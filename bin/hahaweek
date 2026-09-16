@@ -67,7 +67,7 @@ scan() {
 
 start() {
   echo "=== HAHAWEEK START ==="
-  npm start
+  node src/runner.js
 }
 
 repair() {
