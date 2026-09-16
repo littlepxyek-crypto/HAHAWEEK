@@ -1,6 +1,7 @@
 'use strict';
 
 const { getSafeHead } = require('./confirmation');
+const { rpcCall } = require('./rpc-call');
 
 class IngestionEngine {
   constructor({ provider, cursor, confirmations, processor }) {
@@ -19,7 +20,9 @@ class IngestionEngine {
   }
 
   async runOnce() {
-    const latestBlock = await this.provider.getBlockNumber();
+    const latestBlock = await rpcCall(
+      () => this.provider.getBlockNumber()
+    );
     const safeHead = getSafeHead(latestBlock, this.confirmations);
 
     let current = this.cursor.get();
