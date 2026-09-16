@@ -3,8 +3,10 @@
 const { loadState, saveState } = require('./state');
 
 class BlockCursor {
-  constructor() {
-    this.state = loadState();
+  constructor(options = {}) {
+    this.loadState = options.loadState || loadState;
+    this.saveState = options.saveState || saveState;
+    this.state = this.loadState();
   }
 
   get() {
@@ -20,9 +22,14 @@ class BlockCursor {
       return this.state.lastProcessedBlock;
     }
 
-    this.state.lastProcessedBlock = blockNumber;
-    this.state.status = 'INITIALIZED';
-    saveState(this.state);
+    const nextState = {
+      ...this.state,
+      lastProcessedBlock: blockNumber,
+      status: 'INITIALIZED',
+    };
+
+    this.saveState(nextState);
+    this.state = nextState;
 
     return blockNumber;
   }
@@ -39,9 +46,14 @@ class BlockCursor {
       throw new Error('BLOCK_CURSOR_REGRESSION');
     }
 
-    this.state.lastProcessedBlock = blockNumber;
-    this.state.status = 'RUNNING';
-    saveState(this.state);
+    const nextState = {
+      ...this.state,
+      lastProcessedBlock: blockNumber,
+      status: 'RUNNING',
+    };
+
+    this.saveState(nextState);
+    this.state = nextState;
 
     return blockNumber;
   }
