@@ -70,6 +70,22 @@ async function createDatabase(filename = DB_FILE) {
       created_at TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS liquidity_events (
+      event_id TEXT PRIMARY KEY,
+      chain_id INTEGER NOT NULL,
+      pool_id TEXT NOT NULL,
+      pool_manager TEXT NOT NULL,
+      sender TEXT NOT NULL,
+      tick_lower INTEGER NOT NULL,
+      tick_upper INTEGER NOT NULL,
+      liquidity_delta TEXT NOT NULL,
+      salt TEXT NOT NULL,
+      block_number INTEGER NOT NULL,
+      transaction_hash TEXT NOT NULL,
+      log_index INTEGER NOT NULL,
+      captured_at TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS flow_windows (
       chain_id INTEGER NOT NULL,
       pool_id TEXT NOT NULL,
