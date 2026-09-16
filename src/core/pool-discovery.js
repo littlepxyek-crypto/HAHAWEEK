@@ -5,6 +5,10 @@ const {
   decodeInitializeLog,
 } = require('./initialize-decoder');
 
+const {
+  createPoolIdentity,
+} = require('./pool-identity');
+
 const POOL_MANAGER =
   '0x8366a39cc670b4001a1121b8f6a443a643e40951';
 
@@ -31,6 +35,13 @@ function discoverPool(log) {
 
   const decoded = decodeInitializeLog(log);
 
+  const identity = createPoolIdentity({
+    chainId: CHAIN_ID,
+    poolId: decoded.poolId,
+    currency0: decoded.currency0,
+    currency1: decoded.currency1,
+  });
+
   return {
     chainId: CHAIN_ID,
     poolManager: POOL_MANAGER,
@@ -45,6 +56,7 @@ function discoverPool(log) {
     blockNumber: log.blockNumber,
     transactionHash: log.transactionHash,
     logIndex: log.index ?? log.logIndex ?? 0,
+    identity,
   };
 }
 

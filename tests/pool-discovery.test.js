@@ -45,6 +45,42 @@ test('pool discovery creates normalized pool record', () => {
     fixture.transactionHash.toLowerCase()
   );
   assert.equal(pool.logIndex, fixture.index);
+
+  assert.equal(
+    pool.identity.canonicalId,
+    `4663:${fixture.topics[1].toLowerCase()}`
+  );
+
+  assert.equal(
+    pool.identity.poolId,
+    fixture.topics[1].toLowerCase()
+  );
+
+  assert.equal(
+    pool.identity.currency0.address,
+    '0x287aaf654bcae268d0d9a973013293fb1b2e3de4'
+  );
+
+  assert.equal(
+    pool.identity.currency0.kind,
+    'TOKEN'
+  );
+
+  assert.equal(
+    pool.identity.currency1.address,
+    '0x5fc5360d0400a0fd4f2af552add042d716f1d168'
+  );
+
+  assert.equal(
+    pool.identity.currency1.kind,
+    'TOKEN'
+  );
+
+  assert.equal(
+    pool.identity.canonicalPair,
+    'TOKEN:0x287aaf654bcae268d0d9a973013293fb1b2e3de4|' +
+    'TOKEN:0x5fc5360d0400a0fd4f2af552add042d716f1d168'
+  );
 });
 
 test('pool discovery rejects another contract', () => {
