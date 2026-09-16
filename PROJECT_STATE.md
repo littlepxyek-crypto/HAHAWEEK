@@ -48,12 +48,12 @@ A milestone is not considered complete until it is pushed and synchronized.
 
 ## Current Git Checkpoint
 
-- Commit: `5c85940`
-- Message: `feat: harden RPC provider configuration`
-- Local HEAD: `5c859404aa574466ffe3937f80e40780d3c443e7`
-- origin/main: `5c859404aa574466ffe3937f80e40780d3c443e7`
+- Commit: `5f2308c`
+- Message: `test: make health check testable`
+- Local HEAD: `5f2308cf6f136fa2313e1b8a75c2a298887fbe18`
+- origin/main: `5f2308cf6f136fa2313e1b8a75c2a298887fbe18`
 - Working tree: clean
-- Latest test result: 32/32 passing
+- Latest test result: 35/35 passing
 
 ## Implemented Foundation
 
@@ -383,12 +383,18 @@ The project has a Master Specification covering:
 
 **Phase 1 — Reliable Ingestion / Foundation Hardening**
 
+Latest completed milestone:
+- Health layer made testable without live RPC.
+- `runHealth()` supports dependency injection.
+- Health success and failure behavior covered by unit tests.
+- Live RPC remains a separate integration concern.
+
 ## Immediate Next Engineering Steps
 
-1. Integrate `src/health.js` with `src/core/rpc.js`.
-2. Add deterministic health tests without requiring a live RPC.
-3. Keep live RPC integration tests separate from unit tests.
-4. Validate ingestion against a reachable RPC provider when credentials/configuration are available.
+1. Validate the RPC provider boundary independently from deterministic unit tests.
+2. Keep live RPC integration tests separate from unit tests.
+3. Validate ingestion against a reachable RPC provider when credentials/configuration are available.
+4. Audit the existing pool-discovery design before implementation.
 5. Proceed to Phase 2 pool discovery.
 6. Use verified Uniswap v4 ABI/interface decoding.
 7. Add persistent event deduplication.
