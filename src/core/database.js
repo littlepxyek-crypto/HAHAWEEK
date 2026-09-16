@@ -23,7 +23,11 @@ async function createDatabase(filename = DB_FILE) {
 
   let db;
 
-  if (fs.existsSync(filename)) {
+  const inMemory = filename === ':memory:';
+
+  if (inMemory) {
+    db = new SQL.Database();
+  } else if (fs.existsSync(filename)) {
     db = new SQL.Database(
       new Uint8Array(fs.readFileSync(filename))
     );
@@ -102,12 +106,21 @@ async function createDatabase(filename = DB_FILE) {
     db,
 
     save() {
+      if (inMemory) {
+        return;
+      }
+
       const data = db.export();
-      fs.writeFileSync(filename, Buffer.from(data));
+      const tmp = `${filename}.tmp`;
+      fs.writeFileSync(tmp, Buffer.from(data));
+      fs.renameSync(tmp, filename);
     },
 
     close() {
-      this.save();
+      if (!inMemory) {
+        this.save();
+      }
+
       db.close();
     },
   };
