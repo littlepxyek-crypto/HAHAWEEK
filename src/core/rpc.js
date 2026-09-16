@@ -11,10 +11,14 @@ const RPC_TIMEOUT_MS = Number(
   process.env.RPC_TIMEOUT_MS || 15000
 );
 
-function createProvider() {
+function createRpcRequest() {
   const request = new ethers.FetchRequest(RPC_URL);
-
   request.timeout = RPC_TIMEOUT_MS;
+  return request;
+}
+
+function createProvider() {
+  const request = createRpcRequest();
 
   const network = ethers.Network.from({
     name: 'robinhood-mainnet',
@@ -58,6 +62,7 @@ async function getRpcStatus() {
 
 module.exports = {
   RPC_TIMEOUT_MS,
+  createRpcRequest,
   createProvider,
   getRpcStatus,
 };
