@@ -38,6 +38,7 @@ function createFormationTimeline(event) {
         sequence: 0,
         stage: 'FORMATION',
         eventType: 'POOL_INITIALIZED',
+        chainId: event.chainId,
         blockNumber: event.blockNumber,
         transactionHash: event.transactionHash,
         logIndex: event.logIndex,

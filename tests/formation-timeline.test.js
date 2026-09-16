@@ -29,6 +29,7 @@ test('formation timeline starts at T0', () => {
     sequence: 0,
     stage: 'FORMATION',
     eventType: 'POOL_INITIALIZED',
+    chainId: 4663,
     blockNumber: 100,
     transactionHash: '0xtx001',
     logIndex: 7,
