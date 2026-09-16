@@ -17,50 +17,71 @@ class IngestionEngine {
     this.cursor = cursor;
     this.confirmations = confirmations;
     this.processor = processor;
+
+    this.running = false;
   }
 
   async runOnce() {
-    const latestBlock = await rpcCall(
-      () => this.provider.getBlockNumber()
-    );
-    const safeHead = getSafeHead(latestBlock, this.confirmations);
+    if (this.running) {
+      throw new Error('INGESTION_ALREADY_RUNNING');
+    }
 
-    let current = this.cursor.get();
+    this.running = true;
 
-    if (current === null) {
-      current = safeHead;
-      this.cursor.initialize(current);
+    try {
+      const latestBlock = await rpcCall(
+        () => this.provider.getBlockNumber()
+      );
+
+      const safeHead = getSafeHead(
+        latestBlock,
+        this.confirmations
+      );
+
+      let current = this.cursor.get();
+
+      if (current === null) {
+        current = safeHead;
+        this.cursor.initialize(current);
+
+        return {
+          processed: 0,
+          latestBlock,
+          safeHead,
+          cursor: current,
+        };
+      }
+
+      if (current >= safeHead) {
+        return {
+          processed: 0,
+          latestBlock,
+          safeHead,
+          cursor: current,
+        };
+      }
+
+      let processed = 0;
+
+      for (
+        let block = current + 1;
+        block <= safeHead;
+        block += 1
+      ) {
+        await this.processor(block);
+        this.cursor.advance(block);
+        processed += 1;
+      }
+
       return {
-        processed: 0,
+        processed,
         latestBlock,
         safeHead,
-        cursor: current,
+        cursor: this.cursor.get(),
       };
+    } finally {
+      this.running = false;
     }
-
-    if (current >= safeHead) {
-      return {
-        processed: 0,
-        latestBlock,
-        safeHead,
-        cursor: current,
-      };
-    }
-
-    let processed = 0;
-
-    for (let block = current + 1; block <= safeHead; block += 1) {
-      await this.processor(block);
-      this.cursor.advance(block);
-      processed += 1;
-    }
-
-    return {
-      processed,
-      latestBlock,
-      safeHead,
-      cursor: this.cursor.get(),
-    };
   }
 }
 
