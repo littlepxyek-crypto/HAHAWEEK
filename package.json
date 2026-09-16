@@ -11,7 +11,8 @@
     "test": "node --test --test-concurrency=1",
     "start": "node src/index.js",
     "scan": "node src/index.js --once",
-    "health": "node src/health.js"
+    "health": "node src/health.js",
+    "hahaweek": "./bin/hahaweek"
   },
   "repository": {
     "type": "git",
@@ -28,5 +29,8 @@
   "dependencies": {
     "ethers": "^6.17.0",
     "sql.js": "^1.14.2"
+  },
+  "bin": {
+    "hahaweek": "./bin/hahaweek"
   }
 }

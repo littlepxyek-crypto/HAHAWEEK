@@ -1,0 +1,133 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+set -u
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT" || exit 1
+
+usage() {
+  echo "HAHAWEEK Automation CLI"
+  echo
+  echo "Usage:"
+  echo "  hahaweek status"
+  echo "  hahaweek test"
+  echo "  hahaweek health"
+  echo "  hahaweek scan"
+  echo "  hahaweek start"
+  echo "  hahaweek repair"
+  echo
+}
+
+status() {
+  echo "=== HAHAWEEK STATUS ==="
+  echo "Root: $ROOT"
+  echo "Node: $(node -v 2>/dev/null || echo 'NOT FOUND')"
+  echo "npm:  $(npm -v 2>/dev/null || echo 'NOT FOUND')"
+
+  if [ -d node_modules ]; then
+    echo "Dependencies: PRESENT"
+  else
+    echo "Dependencies: MISSING"
+  fi
+
+  if [ -f data/hahaweek.sqlite ]; then
+    echo "SQLite: PRESENT"
+  else
+    echo "SQLite: NOT CREATED"
+  fi
+
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Git HEAD: $(git rev-parse --short HEAD)"
+    echo "Git branch: $(git branch --show-current)"
+    if [ -z "$(git status --short)" ]; then
+      echo "Git status: CLEAN"
+    else
+      echo "Git status: DIRTY"
+      git status --short
+    fi
+  else
+    echo "Git: NOT AVAILABLE"
+  fi
+}
+
+test_all() {
+  echo "=== HAHAWEEK TEST ==="
+  npm test
+}
+
+health() {
+  echo "=== HAHAWEEK HEALTH ==="
+  npm run health
+}
+
+scan() {
+  echo "=== HAHAWEEK SCAN ==="
+  npm run scan
+}
+
+start() {
+  echo "=== HAHAWEEK START ==="
+  npm start
+}
+
+repair() {
+  echo "=== HAHAWEEK REPAIR ==="
+
+  command -v node >/dev/null 2>&1 || {
+    echo "ERROR: Node.js not found"
+    exit 1
+  }
+
+  command -v npm >/dev/null 2>&1 || {
+    echo "ERROR: npm not found"
+    exit 1
+  }
+
+  echo "[1/5] Installing/verifying dependencies..."
+  npm install
+
+  echo "[2/5] Checking source..."
+  node --check src/core/database.js
+  node --check src/core/pool-store.js
+  node --check src/core/liquidity-store.js
+
+  echo "[3/5] Running regression..."
+  npm test
+
+  echo "[4/5] Checking RPC..."
+  npm run health
+
+  echo "[5/5] Final status..."
+  status
+
+  echo
+  echo "HAHAWEEK REPAIR: OK"
+}
+
+case "${1:-}" in
+  status)
+    status
+    ;;
+  test)
+    test_all
+    ;;
+  health)
+    health
+    ;;
+  scan)
+    scan
+    ;;
+  start)
+    start
+    ;;
+  repair)
+    repair
+    ;;
+  help|--help|-h)
+    usage
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac
