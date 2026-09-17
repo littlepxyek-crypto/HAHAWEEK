@@ -23,6 +23,7 @@ const { createProvider } = require('./core/rpc');
 const {
   CHAIN_ID,
   CONFIRMATIONS,
+  CHUNK_SIZE,
 } = require('./core/config');
 
 const { BlockCursor } = require('./core/block-cursor');
@@ -121,11 +122,36 @@ async function createEngine() {
     return result;
   };
 
+  const processorRange = async (fromBlock, toBlock) => {
+    const result = await rawLogs.ingestRange(
+      fromBlock,
+      toBlock,
+      createRelevantLogFilter()
+    );
+
+    /*
+     * Persist only after the complete batch succeeds.
+     * IngestionEngine advances the cursor only after
+     * processorRange resolves successfully.
+     */
+    database.save();
+
+    console.log(
+      `Blocks ${fromBlock}-${toBlock}: fetched=${result.fetched}` +
+      ` inserted=${result.inserted}` +
+      ` duplicates=${result.duplicates}`
+    );
+
+    return result;
+  };
+
   const ingestion = new IngestionEngine({
     provider,
     cursor,
     confirmations: CONFIRMATIONS,
     processor,
+    processorRange,
+    batchSize: CHUNK_SIZE,
   });
 
   return {
