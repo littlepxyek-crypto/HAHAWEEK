@@ -183,3 +183,66 @@ test('constructor rejects invalid confirmations', () => {
     /INVALID_CONFIRMATIONS/
   );
 });
+
+test('range processor advances cursor only after successful batch', async () => {
+  const cursor = makeCursor(100);
+  const processedRanges = [];
+
+  const provider = {
+    async getBlockNumber() {
+      return 110;
+    },
+  };
+
+  const engine = new IngestionEngine({
+    provider,
+    cursor,
+    confirmations: 0,
+    processor: async (block) => {
+      throw new Error('SINGLE_BLOCK_PROCESSOR_SHOULD_NOT_RUN');
+    },
+    processorRange: async (fromBlock, toBlock) => {
+      processedRanges.push([fromBlock, toBlock]);
+    },
+    batchSize: 5,
+  });
+
+  const result = await engine.runOnce();
+
+  assert.deepEqual(processedRanges, [
+    [101, 105],
+    [106, 110],
+  ]);
+
+  assert.equal(result.processed, 10);
+  assert.equal(result.cursor, 110);
+  assert.equal(cursor.get(), 110);
+});
+
+test('failed batch does not advance cursor', async () => {
+  const cursor = makeCursor(100);
+
+  const provider = {
+    async getBlockNumber() {
+      return 110;
+    },
+  };
+
+  const engine = new IngestionEngine({
+    provider,
+    cursor,
+    confirmations: 0,
+    processor: async () => {},
+    processorRange: async () => {
+      throw new Error('BATCH_FAILURE');
+    },
+    batchSize: 5,
+  });
+
+  await assert.rejects(
+    () => engine.runOnce(),
+    /BATCH_FAILURE/
+  );
+
+  assert.equal(cursor.get(), 100);
+});
