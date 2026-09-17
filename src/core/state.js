@@ -3,8 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const STATE_DIR = path.join(process.cwd(), 'data');
-const STATE_FILE = path.join(STATE_DIR, 'state.json');
+const STATE_DIR = process.env.HAHAWEEK_DATA_DIR || path.join(process.cwd(), 'data');
+const STATE_FILE = process.env.HAHAWEEK_STATE_FILE || path.join(STATE_DIR, 'state.json');
 
 function ensureDir() {
   fs.mkdirSync(STATE_DIR, { recursive: true });

@@ -81,13 +81,15 @@ async function runRunner({
 
       await cycle();
 
+      if (stopping) {
+        break;
+      }
+
       backoff = intervalMs;
 
       output('RUNNER: cycle OK');
 
-      if (!stopping) {
-        await sleep(intervalMs);
-      }
+      await sleep(intervalMs);
     } catch (error) {
       output(`RUNNER: cycle failed: ${error.message}`);
 

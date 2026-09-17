@@ -2,45 +2,69 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('fs');
 
 const { BlockCursor } = require('../src/core/block-cursor');
-const { STATE_FILE } = require('../src/core/state');
+
+function createTestCursor() {
+  let persisted = {
+    version: 1,
+    lastProcessedBlock: null,
+    status: 'INITIALIZING',
+    lastError: null,
+    updatedAt: null,
+  };
+
+  return {
+    cursor: new BlockCursor({
+      loadState: () => ({ ...persisted }),
+      saveState: (nextState) => {
+        persisted = { ...nextState };
+      },
+    }),
+    getPersistedState: () => ({ ...persisted }),
+  };
+}
 
 test('block cursor initializes once', () => {
-  fs.rmSync(STATE_FILE, { force: true });
-
-  const cursor = new BlockCursor();
+  const { cursor } = createTestCursor();
 
   assert.equal(cursor.get(), null);
   assert.equal(cursor.initialize(100), 100);
   assert.equal(cursor.get(), 100);
 
   assert.equal(cursor.initialize(200), 100);
-
-  fs.rmSync(STATE_FILE, { force: true });
 });
 
 test('block cursor advances and survives restart', () => {
-  fs.rmSync(STATE_FILE, { force: true });
+  let persisted = {
+    version: 1,
+    lastProcessedBlock: null,
+    status: 'INITIALIZING',
+    lastError: null,
+    updatedAt: null,
+  };
 
-  const cursor = new BlockCursor();
+  const makeCursor = () =>
+    new BlockCursor({
+      loadState: () => ({ ...persisted }),
+      saveState: (nextState) => {
+        persisted = { ...nextState };
+      },
+    });
+
+  const cursor = makeCursor();
 
   cursor.initialize(100);
   assert.equal(cursor.advance(101), 101);
   assert.equal(cursor.advance(105), 105);
 
-  const restarted = new BlockCursor();
+  const restarted = makeCursor();
 
   assert.equal(restarted.get(), 105);
-
-  fs.rmSync(STATE_FILE, { force: true });
 });
 
 test('block cursor rejects regression', () => {
-  fs.rmSync(STATE_FILE, { force: true });
-
-  const cursor = new BlockCursor();
+  const { cursor } = createTestCursor();
 
   cursor.initialize(100);
 
@@ -48,6 +72,4 @@ test('block cursor rejects regression', () => {
     () => cursor.advance(99),
     /BLOCK_CURSOR_REGRESSION/
   );
-
-  fs.rmSync(STATE_FILE, { force: true });
 });

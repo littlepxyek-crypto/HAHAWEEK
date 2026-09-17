@@ -3,8 +3,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const RAW_FILE = path.join(DATA_DIR, 'raw-events.jsonl');
+const DATA_DIR =
+  process.env.HAHAWEEK_DATA_DIR || path.join(process.cwd(), 'data');
+const RAW_FILE =
+  process.env.HAHAWEEK_RAW_FILE || path.join(DATA_DIR, 'raw-events.jsonl');
 
 function ensureDir() {
   fs.mkdirSync(DATA_DIR, { recursive: true });

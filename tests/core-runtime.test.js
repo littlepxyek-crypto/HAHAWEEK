@@ -3,6 +3,17 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
+const TEST_DATA_DIR = fs.mkdtempSync(
+  path.join(os.tmpdir(), 'hahaweek-core-runtime-')
+);
+
+process.env.HAHAWEEK_DATA_DIR = TEST_DATA_DIR;
+process.env.HAHAWEEK_STATE_FILE = path.join(TEST_DATA_DIR, 'state.json');
+process.env.HAHAWEEK_RAW_FILE = path.join(TEST_DATA_DIR, 'raw-events.jsonl');
+
 
 const {
   loadState,

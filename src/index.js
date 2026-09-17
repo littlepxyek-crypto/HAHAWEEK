@@ -1,5 +1,24 @@
 'use strict';
 
+let shutdownRequested = false;
+
+function requestShutdown(signal) {
+  shutdownRequested = true;
+  console.log(`HAHAWEEK SCAN: received ${signal}; finishing current cycle`);
+}
+
+function handleSIGINT() {
+  requestShutdown('SIGINT');
+}
+
+function handleSIGTERM() {
+  requestShutdown('SIGTERM');
+}
+
+process.on('SIGINT', handleSIGINT);
+process.on('SIGTERM', handleSIGTERM);
+
+
 const { createProvider } = require('./core/rpc');
 const {
   CHAIN_ID,
@@ -139,6 +158,10 @@ async function main() {
       lastError: null,
     });
 
+    if (shutdownRequested) {
+      console.log('HAHAWEEK SCAN: graceful shutdown complete');
+    }
+
     console.log('=== HAHAWEEK SCAN ===');
     console.log(`Chain ID: ${CHAIN_ID}`);
     console.log(`Latest block: ${result.latestBlock}`);
@@ -161,6 +184,9 @@ async function main() {
   } finally {
     engine.database.close();
     engine.provider.destroy();
+
+    process.removeListener('SIGINT', handleSIGINT);
+    process.removeListener('SIGTERM', handleSIGTERM);
   }
 }
 
