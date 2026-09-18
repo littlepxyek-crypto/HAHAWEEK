@@ -45,17 +45,17 @@ const {
 } = require('./core/initialize-decoder');
 
 const {
-  MODIFY_LIQUIDITY_TOPIC0,
+  MODIFY_LIQUIDITY_TOPIC,
 } = require('./core/liquidity-event');
 
 const {
-  SWAP_TOPIC0,
+  SWAP_TOPIC0: SWAP_TOPIC,
 } = require('./core/swap-event');
 
 const EVENT_TOPICS = [
   INITIALIZE_TOPIC0,
-  MODIFY_LIQUIDITY_TOPIC0,
-  SWAP_TOPIC0,
+  MODIFY_LIQUIDITY_TOPIC,
+  SWAP_TOPIC,
 ];
 
 function createRelevantLogFilter() {
