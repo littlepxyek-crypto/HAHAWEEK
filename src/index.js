@@ -24,6 +24,7 @@ const {
   CHAIN_ID,
   CONFIRMATIONS,
   CHUNK_SIZE,
+  MAX_BATCHES_PER_RUN,
 } = require('./core/config');
 
 const { BlockCursor } = require('./core/block-cursor');
@@ -152,6 +153,7 @@ async function createEngine() {
     processor,
     processorRange,
     batchSize: CHUNK_SIZE,
+    maxBatchesPerRun: MAX_BATCHES_PER_RUN,
   });
 
   return {

@@ -16,10 +16,15 @@ const CHUNK_SIZE = Number(
   process.env.CHUNK_SIZE || 10
 );
 
+const MAX_BATCHES_PER_RUN = Number(
+  process.env.MAX_BATCHES_PER_RUN || 10
+);
+
 module.exports = {
   RPC_URL,
   CHAIN_ID,
   CONFIRMATIONS,
   POLL_INTERVAL_MS,
   CHUNK_SIZE,
+  MAX_BATCHES_PER_RUN,
 };

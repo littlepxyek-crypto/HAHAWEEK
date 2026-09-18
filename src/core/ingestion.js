@@ -11,6 +11,7 @@ class IngestionEngine {
     processor,
     processorRange,
     batchSize,
+      maxBatchesPerRun,
   }) {
     if (!provider) {
       throw new Error('PROVIDER_REQUIRED');
@@ -46,6 +47,13 @@ class IngestionEngine {
     }
 
     if (
+      maxBatchesPerRun !== undefined &&
+      (!Number.isInteger(maxBatchesPerRun) || maxBatchesPerRun <= 0)
+    ) {
+      throw new Error('INVALID_MAX_BATCHES_PER_RUN');
+    }
+
+    if (
       processorRange !== undefined &&
       batchSize === undefined
     ) {
@@ -58,6 +66,7 @@ class IngestionEngine {
     this.processor = processor;
     this.processorRange = processorRange;
     this.batchSize = batchSize;
+    this.maxBatchesPerRun = maxBatchesPerRun ?? Infinity;
     this.running = false;
   }
 
@@ -139,9 +148,12 @@ class IngestionEngine {
        * successfully completed batch.
        */
       if (typeof this.processorRange === 'function') {
+        let batchesProcessed = 0;
+
         for (
           let fromBlock = current + 1;
-          fromBlock <= safeHead;
+          fromBlock <= safeHead &&
+              batchesProcessed < this.maxBatchesPerRun;
           fromBlock += this.batchSize
         ) {
           const toBlock = Math.min(
@@ -164,6 +176,7 @@ class IngestionEngine {
           this.cursor.advance(toBlock);
 
           processed += toBlock - fromBlock + 1;
+            batchesProcessed += 1;
         }
 
         return {
