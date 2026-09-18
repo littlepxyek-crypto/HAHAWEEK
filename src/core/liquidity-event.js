@@ -7,7 +7,7 @@ const MODIFY_LIQUIDITY_ABI = [
 ];
 
 const iface = new ethers.Interface(MODIFY_LIQUIDITY_ABI);
-const MODIFY_LIQUIDITY_TOPIC0 =
+const MODIFY_LIQUIDITY_TOPIC =
   iface.getEvent('ModifyLiquidity').topicHash;
 
 function createLiquidityEvent(log, pool) {
@@ -23,7 +23,7 @@ function createLiquidityEvent(log, pool) {
     throw new Error('INVALID_MODIFY_LIQUIDITY_TOPIC_COUNT');
   }
 
-  if (log.topics[0].toLowerCase() !== MODIFY_LIQUIDITY_TOPIC0.toLowerCase()) {
+  if (log.topics[0].toLowerCase() !== MODIFY_LIQUIDITY_TOPIC.toLowerCase()) {
     throw new Error('INVALID_MODIFY_LIQUIDITY_TOPIC0');
   }
 
@@ -79,6 +79,6 @@ function createLiquidityEvent(log, pool) {
 }
 
 module.exports = {
-  MODIFY_LIQUIDITY_TOPIC0,
+  MODIFY_LIQUIDITY_TOPIC,
   createLiquidityEvent,
 };

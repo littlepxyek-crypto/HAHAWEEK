@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
-  MODIFY_LIQUIDITY_TOPIC0,
+  MODIFY_LIQUIDITY_TOPIC,
   createLiquidityEvent,
 } = require('../src/core/liquidity-event');
 
@@ -50,7 +50,7 @@ function fixture() {
 
 test('ModifyLiquidity topic is deterministic', () => {
   assert.equal(
-    MODIFY_LIQUIDITY_TOPIC0,
+    MODIFY_LIQUIDITY_TOPIC,
     iface.getEvent('ModifyLiquidity').topicHash
   );
 });
