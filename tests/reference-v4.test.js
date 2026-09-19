@@ -28,7 +28,7 @@ test("V4 reference canonicalization rejects non-finite numbers", () => {
 });
 
 test("V4 reference canonicalization rejects lone surrogates", () => {
-  assert.throws(() => canonicalize({ value: "\\ud800" }), /lone high surrogate/);
+  assert.throws(() => canonicalize({ value: String.fromCharCode(0xd800) }), /lone high surrogate/);
 });
 
 test("domain separation changes the digest", () => {
