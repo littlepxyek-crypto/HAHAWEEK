@@ -40,7 +40,6 @@ const mutations = [
   ["contract_address wrong length", { contract_address: "0x" + "c".repeat(39) }, /invalid canonical hexadecimal form/],
   ["topic0 uppercase", { topic0: identity.topic0.toUpperCase() }, /invalid canonical hexadecimal form/],
   ["unknown key", { extra: "x" }, /exactly the eight V4 identity keys/],
-  ["missing key", { topic0: undefined }, /exactly the eight V4 identity keys/],
 ];
 
 for (const [name, mutation, expected] of mutations) {
@@ -49,3 +48,11 @@ for (const [name, mutation, expected] of mutations) {
     assert.throws(() => validateEventIdentity(mutated), expected);
   });
 }
+
+test("V4 event identity rejects an actually missing key", () => {
+  const { topic0, ...missing } = identity;
+  assert.throws(
+    () => validateEventIdentity(missing),
+    /exactly the eight V4 identity keys/
+  );
+});
