@@ -3,8 +3,6 @@ name: HAHAWEEK Security and Regression
 on:
   pull_request:
   push:
-    branches:
-      - main
 
 permissions:
   contents: read
