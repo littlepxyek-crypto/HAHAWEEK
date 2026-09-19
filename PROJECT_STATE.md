@@ -48,10 +48,11 @@ A milestone is not considered complete until it is pushed and synchronized.
 
 ## Current Git Checkpoint
 
-- Commit: `e4abb5b6c02a0112c6948cd9b89fad296d9725cd`
-- Message: `docs: create HAHAWEEK README v2 landing page`
-- Remote main HEAD: `e4abb5b6c02a0112c6948cd9b89fad296d9725cd`
-- README v2: merged to `main) via PR #30.
+- Last verified main milestone: `181a756676a5f6504c24dd5c810c184607c55604`
+- Milestone: PR #31 — durable project-state reconciliation — merged to `main`.
+- README v2: merged to `main` via PR #30.
+- CI for PR #31: passed.
+- This checkpoint records the latest verified milestone; subsequent documentation commits may advance `main` without invalidating the recorded milestone.
 - Main CI for README v2 commit: passed.
 - Working tree state is governed by the GitHub remote checkpoint; no production runtime state is included in this documentation update.
 
@@ -66,8 +67,8 @@ A milestone is not considered complete until it is pushed and synchronized.
 
 ### Immediate Safe Sequence
 
-1. Reconcile PR #29 with current `main), then run the final B4/B5 trust-model audit on its actual head.
-2. Reconcile PR #28 with current `main), then re-run its complete CI/recovery audit.
+1. Reconcile PR #29 with current `main`, then run the final whole-document trust-model audit on its actual head.
+2. Reconcile PR #28 with current `main`, then re-run its complete CI/recovery audit.
 3. Record each result in the durable project state before advancing.
 4. Continue remaining Gate 2 work only after the two open PRs are independently validated.
 5. Do not perform production V4 cutover or legacy migration before Gate 2 exit criteria are satisfied.
@@ -402,25 +403,26 @@ The project has a Master Specification covering:
 
 ## Current Phase
 
-**Phase 1 — Reliable Ingestion / Foundation Hardening**
+**Phase — V4 Design Gate 2 / Integrity & Recovery Validation**
 
-Latest completed milestone:
-- Health layer made testable without live RPC.
-- `runHealth()` supports dependency injection.
-- Health success and failure behavior covered by unit tests.
-- Live RPC remains a separate integration concern.
+Foundation Phase 1 remains historical context; it is not the current execution phase.
+
+Current focus:
+- Proof-of-Observation Trust Model final audit.
+- Offline Recovery Verifier reconciliation and validation.
+- Remaining V4 executable vectors and adversarial recovery tests.
+- Legacy write-freeze and collision-isolation evidence.
+- Design Gate 2 exit criteria.
 
 ## Immediate Next Engineering Steps
 
-1. Validate the RPC provider boundary independently from deterministic unit tests.
-2. Keep live RPC integration tests separate from unit tests.
-3. Validate ingestion against a reachable RPC provider when credentials/configuration are available.
-4. Audit the existing pool-discovery design before implementation.
-5. Proceed to Phase 2 pool discovery.
-6. Use verified Uniswap v4 ABI/interface decoding.
-7. Add persistent event deduplication.
-8. Add restart/replay validation.
-9. Preserve raw evidence before derived interpretation.
+1. Complete the final whole-document audit for PR #29 on its actual current head.
+2. Reconcile and validate PR #28 against current `main`.
+3. Complete remaining Gate 2 executable families and durability/fencing tests.
+4. Update the durable project state after each material milestone.
+5. Re-audit Gate 2 before any V4 production activation or legacy migration.
+
+Historical foundation work remains preserved above and in Git history.
 
 ## Do Not Repeat
 
