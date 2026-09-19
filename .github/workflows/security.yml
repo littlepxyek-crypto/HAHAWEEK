@@ -44,9 +44,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git ls-files -z | xargs -0 grep -nI -E \
+          if git grep -nI -E -- \
             '-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|ghp_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]+|sk-[A-Za-z0-9_-]{20,}' \
-            -- 2>/dev/null; then
+            -- . 2>/dev/null; then
             echo "Potential credential material found in tracked files."
             exit 1
           fi
