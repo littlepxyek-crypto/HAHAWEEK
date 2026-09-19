@@ -1,0 +1,136 @@
+{
+  "protocol": "HAHAWEEK-SOURCE-INDEPENDENCE-V0.1",
+  "version": "0.1",
+  "vectors": [
+    {
+      "id": "SI-001",
+      "description": "unknown lineage cannot satisfy L4",
+      "evidence": [
+        {"lineage":"L-UNKNOWN","independence_class":"I0"}
+      ],
+      "expected": {"independent_lineage_count":0,"l4_eligible":false}
+    },
+    {
+      "id": "SI-002",
+      "description": "repost remains same lineage",
+      "evidence": [
+        {"lineage":"L-POST-1","independence_class":"I3"},
+        {"lineage":"L-POST-1","independence_class":"I1"}
+      ],
+      "expected": {"independent_lineage_count":1,"l4_eligible":false}
+    },
+    {
+      "id": "SI-003",
+      "description": "mirror remains same lineage",
+      "evidence": [
+        {"lineage":"L-ARTICLE-1","independence_class":"I3"},
+        {"lineage":"L-ARTICLE-1","independence_class":"I1"}
+      ],
+      "expected": {"independent_lineage_count":1,"l4_eligible":false}
+    },
+    {
+      "id": "SI-004",
+      "description": "aggregator and upstream API do not count twice",
+      "evidence": [
+        {"lineage":"L-API-1","independence_class":"I3"},
+        {"lineage":"L-API-1","independence_class":"I2"}
+      ],
+      "expected": {"independent_lineage_count":1,"l4_eligible":false}
+    },
+    {
+      "id": "SI-005",
+      "description": "two dashboards using one feed do not count twice",
+      "evidence": [
+        {"lineage":"L-FEED-1","independence_class":"I2"},
+        {"lineage":"L-FEED-1","independence_class":"I2"}
+      ],
+      "expected": {"independent_lineage_count":0,"l4_eligible":false}
+    },
+    {
+      "id": "SI-006",
+      "description": "multiple RPC acquisitions of one canonical event are not independent facts",
+      "evidence": [
+        {"lineage":"L-CHAIN-EVENT","independence_class":"I2"},
+        {"lineage":"L-CHAIN-EVENT","independence_class":"I2"}
+      ],
+      "expected": {"independent_lineage_count":0,"l4_eligible":false}
+    },
+    {
+      "id": "SI-007",
+      "description": "two genuinely independent observations are L4 eligible",
+      "evidence": [
+        {"lineage":"L-SOCIAL-1","independence_class":"I3"},
+        {"lineage":"L-ONCHAIN-1","independence_class":"I4"}
+      ],
+      "expected": {"independent_lineage_count":2,"l4_eligible":true}
+    },
+    {
+      "id": "SI-008",
+      "description": "two independent lines with a direct contradiction block L4",
+      "evidence": [
+        {"lineage":"L-A","independence_class":"I3"},
+        {"lineage":"L-B","independence_class":"I3"}
+      ],
+      "contradiction": true,
+      "expected": {"independent_lineage_count":2,"l4_eligible":false}
+    },
+    {
+      "id": "SI-009",
+      "description": "same URL count is not source diversity",
+      "evidence": [
+        {"lineage":"L-A","independence_class":"I3"},
+        {"lineage":"L-A","independence_class":"I1"},
+        {"lineage":"L-A","independence_class":"I1"}
+      ],
+      "expected": {"independent_lineage_count":1,"l4_eligible":false}
+    },
+    {
+      "id": "SI-010",
+      "description": "temporal separation alone does not establish independence",
+      "evidence": [
+        {"lineage":"L-SAME-UPSTREAM","independence_class":"I2"},
+        {"lineage":"L-SAME-UPSTREAM","independence_class":"I2"}
+      ],
+      "temporal_separation_only": true,
+      "expected": {"independent_lineage_count":0,"l4_eligible":false}
+    },
+    {
+      "id": "SI-011",
+      "description": "unverified claim of independence remains unknown",
+      "evidence": [
+        {"lineage":"L-CLAIMED-A","independence_class":"I0"},
+        {"lineage":"L-CLAIMED-B","independence_class":"I0"}
+      ],
+      "expected": {"independent_lineage_count":0,"l4_eligible":false}
+    },
+    {
+      "id": "SI-012",
+      "description": "acquisition multiplicity does not substitute for evidence independence",
+      "evidence": [
+        {"lineage":"L-EVENT-1","independence_class":"I2"},
+        {"lineage":"L-EVENT-1","independence_class":"I2"},
+        {"lineage":"L-EVENT-1","independence_class":"I2"}
+      ],
+      "acquisition_count": 3,
+      "expected": {"independent_lineage_count":0,"l4_eligible":false}
+    },
+    {
+      "id": "SI-013",
+      "description": "I3 plus I3 from distinct lineages qualifies",
+      "evidence": [
+        {"lineage":"L-ONE","independence_class":"I3"},
+        {"lineage":"L-TWO","independence_class":"I3"}
+      ],
+      "expected": {"independent_lineage_count":2,"l4_eligible":true}
+    },
+    {
+      "id": "SI-014",
+      "description": "I4 plus I4 from distinct lineages qualifies",
+      "evidence": [
+        {"lineage":"L-DIRECT-A","independence_class":"I4"},
+        {"lineage":"L-DIRECT-B","independence_class":"I4"}
+      ],
+      "expected": {"independent_lineage_count":2,"l4_eligible":true}
+    }
+  ]
+}
