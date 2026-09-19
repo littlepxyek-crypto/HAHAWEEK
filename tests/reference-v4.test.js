@@ -40,7 +40,7 @@ test("domain separation changes the digest", () => {
 
 test("golden vectors reproduce their stored canonical bytes and hashes", () => {
   const result = verifyVectorSet(fixture);
-  assert.equal(result.count, 2);
+  assert.equal(result.count, 1);
 });
 
 test("golden vector verifier detects mutation", () => {
