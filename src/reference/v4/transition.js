@@ -149,8 +149,15 @@ function validateTransitionChain(records) {
 }
 
 function classifyTransitionDuplicate(existing, candidate) {
-  validateTransitionRecord(existing);
-  validateTransitionRecord(candidate);
+  validateTransitionInput(existing.input);
+  validateTransitionInput(candidate.input);
+  assertCanonicalHash(existing.hash, "existing transition hash");
+  assertCanonicalHash(candidate.hash, "candidate transition hash");
+
+  const expectedExistingHash = hashTransition(existing.input);
+  if (existing.hash !== expectedExistingHash) {
+    fail("existing transition hash mismatch");
+  }
 
   if (canonicalize(existing.input) !== canonicalize(candidate.input)) {
     return "NOT_DUPLICATE";
