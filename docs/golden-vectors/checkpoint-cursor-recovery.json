@@ -165,7 +165,8 @@
         "exists": true,
         "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "inventory_valid": true,
-        "segments_valid": true
+        "segments_valid": true,
+        "generation": "0"
       },
       "checkpoint": {
         "input": {
@@ -191,7 +192,8 @@
         "exists": true,
         "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "inventory_valid": true,
-        "segments_valid": false
+        "segments_valid": false,
+        "generation": "0"
       },
       "checkpoint": {
         "input": {
