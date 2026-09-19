@@ -1,0 +1,426 @@
+{
+  "protocol": "HAHAWEEK-CROSS-SPEC-L4-VALIDATION-V0.1",
+  "version": "0.1",
+  "vectors": [
+    {
+      "id": "positive-independent-i3-i4",
+      "description": "Two materially independent lineages support the same narrow relation.",
+      "evidence": [
+        {
+          "lineage": "onchain-control",
+          "independence_class": "I3",
+          "relation": "W1_CONTROLS_C",
+          "valid": true
+        },
+        {
+          "lineage": "signed-declaration",
+          "independence_class": "I4",
+          "relation": "W1_CONTROLS_C",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_ELIGIBLE"
+    },
+    {
+      "id": "single-lineage",
+      "description": "One qualifying lineage is insufficient.",
+      "evidence": [
+        {
+          "lineage": "onchain-control",
+          "independence_class": "I3",
+          "relation": "W1_CONTROLS_C",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_INSUFFICIENT_INDEPENDENCE"
+    },
+    {
+      "id": "same-lineage-duplicate",
+      "description": "Two copies from one lineage do not create corroboration.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": true,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_INSUFFICIENT_INDEPENDENCE"
+    },
+    {
+      "id": "repost-original",
+      "description": "Original post plus repost remains one lineage.",
+      "evidence": [
+        {
+          "lineage": "social-origin",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "social-origin",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_INSUFFICIENT_INDEPENDENCE"
+    },
+    {
+      "id": "mirror-source",
+      "description": "Mirror and upstream source are not independent.",
+      "evidence": [
+        {
+          "lineage": "article-origin",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "article-origin",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_INSUFFICIENT_INDEPENDENCE"
+    },
+    {
+      "id": "aggregator-upstream",
+      "description": "Aggregator and upstream feed share one lineage.",
+      "evidence": [
+        {
+          "lineage": "upstream-feed",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "upstream-feed",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_INSUFFICIENT_INDEPENDENCE"
+    },
+    {
+      "id": "correlated-feeds",
+      "description": "Nominally different feeds with declared correlated lineage do not corroborate.",
+      "evidence": [
+        {
+          "lineage": "correlated-feed-cluster",
+          "independence_class": "I2",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "correlated-feed-cluster",
+          "independence_class": "I2",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_INSUFFICIENT_INDEPENDENCE"
+    },
+    {
+      "id": "multiple-rpc-same-event",
+      "description": "Multiple RPC acquisitions of one chain event are one evidence lineage.",
+      "evidence": [
+        {
+          "lineage": "chain-event-123",
+          "independence_class": "I3",
+          "relation": "EVENT_E",
+          "valid": true
+        },
+        {
+          "lineage": "chain-event-123",
+          "independence_class": "I3",
+          "relation": "EVENT_E",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": true,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_INSUFFICIENT_INDEPENDENCE"
+    },
+    {
+      "id": "unknown-lineage",
+      "description": "Unknown provenance cannot be upgraded by aggregation.",
+      "evidence": [
+        {
+          "lineage": "unknown",
+          "independence_class": "UNKNOWN",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "unknown",
+          "independence_class": "UNKNOWN",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": false,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_PROVENANCE"
+    },
+    {
+      "id": "temporal-incompatible",
+      "description": "Independent lines that fail the relation's temporal condition cannot corroborate it.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "source-b",
+          "independence_class": "I4",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": false,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_TEMPORAL"
+    },
+    {
+      "id": "direct-contradiction",
+      "description": "A direct unresolved contradiction blocks L4.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "source-b",
+          "independence_class": "I4",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": true,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_CONTRADICTION"
+    },
+    {
+      "id": "relation-mismatch",
+      "description": "Independent evidence for different relations cannot be combined.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_CONTROLS_C",
+          "valid": true
+        },
+        {
+          "lineage": "source-b",
+          "independence_class": "I4",
+          "relation": "W1_POSTS_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_RELATION_MISMATCH"
+    },
+    {
+      "id": "incomplete-provenance",
+      "description": "Independent evidence without reconstructable provenance cannot qualify.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "source-b",
+          "independence_class": "I4",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": false,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_BLOCKED_PROVENANCE"
+    },
+    {
+      "id": "reorg-invalidated",
+      "description": "Support invalidated by V4 reorg must be recomputed, not retained as eligible.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "source-b",
+          "independence_class": "I4",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": true,
+      "expected": "L4_UNKNOWN"
+    },
+    {
+      "id": "l4-not-l5",
+      "description": "L4 corroboration does not satisfy the L5 direct-verification boundary.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_CONTROLS_C",
+          "valid": true
+        },
+        {
+          "lineage": "source-b",
+          "independence_class": "I4",
+          "relation": "W1_CONTROLS_C",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "requested_level": "L5",
+      "expected": "L4_UNKNOWN"
+    },
+    {
+      "id": "missing-falsifier",
+      "description": "L4 requires a concrete falsifier.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        },
+        {
+          "lineage": "source-b",
+          "independence_class": "I4",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": false,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_UNKNOWN"
+    },
+    {
+      "id": "invalid-evidence-reference",
+      "description": "Unresolved evidence cannot count as positive support.",
+      "evidence": [
+        {
+          "lineage": "source-a",
+          "independence_class": "I3",
+          "relation": "W1_ASSOC_A",
+          "valid": false
+        },
+        {
+          "lineage": "source-b",
+          "independence_class": "I4",
+          "relation": "W1_ASSOC_A",
+          "valid": true
+        }
+      ],
+      "temporal_compatible": true,
+      "contradiction": false,
+      "falsifier_present": true,
+      "provenance_complete": true,
+      "acquisition_multiplicity": false,
+      "reorg_invalidated": false,
+      "expected": "L4_UNKNOWN"
+    }
+  ]
+}
