@@ -129,20 +129,85 @@ UNKNOWN is a first-class state, not a null, absent value, or implicit default.
 
 R1, R4, and R5 permit registered UNKNOWN-RESOLUTION rules to resolve UNKNOWN. This section defines the ONLY conditions under which such a rule is sound. A rule that fails any condition is INVALID and MUST be rejected by any conforming implementation.
 
-### E1. Directionality
+## State Space (closed)
 
-An UNKNOWN-RESOLUTION rule MAY resolve UNKNOWN only toward a state that is explicitly more constrained by the rule's declared semantics. It MUST NOT resolve UNKNOWN into a trust designation, independence designation, default value, or other conclusion that is not established by the consumed evidence.
+The Trust Model state space is CLOSED. Exactly the following states exist:
 
-Permitted resolution classes are limited to:
-- KNOWN_TRUE;
-- KNOWN_FALSE;
-- INVALID;
-- UNAVAILABLE.
+  U = UNKNOWN
+  T = KNOWN_TRUE
+  F = KNOWN_FALSE
+  I = INVALID
+  X = UNAVAILABLE
 
-Forbidden resolution classes include:
-- INDEPENDENT;
-- TRUSTED;
-- any default or inferred value without qualifying evidence.
+No other state MAY be introduced by this document, by any downstream
+specification, or by any implementation claiming conformance. A
+downstream specification that requires additional nuance MUST express
+it as non-normative metadata attached to one of the states above; it
+MUST NOT introduce a new state name.
+
+The following names MUST NOT be used as states. They are illustrative
+and non-exhaustive:
+
+  RESOLVED, CONFIRMED, VERIFIED, TRUSTED, INDEPENDENT,
+  DEFAULT, PENDING, RESOLVING.
+
+### Constraint Order
+
+Define the strict constraint relation "<" over the closed state space
+as exactly:
+
+  T < U
+  F < U
+  I < U
+  X < U
+
+These are the ONLY strict ordered pairs in the relation.
+
+T, F, I, and X are pairwise incomparable. U is the unique top
+element. There is no bottom element.
+
+The relation is irreflexive and transitive. No additional strict pair
+is introduced by reflexivity, transitivity, analogy, similarity, or
+intent; because the only ordered pairs terminate at U, transitive
+closure adds no additional strict pairs.
+
+"More constrained" means ONLY "strictly below U in this Constraint
+Order". No other interpretation is permitted.
+
+### E1. Directionality (closed form)
+
+An UNKNOWN-RESOLUTION rule MAY resolve a state s to a state t ONLY IF:
+
+  (a) s = U;
+  (b) t is one of {T, F, I, X}; and
+  (c) t < U in the Constraint Order.
+
+Any rule whose target t is not in {T, F, I, X} is INVALID.
+Any rule whose target is not strictly below U is INVALID.
+Any rule that introduces a state name outside the closed state space
+is INVALID, regardless of justification.
+
+E1 is a syntactic check against the closed state space and the
+Constraint Order. It MUST NOT be interpreted by analogy, similarity,
+intent, or an equivalent semantic predicate.
+
+### E1a. No synonyms
+
+A downstream specification MUST NOT treat any of
+{RESOLVED, CONFIRMED, VERIFIED, TRUSTED, INDEPENDENT, DEFAULT}
+as an alias for any state in the closed state space. Doing so is a
+conformance failure.
+
+### E1b. No derived states
+
+A downstream specification MUST NOT derive, combine, refine, or
+annotate closed states in a way that is presented as a new state.
+Refinements MUST remain non-normative metadata.
+
+### E1c. No reordering
+
+A downstream specification MUST NOT extend, weaken, or reinterpret
+the Constraint Order. The order is fixed by this Trust Model.
 
 ### E2. Evidence requirement
 
@@ -178,13 +243,39 @@ An UNKNOWN-RESOLUTION rule MAY be revoked. Revocation MUST NOT rewrite historica
 
 A newly registered UNKNOWN-RESOLUTION rule MUST NOT apply retroactively to historical UNKNOWN states unless the rule explicitly declares retroactive scope and that scope is reviewed and recorded. Any retroactive application is a new recorded evaluation, not an in-place historical mutation.
 
-### E7. Composition
+### E7. Composition (closed form)
 
-Chained UNKNOWN-RESOLUTION rules MUST preserve E1 at every step. A chain that reaches a forbidden resolution class is INVALID regardless of intermediate steps. A downstream rule MUST NOT create a new resolution path merely by composing registered rules.
+A chain of UNKNOWN-RESOLUTION rules s0 → s1 → ... → sn is sound ONLY IF
+each step satisfies E1 in closed form.
 
-### E8. Conformance
+In particular:
 
-Any implementation claiming Trust Model v0.1 conformance MUST reject an UNKNOWN-RESOLUTION rule that fails E1–E7, even if a downstream specification lists it as authoritative.
+- s0 MUST be U;
+- each si (i ≥ 1) MUST be one of {T, F, I, X};
+- the chain MUST NOT contain any state outside the closed state space;
+- the chain MUST NOT pass through U again.
+
+Because E1 requires the source state to be U and every permitted target
+is strictly below U, a conforming exception chain can contain only one
+resolution step. Any attempted subsequent step is INVALID.
+
+Any chain violating these conditions is INVALID as a whole.
+
+### E8. Conformance (closed form)
+
+A conforming implementation MUST:
+
+- reject any rule whose target state is not one of {T, F, I, X};
+- reject any rule whose target is not strictly below U;
+- reject any state name outside the closed state space;
+- reject any synonym mapping prohibited by E1a;
+- reject any derived state prohibited by E1b;
+- reject any reordering or reinterpretation prohibited by E1c;
+
+even if a downstream specification asserts otherwise.
+
+E8 enforcement is a syntactic check against this Trust Model, not an
+interpretation of intent.
 
 
 ## 3. Trusted-as-Reference vs Trusted-as-Oracle
