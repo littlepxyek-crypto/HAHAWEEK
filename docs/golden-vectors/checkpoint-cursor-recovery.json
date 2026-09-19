@@ -1,0 +1,216 @@
+{
+  "protocol": "HAHAWEEK-V4-CHECKPOINT-CURSOR-RECOVERY-V0.1",
+  "version": "0.1",
+  "checkpoint_domain": "HAHAWEEK-EVIDENCE-V4-CHECKPOINT",
+  "cursor_domain": "HAHAWEEK-EVIDENCE-V4-CURSOR",
+  "vectors": [
+    {
+      "id": "checkpoint-genesis-valid",
+      "kind": "checkpoint",
+      "input": {
+        "generation": "0",
+        "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "manifest": {
+        "exists": true,
+        "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "generation": "0",
+        "inventory_valid": true,
+        "segments_valid": true
+      },
+      "expected": "CHECKPOINT_VALID",
+      "expected_hash": "0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe"
+    },
+    {
+      "id": "checkpoint-later-valid",
+      "kind": "checkpoint",
+      "input": {
+        "generation": "7",
+        "manifest_hash": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "manifest": {
+        "exists": true,
+        "hash": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "generation": "7",
+        "inventory_valid": true,
+        "segments_valid": true
+      },
+      "expected": "CHECKPOINT_VALID"
+    },
+    {
+      "id": "checkpoint-generation-noncanonical",
+      "kind": "checkpoint",
+      "input": {
+        "generation": "07",
+        "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "manifest": {
+        "exists": true,
+        "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "generation": "07",
+        "inventory_valid": true,
+        "segments_valid": true
+      },
+      "expected": "CHECKPOINT_INVALID"
+    },
+    {
+      "id": "checkpoint-manifest-hash-mismatch",
+      "kind": "checkpoint",
+      "input": {
+        "generation": "0",
+        "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "manifest": {
+        "exists": true,
+        "hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "generation": "0",
+        "inventory_valid": true,
+        "segments_valid": true
+      },
+      "expected": "CHECKPOINT_INVALID"
+    },
+    {
+      "id": "checkpoint-manifest-missing",
+      "kind": "checkpoint",
+      "input": {
+        "generation": "0",
+        "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "manifest": {
+        "exists": false,
+        "hash": null,
+        "generation": null,
+        "inventory_valid": false,
+        "segments_valid": false
+      },
+      "expected": "CHECKPOINT_INVALID"
+    },
+    {
+      "id": "checkpoint-inventory-invalid",
+      "kind": "checkpoint",
+      "input": {
+        "generation": "0",
+        "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "manifest": {
+        "exists": true,
+        "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "generation": "0",
+        "inventory_valid": false,
+        "segments_valid": true
+      },
+      "expected": "CHECKPOINT_INVALID"
+    },
+    {
+      "id": "cursor-genesis-valid",
+      "kind": "cursor",
+      "checkpoint": {
+        "hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "generation": "0"
+      },
+      "input": {
+        "generation": "0",
+        "checkpoint_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "position": "0"
+      },
+      "expected": "CURSOR_VALID",
+      "expected_hash": "1662d8f8ce13caa623ee798bbc2df2962dd602fc009b829d2d2048111f00335c"
+    },
+    {
+      "id": "cursor-bounded-valid",
+      "kind": "cursor",
+      "checkpoint": {
+        "hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "generation": "7"
+      },
+      "input": {
+        "generation": "6",
+        "checkpoint_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "position": "42"
+      },
+      "expected": "CURSOR_VALID"
+    },
+    {
+      "id": "cursor-checkpoint-mismatch",
+      "kind": "cursor",
+      "checkpoint": {
+        "hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "generation": "7"
+      },
+      "input": {
+        "generation": "7",
+        "checkpoint_hash": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "position": "42"
+      },
+      "expected": "CURSOR_INVALID"
+    },
+    {
+      "id": "cursor-ahead-of-checkpoint",
+      "kind": "cursor",
+      "checkpoint": {
+        "hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "generation": "7"
+      },
+      "input": {
+        "generation": "8",
+        "checkpoint_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "position": "42"
+      },
+      "expected": "CURSOR_INVALID"
+    },
+    {
+      "id": "recovery-valid-chain",
+      "kind": "recovery",
+      "manifest": {
+        "exists": true,
+        "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "inventory_valid": true,
+        "segments_valid": true,
+        "generation": "0"
+      },
+      "checkpoint": {
+        "input": {
+          "generation": "0",
+          "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe"
+      },
+      "cursor": {
+        "input": {
+          "generation": "0",
+          "checkpoint_hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe",
+          "position": "0"
+        }
+      },
+      "acquisition_position_valid": true,
+      "expected": "RECOVERY_RESUME_ALLOWED"
+    },
+    {
+      "id": "recovery-fail-closed-corrupt-segment",
+      "kind": "recovery",
+      "manifest": {
+        "exists": true,
+        "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "inventory_valid": true,
+        "segments_valid": false,
+        "generation": "0"
+      },
+      "checkpoint": {
+        "input": {
+          "generation": "0",
+          "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe"
+      },
+      "cursor": {
+        "input": {
+          "generation": "0",
+          "checkpoint_hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe",
+          "position": "0"
+        }
+      },
+      "acquisition_position_valid": true,
+      "expected": "RECOVERY_FAIL_CLOSED"
+    }
+  ]
+}
