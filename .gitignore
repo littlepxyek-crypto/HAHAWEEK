@@ -1,10 +1,22 @@
+# Secrets / local configuration
 .env
 .env.*
 !.env.example
+
+# Dependencies
 node_modules/
+
+# Runtime / production data
 data/*.jsonl
-
-# Runtime database
 data/*.sqlite
-
 data/state.json
+
+# Local evidence / checkpoints / backups
+data/checkpoints/
+data/manifests/
+data/segments/
+data/backups/
+
+# Logs and local reports
+*.log
+coverage/
