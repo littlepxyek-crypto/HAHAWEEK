@@ -70,7 +70,7 @@ const negatives = [
 
 for (const [name, input, expected] of negatives) {
   test(`V4 transition negative vector: ${name}`, () => {
-    const firstContext = name.startsWith("first ");
+    const firstContext = name.includes("first");
     assert.throws(() => validateTransitionInput(input, { first: firstContext }), expected);
   });
 }
