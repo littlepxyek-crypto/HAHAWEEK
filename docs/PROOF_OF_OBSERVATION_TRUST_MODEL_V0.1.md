@@ -100,7 +100,7 @@ Each failure mode maps to exactly one policy. No implicit promotion is permitted
 - UNAVAILABLE is not UNKNOWN.
 - INVALID is not UNAVAILABLE.
 
-Policy must not collapse these classes. Any downstream specification that collapses them must explicitly reject that input or define a separately versioned semantic rule; it must not perform an implicit conversion.
+Policy MUST NOT collapse these classes. A downstream specification MUST reject a collapse unless the conversion is performed by a currently registered UNKNOWN-RESOLUTION rule satisfying E1–E8. A separately versioned downstream semantic rule MUST NOT create, modify, or implicitly extend an UNKNOWN-RESOLUTION rule, and it MUST NOT perform an implicit conversion.
 
 A failure condition that cannot be classified by this table is itself an unresolved specification condition and MUST NOT be silently promoted to a positive classification or state.
 
@@ -112,7 +112,7 @@ UNKNOWN is a first-class state, not a null, absent value, or implicit default.
 
 - R1. UNKNOWN propagates: if any input required by a derived classification or state precondition is UNKNOWN, the derived result is UNKNOWN. Resolution is permitted ONLY through a registered UNKNOWN-RESOLUTION rule satisfying Section "Exception Soundness for UNKNOWN Resolution".
 - R2. UNKNOWN MUST NOT be coerced to true, false, INDEPENDENT, VALIDATED, or any other positive/negative conclusion by default.
-- R3. UNKNOWN MAY be resolved only by new qualifying evidence, a newly applicable normative rule, or an explicit versioned re-verification event; never by a default value.
+- R3. UNKNOWN MAY be resolved only by new qualifying evidence consumed by a currently registered UNKNOWN-RESOLUTION rule, or by an explicit versioned re-verification event that itself satisfies the applicable registered rule requirements; never by an unregistered rule or a default value.
 - R4. A transition whose required precondition is UNKNOWN is blocked. Unblocking is permitted ONLY through a registered UNKNOWN-RESOLUTION rule satisfying E1–E8.
 - R5. Aggregation: UNKNOWN + X = UNKNOWN unless a registered UNKNOWN-RESOLUTION aggregation rule satisfying E1–E8 applies. Aggregation rules MUST preserve E1.
 - R6. UNKNOWN MUST remain distinguishable from INVALID and UNAVAILABLE in every downstream artifact.
