@@ -18,9 +18,9 @@ The implementation is under `src/reference/v4/` and does not import production i
 
 ## Current fixture coverage
 
-The first executable fixture family is **event identity / PAYLOAD**.
+The first executable fixture is a minimal **PAYLOAD canonicalization** vector. Event-identity vectors remain a separate fixture family to be generated only after their exact input contract is finalized.
 
-It contains two deterministic vectors under:
+It contains one deterministic vector under:
 
 `docs/golden-vectors/payload-event-identity.json`
 
