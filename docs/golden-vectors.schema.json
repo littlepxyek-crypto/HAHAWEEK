@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/littlepxyek-crypto/HAHAWEEK/blob/main/docs/golden-vectors.schema.json",
+  "title": "HAHAWEEK V4 Golden Vector Set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "protocol",
+    "canonicalization",
+    "vectors"
+  ],
+  "properties": {
+    "format": {
+      "const": "HAHAWEEK-EVIDENCE-V4-GOLDEN-VECTORS-1"
+    },
+    "protocol": {
+      "const": "HAHAWEEK-EVIDENCE-V4"
+    },
+    "canonicalization": {
+      "const": "RFC8785-JCS-UTF8-SHA256-DOMAIN-SEPARATOR"
+    },
+    "vectors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vector_id",
+          "domain",
+          "input_object",
+          "canonical_utf8_hex",
+          "expected_hash"
+        ],
+        "properties": {
+          "vector_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[a-z0-9][a-z0-9._-]*$"
+          },
+          "domain": {
+            "type": "string",
+            "enum": [
+              "HAHAWEEK-EVIDENCE-V4-PAYLOAD",
+              "HAHAWEEK-EVIDENCE-V4-TRANSITION",
+              "HAHAWEEK-EVIDENCE-V4-ACQUISITION",
+              "HAHAWEEK-EVIDENCE-V4-SEGMENT",
+              "HAHAWEEK-EVIDENCE-V4-MANIFEST",
+              "HAHAWEEK-EVIDENCE-V4-CHECKPOINT",
+              "HAHAWEEK-EVIDENCE-V4-CURSOR",
+              "HAHAWEEK-EVIDENCE-V4-LEASE",
+              "HAHAWEEK-EVIDENCE-V4-MIGRATION",
+              "HAHAWEEK-EVIDENCE-V4-BACKUP"
+            ]
+          },
+          "input_object": {
+            "type": "object"
+          },
+          "canonical_utf8_hex": {
+            "type": "string",
+            "pattern": "^(?:[0-9a-f]{2})*$"
+          },
+          "expected_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  }
+}
