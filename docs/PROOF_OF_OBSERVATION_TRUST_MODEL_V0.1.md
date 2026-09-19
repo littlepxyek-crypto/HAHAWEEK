@@ -45,6 +45,87 @@ An unavailable, unpublished, suppressed, delayed, or undiscovered observation re
 
 PoO cannot prove completeness merely from the absence of an artifact.
 
+
+## Threat Model
+
+Trust Model v0.1 assumes an adversary with the following capabilities. Capabilities outside this list are not covered by v0.1.
+
+### In-scope adversary capabilities
+
+| ID | Capability | Covered? |
+| --- | --- | --- |
+| A1 | Malicious or mistaken operator | yes |
+| A2 | Dishonest observer | yes |
+| A3 | Provenance corruption | yes |
+| A4 | Provenance omission (selective) | yes |
+| A5 | Equivocation (conflicting claims) | yes |
+| A6 | Replay of valid past claims | yes |
+| A7 | Compromised reference implementation | yes |
+| A8 | Network partition / delay | yes |
+| A9 | Denial of availability | yes |
+
+### Out-of-scope
+
+- Compromise of the declared normative trust anchors themselves; such compromise invalidates the corresponding trust assumption and requires external recovery or governance.
+- Cryptographic primitive breakage.
+- Coercion of a root authority.
+- Side-channel attacks on the host environment.
+
+### Trust boundary
+
+The declared trust anchors for v0.1 are the applicable normative specification, preserved version history, and the cryptographic primitives explicitly relied upon by the applicable specification. Claim producers, operators, verifiers, storage, networks, RPC providers, explorers, and other external infrastructure are untrusted by default unless a narrower specification explicitly declares otherwise.
+
+The threat model does not turn an anchor into an oracle: an anchor defines the applicable trust assumption; it does not establish the truth of an observed real-world event.
+
+## Failure Modes
+
+Each failure mode maps to exactly one policy. No implicit promotion is permitted.
+
+| Failure | Policy |
+| --- | --- |
+| Provenance missing | UNKNOWN |
+| Provenance partial | UNKNOWN |
+| Evidence conflict (equivocation) | INVALID |
+| Replay detected | INVALID |
+| Artifact unavailable | UNAVAILABLE |
+| Data corrupt / unreadable | INVALID |
+| Anchor unreachable | UNAVAILABLE |
+| Signature invalid | INVALID |
+
+### Distinctions (normative)
+
+- UNKNOWN is not false.
+- UNKNOWN is not INDEPENDENT.
+- UNKNOWN is not INVALID.
+- UNAVAILABLE is not UNKNOWN.
+- INVALID is not UNAVAILABLE.
+
+Policy must not collapse these classes. Any downstream specification that collapses them must explicitly reject that input or define a separately versioned semantic rule; it must not perform an implicit conversion.
+
+A failure condition that cannot be classified by this table is itself an unresolved specification condition and MUST NOT be silently promoted to a positive classification or state.
+
+## UNKNOWN Semantics and Propagation
+
+UNKNOWN is a first-class state, not a null, absent value, or implicit default.
+
+### Rules
+
+- R1. UNKNOWN propagates: if any input required by a derived classification or state precondition is UNKNOWN, the derived result is UNKNOWN unless an explicit versioned rule defines a sound exception.
+- R2. UNKNOWN MUST NOT be coerced to true, false, INDEPENDENT, VALIDATED, or any other positive/negative conclusion by default.
+- R3. UNKNOWN MAY be resolved only by new qualifying evidence, a newly applicable normative rule, or an explicit versioned re-verification event; never by a default value.
+- R4. A transition whose required precondition is UNKNOWN is blocked unless an explicit versioned rule defines otherwise.
+- R5. Aggregation: UNKNOWN + X = UNKNOWN unless an explicit versioned aggregation rule defines how UNKNOWN is handled without silently converting it to a known value.
+- R6. UNKNOWN MUST remain distinguishable from INVALID and UNAVAILABLE in every downstream artifact.
+
+### Forbidden
+
+- Default-to-false.
+- Default-to-INDEPENDENT.
+- Silent drop of UNKNOWN inputs.
+- Best-effort interpretation of UNKNOWN.
+- Treating absence of UNKNOWN evidence as evidence that the unknown condition did not exist.
+
+
 ## 3. Trusted-as-Reference vs Trusted-as-Oracle
 
 The HAHAWEEK reference implementation is **trusted-as-reference**, never trusted-as-oracle.
