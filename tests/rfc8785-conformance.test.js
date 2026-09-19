@@ -16,7 +16,7 @@ test("RFC 8785 property-order conformance example", () => {
   };
 
   const expected =
-    '{"\\r":"Carriage Return","1":"One","\\u0080":"Control","\\u00f6":"Latin Small Letter O With Diaeresis","€":"Euro Sign","😀":"Emoji: Grinning Face","\ufb33":"Hebrew Letter Dalet With Dagesh"}';
+    '{"\\r":"Carriage Return","1":"One","\x80":"Control","ö":"Latin Small Letter O With Diaeresis","€":"Euro Sign","😀":"Emoji: Grinning Face","דּ":"Hebrew Letter Dalet With Dagesh"}';
 
   assert.equal(canonicalize(input), expected);
 });
@@ -30,7 +30,7 @@ test("RFC 8785 number serialization samples use ECMAScript JSON serialization", 
     [Number.MAX_VALUE, "1.7976931348623157e+308"],
     [-Number.MAX_VALUE, "-1.7976931348623157e+308"],
     [9007199254740992, "9007199254740992"],
-    [295147905179352830000, "295147905179352800000"],
+    [295147905179352830000, "295147905179352830000"],
     [9.999999999999997e22, "9.999999999999997e+22"],
     [1e23, "1e+23"],
     [1.0000000000000001e23, "1.0000000000000001e+23"],
