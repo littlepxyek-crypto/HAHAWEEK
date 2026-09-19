@@ -110,11 +110,11 @@ UNKNOWN is a first-class state, not a null, absent value, or implicit default.
 
 ### Rules
 
-- R1. UNKNOWN propagates: if any input required by a derived classification or state precondition is UNKNOWN, the derived result is UNKNOWN unless an explicit versioned rule defines a sound exception.
+- R1. UNKNOWN propagates: if any input required by a derived classification or state precondition is UNKNOWN, the derived result is UNKNOWN. Resolution is permitted ONLY through a registered UNKNOWN-RESOLUTION rule satisfying Section "Exception Soundness for UNKNOWN Resolution".
 - R2. UNKNOWN MUST NOT be coerced to true, false, INDEPENDENT, VALIDATED, or any other positive/negative conclusion by default.
 - R3. UNKNOWN MAY be resolved only by new qualifying evidence, a newly applicable normative rule, or an explicit versioned re-verification event; never by a default value.
-- R4. A transition whose required precondition is UNKNOWN is blocked unless an explicit versioned rule defines otherwise.
-- R5. Aggregation: UNKNOWN + X = UNKNOWN unless an explicit versioned aggregation rule defines how UNKNOWN is handled without silently converting it to a known value.
+- R4. A transition whose required precondition is UNKNOWN is blocked. Unblocking is permitted ONLY through a registered UNKNOWN-RESOLUTION rule satisfying E1–E8.
+- R5. Aggregation: UNKNOWN + X = UNKNOWN unless a registered UNKNOWN-RESOLUTION aggregation rule satisfying E1–E8 applies. Aggregation rules MUST preserve E1.
 - R6. UNKNOWN MUST remain distinguishable from INVALID and UNAVAILABLE in every downstream artifact.
 
 ### Forbidden
@@ -124,6 +124,67 @@ UNKNOWN is a first-class state, not a null, absent value, or implicit default.
 - Silent drop of UNKNOWN inputs.
 - Best-effort interpretation of UNKNOWN.
 - Treating absence of UNKNOWN evidence as evidence that the unknown condition did not exist.
+
+## Exception Soundness for UNKNOWN Resolution
+
+R1, R4, and R5 permit registered UNKNOWN-RESOLUTION rules to resolve UNKNOWN. This section defines the ONLY conditions under which such a rule is sound. A rule that fails any condition is INVALID and MUST be rejected by any conforming implementation.
+
+### E1. Directionality
+
+An UNKNOWN-RESOLUTION rule MAY resolve UNKNOWN only toward a state that is explicitly more constrained by the rule's declared semantics. It MUST NOT resolve UNKNOWN into a trust designation, independence designation, default value, or other conclusion that is not established by the consumed evidence.
+
+Permitted resolution classes are limited to:
+- KNOWN_TRUE;
+- KNOWN_FALSE;
+- INVALID;
+- UNAVAILABLE.
+
+Forbidden resolution classes include:
+- INDEPENDENT;
+- TRUSTED;
+- any default or inferred value without qualifying evidence.
+
+### E2. Evidence requirement
+
+An UNKNOWN-RESOLUTION rule MUST name the specific evidence class it consumes. New evidence alone is insufficient. The rule MUST specify:
+- evidence type;
+- evidence producer;
+- verification method;
+- failure handling if verification fails.
+
+### E3. No silent resolution
+
+An UNKNOWN-RESOLUTION rule MUST NOT be triggered implicitly by absence, timeout, quorum silence, default, or operator convenience. If the trigger condition is not observed and verified, the state remains UNKNOWN.
+
+### E4. Registration
+
+Every UNKNOWN-RESOLUTION rule MUST be registered in the Trust Model as a versioned rule with:
+- rule ID;
+- rule version;
+- scope;
+- evidence class;
+- trigger condition;
+- verification method;
+- resulting state;
+- review record.
+
+Downstream specifications MAY reference a registered rule. Downstream specifications MUST NOT define, modify, or implicitly extend an UNKNOWN-RESOLUTION rule.
+
+### E5. Revocation
+
+An UNKNOWN-RESOLUTION rule MAY be revoked. Revocation MUST NOT rewrite historical artifacts. Any previously derived state affected by revocation requires an explicit versioned re-verification or transition under the applicable history rules. A newly evaluated result MUST remain UNKNOWN unless another currently registered rule independently resolves it.
+
+### E6. Non-retroactivity
+
+A newly registered UNKNOWN-RESOLUTION rule MUST NOT apply retroactively to historical UNKNOWN states unless the rule explicitly declares retroactive scope and that scope is reviewed and recorded. Any retroactive application is a new recorded evaluation, not an in-place historical mutation.
+
+### E7. Composition
+
+Chained UNKNOWN-RESOLUTION rules MUST preserve E1 at every step. A chain that reaches a forbidden resolution class is INVALID regardless of intermediate steps. A downstream rule MUST NOT create a new resolution path merely by composing registered rules.
+
+### E8. Conformance
+
+Any implementation claiming Trust Model v0.1 conformance MUST reject an UNKNOWN-RESOLUTION rule that fails E1–E7, even if a downstream specification lists it as authoritative.
 
 
 ## 3. Trusted-as-Reference vs Trusted-as-Oracle
