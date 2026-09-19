@@ -48,12 +48,14 @@ A milestone is not considered complete until it is pushed and synchronized.
 
 ## Current Git Checkpoint
 
-- Commit: `5f2308c`
-- Message: `test: make health check testable`
-- Local HEAD: `5f2308cf6f136fa2313e1b8a75c2a298887fbe18`
-- origin/main: `5f2308cf6f136fa2313e1b8a75c2a298887fbe18`
-- Working tree: clean
-- Latest test result: 35/35 passing
+- Commit: `0d9b3d2cb20050ef9cfc5052836b5ac7e3b92831`
+- Message: `docs: verify active GitHub hardening state (#2)`
+- Remote main HEAD: `0d9b3d2cb20050ef9cfc5052836b5ac7e3b92831`
+- Working tree: clean (verified in the pre-merge engineering state; current authoritative state is the remote `main` commit above)
+- Latest main CI result: `test-and-security` passed on `0d9b3d2c`
+- PR #2 result: 4 checks passed and merged to `main`
+- CodeQL on `main`: latest run was still in progress at the time of this checkpoint
+- Security baseline: Secret Protection and Push Protection enabled; Secret, CodeQL/code-scanning, and Dependabot alert surfaces were clean at audit time
 
 ## Implemented Foundation
 
@@ -113,7 +115,7 @@ Current tests cover:
 
 Latest result:
 
-`32 tests passed, 0 failed`
+`35 tests passed, 0 failed` (last recorded foundation test result; current main CI is the authoritative regression gate)
 
 ## RPC Configuration
 
@@ -346,6 +348,10 @@ Do not bypass TLS security to solve this.
 
 Android may terminate long-running Termux processes.
 
+### Repository continuity
+
+The repository hardening baseline is now active and verified. Main is protected by `HAHAWEEK-main-protection`, with required `test-and-security`, no bypass actors, force-push protection, branch-deletion protection, up-to-date branch enforcement, and conversation-resolution enforcement.
+
 ### Raw Data
 
 `data/*.jsonl` is currently ignored by Git.
@@ -354,9 +360,9 @@ Raw data retention and backup strategy must be addressed before production deplo
 
 ### State
 
-`data/state.json` is currently not ignored.
+`data/state.json` is ignored by Git.
 
-Do not change this casually; review persistence requirements first.
+Runtime state remains outside GitHub; do not commit production runtime state. Any change to persistence authority must be reviewed against V4.
 
 ## Master Specification
 
