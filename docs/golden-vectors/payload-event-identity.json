@@ -1,0 +1,16 @@
+{
+  "format": "HAHAWEEK-EVIDENCE-V4-GOLDEN-VECTORS-1",
+  "protocol": "HAHAWEEK-EVIDENCE-V4",
+  "canonicalization": "RFC8785-JCS-UTF8-SHA256-DOMAIN-SEPARATOR",
+  "vectors": [
+    {
+      "vector_id": "payload-canonicalization-001",
+      "domain": "HAHAWEEK-EVIDENCE-V4-PAYLOAD",
+      "input_object": {
+        "a": "b"
+      },
+      "canonical_utf8_hex": "7b2261223a2262227d",
+      "expected_hash": "c00541e4e7880a328221ecf4ff28a11424cc1e6455286ec0f3a209a0c861d374"
+    }
+  ]
+}
