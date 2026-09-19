@@ -48,14 +48,29 @@ A milestone is not considered complete until it is pushed and synchronized.
 
 ## Current Git Checkpoint
 
-- Commit: `0d9b3d2cb20050ef9cfc5052836b5ac7e3b92831`
-- Message: `docs: verify active GitHub hardening state (#2)`
-- Remote main HEAD: `0d9b3d2cb20050ef9cfc5052836b5ac7e3b92831`
-- Working tree: clean (verified in the pre-merge engineering state; current authoritative state is the remote `main` commit above)
-- Latest main CI result: `test-and-security` passed on `0d9b3d2c`
-- PR #2 result: 4 checks passed and merged to `main`
-- CodeQL on `main`: latest run was still in progress at the time of this checkpoint
-- Security baseline: Secret Protection and Push Protection enabled; Secret, CodeQL/code-scanning, and Dependabot alert surfaces were clean at audit time
+- Commit: `e4abb5b6c02a0112c6948cd9b89fad296d9725cd`
+- Message: `docs: create HAHAWEEK README v2 landing page`
+- Remote main HEAD: `e4abb5b6c02a0112c6948cd9b89fad296d9725cd`
+- README v2: merged to `main) via PR #30.
+- Main CI for README v2 commit: passed.
+- Working tree state is governed by the GitHub remote checkpoint; no production runtime state is included in this documentation update.
+
+### Continuity Reconciliation — 2026-09-20
+
+- PR #30 (README v2): MERGED.
+- PR #29 (Proof-of-Observation Trust Model v0.1): OPEN; current head `fe63e7136468613cc1f89ccb6c901ab129756c1c`; merge remains blocked pending final adversarial re-audit and current-head CI.
+- PR #28 (V4 Offline Recovery Verifier): OPEN; current head `afabffd4cab8fa1d4924cdf38c3122465117b8fa`; branch requires reconciliation with current `main` before relying on it as a merge candidate.
+- Design Gate 2: OPEN.
+- Production V4 cutover: NOT AUTHORIZED.
+- No raw evidence, SQLite production state, cursor reset, legacy migration, token/contract implementation, or production chain cutover is authorized by this checkpoint.
+
+### Immediate Safe Sequence
+
+1. Reconcile PR #29 with current `main), then run the final B4/B5 trust-model audit on its actual head.
+2. Reconcile PR #28 with current `main), then re-run its complete CI/recovery audit.
+3. Record each result in the durable project state before advancing.
+4. Continue remaining Gate 2 work only after the two open PRs are independently validated.
+5. Do not perform production V4 cutover or legacy migration before Gate 2 exit criteria are satisfied.
 
 ## Implemented Foundation
 
