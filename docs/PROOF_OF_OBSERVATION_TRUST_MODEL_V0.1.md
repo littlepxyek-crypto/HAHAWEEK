@@ -129,9 +129,10 @@ UNKNOWN is a first-class state, not a null, absent value, or implicit default.
 
 R1, R4, and R5 permit registered UNKNOWN-RESOLUTION rules to resolve UNKNOWN. This section defines the ONLY conditions under which such a rule is sound. A rule that fails any condition is INVALID and MUST be rejected by any conforming implementation.
 
-## State Space (closed)
+## UNKNOWN-Resolution State Space (closed)
 
-The Trust Model state space is CLOSED. Exactly the following states exist:
+The state space used by UNKNOWN-RESOLUTION rules is CLOSED. Exactly the
+following UNKNOWN-resolution states exist:
 
   U = UNKNOWN
   T = KNOWN_TRUE
@@ -139,14 +140,21 @@ The Trust Model state space is CLOSED. Exactly the following states exist:
   I = INVALID
   X = UNAVAILABLE
 
-No other state MAY be introduced by this document, by any downstream
-specification, or by any implementation claiming conformance. A
-downstream specification that requires additional nuance MUST express
-it as non-normative metadata attached to one of the states above; it
-MUST NOT introduce a new state name.
+No other state MAY be introduced within the UNKNOWN-RESOLUTION state
+space by this document, by any downstream specification, or by any
+implementation claiming conformance. A downstream specification that
+requires additional nuance MUST express it as non-normative metadata
+attached to one of the states above; it MUST NOT introduce a new
+UNKNOWN-resolution state name.
 
-The following names MUST NOT be used as states. They are illustrative
-and non-exhaustive:
+The separate PoO lifecycle states used by Section 8 (such as OBSERVED,
+REPRODUCED, CORROBORATED, FORMATION-CONNECTED, VALIDATED, and
+CONTESTED) are outside this UNKNOWN-RESOLUTION state space and are not
+defined, reordered, or constrained by E1-E8. They remain governed by
+their applicable State / Validation specification.
+
+The following names MUST NOT be used as UNKNOWN-resolution states.
+They are illustrative and non-exhaustive:
 
   RESOLVED, CONFIRMED, VERIFIED, TRUSTED, INDEPENDENT,
   DEFAULT, PENDING, RESOLVING.
