@@ -1,0 +1,59 @@
+name: HAHAWEEK Security and Regression
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hahaweek-ci-\${{ github.workflow }}-\${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+
+      - name: Detect tracked secret material
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-files -z | xargs -0 grep -nI -E \
+            '-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|ghp_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+|AKIA[0-9A-Z]{16}|xox[baprs]-[A-Za-z0-9-]+|sk-[A-Za-z0-9_-]{20,}' \
+            -- 2>/dev/null; then
+            echo "Potential credential material found in tracked files."
+            exit 1
+          fi
+          forbidden="$(git ls-files | grep -E '(^|/)(\.env|\.env\..*)$' | grep -v '^\.env\.example$' || true)"
+          if [ -n "$forbidden" ]; then
+            echo "Forbidden environment file is tracked:"
+            printf '%s\n' "$forbidden"
+            exit 1
+          fi
+          echo "Tracked-secret baseline passed."
