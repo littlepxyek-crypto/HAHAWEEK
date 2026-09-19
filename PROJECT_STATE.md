@@ -48,10 +48,11 @@ A milestone is not considered complete until it is pushed and synchronized.
 
 ## Current Git Checkpoint
 
-- Last verified main milestone: `181a756676a5f6504c24dd5c810c184607c55604`
-- Milestone: PR #31 — durable project-state reconciliation — merged to `main`.
+- Last verified main milestone: `e39fad24168a6d025b385365adb3e6d5c0a661ae`
+- Milestone: PR #33 — Proof-of-Observation Trust Model reconciled with current main and merged.
+- PR #31 — durable project-state reconciliation — remains in history.
 - README v2: merged to `main` via PR #30.
-- CI for PR #31: passed.
+- PR #33 CI: passed.
 - This checkpoint records the latest verified milestone; subsequent documentation commits may advance `main` without invalidating the recorded milestone.
 - Main CI for README v2 commit: passed.
 - Working tree state is governed by the GitHub remote checkpoint; no production runtime state is included in this documentation update.
@@ -59,7 +60,8 @@ A milestone is not considered complete until it is pushed and synchronized.
 ### Continuity Reconciliation — 2026-09-20
 
 - PR #30 (README v2): MERGED.
-- PR #29 (Proof-of-Observation Trust Model v0.1): OPEN; current head `fe63e7136468613cc1f89ccb6c901ab129756c1c`; merge remains blocked pending final adversarial re-audit and current-head CI.
+- PR #33 (Proof-of-Observation Trust Model v0.1 reconciled): MERGED to current `main` at `e39fad24168a6d025b385365adb3e6d5c0a661ae` after CI and final whole-document audit.
+- PR #29 remains OPEN as the historical/stale-base audit trail; do not merge it.
 - PR #28 (V4 Offline Recovery Verifier): OPEN; current head `afabffd4cab8fa1d4924cdf38c3122465117b8fa`; branch requires reconciliation with current `main` before relying on it as a merge candidate.
 - Design Gate 2: OPEN.
 - Production V4 cutover: NOT AUTHORIZED.
@@ -416,8 +418,8 @@ Current focus:
 
 ## Immediate Next Engineering Steps
 
-1. Complete the final whole-document audit for PR #29 on its actual current head.
-2. Reconcile and validate PR #28 against current `main`.
+1. Reconcile PR #28 against current `main`, then re-run its complete CI/recovery audit.
+2. Compare the recovery verifier against the current V4 trust boundaries and ensure no production activation is implied.
 3. Complete remaining Gate 2 executable families and durability/fencing tests.
 4. Update the durable project state after each material milestone.
 5. Re-audit Gate 2 before any V4 production activation or legacy migration.
