@@ -172,12 +172,12 @@
           "generation": "0",
           "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
-        "hash": "0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe"
+        "hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe"
       },
       "cursor": {
         "input": {
           "generation": "0",
-          "checkpoint_hash": "0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe",
+          "checkpoint_hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe",
           "position": "0"
         }
       },
@@ -198,12 +198,12 @@
           "generation": "0",
           "manifest_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
-        "hash": "0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe"
+        "hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe"
       },
       "cursor": {
         "input": {
           "generation": "0",
-          "checkpoint_hash": "0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe",
+          "checkpoint_hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe",
           "position": "0"
         }
       },
