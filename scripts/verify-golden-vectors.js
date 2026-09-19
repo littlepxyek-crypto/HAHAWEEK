@@ -26,7 +26,7 @@ function verifyVectorSet(filePath = DEFAULT_FIXTURE) {
 
   if (set.format !== "HAHAWEEK-EVIDENCE-V4-GOLDEN-VECTORS-1") fail("invalid format");
   if (set.protocol !== "HAHAWEEK-EVIDENCE-V4") fail("invalid protocol");
-  if (set.canonicalization !== "RFC8785-JCS-UTF8-SHA256-DOMAIN-SEP ARATOR".replace(" ", "")) {
+  if (set.canonicalization !== "RFC8785-JCS-UTF8-SHA256-DOMAIN-SEPARATOR") {
     fail("invalid canonicalization");
   }
   if (!Array.isArray(set.vectors) || set.vectors.length === 0) fail("vectors must be non-empty");
