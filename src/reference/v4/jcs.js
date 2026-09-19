@@ -8,7 +8,7 @@ function isPlainObject(value) {
 
 function assertJsonValue(value, path = "$") {
   if (value === null || typeof value === "string" || typeof value === "boolean") {
-    if (typeof value === "string" && /[\\uD800-\\uDFFF]/u.test(value)) {
+    if (typeof value === "string") {
       for (let i = 0; i < value.length; i += 1) {
         const code = value.charCodeAt(i);
         if (code >= 0xd800 && code <= 0xdbff) {
