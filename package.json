@@ -12,7 +12,8 @@
     "start": "node src/index.js",
     "scan": "node src/index.js --once",
     "health": "node src/health.js",
-    "hahaweek": "./bin/hahaweek"
+    "hahaweek": "./bin/hahaweek",
+    "verify:v4": "node scripts/verify-golden-vectors.js"
   },
   "repository": {
     "type": "git",
