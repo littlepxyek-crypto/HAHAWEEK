@@ -477,3 +477,16 @@ git rev-parse origin/main
 
 
 
+
+
+## V4 Design Continuity Checkpoint — STEP 3C-C
+
+- Audited V4 lexical requirements against the current repository at main merge commit `4ee0e132df5a10cb8ada8a85c0d245ef1d2c6f17`.
+- Added `docs/V4_LEXICAL_FORMS_AUDIT.md` on branch `v4/lexical-forms-audit-3c-c-2026-09-19`.
+- Confirmed the eight-field V4 event identity shape is already normative.
+- Confirmed protocol integer semantic type is unsigned 64-bit decimal string.
+- Confirmed complete lexical grammar for uint64, hashes, addresses, and topic0 is not yet authoritative.
+- Identified legacy event identity as non-equivalent to V4 because legacy identity omits block hash, transaction index, contract address, and topic0.
+- No production code, runtime state, SQLite, cursor, evidence, or migration artifacts were changed.
+- Design Gate 2 remains OPEN.
+- Next required artifact: normative V4 lexical-form specification, followed only afterward by an executable event-identity golden vector.
