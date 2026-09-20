@@ -11,3 +11,11 @@ test('default production createEngine remains on the legacy cursor boundary unti
   assert.doesNotMatch(source, /createV4ProductionIngestionEngine/);
   assert.doesNotMatch(source, /v4CursorAdapter/);
 });
+
+
+test('default production createEngine selects V4 only with explicit opt-in', () => {
+  const source = createEngine.toString();
+  assert.match(source, /isV4ProductionOptIn/);
+  assert.match(source, /createV4ProductionFactory/);
+  assert.match(source, /mode: 'v4-production'/);
+});
