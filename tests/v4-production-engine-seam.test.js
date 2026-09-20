@@ -142,7 +142,7 @@ test('V4 production ingestion seam fails closed on persisted manifest corruption
   insertManifest(db, f.manifest);
   insertCheckpoint(db, f.checkpoint);
   insertAuthorityRecord(db, f.record);
-  db.db.run('UPDATE v4_manifests SET generation = ? WHERE manifest_hash = ?', ['22', f.manifest.hash]);
+  db.db.run('UPDATE v4_manifests SET generation = ?, manifest_json = ? WHERE manifest_hash = ?', ['22', JSON.stringify({ ...f.manifest, generation: '22' }), f.manifest.hash]);
 
   let processed = 0;
   assert.throws(() => createV4ProductionIngestionEngine({
