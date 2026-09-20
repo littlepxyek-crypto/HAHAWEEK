@@ -37,6 +37,7 @@ async function createDatabase(filename = DB_FILE) {
     CREATE TABLE IF NOT EXISTS flow_windows (chain_id INTEGER NOT NULL, pool_id TEXT NOT NULL, window_start INTEGER NOT NULL, window_end INTEGER NOT NULL, swap_count INTEGER NOT NULL, unique_sender_count INTEGER NOT NULL, total_amount0 TEXT NOT NULL, total_amount1 TEXT NOT NULL, first_block INTEGER NOT NULL, last_block INTEGER NOT NULL, first_timestamp INTEGER NOT NULL, last_timestamp INTEGER NOT NULL, PRIMARY KEY (chain_id, pool_id, window_start));
     CREATE TABLE IF NOT EXISTS ingestion_state (key TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS v4_authority_records (record_id TEXT PRIMARY KEY, schema_version INTEGER NOT NULL, manifest_generation TEXT NOT NULL, manifest_hash TEXT NOT NULL, checkpoint_input_json TEXT NOT NULL, checkpoint_hash TEXT NOT NULL, cursor_input_json TEXT NOT NULL, cursor_hash TEXT NOT NULL, acquisition_position_valid INTEGER NOT NULL CHECK (acquisition_position_valid IN (0,1)), created_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS v4_cursor_state (singleton_key TEXT PRIMARY KEY CHECK (singleton_key = 'current'), generation TEXT NOT NULL, position TEXT NOT NULL, checkpoint_hash TEXT NOT NULL, cursor_hash TEXT NOT NULL, authority_record_id TEXT NOT NULL, updated_at TEXT NOT NULL);
     INSERT OR IGNORE INTO schema_meta (key, value) VALUES ('schema_version', '1');
   `);
 
