@@ -12,6 +12,8 @@ const { insertAuthorityRecord } = require('../src/core/v4-authority-store');
 const { createAuthorityRecord } = require('../src/core/v4-authority-record');
 const { expectedCheckpointHash, expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
 const { recoverPersistedAuthority } = require('../src/core/v4-production-recovery');
+const { createAuthorityRecord } = require('../src/core/v4-authority-record');
+const { expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
 
 function fixture() {
   const manifest = { exists: true, hash: '0x' + 'd'.repeat(64), generation: '12', inventory_valid: true, segments_valid: true };
@@ -73,6 +75,42 @@ test('startup recovery fails closed when cursor checkpoint binding is corrupted'
   const db = await createDatabase(filename);
   const bad = { ...f.record, cursor_input: { ...f.record.cursor_input, checkpoint_hash: '0x' + 'e'.repeat(64) } };
   db.db.run('UPDATE v4_authority_records SET cursor_input_json = ?', [JSON.stringify(bad.cursor_input)]);
+  assert.throws(() => recoverPersistedAuthority(db), /CURSOR_AUTHORITY_INVALID/);
+  db.close(); fs.rmSync(dir, { recursive: true, force: true });
+});
+
+
+test('startup recovery fails closed when persisted manifest identity is mutated', async () => {
+  const { dir, filename, f } = await seeded();
+  const db = await createDatabase(filename);
+  const mutated = { ...f.manifest, hash: '0x' + 'f'.repeat(64) };
+  db.db.run('UPDATE v4_manifests SET manifest_json = ? WHERE manifest_hash = ?', [JSON.stringify(mutated), f.manifest.hash]);
+  assert.throws(() => recoverPersistedAuthority(db), /CHECKPOINT_AUTHORITY_INVALID/);
+  db.close(); fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('startup recovery fails closed when persisted checkpoint hash is mutated', async () => {
+  const { dir, filename, f } = await seeded();
+  const db = await createDatabase(filename);
+  db.db.run('UPDATE v4_checkpoints SET checkpoint_hash = ? WHERE checkpoint_hash = ?', ['0x' + 'f'.repeat(64), f.checkpoint.hash]);
+  assert.throws(() => recoverPersistedAuthority(db), /CHECKPOINT_AUTHORITY_INVALID|CHECKPOINT_HASH_INVALID/);
+  db.close(); fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('startup recovery fails closed when cursor generation exceeds checkpoint generation', async () => {
+  const { dir, filename, f } = await seeded();
+  const db = await createDatabase(filename);
+  const cursorInput = { ...f.cursor.input, generation: '13' };
+  const badRecord = createAuthorityRecord({
+    manifestGeneration: f.manifest.generation,
+    manifestHash: f.manifest.hash,
+    checkpointInput: f.checkpoint.input,
+    checkpointHash: f.checkpoint.hash,
+    cursorInput,
+    cursorHash: expectedCursorHash(cursorInput),
+    acquisitionPositionValid: true,
+  });
+  insertAuthorityRecord(db, badRecord);
   assert.throws(() => recoverPersistedAuthority(db), /CURSOR_AUTHORITY_INVALID/);
   db.close(); fs.rmSync(dir, { recursive: true, force: true });
 });
