@@ -12,8 +12,6 @@ const { insertAuthorityRecord } = require('../src/core/v4-authority-store');
 const { createAuthorityRecord } = require('../src/core/v4-authority-record');
 const { expectedCheckpointHash, expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
 const { recoverPersistedAuthority } = require('../src/core/v4-production-recovery');
-const { createAuthorityRecord } = require('../src/core/v4-authority-record');
-const { expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
 
 function fixture() {
   const manifest = { exists: true, hash: '0x' + 'd'.repeat(64), generation: '12', inventory_valid: true, segments_valid: true };
