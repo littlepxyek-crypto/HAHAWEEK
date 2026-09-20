@@ -64,6 +64,28 @@ test('V4 authority rejects a cursor ahead of its checkpoint generation', () => {
   );
 });
 
+test('V4 authority fails closed on malformed checkpoint hash', () => {
+  const v = vector('recovery-valid-chain');
+  const checkpoint = {
+    ...v.checkpoint,
+    hash: '0xnot-a-hash',
+  };
+
+  assert.throws(
+    () => assertCursorAuthority(v.cursor, checkpoint),
+    /CURSOR_AUTHORITY_INVALID/
+  );
+});
+
+test('V4 authority fails closed when checkpoint input is missing', () => {
+  const v = vector('recovery-valid-chain');
+
+  assert.throws(
+    () => assertCursorAuthority(v.cursor, { hash: v.checkpoint.hash }),
+    /CURSOR_AUTHORITY_INVALID/
+  );
+});
+
 test('V4 authority rejects a cursor checkpoint hash mismatch', () => {
   const v = vector('cursor-checkpoint-mismatch');
 
