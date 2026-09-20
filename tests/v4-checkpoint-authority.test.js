@@ -47,9 +47,19 @@ test('V4 authority rejects a manifest hash mismatch', () => {
 
 test('V4 authority rejects a cursor ahead of its checkpoint generation', () => {
   const v = vector('cursor-ahead-of-checkpoint');
+  const cursor = {
+    input: v.input,
+  };
+  const checkpoint = {
+    hash: v.checkpoint.hash,
+    input: {
+      generation: v.checkpoint.generation,
+      manifest_hash: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    },
+  };
 
   assert.throws(
-    () => assertCursorAuthority(v, v.checkpoint),
+    () => assertCursorAuthority(cursor, checkpoint),
     /CURSOR_AUTHORITY_INVALID/
   );
 });
