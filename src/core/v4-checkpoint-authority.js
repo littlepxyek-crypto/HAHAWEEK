@@ -65,7 +65,7 @@ function assertCursorAuthority(cursor, checkpoint) {
     throw new Error('CURSOR_AUTHORITY_INVALID');
   }
 
-  if (BigInt(input.generation) > BigInt(checkpoint.generation)) {
+  if (BigInt(input.generation) > BigInt(checkpoint.input.generation)) {
     throw new Error('CURSOR_AUTHORITY_INVALID');
   }
 
