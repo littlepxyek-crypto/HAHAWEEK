@@ -70,10 +70,10 @@ function isV4ProductionOptIn() {
   return process.env.HAHAWEEK_V4_PRODUCTION === '1';
 }
 
-async function createEngine() {
-  const provider = createProvider();
+async function createEngine({ provider: injectedProvider, database: injectedDatabase } = {}) {
+  const provider = injectedProvider || createProvider();
 
-  const database = await createDatabase();
+  const database = injectedDatabase || await createDatabase();
 
   const rawEventStore = createRawEventStore(database.db);
 
