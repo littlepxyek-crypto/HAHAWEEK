@@ -29,6 +29,7 @@ const {
 
 const { BlockCursor } = require('./core/block-cursor');
 const { IngestionEngine } = require('./core/ingestion');
+const { createV4ProductionFactory } = require('./core/v4-production-factory');
 const { RawLogIngestion } = require('./core/raw-log-ingestion');
 
 const { createDatabase } = require('./core/database');
@@ -79,7 +80,22 @@ async function createEngine() {
   const cursor = new BlockCursor();
 
   if (isV4ProductionOptIn()) {
-    throw new Error('V4_PRODUCTION_REQUIRES_EXPLICIT_FACTORY_WIRING');
+    const v4Factory = createV4ProductionFactory({
+      database,
+      provider,
+      confirmations: CONFIRMATIONS,
+      rawLogs,
+      filterFactory: createRelevantLogFilter,
+      batchSize: CHUNK_SIZE,
+      maxBatchesPerRun: MAX_BATCHES_PER_RUN,
+    });
+
+    return {
+      provider,
+      database,
+      ingestion: v4Factory.createEngine(),
+      mode: 'v4-production',
+    };
   }
 
   const rawLogs = new RawLogIngestion({
