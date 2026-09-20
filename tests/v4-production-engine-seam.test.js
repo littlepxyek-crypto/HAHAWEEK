@@ -202,3 +202,49 @@ test('V4 production ingestion seam fails closed on persisted cursor corruption w
   db.close();
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+
+test('V4 production engine seam wires raw logs through the transactional processor boundary', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-engine-processor-'));
+  const filename = path.join(dir, 'authority.sqlite');
+  const f = fixture();
+  const db = await createDatabase(filename);
+  insertManifest(db, f.manifest);
+  insertCheckpoint(db, f.checkpoint);
+  insertAuthorityRecord(db, f.record);
+  db.save();
+
+  const calls = [];
+  let saves = 0;
+  const rawLogs = {
+    async ingestRange(fromBlock, toBlock, filter) {
+      calls.push({ fromBlock, toBlock, filter });
+      db.db.run(
+        'INSERT INTO raw_events(event_id,chain_id,block_number,transaction_hash,log_index,address,topics_json,data,captured_at) VALUES(?,?,?,?,?,?,?,?,?)',
+        ['processor-' + toBlock, 4663, toBlock, '0x' + String(toBlock).padStart(64, '0'), 0, '0x' + '1'.repeat(40), '[]', '0x', '2026-09-20T00:00:00.000Z']
+      );
+      return { fetched: 1, inserted: 1, duplicates: 0 };
+    },
+  };
+
+  const engine = createV4ProductionIngestionEngine({
+    database: db,
+    provider: { async getBlockNumber() { return 901; } },
+    confirmations: 0,
+    rawLogs,
+    filterFactory: () => ({ address: '0xpool', topics: [['0xtopic']] }),
+  });
+
+  db.save = () => { saves += 1; };
+  const result = await engine.runOnce();
+
+  assert.equal(result.cursor, 901);
+  assert.equal(engine.getActiveCursor().get(), 901);
+  assert.deepEqual(calls.map(call => [call.fromBlock, call.toBlock]), [[901, 901]]);
+  assert.equal(saves, 1);
+  assert.equal(db.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 1);
+  assert.equal(db.db.exec('SELECT COUNT(*) FROM v4_authority_records')[0].values[0][0], 2);
+
+  db.db.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
