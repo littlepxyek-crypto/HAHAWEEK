@@ -1,0 +1,61 @@
+'use strict';
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+
+const { createDatabase } = require('../src/core/database');
+const { insertManifest, insertCheckpoint } = require('../src/core/v4-production-authority-store');
+const { createAuthorityRecord } = require('../src/core/v4-authority-record');
+const { insertAuthorityRecord } = require('../src/core/v4-authority-store');
+const { expectedCheckpointHash, expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
+const { createV4ProductionCursor } = require('../src/core/v4-production-engine-seam');
+
+function fixture() {
+  const manifest = { exists: true, hash: '0x' + 'e'.repeat(64), generation: '21', inventory_valid: true, segments_valid: true };
+  const checkpointInput = { generation: '21', manifest_hash: manifest.hash };
+  const checkpoint = { input: checkpointInput, hash: expectedCheckpointHash(checkpointInput) };
+  const cursorInput = { generation: '21', checkpoint_hash: checkpoint.hash, position: '900' };
+  const cursorHash = expectedCursorHash(cursorInput);
+  const record = createAuthorityRecord({
+    manifestGeneration: manifest.generation,
+    manifestHash: manifest.hash,
+    checkpointInput,
+    checkpointHash: checkpoint.hash,
+    cursorInput,
+    cursorHash,
+    acquisitionPositionValid: true,
+  });
+  return { manifest, checkpoint, record };
+}
+
+test('V4 production startup seam constructs cursor only from persisted authority chain', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-seam-'));
+  const filename = path.join(dir, 'authority.sqlite');
+  const f = fixture();
+  const db = await createDatabase(filename);
+  insertManifest(db, f.manifest);
+  insertCheckpoint(db, f.checkpoint);
+  insertAuthorityRecord(db, f.record);
+  db.save();
+
+  const result = createV4ProductionCursor({ database: db });
+  assert.equal(result.cursor.get(), 900);
+  assert.equal(result.recovered.record.record_id, f.record.record_id);
+
+  db.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('V4 production startup seam fails closed when persisted authority is absent', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-seam-missing-'));
+  const filename = path.join(dir, 'authority.sqlite');
+  const db = await createDatabase(filename);
+
+  assert.throws(() => createV4ProductionCursor({ database: db }), /V4_AUTHORITY_RECORD_MISSING/);
+
+  db.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
