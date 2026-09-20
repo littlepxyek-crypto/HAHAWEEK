@@ -4,6 +4,7 @@ const { assertAuthorityRecord, createAuthorityRecord } = require('./v4-authority
 const { expectedCursorHash, assertRecoveryAuthority } = require('./v4-checkpoint-authority');
 const { loadCurrentCursor, insertAuthorityAndCursorInTransaction } = require('./v4-cursor-store');
 const { assertCursorTransition } = require('./v4-cursor-transition');
+const { assertPositionMatchesBlock } = require('./v4-robinhood-block-position');
 
 class V4BlockCursorAdapter {
   constructor({ database, authorityRecord, authorityContext }) {
@@ -44,6 +45,9 @@ class V4BlockCursorAdapter {
 
   buildNext(blockNumber) {
     if (!Number.isInteger(blockNumber) || blockNumber < 0) throw new Error('INVALID_BLOCK_NUMBER');
+    assertPositionMatchesBlock(this.get().toString(), this.get());
+    const currentPosition = this.get();
+    if (!Number.isSafeInteger(currentPosition) || currentPosition < 0) throw new Error('ACQUISITION_BLOCK_INVALID');
 
     assertRecoveryAuthority({
       manifest: this.authorityContext.manifest,
