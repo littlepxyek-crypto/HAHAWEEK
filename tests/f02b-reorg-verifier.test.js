@@ -33,6 +33,6 @@ test('F-02B rejects loss of historical evidence', () => {
 
   assert.throws(
     () => verifyFixture(fixture),
-    /preserved evidence/
+    /historical evidence preservation set is incomplete/
   );
 });
