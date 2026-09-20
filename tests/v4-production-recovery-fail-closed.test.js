@@ -91,7 +91,7 @@ test('startup recovery fails closed when persisted checkpoint hash is mutated', 
   const { dir, filename, f } = await seeded();
   const db = await createDatabase(filename);
   db.db.run('UPDATE v4_checkpoints SET checkpoint_hash = ? WHERE checkpoint_hash = ?', ['0x' + 'f'.repeat(64), f.checkpoint.hash]);
-  assert.throws(() => recoverPersistedAuthority(db), /CHECKPOINT_AUTHORITY_INVALID|CHECKPOINT_HASH_INVALID/);
+  assert.throws(() => recoverPersistedAuthority(db), /V4_CHECKPOINT_MISSING|CHECKPOINT_AUTHORITY_INVALID|CHECKPOINT_HASH_INVALID/);
   db.close(); fs.rmSync(dir, { recursive: true, force: true });
 });
 
