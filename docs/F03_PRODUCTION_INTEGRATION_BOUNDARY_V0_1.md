@@ -74,6 +74,27 @@ Wiring the pure validator directly into `BlockCursor.advance()` without those pe
 
 Therefore this branch first records the integration contract. The next implementation should add the minimal persisted authority state and then wire it into the actual commit ordering.
 
+## Production path audit — 2026-09-20
+
+The current inspection confirms that `src/index.js#createEngine()` is still the legacy production path:
+
+- it constructs `BlockCursor` directly;
+- it constructs the legacy `IngestionEngine` without `v4CursorAdapter` / `v4Database`;
+- its processors call `database.save()` internally;
+- the V4 production engine seam exists separately but is not called by `createEngine()`.
+
+This is an intentional safety boundary: V4 remains opt-in and the legacy production path is not silently migrated.
+
+A critical integration constraint is also confirmed: V4 `IngestionEngine` owns the SQLite transaction around processor execution and cursor advancement, so the production V4 processor must not call `database.save()` from inside that transaction. The existing legacy processor callbacks therefore cannot simply be reused unchanged for V4.
+
+The required next implementation is an explicit production factory seam that separates:
+
+1. evidence mutation inside the SQLite transaction;
+2. V4 authority/cursor advancement inside the same transaction;
+3. durable database export only after the transaction commits.
+
+No V4 default cutover is authorized by this audit.
+
 ## Validation target
 
 F-03 can only be considered closed after all of the following are demonstrated:
