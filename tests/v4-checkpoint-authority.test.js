@@ -98,21 +98,21 @@ test('cursor advancement is authorized only after authority validation', () => {
 });
 
 test('cursor advancement fails closed when authority is invalid', () => {
-  const v = vector('cursor-checkpoint-mismatch');
+  const v = vector('recovery-valid-chain');
+  const invalidCursor = {
+    input: {
+      ...v.cursor.input,
+      checkpoint_hash: '0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
+    },
+  };
 
   assert.throws(
     () => authorizeCursorAdvance({
       currentCursor: '0',
       targetPosition: '42',
-      manifest: {
-        exists: true,
-        hash: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        generation: '7',
-        inventory_valid: true,
-        segments_valid: true,
-      },
+      manifest: v.manifest,
       checkpoint: v.checkpoint,
-      cursor: v,
+      cursor: invalidCursor,
       acquisitionPositionValid: true,
     }),
     /CURSOR_AUTHORITY_INVALID/
