@@ -2,7 +2,7 @@
 const test=require("node:test");
 const assert=require("node:assert/strict");
 const path=require("node:path");
-const {validateTransition,transitionHash,verifyChain,verifyVectorFile}=require("../scripts/verify-v4-transition-independent");
+const {validateTransition,transitionHash,verifyChain,classifyTransitionDuplicate,verifyVectorFile}=require("../scripts/verify-v4-transition-independent");
 const vectors=require("../docs/golden-vectors/transition.json");
 const fixture=path.join(__dirname,"..","docs","golden-vectors","transition.json");
 
@@ -40,4 +40,25 @@ test("rejects predecessor mutation",()=>{
 test("rejects forked state edge",()=>{
   const chain=[{...vectors.vectors[0].input_object},{...vectors.vectors[1].input_object,to_state:"CANONICAL"}];
   assert.throws(()=>verifyChain(chain));
+});
+test("rejects wrong vector domain",()=>{
+  const fs=require("node:fs");
+  const tmp=path.join(require("node:os").tmpdir(),"hahaweek-transition-domain-test.json");
+  const set=JSON.parse(fs.readFileSync(fixture,"utf8"));
+  set.vectors[0].domain="WRONG-DOMAIN";
+  fs.writeFileSync(tmp,JSON.stringify(set));
+  try { assert.throws(()=>verifyVectorFile(tmp)); } finally { fs.unlinkSync(tmp); }
+});
+const first=vectors.vectors[0];
+const existing={input:first.input_object,hash:first.expected_hash};
+test("classifies identical transition as idempotent",()=>{
+  assert.equal(classifyTransitionDuplicate(existing,{input:{...first.input_object},hash:first.expected_hash}),"IDEMPOTENT");
+});
+test("classifies different transition input as not duplicate",()=>{
+  const candidate={input:{...first.input_object,sequence:"1"},hash:first.expected_hash};
+  assert.equal(classifyTransitionDuplicate(existing,candidate),"NOT_DUPLICATE");
+});
+test("classifies same input with different digest as integrity conflict",()=>{
+  const candidate={input:{...first.input_object},hash:"0x"+"1".repeat(64)};
+  assert.equal(classifyTransitionDuplicate(existing,candidate),"INTEGRITY_CONFLICT");
 });

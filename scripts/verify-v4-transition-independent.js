@@ -60,11 +60,22 @@ function verifyChain(transitions){
   }
   return {state:previousState,last_sequence:(expectedSeq-1n).toString(),last_hash:previousHash};
 }
+function classifyTransitionDuplicate(existing,candidate){
+  validateTransition(existing.input);
+  validateTransition(candidate.input);
+  if(typeof existing.hash!=="string" || !HASH_RE.test(existing.hash)) fail("existing transition hash invalid");
+  if(typeof candidate.hash!=="string" || !HASH_RE.test(candidate.hash)) fail("candidate transition hash invalid");
+  if(existing.hash!==transitionHash(existing.input)) fail("existing transition hash mismatch");
+  if(canonical(existing.input)!==canonical(candidate.input)) return "NOT_DUPLICATE";
+  if(existing.hash===candidate.hash) return "IDEMPOTENT";
+  return "INTEGRITY_CONFLICT";
+}
 function verifyVectorFile(filePath){
   const set=JSON.parse(fs.readFileSync(filePath,"utf8"));
-  if(set.protocol!=="HAHAWEEK-EVIDENCE-V4"||set.domain!==DOMAIN) fail("invalid vector metadata");
+  if(set.protocol!=="HAHAWEEK-EVIDENCE-V4") fail("invalid vector metadata");
   if(!Array.isArray(set.vectors)||!set.vectors.length) fail("empty vector set");
   for(const v of set.vectors){
+    if(v.domain!==DOMAIN) fail(v.vector_id+": invalid vector domain");
     const bytes=Buffer.from(canonical(v.input_object),"utf8").toString("hex");
     if(bytes!==v.canonical_utf8_hex) fail(v.vector_id+": canonical bytes mismatch");
     if(transitionHash(v.input_object)!==v.expected_hash) fail(v.vector_id+": hash mismatch");
@@ -75,4 +86,4 @@ if(require.main===module){
   const file=process.argv[2]||path.join(__dirname,"..","docs","golden-vectors","transition.json");
   process.stdout.write("independently verified "+verifyVectorFile(file)+" transition vector(s)\n");
 }
-module.exports={validateTransition,canonical,transitionHash,verifyChain,verifyVectorFile};
+module.exports={validateTransition,canonical,transitionHash,verifyChain,classifyTransitionDuplicate,verifyVectorFile};
