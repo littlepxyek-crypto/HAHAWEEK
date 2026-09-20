@@ -6,9 +6,9 @@ const {validateTransition,verifyChain,verifyVectorFile}=require("../scripts/veri
 const vectors=require("../docs/golden-vectors/transition.json");
 const fixture=path.join(__dirname,"..","docs","golden-vectors","transition.json");
 
-test("independent verifier validates transition golden vectors",()=>assert.equal(verifyVectorFile(fixture),2));
+test("independent verifier validates all transition golden vectors",()=>assert.equal(verifyVectorFile(fixture),vectors.vectors.length));
 test("valid transition chain is contiguous and state-consistent",()=>{
-  const chain=vectors.vectors.map(v=>({...v.input_object,expected_transition_hash:v.expected_hash}));
+  const chain=vectors.vectors.slice(0,2).map(v=>({...v.input_object,expected_transition_hash:v.expected_hash}));
   const result=verifyChain(chain);
   assert.equal(result.state,"ORPHANED");
   assert.equal(result.last_sequence,"1");
@@ -29,11 +29,11 @@ for(const [name,mutate] of cases)test("rejects "+name,()=>{
   const t={...vectors.vectors[0].input_object}; mutate(t); assert.throws(()=>validateTransition(t));
 });
 test("rejects sequence gap",()=>{
-  const chain=vectors.vectors.map(v=>({...v.input_object}));
+  const chain=vectors.vectors.slice(0,2).map(v=>({...v.input_object}));
   chain[1].sequence="2"; assert.throws(()=>verifyChain(chain));
 });
 test("rejects predecessor mutation",()=>{
-  const chain=vectors.vectors.map(v=>({...v.input_object}));
+  const chain=vectors.vectors.slice(0,2).map(v=>({...v.input_object}));
   chain[1].previous_transition_hash="0x"+"1".repeat(64); assert.throws(()=>verifyChain(chain));
 });
 test("rejects forked state edge",()=>{
