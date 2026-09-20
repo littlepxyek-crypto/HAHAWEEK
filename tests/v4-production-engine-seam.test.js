@@ -133,3 +133,72 @@ test('V4 production ingestion seam restarts from the last durable authority curs
   second.close();
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+test('V4 production ingestion seam fails closed on persisted manifest corruption', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-seam-manifest-corrupt-'));
+  const filename = path.join(dir, 'authority.sqlite');
+  const f = fixture();
+  const db = await createDatabase(filename);
+  insertManifest(db, f.manifest);
+  insertCheckpoint(db, f.checkpoint);
+  insertAuthorityRecord(db, f.record);
+  db.db.run('UPDATE v4_manifests SET generation = ? WHERE manifest_hash = ?', ['22', f.manifest.hash]);
+
+  let processed = 0;
+  assert.throws(() => createV4ProductionIngestionEngine({
+    database: db,
+    provider: { async getBlockNumber() { return 901; } },
+    confirmations: 0,
+    processor: async () => { processed += 1; },
+  }), /CHECKPOINT_AUTHORITY_INVALID/);
+  assert.equal(processed, 0);
+
+  db.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('V4 production ingestion seam fails closed on persisted checkpoint corruption', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-seam-checkpoint-corrupt-'));
+  const filename = path.join(dir, 'authority.sqlite');
+  const f = fixture();
+  const db = await createDatabase(filename);
+  insertManifest(db, f.manifest);
+  insertCheckpoint(db, f.checkpoint);
+  insertAuthorityRecord(db, f.record);
+  db.db.run('UPDATE v4_checkpoints SET checkpoint_input_json = ? WHERE checkpoint_hash = ?', [JSON.stringify({ generation: '20', manifest_hash: f.manifest.hash }), f.checkpoint.hash]);
+
+  let processed = 0;
+  assert.throws(() => createV4ProductionIngestionEngine({
+    database: db,
+    provider: { async getBlockNumber() { return 901; } },
+    confirmations: 0,
+    processor: async () => { processed += 1; },
+  }), /CHECKPOINT_AUTHORITY_INVALID/);
+  assert.equal(processed, 0);
+
+  db.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('V4 production ingestion seam fails closed on persisted cursor corruption without legacy fallback', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-seam-cursor-corrupt-'));
+  const filename = path.join(dir, 'authority.sqlite');
+  const f = fixture();
+  const db = await createDatabase(filename);
+  insertManifest(db, f.manifest);
+  insertCheckpoint(db, f.checkpoint);
+  insertAuthorityRecord(db, f.record);
+  db.db.run('UPDATE v4_authority_records SET cursor_input_json = ? WHERE record_id = ?', [JSON.stringify({ generation: '21', checkpoint_hash: f.checkpoint.hash, position: '901' }), f.record.record_id]);
+
+  let processed = 0;
+  assert.throws(() => createV4ProductionIngestionEngine({
+    database: db,
+    provider: { async getBlockNumber() { return 901; } },
+    confirmations: 0,
+    processor: async () => { processed += 1; },
+  }), /CURSOR_AUTHORITY_INVALID|AUTHORITY_RECORD_INVALID/);
+  assert.equal(processed, 0);
+
+  db.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
