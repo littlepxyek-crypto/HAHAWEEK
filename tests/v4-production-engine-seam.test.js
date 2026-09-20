@@ -11,7 +11,7 @@ const { insertManifest, insertCheckpoint } = require('../src/core/v4-production-
 const { createAuthorityRecord } = require('../src/core/v4-authority-record');
 const { insertAuthorityRecord } = require('../src/core/v4-authority-store');
 const { expectedCheckpointHash, expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
-const { createV4ProductionCursor } = require('../src/core/v4-production-engine-seam');
+const { createV4ProductionCursor, createV4ProductionIngestionEngine } = require('../src/core/v4-production-engine-seam');
 
 function fixture() {
   const manifest = { exists: true, hash: '0x' + 'e'.repeat(64), generation: '21', inventory_valid: true, segments_valid: true };
@@ -55,6 +55,32 @@ test('V4 production startup seam fails closed when persisted authority is absent
   const db = await createDatabase(filename);
 
   assert.throws(() => createV4ProductionCursor({ database: db }), /V4_AUTHORITY_RECORD_MISSING/);
+
+  db.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('V4 production ingestion engine seam binds persisted authority cursor explicitly', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-engine-seam-'));
+  const filename = path.join(dir, 'authority.sqlite');
+  const f = fixture();
+  const db = await createDatabase(filename);
+  insertManifest(db, f.manifest);
+  insertCheckpoint(db, f.checkpoint);
+  insertAuthorityRecord(db, f.record);
+  db.save();
+
+  let processed = 0;
+  const engine = createV4ProductionIngestionEngine({
+    database: db,
+    provider: { async getBlockNumber() { return 900; } },
+    confirmations: 0,
+    processor: async () => { processed += 1; },
+  });
+
+  assert.equal(engine.getActiveCursor().get(), 900);
+  assert.equal(engine.v4CursorAdapter.get(), 900);
+  assert.equal(processed, 0);
 
   db.close();
   fs.rmSync(dir, { recursive: true, force: true });
