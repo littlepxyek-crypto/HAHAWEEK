@@ -46,7 +46,8 @@ function loadCheckpoint(database, checkpointHash) {
 }
 
 function loadAuthoritativeCursor(database, cursor) {
-  const checkpoint = loadCheckpoint(database, cursor.checkpoint_hash);
+  if (!cursor || !cursor.input || typeof cursor.input.checkpoint_hash !== 'string') throw new Error('CURSOR_AUTHORITY_INVALID');
+  const checkpoint = loadCheckpoint(database, cursor.input.checkpoint_hash);
   if (!checkpoint) throw new Error('CURSOR_CHECKPOINT_MISSING');
   assertCursorAuthority(cursor, checkpoint);
   return true;
