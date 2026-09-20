@@ -64,7 +64,7 @@ The next implementation must introduce an explicit persisted authority record co
 - cursor authority input;
 - acquisition position validity.
 
-The production cursor must only accept an advance after this persisted chain validates through the existing V4 authority module.
+The production cursor must only accept an advance after this persisted chain validates through the existing V4 authority module. The acquisition-specific position mapping for the current Robinhood block-range path is frozen in `docs/V4_ROBINHOOD_BLOCK_POSITION_CONTRACT_V0_1.md`.
 
 ## Why integration is not being implemented in this change
 
