@@ -12,6 +12,8 @@ const {
   loadAuthoritativeCursor,
 } = require('../src/core/v4-production-authority-store');
 const { expectedCheckpointHash, expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
+const { insertAuthorityRecord, loadAuthorityRecord } = require('../src/core/v4-authority-store');
+const { createAuthorityRecord } = require('../src/core/v4-authority-record');
 
 function fixture() {
   const manifestHash = '0x' + 'a'.repeat(64);
@@ -50,6 +52,18 @@ test('V4 production authority store persists and verifies manifest -> checkpoint
   assert.deepEqual(loadCheckpoint(db, checkpoint.hash), checkpoint);
 
   assert.equal(loadAuthoritativeCursor(db, cursor), true);
+
+  const record = createAuthorityRecord({
+    manifestGeneration: manifest.generation,
+    manifestHash: manifest.hash,
+    checkpointInput: checkpoint.input,
+    checkpointHash: checkpoint.hash,
+    cursorInput: cursor.input,
+    cursorHash: cursor.hash,
+    acquisitionPositionValid: true,
+  });
+  insertAuthorityRecord(db, record);
+  assert.deepEqual(loadAuthorityRecord(db, record.record_id), record);
   db.close();
 });
 
