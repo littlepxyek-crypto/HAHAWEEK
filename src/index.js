@@ -65,6 +65,10 @@ function createRelevantLogFilter() {
   };
 }
 
+function isV4ProductionOptIn() {
+  return process.env.HAHAWEEK_V4_PRODUCTION === '1';
+}
+
 async function createEngine() {
   const provider = createProvider();
 
@@ -73,6 +77,10 @@ async function createEngine() {
   const rawEventStore = createRawEventStore(database.db);
 
   const cursor = new BlockCursor();
+
+  if (isV4ProductionOptIn()) {
+    throw new Error('V4_PRODUCTION_REQUIRES_EXPLICIT_FACTORY_WIRING');
+  }
 
   const rawLogs = new RawLogIngestion({
     provider,
