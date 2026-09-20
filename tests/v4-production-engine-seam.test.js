@@ -233,6 +233,7 @@ test('V4 production engine seam wires raw logs through the transactional process
     confirmations: 0,
     rawLogs,
     filterFactory: () => ({ address: '0xpool', topics: [['0xtopic']] }),
+    batchSize: 1,
   });
 
   db.save = () => { saves += 1; };
