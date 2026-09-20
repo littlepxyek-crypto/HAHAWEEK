@@ -29,6 +29,7 @@ const {
 
 const { BlockCursor } = require('./core/block-cursor');
 const { IngestionEngine } = require('./core/ingestion');
+const { createV4ProductionFactory } = require('./core/v4-production-factory');
 const { RawLogIngestion } = require('./core/raw-log-ingestion');
 
 const { createDatabase } = require('./core/database');
@@ -65,10 +66,14 @@ function createRelevantLogFilter() {
   };
 }
 
-async function createEngine() {
-  const provider = createProvider();
+function isV4ProductionOptIn() {
+  return process.env.HAHAWEEK_V4_PRODUCTION === '1';
+}
 
-  const database = await createDatabase();
+async function createEngine({ provider: injectedProvider, database: injectedDatabase } = {}) {
+  const provider = injectedProvider || createProvider();
+
+  const database = injectedDatabase || await createDatabase();
 
   const rawEventStore = createRawEventStore(database.db);
 
@@ -100,6 +105,25 @@ async function createEngine() {
     chainId: CHAIN_ID,
     chunkSize: 10,
   });
+
+  if (isV4ProductionOptIn()) {
+    const v4Factory = createV4ProductionFactory({
+      database,
+      provider,
+      confirmations: CONFIRMATIONS,
+      rawLogs,
+      filterFactory: createRelevantLogFilter,
+      batchSize: CHUNK_SIZE,
+      maxBatchesPerRun: MAX_BATCHES_PER_RUN,
+    });
+
+    return {
+      provider,
+      database,
+      ingestion: v4Factory.createEngine(),
+      mode: 'v4-production',
+    };
+  }
 
   const processor = async (block) => {
     const result = await rawLogs.ingestRange(
