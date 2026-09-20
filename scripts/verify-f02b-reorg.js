@@ -31,6 +31,10 @@ function validateEvidence(evidence, label) {
   }
 }
 
+function sameSet(a, b) {
+  return a.size === b.size && [...a].every(value => b.has(value));
+}
+
 function verifyFixture(fixture) {
   assert(fixture && typeof fixture === 'object', 'fixture must be an object');
   assert(fixture.format === FORMAT, 'unexpected fixture format');
@@ -44,12 +48,16 @@ function verifyFixture(fixture) {
   validateEvidence(original.evidence, 'original');
   validateEvidence(replacement.evidence, 'replacement');
 
+  const originalIds = new Set(original.evidence.map(e => e.evidence_id));
   const originalById = new Map(original.evidence.map(e => [e.evidence_id, e]));
   const replacementIds = new Set(replacement.evidence.map(e => e.evidence_id));
 
-  for (const id of expected.preserved_evidence_ids) {
-    assert(originalById.has(id), 'preserved evidence missing from original: ' + id);
-  }
+  assert(originalIds.size === original.evidence.length, 'duplicate original evidence identity');
+  assert(replacementIds.size === replacement.evidence.length, 'duplicate replacement evidence identity');
+
+  const preservedIds = new Set(expected.preserved_evidence_ids);
+  assert(sameSet(preservedIds, originalIds),
+    'historical evidence preservation set is incomplete or contains unknown identities');
 
   for (const id of expected.orphaned_evidence_ids) {
     assert(originalById.has(id), 'orphaned evidence missing from original: ' + id);
@@ -61,16 +69,12 @@ function verifyFixture(fixture) {
     assert(!originalById.has(id), 'replacement reused historical evidence identity: ' + id);
   }
 
-  const originalSnapshot = JSON.stringify(original.evidence);
-  assert(JSON.stringify(original.evidence) === originalSnapshot,
-    'historical evidence payload changed during verification');
-
   assert(expected.orphaned_evidence_ids.length === 2, 'unexpected orphaned evidence count');
   assert(expected.canonical_replacement_ids.length === 2, 'unexpected replacement evidence count');
 
   return {
     ok: true,
-    preserved: expected.preserved_evidence_ids.length,
+    preserved: preservedIds.size,
     orphaned: expected.orphaned_evidence_ids.length,
     replacements: expected.canonical_replacement_ids.length
   };
