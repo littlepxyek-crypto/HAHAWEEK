@@ -109,7 +109,7 @@ test('V4 save failure leaves the last durable evidence and cursor unchanged on r
   assert.equal(db.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '101');
 
   db.save = originalSave;
-  db.close();
+  db.db.close();
 
   const reopened = await createDatabase(filename);
   assert.equal(reopened.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 0);
