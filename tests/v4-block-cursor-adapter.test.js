@@ -11,11 +11,16 @@ function fixture(position='101') {
   return createAuthorityRecord({ manifestGeneration:'7', manifestHash:'0x'+'a'.repeat(64), checkpointInput:{generation:'7',manifest_hash:'0x'+'a'.repeat(64)}, checkpointHash:'0x'+'b'.repeat(64), cursorInput:{generation:'7',checkpoint_hash:'0x'+'b'.repeat(64),position}, cursorHash:'0x'+'c'.repeat(64), acquisitionPositionValid:true });
 }
 
+function seed(database, position='101') {
+  const record = fixture(position);
+  persistAuthorityAndCursor(database, record, Number(position));
+  return record;
+}
+
 test('opt-in V4 BlockCursor adapter advances through a new canonical authority record', async () => {
   const database = await createDatabase(':memory:');
-  const initial = fixture();
-  persistAuthorityAndCursor(database, initial, 101);
-  const adapter = new V4BlockCursorAdapter({database, authorityRecord:fixture()});
+  const initial = seed(database);
+  const adapter = new V4BlockCursorAdapter({database, authorityRecord:initial});
   assert.equal(adapter.get(),101);
   assert.equal(adapter.advance(102),102);
   assert.equal(adapter.get(),102);
@@ -25,7 +30,8 @@ test('opt-in V4 BlockCursor adapter advances through a new canonical authority r
 
 test('V4 BlockCursor adapter rejects regression without persistence', async () => {
   const database = await createDatabase(':memory:');
-  const adapter = new V4BlockCursorAdapter({database, authorityRecord:fixture()});
+  const initial = seed(database);
+  const adapter = new V4BlockCursorAdapter({database, authorityRecord:initial});
   adapter.advance(102);
   assert.throws(() => adapter.advance(101), /BLOCK_CURSOR_REGRESSION/);
   assert.equal(adapter.get(),102);
