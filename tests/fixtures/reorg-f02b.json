@@ -1,0 +1,42 @@
+{
+  "format": "HAHAWEEK-F02B-REORG-FIXTURE-1",
+  "chain_id": "4663",
+  "original": {
+    "blocks": [
+      {"block_number": "100", "block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+      {"block_number": "101", "block_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+      {"block_number": "102", "block_hash": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+    ],
+    "evidence": [
+      {"evidence_id": "0x1111111111111111111111111111111111111111111111111111111111111111", "block_number": "100", "state": "CANONICAL"},
+      {"evidence_id": "0x2222222222222222222222222222222222222222222222222222222222222222", "block_number": "101", "state": "CANONICAL"},
+      {"evidence_id": "0x3333333333333333333333333333333333333333333333333333333333333333", "block_number": "102", "state": "CANONICAL"}
+    ]
+  },
+  "replacement": {
+    "blocks": [
+      {"block_number": "100", "block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+      {"block_number": "101", "block_hash": "0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+      {"block_number": "102", "block_hash": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}
+    ],
+    "evidence": [
+      {"evidence_id": "0x4444444444444444444444444444444444444444444444444444444444444444", "block_number": "101", "state": "CANONICAL"},
+      {"evidence_id": "0x5555555555555555555555555555555555555555555555555555555555555555", "block_number": "102", "state": "CANONICAL"}
+    ]
+  },
+  "expected": {
+    "orphaned_evidence_ids": [
+      "0x2222222222222222222222222222222222222222222222222222222222222222",
+      "0x3333333333333333333333333333333333333333333333333333333333333333"
+    ],
+    "canonical_replacement_ids": [
+      "0x4444444444444444444444444444444444444444444444444444444444444444",
+      "0x5555555555555555555555555555555555555555555555555555555555555555"
+    ],
+    "preserved_evidence_ids": [
+      "0x1111111111111111111111111111111111111111111111111111111111111111",
+      "0x2222222222222222222222222222222222222222222222222222222222222222",
+      "0x3333333333333333333333333333333333333333333333333333333333333333"
+    ]
+  }
+}
