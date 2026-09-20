@@ -24,6 +24,12 @@ function loadAuthorityRecord(database, recordId) {
   } finally { stmt.free(); }
 }
 
+function loadLatestAuthorityRecord(database) {
+  const result = database.db.exec('SELECT record_id FROM v4_authority_records ORDER BY rowid DESC LIMIT 1');
+  if (result.length === 0 || result[0].values.length === 0) return null;
+  return loadAuthorityRecord(database, result[0].values[0][0]);
+}
+
 function persistAuthorityRecord(database, record, createdAt) { return database.transaction(() => insertAuthorityRecord(database, record, createdAt)); }
 
-module.exports = { insertAuthorityRecord, loadAuthorityRecord, persistAuthorityRecord };
+module.exports = { insertAuthorityRecord, loadAuthorityRecord, loadLatestAuthorityRecord, persistAuthorityRecord };
