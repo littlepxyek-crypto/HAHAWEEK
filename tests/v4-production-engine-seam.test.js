@@ -85,3 +85,51 @@ test('V4 production ingestion engine seam binds persisted authority cursor expli
   db.close();
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+test('V4 production ingestion seam restarts from the last durable authority cursor', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-engine-restart-'));
+  const filename = path.join(dir, 'authority.sqlite');
+  const f = fixture();
+
+  const first = await createDatabase(filename);
+  insertManifest(first, f.manifest);
+  insertCheckpoint(first, f.checkpoint);
+  insertAuthorityRecord(first, f.record);
+  first.save();
+
+  const seenFirst = [];
+  const engine1 = createV4ProductionIngestionEngine({
+    database: first,
+    provider: { async getBlockNumber() { return 901; } },
+    confirmations: 0,
+    processor: async block => {
+      seenFirst.push(block);
+      first.db.run('INSERT INTO raw_events(event_id,chain_id,block_number,transaction_hash,log_index,address,topics_json,data,captured_at) VALUES(?,?,?,?,?,?,?,?,?)', ['restart-' + block, 4663, block, '0x' + String(block).padStart(64, '0'), 0, '0x' + '1'.repeat(40), '[]', '0x', '2026-09-20T00:00:00.000Z']);
+    },
+  });
+
+  await engine1.runOnce();
+  assert.deepEqual(seenFirst, [901]);
+  first.save();
+  first.close();
+
+  const second = await createDatabase(filename);
+  const seenSecond = [];
+  const engine2 = createV4ProductionIngestionEngine({
+    database: second,
+    provider: { async getBlockNumber() { return 902; } },
+    confirmations: 0,
+    processor: async block => {
+      seenSecond.push(block);
+      second.db.run('INSERT INTO raw_events(event_id,chain_id,block_number,transaction_hash,log_index,address,topics_json,data,captured_at) VALUES(?,?,?,?,?,?,?,?,?)', ['restart-' + block, 4663, block, '0x' + String(block).padStart(64, '0'), 0, '0x' + '1'.repeat(40), '[]', '0x', '2026-09-20T00:00:00.000Z']);
+    },
+  });
+
+  assert.equal(engine2.getActiveCursor().get(), 901);
+  await engine2.runOnce();
+  assert.deepEqual(seenSecond, [902]);
+  assert.equal(engine2.getActiveCursor().get(), 902);
+
+  second.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
