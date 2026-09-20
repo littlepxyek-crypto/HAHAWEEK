@@ -79,3 +79,41 @@ test('V4 ingestion saves only after the transaction commits', async () => {
   reopened.close();
   fs.rmSync(dir, { recursive: true, force: true });
 });
+
+test('V4 save failure leaves the last durable evidence and cursor unchanged on restart', async () => {
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const path = require('node:path');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-save-fail-'));
+  const filename = path.join(dir, 'state.sqlite');
+  const db = await createDatabase(filename);
+  const { record, authorityContext } = fixture();
+  persistAuthorityAndCursor(db, record, 100);
+  db.save();
+
+  const adapter = new V4BlockCursorAdapter({ database: db, authorityRecord: record, authorityContext });
+  const originalSave = db.save;
+  db.save = () => { throw new Error('DURABILITY_SAVE_FAILURE'); };
+
+  const engine = new IngestionEngine({
+    provider: { async getBlockNumber() { return 101; } },
+    cursor: { get: () => 999 },
+    confirmations: 0,
+    processor: async block => insertRaw(db, block),
+    v4CursorAdapter: adapter,
+    v4Database: db,
+  });
+
+  await assert.rejects(() => engine.runOnce(), /DURABILITY_SAVE_FAILURE/);
+  assert.equal(db.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 1);
+  assert.equal(db.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '101');
+
+  db.save = originalSave;
+  db.close();
+
+  const reopened = await createDatabase(filename);
+  assert.equal(reopened.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 0);
+  assert.equal(reopened.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '100');
+  reopened.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
