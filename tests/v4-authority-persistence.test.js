@@ -27,7 +27,7 @@ test('V4 authority transaction rolls back on failure', async () => {
 test('V4 authority duplicate identity fails instead of replacing history', async () => {
   const database = await createDatabase(':memory:');
   insertAuthority(database, 'r3');
-  assert.throws(() => database.transaction(() => insertAuthority(database.db, 'r3')), /UNIQUE constraint failed|constraint failed/i);
+  assert.throws(() => database.transaction(() => insertAuthority(database, 'r3')), /UNIQUE constraint failed|constraint failed/i);
   const rows = database.db.exec('SELECT COUNT(*) FROM v4_authority_records WHERE record_id = \'r3\'');
   assert.equal(rows[0].values[0][0], 1);
   database.close();
