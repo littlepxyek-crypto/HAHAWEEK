@@ -90,3 +90,32 @@ test('V4 BlockCursor adapter is opt-in and does not alter legacy BlockCursor', (
   assert.equal(cursor.advance(101), 101);
   assert.equal(state.lastProcessedBlock, 101);
 });
+
+
+test('V4 BlockCursor adapter rejects persisted position that cannot map exactly to a JS block number', async () => {
+  const database = await createDatabase(':memory:');
+  const { record, authorityContext } = seed(database, '18446744073709551615');
+  assert.throws(
+    () => new V4BlockCursorAdapter({ database, authorityRecord: record, authorityContext }),
+    /ACQUISITION_BLOCK_INVALID/
+  );
+  database.close();
+});
+
+test('V4 BlockCursor adapter rejects a non-block acquisition coordinate', async () => {
+  const database = await createDatabase(':memory:');
+  const { record, authorityContext } = seed(database, '101');
+  const adapter = new V4BlockCursorAdapter({ database, authorityRecord: record, authorityContext });
+  assert.throws(() => adapter.advance(-1), /INVALID_BLOCK_NUMBER/);
+  assert.throws(() => adapter.advance(101.5), /INVALID_BLOCK_NUMBER/);
+  assert.equal(adapter.get(), 101);
+  database.close();
+});
+
+test('Robinhood block position mapping rejects an exact position mismatch', () => {
+  const { assertPositionMatchesBlock } = require('../src/core/v4-robinhood-block-position');
+  assert.throws(
+    () => assertPositionMatchesBlock('102', 101),
+    /ACQUISITION_POSITION_MISMATCH/
+  );
+});
