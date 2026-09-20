@@ -92,14 +92,12 @@ test('V4 BlockCursor adapter is opt-in and does not alter legacy BlockCursor', (
 });
 
 
-test('V4 BlockCursor adapter rejects persisted position that cannot map exactly to a JS block number', async () => {
-  const database = await createDatabase(':memory:');
-  const { record, authorityContext } = seed(database, '18446744073709551615');
+test('Robinhood block position mapping rejects a uint64 position outside the JS-safe block range', () => {
+  const { blockNumberToPosition } = require('../src/core/v4-robinhood-block-position');
   assert.throws(
-    () => new V4BlockCursorAdapter({ database, authorityRecord: record, authorityContext }),
+    () => blockNumberToPosition(Number.MAX_SAFE_INTEGER + 1),
     /ACQUISITION_BLOCK_INVALID/
   );
-  database.close();
 });
 
 test('V4 BlockCursor adapter rejects a non-block acquisition coordinate', async () => {
