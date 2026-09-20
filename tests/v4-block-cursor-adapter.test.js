@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const { createDatabase } = require('../src/core/database');
 const { createAuthorityRecord } = require('../src/core/v4-authority-record');
 const { V4BlockCursorAdapter } = require('../src/core/v4-block-cursor-adapter');
+const { persistAuthorityAndCursor } = require('../src/core/v4-cursor-store');
 
 function fixture(position='101') {
   return createAuthorityRecord({ manifestGeneration:'7', manifestHash:'0x'+'a'.repeat(64), checkpointInput:{generation:'7',manifest_hash:'0x'+'a'.repeat(64)}, checkpointHash:'0x'+'b'.repeat(64), cursorInput:{generation:'7',checkpoint_hash:'0x'+'b'.repeat(64),position}, cursorHash:'0x'+'c'.repeat(64), acquisitionPositionValid:true });
@@ -12,6 +13,8 @@ function fixture(position='101') {
 
 test('opt-in V4 BlockCursor adapter advances through a new canonical authority record', async () => {
   const database = await createDatabase(':memory:');
+  const initial = fixture();
+  persistAuthorityAndCursor(database, initial, 101);
   const adapter = new V4BlockCursorAdapter({database, authorityRecord:fixture()});
   assert.equal(adapter.get(),101);
   assert.equal(adapter.advance(102),102);
