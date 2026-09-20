@@ -49,3 +49,33 @@ test('V4 ingestion rolls back evidence, authority and cursor together on process
   assert.equal(db.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '100');
   db.close();
 });
+test('V4 ingestion saves only after the transaction commits', async () => {
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const path = require('node:path');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-v4-save-'));
+  const filename = path.join(dir, 'state.sqlite');
+  const db = await createDatabase(filename);
+  const { record, authorityContext } = fixture();
+  persistAuthorityAndCursor(db, record, 100);
+  db.save();
+
+  const adapter = new V4BlockCursorAdapter({ database: db, authorityRecord: record, authorityContext });
+  const engine = new IngestionEngine({
+    provider: { async getBlockNumber() { return 101; } },
+    cursor: { get: () => 999 },
+    confirmations: 0,
+    processor: async block => insertRaw(db, block),
+    v4CursorAdapter: adapter,
+    v4Database: db,
+  });
+
+  await engine.runOnce();
+  db.close();
+
+  const reopened = await createDatabase(filename);
+  assert.equal(reopened.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 1);
+  assert.equal(reopened.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '101');
+  reopened.close();
+  fs.rmSync(dir, { recursive: true, force: true });
+});
