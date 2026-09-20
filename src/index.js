@@ -79,25 +79,6 @@ async function createEngine() {
 
   const cursor = new BlockCursor();
 
-  if (isV4ProductionOptIn()) {
-    const v4Factory = createV4ProductionFactory({
-      database,
-      provider,
-      confirmations: CONFIRMATIONS,
-      rawLogs,
-      filterFactory: createRelevantLogFilter,
-      batchSize: CHUNK_SIZE,
-      maxBatchesPerRun: MAX_BATCHES_PER_RUN,
-    });
-
-    return {
-      provider,
-      database,
-      ingestion: v4Factory.createEngine(),
-      mode: 'v4-production',
-    };
-  }
-
   const rawLogs = new RawLogIngestion({
     provider,
 
@@ -124,6 +105,25 @@ async function createEngine() {
     chainId: CHAIN_ID,
     chunkSize: 10,
   });
+
+  if (isV4ProductionOptIn()) {
+    const v4Factory = createV4ProductionFactory({
+      database,
+      provider,
+      confirmations: CONFIRMATIONS,
+      rawLogs,
+      filterFactory: createRelevantLogFilter,
+      batchSize: CHUNK_SIZE,
+      maxBatchesPerRun: MAX_BATCHES_PER_RUN,
+    });
+
+    return {
+      provider,
+      database,
+      ingestion: v4Factory.createEngine(),
+      mode: 'v4-production',
+    };
+  }
 
   const processor = async (block) => {
     const result = await rawLogs.ingestRange(
