@@ -8,13 +8,21 @@ Prove, offline and deterministically, that a blockchain reorganization preserves
 
 ## Scope
 
-In scope:
+In scope for this boundary:
 - deterministic reorg fixture
-- evidence preservation
-- CANONICAL -> ORPHANED transition
-- replacement evidence
-- transition linkage
+- historical evidence identity preservation
+- replacement evidence identity isolation
+- explicit expected orphan/replacement sets
+- executable negative tests for preservation loss and identity reuse
+
+Deferred to subsequent verification work:
+- executable CANONICAL -> ORPHANED transition records
+- transition predecessor linkage
+- sequence-gap detection
+- conflicting duplicate transition detection
 - restart/recovery assertions
+- byte-level payload immutability verification
+- production cursor behavior
 
 Out of scope:
 - production RPC
@@ -38,28 +46,29 @@ B100 -> B201 -> B202
 Replacement evidence:
 E201 -> E202
 
-Required result:
-- E101 and E102 remain present and byte-identical to their original payloads.
-- E101 and E102 transition from CANONICAL to ORPHANED.
-- E201 and E202 have distinct authoritative evidence identities.
-- E201 and E202 may become CANONICAL through valid transition chains.
-- No historical evidence is deleted.
-- No cursor is silently reset.
+## Required result for this boundary
 
-## Failure cases
+- All original evidence identities remain represented in the preservation set.
+- Superseded evidence identities remain distinct from replacement identities.
+- Expected orphaned identities must belong to the original evidence set.
+- Expected replacement identities must belong to the replacement set and not to the original set.
+- Historical evidence is never represented as deleted by the fixture.
+- The verifier produces a deterministic result from fixture input only.
 
-The verifier must reject:
-- deleted historical evidence
-- mutated historical payload
-- invalid ORPHANED transition
-- replacement evidence reusing an old evidence identity
-- broken transition predecessor linkage
-- sequence gaps
-- conflicting duplicate transitions
-- nondeterministic output
+## Failure cases covered by this boundary
+
+The verifier rejects:
+- incomplete or unknown historical preservation identities
+- duplicate original evidence identities
+- duplicate replacement evidence identities
+- replacement evidence reusing a historical evidence identity
+- orphaned identity missing from original evidence
+- replacement identity missing from replacement evidence
+
+The deferred transition/recovery cases above remain open and are not claimed as proven by F-02B v0.1.
 
 ## Acceptance criteria
 
-A fixture passes only when all invariants above are independently verifiable without RPC access or production state.
+A fixture passes this boundary only when the executable verifier and negative tests establish the identity-preservation and replacement-isolation invariants above without RPC access or production state.
 
 F-02B does not close Design Gate 2.
