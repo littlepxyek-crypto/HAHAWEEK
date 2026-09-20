@@ -17,4 +17,22 @@ function createV4ProductionCursor({ database }) {
   return { cursor, recovered };
 }
 
-module.exports = { createV4ProductionCursor };
+
+function createV4ProductionIngestionEngine({ database, provider, confirmations, processor, processorRange, batchSize, maxBatchesPerRun }) {
+  const { IngestionEngine } = require('./ingestion');
+  const { cursor } = createV4ProductionCursor({ database });
+  return new IngestionEngine({
+    provider,
+    cursor,
+    confirmations,
+    processor,
+    processorRange,
+    batchSize,
+    maxBatchesPerRun,
+    v4CursorAdapter: cursor,
+    v4Database: database,
+  });
+}
+
+module.exports = { createV4ProductionCursor, createV4ProductionIngestionEngine };
+
