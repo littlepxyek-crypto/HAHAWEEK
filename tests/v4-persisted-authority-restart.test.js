@@ -11,6 +11,7 @@ const { insertManifest, loadManifest, insertCheckpoint, loadCheckpoint, loadAuth
 const { createAuthorityRecord } = require('../src/core/v4-authority-record');
 const { insertAuthorityRecord, loadAuthorityRecord } = require('../src/core/v4-authority-store');
 const { expectedCheckpointHash, expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
+const { recoverPersistedAuthority } = require('../src/core/v4-production-recovery');
 
 function fixture() {
   const manifest = { exists: true, hash: '0x' + 'c'.repeat(64), generation: '11', inventory_valid: true, segments_valid: true };
@@ -47,6 +48,11 @@ test('V4 persisted authority chain survives database restart and re-verifies fro
   assert.deepEqual(loadCheckpoint(second, f.checkpoint.hash), f.checkpoint);
   assert.deepEqual(loadAuthorityRecord(second, f.record.record_id), f.record);
   assert.equal(loadAuthoritativeCursor(second, f.cursor), true);
+  const recovered = recoverPersistedAuthority(second);
+  assert.deepEqual(recovered.record, f.record);
+  assert.deepEqual(recovered.manifest, f.manifest);
+  assert.deepEqual(recovered.checkpoint, f.checkpoint);
+  assert.deepEqual(recovered.cursor, f.cursor);
   second.close();
 
   fs.rmSync(dir, { recursive: true, force: true });
