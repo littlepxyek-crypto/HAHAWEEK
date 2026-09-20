@@ -2,16 +2,17 @@
 const test=require("node:test");
 const assert=require("node:assert/strict");
 const path=require("node:path");
-const {validateTransition,verifyChain,verifyVectorFile}=require("../scripts/verify-v4-transition-independent");
+const {validateTransition,transitionHash,verifyChain,verifyVectorFile}=require("../scripts/verify-v4-transition-independent");
 const vectors=require("../docs/golden-vectors/transition.json");
 const fixture=path.join(__dirname,"..","docs","golden-vectors","transition.json");
 
 test("independent verifier validates all transition golden vectors",()=>assert.equal(verifyVectorFile(fixture),vectors.vectors.length));
 test("valid transition chain is contiguous and state-consistent",()=>{
-  const chain=vectors.vectors.slice(0,2).map(v=>({...v.input_object,expected_transition_hash:v.expected_hash}));
+  const chain=vectors.vectors.slice(0,2).map(v=>v.input_object);
   const result=verifyChain(chain);
   assert.equal(result.state,"ORPHANED");
   assert.equal(result.last_sequence,"1");
+  for(const v of vectors.vectors.slice(0,2)) assert.equal(transitionHash(v.input_object),v.expected_hash);
 });
 const cases=[
   ["missing key",t=>{delete t.to_state;}],
