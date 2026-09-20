@@ -1,1 +1,51 @@
-'use strict';\n\nconst test = require('node:test');\nconst assert = require('node:assert/strict');\nconst { createDatabase } = require('../src/core/database');\nconst { createAuthorityRecord } = require('../src/core/v4-authority-record');\nconst { expectedCheckpointHash, expectedCursorHash } = require('../src/core/v4-checkpoint-authority');\nconst { persistAuthorityAndCursor } = require('../src/core/v4-cursor-store');\nconst { V4BlockCursorAdapter } = require('../src/core/v4-block-cursor-adapter');\nconst { IngestionEngine } = require('../src/core/ingestion');\n\nfunction fixture() {\n  const manifestHash = '0x' + 'a'.repeat(64);\n  const checkpointInput = { generation: '7', manifest_hash: manifestHash };\n  const checkpointHash = expectedCheckpointHash(checkpointInput);\n  const cursorInput = { generation: '7', checkpoint_hash: checkpointHash, position: '100' };\n  const cursorHash = expectedCursorHash(cursorInput);\n  const record = createAuthorityRecord({ manifestGeneration: '7', manifestHash, checkpointInput, checkpointHash, cursorInput, cursorHash, acquisitionPositionValid: true });\n  return { record, authorityContext: { manifest: { exists: true, hash: manifestHash, generation: '7', inventory_valid: true, segments_valid: true }, checkpoint: { input: checkpointInput, hash: checkpointHash } } };\n}\n\nfunction insertRaw(database, block) {\n  database.db.run('INSERT INTO raw_events(event_id,chain_id,block_number,transaction_hash,log_index,address,topics_json,data,captured_at) VALUES(?,?,?,?,?,?,?,?,?)', ['e-' + block, 4663, block, '0x' + String(block).padStart(64, '0'), 0, '0x' + '1'.repeat(40), '[]', '0x', '2026-09-20T00:00:00.000Z']);\n}\n\ntest('V4 ingestion commits evidence and cursor together', async () => {\n  const db = await createDatabase(':memory:');\n  const { record, authorityContext } = fixture();\n  persistAuthorityAndCursor(db, record, 100);\n  const adapter = new V4BlockCursorAdapter({ database: db, authorityRecord: record, authorityContext });\n  const engine = new IngestionEngine({ provider: { async getBlockNumber() { return 101; } }, cursor: { get: () => 999 }, confirmations: 0, processor: async block => insertRaw(db, block), v4CursorAdapter: adapter, v4Database: db });\n  const result = await engine.runOnce();\n  assert.equal(result.cursor, 101);\n  assert.equal(db.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 1);\n  assert.equal(db.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '101');\n  assert.equal(db.db.exec('SELECT COUNT(*) FROM v4_authority_records')[0].values[0][0], 2);\n  db.close();\n});\n\ntest('V4 ingestion rolls back evidence, authority and cursor together on processor failure', async () => {\n  const db = await createDatabase(':memory:');\n  const { record, authorityContext } = fixture();\n  persistAuthorityAndCursor(db, record, 100);\n  const adapter = new V4BlockCursorAdapter({ database: db, authorityRecord: record, authorityContext });\n  const engine = new IngestionEngine({ provider: { async getBlockNumber() { return 101; } }, cursor: { get: () => 999 }, confirmations: 0, processor: async block => { insertRaw(db, block); throw new Error('PROCESSOR_FAILURE'); }, v4CursorAdapter: adapter, v4Database: db });\n  await assert.rejects(() => engine.runOnce(), /PROCESSOR_FAILURE/);\n  assert.equal(db.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 0);\n  assert.equal(db.db.exec('SELECT COUNT(*) FROM v4_authority_records')[0].values[0][0], 1);\n  assert.equal(db.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '100');\n  db.close();\n});
+'use strict';
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { createDatabase } = require('../src/core/database');
+const { createAuthorityRecord } = require('../src/core/v4-authority-record');
+const { expectedCheckpointHash, expectedCursorHash } = require('../src/core/v4-checkpoint-authority');
+const { persistAuthorityAndCursor } = require('../src/core/v4-cursor-store');
+const { V4BlockCursorAdapter } = require('../src/core/v4-block-cursor-adapter');
+const { IngestionEngine } = require('../src/core/ingestion');
+
+function fixture() {
+  const manifestHash = '0x' + 'a'.repeat(64);
+  const checkpointInput = { generation: '7', manifest_hash: manifestHash };
+  const checkpointHash = expectedCheckpointHash(checkpointInput);
+  const cursorInput = { generation: '7', checkpoint_hash: checkpointHash, position: '100' };
+  const cursorHash = expectedCursorHash(cursorInput);
+  const record = createAuthorityRecord({ manifestGeneration: '7', manifestHash, checkpointInput, checkpointHash, cursorInput, cursorHash, acquisitionPositionValid: true });
+  return { record, authorityContext: { manifest: { exists: true, hash: manifestHash, generation: '7', inventory_valid: true, segments_valid: true }, checkpoint: { input: checkpointInput, hash: checkpointHash } } };
+}
+
+function insertRaw(database, block) {
+  database.db.run('INSERT INTO raw_events(event_id,chain_id,block_number,transaction_hash,log_index,address,topics_json,data,captured_at) VALUES(?,?,?,?,?,?,?,?,?)', ['e-' + block, 4663, block, '0x' + String(block).padStart(64, '0'), 0, '0x' + '1'.repeat(40), '[]', '0x', '2026-09-20T00:00:00.000Z']);
+}
+
+test('V4 ingestion commits evidence and cursor together', async () => {
+  const db = await createDatabase(':memory:');
+  const { record, authorityContext } = fixture();
+  persistAuthorityAndCursor(db, record, 100);
+  const adapter = new V4BlockCursorAdapter({ database: db, authorityRecord: record, authorityContext });
+  const engine = new IngestionEngine({ provider: { async getBlockNumber() { return 101; } }, cursor: { get: () => 999 }, confirmations: 0, processor: async block => insertRaw(db, block), v4CursorAdapter: adapter, v4Database: db });
+  const result = await engine.runOnce();
+  assert.equal(result.cursor, 101);
+  assert.equal(db.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 1);
+  assert.equal(db.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '101');
+  assert.equal(db.db.exec('SELECT COUNT(*) FROM v4_authority_records')[0].values[0][0], 2);
+  db.close();
+});
+
+test('V4 ingestion rolls back evidence, authority and cursor together on processor failure', async () => {
+  const db = await createDatabase(':memory:');
+  const { record, authorityContext } = fixture();
+  persistAuthorityAndCursor(db, record, 100);
+  const adapter = new V4BlockCursorAdapter({ database: db, authorityRecord: record, authorityContext });
+  const engine = new IngestionEngine({ provider: { async getBlockNumber() { return 101; } }, cursor: { get: () => 999 }, confirmations: 0, processor: async block => { insertRaw(db, block); throw new Error('PROCESSOR_FAILURE'); }, v4CursorAdapter: adapter, v4Database: db });
+  await assert.rejects(() => engine.runOnce(), /PROCESSOR_FAILURE/);
+  assert.equal(db.db.exec('SELECT COUNT(*) FROM raw_events')[0].values[0][0], 0);
+  assert.equal(db.db.exec('SELECT COUNT(*) FROM v4_authority_records')[0].values[0][0], 1);
+  assert.equal(db.db.exec("SELECT position FROM v4_cursor_state WHERE singleton_key='current'")[0].values[0][0], '100');
+  db.close();
+});
