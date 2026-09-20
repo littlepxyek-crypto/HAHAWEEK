@@ -43,7 +43,11 @@ function assertCheckpointAuthority(checkpoint, manifest) {
 }
 
 function assertCursorAuthority(cursor, checkpoint) {
-  if (!cursor || !checkpoint) {
+  if (!cursor || !checkpoint || !checkpoint.input) {
+    throw new Error('CURSOR_AUTHORITY_INVALID');
+  }
+
+  if (!validHash(checkpoint.hash)) {
     throw new Error('CURSOR_AUTHORITY_INVALID');
   }
 
