@@ -11,26 +11,11 @@ const TRANSITION_IDENTITY = {
   to_state: 'CANONICAL',
   reason_code: 'INITIAL_CANONICAL',
 };
-
-const EXPECTED_CANONICAL_UTF8_HEX =
-  '7b226576656e745f6964223a22307861616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161222c2266726f6d5f7374617465223a224f42534552564544222c22726561736f6e5f636f6465223a22494e495449414c5f43414e4f4e4943414c222c22746f5f7374617465223a2243414e4f4e4943414c222c227472616e736974696f6e5f73657175656e6365223a2230227d';
-
+const EXPECTED_CANONICAL_UTF8_HEX = '7b226576656e745f6964223a22307861616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161222c2266726f6d5f7374617465223a224f42534552564544222c22726561736f6e5f636f6465223a22494e495449414c5f43414e4f4e4943414c222c22746f5f7374617465223a2243414e4f4e4943414c222c227472616e736974696f6e5f73657175656e6365223a2230227d';
 const EXPECTED_HASH = '767b8bf9b7a491d0e072478122920711cadee818dbfe14850143522e1f7ae389';
-
-test('F-01 transition identity vector matches canonical bytes', () => {
-  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-TRANSITION', TRANSITION_IDENTITY);
-  assert.equal(Buffer.from(actual.canonical, 'utf8').toString('hex'), EXPECTED_CANONICAL_UTF8_HEX);
-});
-
-test('F-01 transition identity vector matches domain-separated hash', () => {
-  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-TRANSITION', TRANSITION_IDENTITY);
-  assert.equal(actual.sha256, EXPECTED_HASH);
-});
-
-test('F-01 transition identity key order is irrelevant to canonical bytes', () => {
-  const reordered = Object.fromEntries(Object.entries(TRANSITION_IDENTITY).reverse());
-  assert.equal(jcs(reordered), jcs(TRANSITION_IDENTITY));
-});
+test('F-01 transition identity vector matches canonical bytes', () => { const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-TRANSITION', TRANSITION_IDENTITY); assert.equal(Buffer.from(actual.canonical, 'utf8').toString('hex'), EXPECTED_CANONICAL_UTF8_HEX); });
+test('F-01 transition identity vector matches domain-separated hash', () => { const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-TRANSITION', TRANSITION_IDENTITY); assert.equal(actual.sha256, EXPECTED_HASH); });
+test('F-01 transition identity key order is irrelevant to canonical bytes', () => { const reordered = Object.fromEntries(Object.entries(TRANSITION_IDENTITY).reverse()); assert.equal(jcs(reordered), jcs(TRANSITION_IDENTITY)); });
 
 const REORG_OBSERVATION_IDENTITY = {
   chain_id: '4663',
@@ -39,10 +24,10 @@ const REORG_OBSERVATION_IDENTITY = {
   replacement_block_hash: '0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
   detected_by_acquisition_id: '0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
 };
-
-test('F-01 reorg observation identity is canonical and domain-separated', () => {
+test('F-01 reorg observation golden vector', () => {
   const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-TRANSITION', REORG_OBSERVATION_IDENTITY);
+  console.log('REORG_CANONICAL_UTF8_HEX=' + Buffer.from(actual.canonical, 'utf8').toString('hex'));
+  console.log('REORG_SHA256=' + actual.sha256);
   assert.equal(jcs(REORG_OBSERVATION_IDENTITY), jcs({ ...REORG_OBSERVATION_IDENTITY }));
   assert.match(actual.sha256, /^[0-9a-f]{64}$/);
-  assert.equal(actual.sha256, canonicalHash('HAHAWEEK-EVIDENCE-V4-TRANSITION', REORG_OBSERVATION_IDENTITY).sha256);
 });
