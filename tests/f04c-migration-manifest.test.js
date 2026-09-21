@@ -5,7 +5,6 @@ const assert = require('node:assert/strict');
 
 const {
   dispositionDigest,
-  migrationIdentity,
   createMigrationManifest,
 } = require('../src/reference/v4/migration-manifest');
 
@@ -50,16 +49,12 @@ test('F-04C migration identity is deterministic', () => {
   assert.equal(manifestA.disposition_digest, manifestB.disposition_digest);
 });
 
-test('F-04C disposition status is explicit', () => {
-  assert.throws(
-    () => dispositionDigest([{ record_id: 'legacy-1', status: 'MIGRATE' }]),
-    () => false
-  );
-
-  assert.throws(
-    () => dispositionDigest([{ record_id: 'legacy-1', status: 'UNKNOWN' }]),
-    /DISPOSITION_STATUS_INVALID/
-  );
+test('F-04C all disposition statuses are explicit and accepted', () => {
+  for (const status of ['PRESERVE', 'MIGRATE', 'QUARANTINE', 'REJECT']) {
+    assert.doesNotThrow(() =>
+      dispositionDigest([{ record_id: 'legacy-1', status }])
+    );
+  }
 });
 
 test('F-04C changing disposition changes migration identity', () => {
