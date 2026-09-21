@@ -8,7 +8,7 @@ const EVENT_IDENTITY = {
   chain_id: '4663',
   block_hash: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   block_number: '123',
-  transaction_hash: '0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  transaction_hash: '0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
   transaction_index: '4',
   log_index: '7',
   contract_address: '0xcccccccccccccccccccccccccccccccccccccccc',
