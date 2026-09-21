@@ -32,3 +32,21 @@ test('F-01 reorg observation golden vector', () => {
   assert.equal(Buffer.from(actual.canonical, 'utf8').toString('hex'), EXPECTED_REORG_CANONICAL_UTF8_HEX);
   assert.equal(actual.sha256, EXPECTED_REORG_HASH);
 });
+
+
+const ACQUISITION_IDENTITY = {
+  chain_id: '4663',
+  provider_id: 'rpc-primary',
+  request_sequence: '0',
+  pagination_index: '0',
+  requested_from_block: '123',
+  requested_to_block: '132',
+  filter_hash: '0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
+};
+
+test('F-01 acquisition identity boundary is canonical and domain-separated', () => {
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-ACQUISITION', ACQUISITION_IDENTITY);
+  assert.equal(jcs(ACQUISITION_IDENTITY), jcs({ ...ACQUISITION_IDENTITY }));
+  assert.match(actual.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(actual.sha256, canonicalHash('HAHAWEEK-EVIDENCE-V4-ACQUISITION', ACQUISITION_IDENTITY).sha256);
+});
