@@ -158,5 +158,5 @@ const MIGRATION_IDENTITY = {
 
 test('F-01 migration identity golden vector is canonical', () => {
   const migrationId = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', MIGRATION_IDENTITY);
-  assert.equal(migrationId.sha256, 'MIGRATION_HASH_PENDING');
+  assert.equal(migrationId.sha256, 'ba740e4535441843ba4e12e0eecb139b3f006dd310524fa3748d54d11b716715');
 });
