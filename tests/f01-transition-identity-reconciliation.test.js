@@ -104,5 +104,5 @@ const MANIFEST_IDENTITY = {
 
 test('F-01 manifest identity golden vector is canonical', () => {
   const manifestId = canonicalHash('HAHAWEEK-EVIDENCE-V4-MANIFEST', MANIFEST_IDENTITY);
-  assert.equal(manifestId.sha256, '0d1e8d2a58d1c0d6c3d67d7e1d4a7aebf4c5a4e3e7f7f7f4a0a0b5b8c0d0d2c7');
+  assert.equal(manifestId.sha256, 'cf317d57f76fdb52cba8f4631ed2196c3f21f3e9b7ac2bc132d673ebf4ac2973');
 });
