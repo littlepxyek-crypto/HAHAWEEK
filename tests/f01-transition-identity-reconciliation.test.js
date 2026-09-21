@@ -106,3 +106,17 @@ test('F-01 manifest identity golden vector is canonical', () => {
   const manifestId = canonicalHash('HAHAWEEK-EVIDENCE-V4-MANIFEST', MANIFEST_IDENTITY);
   assert.equal(manifestId.sha256, 'cf317d57f76fdb52cba8f4631ed2196c3f21f3e9b7ac2bc132d673ebf4ac2973');
 });
+
+const CHECKPOINT_IDENTITY = {
+  chain_id: '4663',
+  manifest_generation: '0',
+  manifest_hash: '0x' + '1'.repeat(64),
+  evidence_to_block: '64986566',
+  last_segment_sequence: '0',
+  last_record_sequence: '229',
+};
+
+test('F-01 checkpoint identity golden vector is canonical', () => {
+  const checkpointId = canonicalHash('HAHAWEEK-EVIDENCE-V4-CHECKPOINT', CHECKPOINT_IDENTITY);
+  assert.equal(checkpointId.sha256, 'CHECKPOINT_HASH_PENDING');
+});
