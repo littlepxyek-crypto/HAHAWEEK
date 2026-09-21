@@ -217,6 +217,13 @@ test('F-01 migration manifest golden vector is canonical', () => {
   assert.equal(manifestHash.sha256, 'a3a802eec55973adf7e2aee95d23193949bb3af3e1040439b84c9cf9f9c19c13');
 });
 
+test('F-01 migration manifest negative vector rejects mutated verified count', () => {
+  const mutated = { ...MIGRATION_MANIFEST, verified_count: '6' };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', MIGRATION_MANIFEST);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', mutated);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 const BACKUP_IDENTITY = {
   source_manifest_hash: '0x' + 'a'.repeat(64),
   source_checkpoint_hash: '0x' + 'b'.repeat(64),
