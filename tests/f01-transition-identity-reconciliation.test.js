@@ -50,6 +50,13 @@ test('F-01 acquisition identity golden vector is canonical and domain-separated'
   assert.equal(actual.sha256, '74b075d427f5af63d7b2db60e5cf24db200a1cde36db68a2db9494742982aaec');
 });
 
+test('F-01 acquisition identity negative vector rejects mutated filter hash', () => {
+  const mutated = { ...ACQUISITION_IDENTITY, filter_hash: '0x' + 'e'.repeat(64) };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-ACQUISITION', ACQUISITION_IDENTITY);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-ACQUISITION', mutated);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 const SEGMENT_IDENTITY = {
   protocol_version: '4',
   segment_kind: 'EVENT',
