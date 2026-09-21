@@ -1,0 +1,40 @@
+name: F-01 V4 Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - v4/f01-rfc8785-conformance
+
+permissions:
+  contents: read
+
+jobs:
+  f01-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run test suite
+        run: npm test
+
+      - name: Verify V4 golden vectors
+        run: npm run verify:v4
+
+      - name: Verify event identity independently
+        run: node scripts/verify-v4-event-identity-independent.js
+
+      - name: Check repository diff
+        run: git diff --check
