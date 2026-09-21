@@ -179,5 +179,5 @@ const MIGRATION_MANIFEST = {
 
 test('F-01 migration manifest golden vector is canonical', () => {
   const manifestHash = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', MIGRATION_MANIFEST);
-  assert.equal(manifestHash.sha256, 'MIGRATION_MANIFEST_HASH_PENDING');
+  assert.equal(manifestHash.sha256, 'a3a802eec55973adf7e2aee95d23193949bb3af3e1040439b84c9cf9f9c19c13');
 });
