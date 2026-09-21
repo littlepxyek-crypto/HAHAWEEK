@@ -191,4 +191,4 @@ const BACKUP_IDENTITY = {
 test('F-01 backup identity golden vector is canonical', () => {
   const backupId = canonicalHash('HAHAWEEK-EVIDENCE-V4-BACKUP', BACKUP_IDENTITY);
   assert.equal(backupId.sha256, '16543b7790c5ff4ae40abb75c10b7264685a1dd6e54c1fe7d48636f0e0c7c78c');
-});
+});\n\ntest('F-01 backup identity negative vector rejects mutated inventory generation', () => {\n  const mutated = { ...BACKUP_IDENTITY, inventory_generation: '1' };\n  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-BACKUP', BACKUP_IDENTITY);\n  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-BACKUP', mutated);\n  assert.notEqual(actual.sha256, valid.sha256);\n});
