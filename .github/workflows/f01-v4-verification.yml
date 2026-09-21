@@ -31,6 +31,9 @@ jobs:
       - name: Run test suite
         run: npm test
 
+      - name: Verify RFC 8785 independently
+        run: node scripts/verify-rfc8785-independent.js
+
       - name: Verify V4 golden vectors
         run: npm run verify:v4
 
