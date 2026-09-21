@@ -68,6 +68,31 @@ class IngestionEngine {
     });
   }
 
+  async verifyIdentityRange(fromBlock, toBlock, legacyCursor) {
+    if (!this.identityBoundary) return;
+
+    let previousBlock = fromBlock - 1;
+    let bindCursor = legacyCursor;
+
+    for (let block = fromBlock; block <= toBlock; block += 1) {
+      const boundary = await this.evaluateIdentityBoundary(
+        previousBlock,
+        block,
+        bindCursor
+      );
+
+      if (boundary.result !== 'CONTINUE') {
+        const error = new Error('IDENTITY_BOUNDARY_' + boundary.result);
+        error.code = boundary.result;
+        error.blockNumber = block;
+        throw error;
+      }
+
+      previousBlock = block;
+      bindCursor = undefined;
+    }
+  }
+
   async runOnce() {
     if (this.running) throw new Error('INGESTION_ALREADY_RUNNING');
     this.running = true;
@@ -99,8 +124,10 @@ class IngestionEngine {
         ) {
           const toBlock = Math.min(fromBlock + this.batchSize - 1, safeHead);
 
+          await this.verifyIdentityRange(fromBlock, toBlock, current);
           await this.processorRange(fromBlock, toBlock);
           this.cursor.advance(toBlock);
+          current = toBlock;
           processed += toBlock - fromBlock + 1;
           batchesProcessed += 1;
         }
