@@ -168,6 +168,13 @@ test('F-01 lease identity golden vector is canonical', () => {
   assert.equal(leaseId.sha256, '7eb8894c1f61444a66bf57ad96b88427a4280bb54a4859c1408370a48bacd53f');
 });
 
+test('F-01 lease identity negative vector rejects mutated owner', () => {
+  const mutated = { ...LEASE_IDENTITY, owner_id: '5'.repeat(64) };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-LEASE', LEASE_IDENTITY);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-LEASE', mutated);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 const MIGRATION_IDENTITY = {
   source_file_sha256: '5'.repeat(64),
   source_size_bytes: '1024',
