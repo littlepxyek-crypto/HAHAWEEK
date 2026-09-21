@@ -1,0 +1,71 @@
+{
+  "schema": "hahaweek-v4-jcs-rfc8785-golden-vectors-v1",
+  "source": "RFC 8785, Sections 3.2.2, 3.2.3, and Appendix B",
+  "vectors": [
+    {
+      "id": "section-3-2-2-sample",
+      "input_json": "{\"numbers\":[333333333.33333329,1E30,4.50,2e-3,0.000000000000000000000000001],\"string\":\"\\u20ac$\\u000F\\u000aA'\\u0042\\u0022\\u005c\\\\\\\"\\/\",\"literals\":[null,true,false]}",
+      "expected_canonical": "{\"literals\":[null,true,false],\"numbers\":[333333333.3333333,1e+30,4.5,0.002,1e-27],\"string\":\"€$\\u000f\\nA'B\\\"\\\\\\\\\\\"/\"}"
+    },
+    {
+      "id": "appendix-b-zero",
+      "input_json": "0",
+      "expected_canonical": "0"
+    },
+    {
+      "id": "appendix-b-minus-zero",
+      "input_json": "-0",
+      "expected_canonical": "0"
+    },
+    {
+      "id": "appendix-b-min-positive",
+      "input_json": "5e-324",
+      "expected_canonical": "5e-324"
+    },
+    {
+      "id": "appendix-b-min-negative",
+      "input_json": "-5e-324",
+      "expected_canonical": "-5e-324"
+    },
+    {
+      "id": "appendix-b-max-positive",
+      "input_json": "1.7976931348623157e+308",
+      "expected_canonical": "1.7976931348623157e+308"
+    },
+    {
+      "id": "appendix-b-max-negative",
+      "input_json": "-1.7976931348623157e+308",
+      "expected_canonical": "-1.7976931348623157e+308"
+    },
+    {
+      "id": "appendix-b-max-safe-internal-integer",
+      "input_json": "9007199254740992",
+      "expected_canonical": "9007199254740992"
+    },
+    {
+      "id": "appendix-b-2-power-68",
+      "input_json": "295147905179352830000",
+      "expected_canonical": "295147905179352830000"
+    },
+    {
+      "id": "appendix-b-1e21",
+      "input_json": "1e21",
+      "expected_canonical": "1e+21"
+    },
+    {
+      "id": "appendix-b-1e-6",
+      "input_json": "0.000001",
+      "expected_canonical": "0.000001"
+    },
+    {
+      "id": "appendix-b-rounding",
+      "input_json": "333333333.33333329",
+      "expected_canonical": "333333333.3333333"
+    },
+    {
+      "id": "recursive-property-order",
+      "input_json": "{\"b\":1,\"a\":{\"z\":2,\"a\":3},\"arr\":[{\"d\":4,\"c\":5}]}",
+      "expected_canonical": "{\"a\":{\"a\":3,\"z\":2},\"arr\":[{\"c\":5,\"d\":4}],\"b\":1}"
+    }
+  ]
+}
