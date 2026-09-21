@@ -1,0 +1,27 @@
+{
+  "fixture_id": "manifest-001",
+  "protocol_id": "HAHAWEEK-EVIDENCE-V4",
+  "artifact_type": "MANIFEST",
+  "domain": "HAHAWEEK-EVIDENCE-V4-MANIFEST",
+  "status": "REFERENCE_ONLY_PENDING_FULL_ENVELOPE_VERIFICATION",
+  "positive_vectors": [{
+    "vector_id": "manifest-positive-001",
+    "input_object": {
+      "chain_id": "4663",
+      "manifest_generation": "0",
+      "previous_manifest_hash": null
+    },
+    "canonical_utf8_hex": "7b22636861696e5f6964223a2234363633222c226d616e69666573745f67656e65726174696f6e223a2230222c2270726576696f75735f6d616e69666573745f68617368223a6e756c6c7d",
+    "expected_sha256": "cf317d57f76fdb52cba8f4631ed2196c3f21f3e9b7ac2bc132d673ebf4ac2973",
+    "expected_artifact_id": "cf317d57f76fdb52cba8f4631ed2196c3f21f3e9b7ac2bc132d673ebf4ac2973"
+  }],
+  "negative_vectors": [{
+    "vector_id": "manifest-negative-001",
+    "mutation": {
+      "field": "manifest_generation",
+      "from": "0",
+      "to": "1"
+    },
+    "expected_error": "HASH_MISMATCH"
+  }]
+}

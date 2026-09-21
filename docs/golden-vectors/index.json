@@ -1,0 +1,21 @@
+{
+  "format": "HAHAWEEK-EVIDENCE-V4-GOLDEN-VECTOR-INDEX-1",
+  "protocol": "HAHAWEEK-EVIDENCE-V4",
+  "status": "REFERENCE_EVIDENCE_INDEX",
+  "production_authority": false,
+  "note": "This index inventories F-01 reference/test evidence. It is not production V4 authority and does not establish RFC 8785 conformance.",
+  "artifacts": [
+    {"artifact_type":"EVENT_IDENTITY","source":"tests/f01-event-identity-reconciliation.test.js","fixture":"event-identity.json"},
+    {"artifact_type":"TRANSITION_IDENTITY","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"transition-identity.json"},
+    {"artifact_type":"REORG_OBSERVATION","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"reorg-observation.json"},
+    {"artifact_type":"ACQUISITION_IDENTITY","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"acquisition-identity.json"},
+    {"artifact_type":"SEGMENT","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"segment.json"},
+    {"artifact_type":"MANIFEST","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"manifest.json"},
+    {"artifact_type":"CHECKPOINT","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"checkpoint.json"},
+    {"artifact_type":"CURSOR","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"cursor.json"},
+    {"artifact_type":"LEASE","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"lease.json"},
+    {"artifact_type":"MIGRATION","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"migration.json"},
+    {"artifact_type":"MIGRATION_MANIFEST","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"migration-manifest.json"},
+    {"artifact_type":"BACKUP","source":"tests/f01-transition-identity-reconciliation.test.js","fixture":"backup.json"}
+  ]
+}

@@ -19,7 +19,6 @@ const UINT64_MAX = 18446744073709551615n;
 const UINT64_RE = /^(0|[1-9][0-9]*)$/;
 const HASH32_RE = /^0x[0-9a-f]{64}$/;
 const ADDRESS20_RE = /^0x[0-9a-f]{40}$/;
-const DOMAIN = "HAHAWEEK-EVIDENCE-V4-PAYLOAD";
 
 function fail(message) {
   throw new Error(message);
@@ -63,11 +62,12 @@ function canonicalizeStringObject(input) {
 
 function verify(filePath) {
   const set = JSON.parse(fs.readFileSync(filePath, "utf8"));
-  if (set.protocol !== "HAHAWEEK-EVIDENCE-V4") fail("invalid protocol");
-  if (!Array.isArray(set.vectors) || set.vectors.length === 0) fail("empty vector set");
+  if (set.protocol_id !== "HAHAWEEK-EVIDENCE-V4") fail("invalid protocol");
+  if (set.artifact_type !== "EVENT_IDENTITY") fail("invalid artifact type");
+  if (typeof set.domain !== "string" || set.domain !== "HAHAWEEK-EVIDENCE-V4-PAYLOAD") fail("invalid domain");
+  if (!Array.isArray(set.positive_vectors) || set.positive_vectors.length === 0) fail("empty positive vector set");
 
-  for (const vector of set.vectors) {
-    if (vector.domain !== DOMAIN) fail(vector.vector_id + ": unexpected domain");
+  for (const vector of set.positive_vectors) {
     const canonical = canonicalizeStringObject(vector.input_object);
     const bytes = Buffer.from(canonical, "utf8");
     const canonicalHex = bytes.toString("hex");
@@ -76,15 +76,15 @@ function verify(filePath) {
     }
 
     const preimage = Buffer.concat([
-      Buffer.from(DOMAIN, "utf8"),
+      Buffer.from(set.domain, "utf8"),
       Buffer.from([0]),
       bytes,
     ]);
     const hash = crypto.createHash("sha256").update(preimage).digest("hex");
-    if (hash !== vector.expected_hash) fail(vector.vector_id + ": hash mismatch");
+    if (hash !== vector.expected_sha256) fail(vector.vector_id + ": hash mismatch");
   }
 
-  return set.vectors.length;
+  return set.positive_vectors.length;
 }
 
 if (require.main === module) {
