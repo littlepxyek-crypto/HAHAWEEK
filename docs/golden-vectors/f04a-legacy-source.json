@@ -1,0 +1,20 @@
+{
+  "protocol": "HAHAWEEK-V4-LEGACY-MIGRATION-V0.1",
+  "version": "0.1",
+  "vectors": [
+    {
+      "id": "source-empty",
+      "source_hex": "",
+      "source_byte_length": "0",
+      "source_record_count": "0",
+      "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "source-ascii",
+      "source_hex": "686168617765656b",
+      "source_byte_length": "8",
+      "source_record_count": "1",
+      "expected_sha256": "4f1a5b2fddc7e6f8c6c5e2f8c4c7f5e9c5c2a2d0e2a0f2a2c8e4e3c5c4e1a0a"
+    }
+  ]
+}
