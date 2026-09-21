@@ -1,0 +1,24 @@
+{
+  "fixture_id": "transition-identity-001",
+  "protocol_id": "HAHAWEEK-EVIDENCE-V4",
+  "artifact_type": "TRANSITION_IDENTITY",
+  "domain": "HAHAWEEK-EVIDENCE-V4-TRANSITION",
+  "positive_vectors": [{
+    "vector_id": "transition-identity-positive-001",
+    "input_object": {
+      "event_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "transition_sequence": "0",
+      "from_state": "OBSERVED",
+      "to_state": "CANONICAL",
+      "reason_code": "INITIAL_CANONICAL"
+    },
+    "canonical_utf8_hex": "7b226576656e745f6964223a22307861616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161222c2266726f6d5f7374617465223a224f42534552564544222c22726561736f6e5f636f6465223a22494e495449414c5f43414e4f4e4943414c222c22746f5f7374617465223a2243414e4f4e4943414c222c227472616e736974696f6e5f73657175656e6365223a2230227d",
+    "expected_sha256": "767b8bf9b7a491d0e072478122920711cadee818dbfe14850143522e1f7ae389",
+    "expected_artifact_id": "767b8bf9b7a491d0e072478122920711cadee818dbfe14850143522e1f7ae389"
+  }],
+  "negative_vectors": [{
+    "vector_id": "transition-identity-negative-001",
+    "mutation": {"field": "to_state", "from": "CANONICAL", "to": "ORPHANED"},
+    "expected_error": "HASH_MISMATCH"
+  }]
+}
