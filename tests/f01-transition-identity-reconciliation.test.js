@@ -103,6 +103,25 @@ test('F-01 segment identity/body/seal golden vector is canonical', () => {
   assert.equal(sealHash.sha256, SEGMENT_HASH);
 });
 
+test('F-01 segment seal negative vector rejects mutated body hash', () => {
+  const segmentId = canonicalHash('HAHAWEEK-EVIDENCE-V4-SEGMENT', SEGMENT_IDENTITY);
+  const sealIdentity = {
+    segment_id: '0x' + segmentId.sha256,
+    generation: '0',
+    segment_sequence: '0',
+    segment_kind: 'EVENT',
+    first_body_sequence: '1',
+    last_body_sequence: '1',
+    record_count: '1',
+    body_sha256: '0x' + SEGMENT_BODY_SHA256,
+  };
+  const mutated = { ...sealIdentity, body_sha256: '0x' + 'c'.repeat(64) };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-SEGMENT', sealIdentity);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-SEGMENT', mutated);
+  assert.equal(valid.sha256, SEGMENT_HASH);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 test('F-01 segment body negative vector rejects mutated body bytes', () => {
   const original = Buffer.from(jcs(SEGMENT_EVENT_RECORD) + '\n', 'utf8');
   const mutatedRecord = { ...SEGMENT_EVENT_RECORD, sequence_number: '2' };
