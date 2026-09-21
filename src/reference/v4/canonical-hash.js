@@ -7,7 +7,7 @@ function assertValidString(value) {
     const code = value.charCodeAt(i);
     if (code >= 0xd800 && code <= 0xdbff) {
       const next = value.charCodeAt(i + 1);
-      if (next < 0xdc00 || next > 0xdfff) throw new TypeError('JCS_UNPAIRED_SURROGATE');
+      if (next < 0xdc00 || next > 0xdfff || Number.isNaN(next)) throw new TypeError('JCS_UNPAIRED_SURROGATE');
       i++;
     } else if (code >= 0xdc00 && code <= 0xdfff) {
       throw new TypeError('JCS_UNPAIRED_SURROGATE');
