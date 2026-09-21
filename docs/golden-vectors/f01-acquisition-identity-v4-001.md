@@ -11,7 +11,7 @@ canonical_jcs_utf8:
 {"chain_id":"4663","filter_hash":"0x7777777777777777777777777777777777777777777777777777777777777777","pagination_index":"0","provider_id":"robinhood-mainnet-primary","request_sequence":"0","requested_from_block":"64986557","requested_to_block":"64986566"}
 
 expected_acquisition_id:
-d92b2b5f76e4f61d4a0d8f8e2a6e7b8d1c0c0c75d37d0e2f3a6c3e2a8d5e0d6a
+6efb8f5087b0681c33c72f5f38eedb6ca8fba97478b85aef300adaf2d824f7c9
 
 ## Response digest fixture
 
@@ -20,6 +20,9 @@ response_object:
 
 canonical_response_jcs_utf8:
 {"chain_id":"4663","filter_hash":"0x7777777777777777777777777777777777777777777777777777777777777777","logs":[],"requested_from_block":"64986557","requested_to_block":"64986566","status":"SUCCESS"}
+
+response_digest:
+29dbbd1485e675f18c177940d1708067ac70fb765a87321032e8f1795d98935c
 
 response_digest_domain:
 HAHAWEEK-EVIDENCE-V4-ACQUISITION
