@@ -1,0 +1,30 @@
+{
+  "fixture_id": "checkpoint-001",
+  "protocol_id": "HAHAWEEK-EVIDENCE-V4",
+  "artifact_type": "CHECKPOINT",
+  "domain": "HAHAWEEK-EVIDENCE-V4-CHECKPOINT",
+  "status": "REFERENCE_ONLY_PENDING_FULL_NORMATIVE_VERIFIER",
+  "positive_vectors": [{
+    "vector_id": "checkpoint-positive-001",
+    "input_object": {
+      "chain_id": "4663",
+      "manifest_generation": "0",
+      "manifest_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+      "evidence_to_block": "64986566",
+      "last_segment_sequence": "0",
+      "last_record_sequence": "229"
+    },
+    "canonical_utf8_hex": "7b22636861696e5f6964223a2234363633222c2265766964656e63655f746f5f626c6f636b223a223634393836353636222c226c6173745f7265636f72645f73657175656e6365223a22323239222c226c6173745f7365676d656e745f73657175656e6365223a2230222c226d616e69666573745f67656e65726174696f6e223a2230222c226d616e69666573745f68617368223a223131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131313131227d",
+    "expected_sha256": "UNVERIFIED_NORMATIVE_VECTOR",
+    "expected_artifact_id": "UNVERIFIED_NORMATIVE_VECTOR"
+  }],
+  "negative_vectors": [{
+    "vector_id": "checkpoint-negative-001",
+    "mutation": {
+      "field": "evidence_to_block",
+      "from": "64986566",
+      "to": "64986567"
+    },
+    "expected_error": "HASH_MISMATCH"
+  }]
+}
