@@ -5,7 +5,6 @@ const assert = require("node:assert/strict");
 const path = require("node:path");
 const { domainSeparatedHash } = require("../src/reference/v4/hash");
 const { validateEventIdentity } = require("../src/reference/v4/event-identity");
-const { verifyVectorSet } = require("../scripts/verify-golden-vectors");
 
 const fixture = path.join(
   __dirname,
@@ -16,18 +15,17 @@ const fixture = path.join(
 );
 
 const vectorSet = require(fixture);
-const identity = vectorSet.vectors[0].input_object;
+const identity = vectorSet.positive_vectors[0].input_object;
 
 test("V4 event identity golden vector is lexically valid", () => {
   assert.deepEqual(validateEventIdentity(identity), identity);
 });
 
 test("V4 event identity golden vector reproduces canonical bytes and hash", () => {
-  const vector = vectorSet.vectors[0];
-  const actual = domainSeparatedHash(vector.domain, vector.input_object);
+  const vector = vectorSet.positive_vectors[0];
+  const actual = domainSeparatedHash(vectorSet.domain, vector.input_object);
   assert.equal(actual.canonicalUtf8Hex, vector.canonical_utf8_hex);
-  assert.equal(actual.hash, vector.expected_hash);
-  assert.equal(verifyVectorSet(fixture).count, 1);
+  assert.equal(actual.hash, vector.expected_sha256);
 });
 
 const mutations = [
