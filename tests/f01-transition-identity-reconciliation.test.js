@@ -120,3 +120,17 @@ test('F-01 checkpoint identity golden vector is canonical', () => {
   const checkpointId = canonicalHash('HAHAWEEK-EVIDENCE-V4-CHECKPOINT', CHECKPOINT_IDENTITY);
   assert.equal(checkpointId.sha256, '466357fe0a6d69ff83fc290d247c59fb6e3fa4f32d5e0daa1fff4c176b195e87');
 });
+
+const CURSOR_IDENTITY = {
+  chain_id: '4663',
+  manifest_generation: '0',
+  checkpoint_id: '0x' + '2'.repeat(64),
+  cursor_generation: '0',
+  next_block: '64986567',
+  last_record_sequence: '229',
+};
+
+test('F-01 cursor identity golden vector is canonical', () => {
+  const cursorId = canonicalHash('HAHAWEEK-EVIDENCE-V4-CURSOR', CURSOR_IDENTITY);
+  assert.equal(cursorId.sha256, 'CURSOR_HASH_PENDING');
+});
