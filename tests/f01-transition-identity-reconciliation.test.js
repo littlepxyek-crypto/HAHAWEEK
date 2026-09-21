@@ -107,6 +107,13 @@ test('F-01 manifest identity golden vector is canonical', () => {
   assert.equal(manifestId.sha256, 'cf317d57f76fdb52cba8f4631ed2196c3f21f3e9b7ac2bc132d673ebf4ac2973');
 });
 
+test('F-01 manifest identity negative vector rejects mutated generation', () => {
+  const mutated = { ...MANIFEST_IDENTITY, manifest_generation: '1' };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-MANIFEST', MANIFEST_IDENTITY);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-MANIFEST', mutated);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 const CHECKPOINT_IDENTITY = {
   chain_id: '4663',
   manifest_generation: '0',
