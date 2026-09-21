@@ -24,7 +24,7 @@ function identity(block, parent) {
   };
 }
 
-function makeEngine({ cursor, head = 102, identityProvider, processorRange, batchSize = 2 }) {
+function makeEngine({ cursor, head = 102, identityProvider = async block => identity(block), processorRange, batchSize = 2 }) {
   return new IngestionEngine({
     provider: { async getBlockNumber() { return head; } },
     cursor,
@@ -44,9 +44,7 @@ test('identity-aware batch verifies the complete range before processing', async
     cursor,
     processorRange: async (from, to) => ranges.push([from, to])
   });
-
   const result = await engine.runOnce();
-
   assert.deepEqual(ranges, [[101, 102]]);
   assert.equal(result.cursor, 102);
 });
@@ -57,18 +55,13 @@ test('identity-aware batch stops before processorRange on reorg inside the batch
   const engine = makeEngine({
     cursor,
     processorRange: async (from, to) => ranges.push([from, to]),
-    identityProvider: async block => {
-      if (block === 102) return identity(102, '0xfork');
-      return identity(block);
-    }
+    identityProvider: async block => block === 102 ? identity(102, '0xfork') : identity(block)
   });
-
   await assert.rejects(() => engine.runOnce(), error => {
     assert.equal(error.code, 'STOP_REORG');
     assert.equal(error.blockNumber, 102);
     return true;
   });
-
   assert.deepEqual(ranges, []);
   assert.equal(cursor.get(), 100);
 });
@@ -81,13 +74,11 @@ test('identity-aware batch fails closed and preserves cursor on invalid identity
     processorRange: async (from, to) => ranges.push([from, to]),
     identityProvider: async block => block === 101 ? { blockNumber: 101 } : identity(block)
   });
-
   await assert.rejects(() => engine.runOnce(), error => {
     assert.equal(error.code, 'FAIL_CLOSED');
     assert.equal(error.blockNumber, 101);
     return true;
   });
-
   assert.deepEqual(ranges, []);
   assert.equal(cursor.get(), 100);
 });
@@ -98,7 +89,6 @@ test('identity-aware batch advances only after processorRange succeeds', async (
     cursor,
     processorRange: async () => { throw new Error('BATCH_FAILURE'); }
   });
-
   await assert.rejects(() => engine.runOnce(), /BATCH_FAILURE/);
   assert.equal(cursor.get(), 100);
 });
@@ -114,7 +104,6 @@ test('identity-aware batch preserves legacy mode when identity seam is disabled'
     processorRange: async (from, to) => ranges.push([from, to]),
     batchSize: 2
   });
-
   const result = await engine.runOnce();
   assert.deepEqual(ranges, [[101, 102]]);
   assert.equal(result.cursor, 102);
