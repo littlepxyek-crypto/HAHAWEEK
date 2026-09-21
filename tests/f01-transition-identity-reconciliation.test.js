@@ -189,6 +189,13 @@ test('F-01 migration identity golden vector is canonical', () => {
   assert.equal(migrationId.sha256, 'ba740e4535441843ba4e12e0eecb139b3f006dd310524fa3748d54d11b716715');
 });
 
+test('F-01 migration identity negative vector rejects mutated source count', () => {
+  const mutated = { ...MIGRATION_IDENTITY, source_record_count: '11' };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', MIGRATION_IDENTITY);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', mutated);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 const MIGRATION_MANIFEST = {
   record_type: 'MIGRATION_MANIFEST',
   protocol_version: '4',
