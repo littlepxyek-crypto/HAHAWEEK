@@ -18,7 +18,7 @@ test('JCS reference boundary rejects non-finite numbers', () => {
 });
 
 test('JCS reference boundary rejects unpaired surrogates', () => {
-  assert.throws(() => jcs('\ud800'), /JCS_UNPAIRED_SURROGATE/);
+  assert.throws(() => jcs(String.fromCharCode(0xd800)), /JCS_UNPAIRED_SURROGATE/);
 });
 
 test('V4 payload golden vector remains stable', () => {
