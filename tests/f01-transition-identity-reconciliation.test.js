@@ -190,5 +190,5 @@ const BACKUP_IDENTITY = {
 
 test('F-01 backup identity golden vector is canonical', () => {
   const backupId = canonicalHash('HAHAWEEK-EVIDENCE-V4-BACKUP', BACKUP_IDENTITY);
-  assert.equal(backupId.sha256, 'BACKUP_HASH_PENDING');
+  assert.equal(backupId.sha256, '16543b7790c5ff4ae40abb75c10b7264685a1dd6e54c1fe7d48636f0e0c7c78c');
 });
