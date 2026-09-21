@@ -118,5 +118,5 @@ const CHECKPOINT_IDENTITY = {
 
 test('F-01 checkpoint identity golden vector is canonical', () => {
   const checkpointId = canonicalHash('HAHAWEEK-EVIDENCE-V4-CHECKPOINT', CHECKPOINT_IDENTITY);
-  assert.equal(checkpointId.sha256, 'CHECKPOINT_HASH_PENDING');
+  assert.equal(checkpointId.sha256, '466357fe0a6d69ff83fc290d247c59fb6e3fa4f32d5e0daa1fff4c176b195e87');
 });
