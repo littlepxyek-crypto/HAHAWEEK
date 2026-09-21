@@ -31,7 +31,7 @@ function verifyCursor(v) {
 }
 function verifyRecovery(v) {
   verifyCheckpoint({ input: v.checkpoint.input, manifest: v.manifest });
-  verifyCursor({ input: v.cursor.input, checkpoint: v.checkpoint });
+  verifyCursor({ input: v.cursor.input, checkpoint: { hash: v.checkpoint.hash, generation: v.checkpoint.input.generation } });
   if (v.acquisition_position_valid !== true) fail("RECOVERY_ACQUISITION_POSITION_INVALID");
   return true;
 }
