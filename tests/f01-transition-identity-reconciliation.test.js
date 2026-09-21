@@ -31,3 +31,18 @@ test('F-01 transition identity key order is irrelevant to canonical bytes', () =
   const reordered = Object.fromEntries(Object.entries(TRANSITION_IDENTITY).reverse());
   assert.equal(jcs(reordered), jcs(TRANSITION_IDENTITY));
 });
+
+const REORG_OBSERVATION_IDENTITY = {
+  chain_id: '4663',
+  block_number: '123',
+  previous_block_hash: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  replacement_block_hash: '0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  detected_by_acquisition_id: '0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
+};
+
+test('F-01 reorg observation identity is canonical and domain-separated', () => {
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-TRANSITION', REORG_OBSERVATION_IDENTITY);
+  assert.equal(jcs(REORG_OBSERVATION_IDENTITY), jcs({ ...REORG_OBSERVATION_IDENTITY }));
+  assert.match(actual.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(actual.sha256, canonicalHash('HAHAWEEK-EVIDENCE-V4-TRANSITION', REORG_OBSERVATION_IDENTITY).sha256);
+});
