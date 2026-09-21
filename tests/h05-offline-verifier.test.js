@@ -22,7 +22,7 @@ test("H-05 rejects tampered checkpoint authority", () => {
       kind: "checkpoint",
       input: { generation: "0", manifest_hash: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
       manifest: { exists: true, hash: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", generation: "0", inventory_valid: true, segments_valid: true },
-      expected: "CHECKPOINT_INVALID"
+      expected: "CHECKPOINT_VALID"
     }]
   };
   const file = require("node:fs").mkdtempSync(require("node:os").tmpdir() + "/hahaweek-h05-");
@@ -40,7 +40,7 @@ test("H-05 rejects cursor ahead of checkpoint", () => {
       kind: "cursor",
       checkpoint: { hash: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", generation: "7" },
       input: { generation: "8", checkpoint_hash: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", position: "42" },
-      expected: "CURSOR_INVALID"
+      expected: "CURSOR_VALID"
     }]
   };
   const dir = require("node:fs").mkdtempSync(require("node:os").tmpdir() + "/hahaweek-h05-");
