@@ -128,6 +128,13 @@ test('F-01 checkpoint identity golden vector is canonical', () => {
   assert.equal(checkpointId.sha256, '466357fe0a6d69ff83fc290d247c59fb6e3fa4f32d5e0daa1fff4c176b195e87');
 });
 
+test('F-01 checkpoint identity negative vector rejects mutated evidence block', () => {
+  const mutated = { ...CHECKPOINT_IDENTITY, evidence_to_block: '64986567' };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-CHECKPOINT', CHECKPOINT_IDENTITY);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-CHECKPOINT', mutated);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 const CURSOR_IDENTITY = {
   chain_id: '4663',
   manifest_generation: '0',
