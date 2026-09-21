@@ -23,7 +23,7 @@ test('identity layer accepts a continuous next block', () => {
     previousHash: previous.blockHash,
     currentBlockNumber: continuous.blockNumber,
     currentHash: continuous.blockHash,
-    parentHash: continuous.parentHash
+    currentParentHash: continuous.parentHash
   }), REORG.CONTINUOUS);
 });
 
@@ -34,7 +34,7 @@ test('identity layer feeds parent mismatch into reorg detector', () => {
     previousHash: previous.blockHash,
     currentBlockNumber: forked.blockNumber,
     currentHash: forked.blockHash,
-    parentHash: forked.parentHash
+    currentParentHash: forked.parentHash
   }), REORG.REORG_DETECTED);
 });
 
@@ -60,7 +60,7 @@ test('integration contract has no cursor/evidence side effects', () => {
     previousHash: previous.blockHash,
     currentBlockNumber: continuous.blockNumber,
     currentHash: continuous.blockHash,
-    parentHash: continuous.parentHash
+    currentParentHash: continuous.parentHash
   });
   assert.equal(cursor, 100);
   assert.deepEqual(evidence, ['e100']);
