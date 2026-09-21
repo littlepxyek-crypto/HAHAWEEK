@@ -160,3 +160,24 @@ test('F-01 migration identity golden vector is canonical', () => {
   const migrationId = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', MIGRATION_IDENTITY);
   assert.equal(migrationId.sha256, 'ba740e4535441843ba4e12e0eecb139b3f006dd310524fa3748d54d11b716715');
 });
+
+const MIGRATION_MANIFEST = {
+  record_type: 'MIGRATION_MANIFEST',
+  protocol_version: '4',
+  migration_id: '0x' + '6'.repeat(64),
+  source_file_sha256: '0x' + '5'.repeat(64),
+  source_size_bytes: '1024',
+  source_record_count: '10',
+  verified_count: '7',
+  unverified_count: '2',
+  quarantined_count: '1',
+  verified_output_hash: '0x' + '7'.repeat(64),
+  unverified_output_hash: '0x' + '8'.repeat(64),
+  quarantine_output_hash: '0x' + '9'.repeat(64),
+  created_at: '2026-09-19T00:00:00.000Z',
+};
+
+test('F-01 migration manifest golden vector is canonical', () => {
+  const manifestHash = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', MIGRATION_MANIFEST);
+  assert.equal(manifestHash.sha256, 'MIGRATION_MANIFEST_HASH_PENDING');
+});
