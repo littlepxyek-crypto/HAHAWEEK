@@ -1,0 +1,28 @@
+{
+  "fixture_id": "lease-001",
+  "protocol_id": "HAHAWEEK-EVIDENCE-V4",
+  "artifact_type": "LEASE",
+  "domain": "HAHAWEEK-EVIDENCE-V4-LEASE",
+  "status": "REFERENCE_ONLY_PENDING_FULL_NORMATIVE_VERIFIER",
+  "positive_vectors": [{
+    "vector_id": "lease-positive-001",
+    "input_object": {
+      "chain_id": "4663",
+      "lease_generation": "0",
+      "owner_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "process_start_nonce": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "canonical_utf8_hex": "7b22636861696e5f6964223a2234363633222c226c656173655f67656e65726174696f6e223a2230222c226f776e65725f6964223a226161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161222c2270726f636573735f73746172745f6e6f6e6365223a226262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262227d",
+    "expected_sha256": "UNVERIFIED_NORMATIVE_VECTOR",
+    "expected_artifact_id": "UNVERIFIED_NORMATIVE_VECTOR"
+  }],
+  "negative_vectors": [{
+    "vector_id": "lease-negative-001",
+    "mutation": {
+      "field": "owner_id",
+      "from": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "to": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "expected_error": "HASH_MISMATCH"
+  }]
+}
