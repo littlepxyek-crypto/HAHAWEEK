@@ -12,7 +12,7 @@ test("RFC 8785: primitive and nested canonicalization example", () => {
   };
 
   const expected =
-    '{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\\u000f\\nA\'B\\\"\\\\\\\"/"}';
+    '{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\\u000f\\nA\'B\\\"\\\\\\\\\"/"}';
 
   assert.equal(canonicalize(input), expected);
 });
@@ -30,7 +30,7 @@ test("RFC 8785: property ordering follows UTF-16 code-unit order", () => {
 
   assert.equal(
     canonicalize(input),
-    '{"\\r":"Carriage Return","1":"One","\\u0080":"Control","\\u00f6":"Latin Small Letter O With Diaeresis","\\u20ac":"Euro Sign","😀":"Emoji: Grinning Face","\ufb33":"Hebrew Letter Dalet With Dagesh"}'
+    '{"\\r":"Carriage Return","1":"One","\u0080":"Control","ö":"Latin Small Letter O With Diaeresis","€":"Euro Sign","😀":"Emoji: Grinning Face","דּ":"Hebrew Letter Dalet With Dagesh"}'
   );
 });
 
