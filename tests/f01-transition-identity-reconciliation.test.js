@@ -149,6 +149,13 @@ test('F-01 cursor identity golden vector is canonical', () => {
   assert.equal(cursorId.sha256, 'a34b8cdf11a16fd3a9df8c565df496a2af50bdf3f15db5f088a93b305c0209da');
 });
 
+test('F-01 cursor identity negative vector rejects mutated next block', () => {
+  const mutated = { ...CURSOR_IDENTITY, next_block: '64986568' };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-CURSOR', CURSOR_IDENTITY);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-CURSOR', mutated);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 const LEASE_IDENTITY = {
   chain_id: '4663',
   lease_generation: '0',
