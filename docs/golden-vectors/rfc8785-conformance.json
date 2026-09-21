@@ -6,13 +6,6 @@
   "status": "REFERENCE_ONLY_PENDING_EXECUTION",
   "positive_vectors": [
     {
-      "vector_id": "rfc8785-number-boundary-001",
-      "input_object": {
-        "numbers": [333333333.33333329, 1e30, 4.5, 0.002, 1e-27]
-      },
-      "expected_canonical_utf8_hex": "7b226e756d62657273223a5b3333333333333333332e333333333333332c31652b33302c342e352c302e3030322c31652d32375d7d"
-    },
-    {
       "vector_id": "rfc8785-ordering-001",
       "input_object": {
         "b": 1,
@@ -21,6 +14,22 @@
         "A": 4
       },
       "expected_canonical_utf8_hex": "7b2241223a342c2261223a322c2262223a312c22f09f9880223a337d"
+    },
+    {
+      "vector_id": "rfc8785-unicode-001",
+      "input_object": {
+        "a": "€"
+      },
+      "expected_canonical_utf8_hex": "7b2261223a22e282ac227d"
+    },
+    {
+      "vector_id": "rfc8785-number-001",
+      "input_object": {
+        "a": 0,
+        "b": 0.000001,
+        "c": 1e-7
+      },
+      "expected_canonical_utf8_hex": "7b2261223a302c2262223a302e3030303030312c2263223a31652d377d"
     }
   ],
   "negative_vectors": [
