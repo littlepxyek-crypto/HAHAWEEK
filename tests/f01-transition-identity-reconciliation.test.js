@@ -146,3 +146,17 @@ test('F-01 lease identity golden vector is canonical', () => {
   const leaseId = canonicalHash('HAHAWEEK-EVIDENCE-V4-LEASE', LEASE_IDENTITY);
   assert.equal(leaseId.sha256, '7eb8894c1f61444a66bf57ad96b88427a4280bb54a4859c1408370a48bacd53f');
 });
+
+const MIGRATION_IDENTITY = {
+  source_file_sha256: '5'.repeat(64),
+  source_size_bytes: '1024',
+  source_record_count: '10',
+  source_path: 'data/raw-events.jsonl',
+  target_chain_id: '4663',
+  protocol_version: '4',
+};
+
+test('F-01 migration identity golden vector is canonical', () => {
+  const migrationId = canonicalHash('HAHAWEEK-EVIDENCE-V4-MIGRATION', MIGRATION_IDENTITY);
+  assert.equal(migrationId.sha256, 'MIGRATION_HASH_PENDING');
+});
