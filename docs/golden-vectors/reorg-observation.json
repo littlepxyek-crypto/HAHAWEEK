@@ -1,0 +1,28 @@
+{
+  "fixture_id": "reorg-observation-001",
+  "protocol_id": "HAHAWEEK-EVIDENCE-V4",
+  "artifact_type": "REORG_OBSERVATION",
+  "domain": "HAHAWEEK-EVIDENCE-V4-TRANSITION",
+  "positive_vectors": [{
+    "vector_id": "reorg-observation-positive-001",
+    "input_object": {
+      "chain_id": "4663",
+      "block_number": "123",
+      "previous_block_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "replacement_block_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "detected_by_acquisition_id": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "canonical_utf8_hex": "7b22626c6f636b5f6e756d626572223a22313233222c22636861696e5f6964223a2234363633222c2264657465637465645f62795f6163717569736974696f6e5f6964223a22307863636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363222c2270726576696f75735f626c6f636b5f68617368223a22307861616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161222c227265706c6163656d656e745f626c6f636b5f68617368223a22307862626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262626262227d",
+    "expected_sha256": "a6cac6b3c513dc9f184b74249a61d5cff130c0a8838de8f4344cc59a7f549201",
+    "expected_artifact_id": "a6cac6b3c513dc9f184b74249a61d5cff130c0a8838de8f4344cc59a7f549201"
+  }],
+  "negative_vectors": [{
+    "vector_id": "reorg-observation-negative-001",
+    "mutation": {
+      "field": "replacement_block_hash",
+      "from": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "to": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "expected_error": "HASH_MISMATCH"
+  }]
+}

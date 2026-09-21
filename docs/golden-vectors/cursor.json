@@ -1,0 +1,31 @@
+{
+  "fixture_id": "cursor-001",
+  "protocol_id": "HAHAWEEK-EVIDENCE-V4",
+  "artifact_type": "CURSOR",
+  "domain": "HAHAWEEK-EVIDENCE-V4-CURSOR",
+  "status": "REFERENCE_ONLY_PENDING_FULL_NORMATIVE_VERIFIER",
+  "positive_vectors": [{
+    "vector_id": "cursor-positive-001",
+    "input_object": {
+      "record_type": "CURSOR",
+      "protocol_version": "4",
+      "chain_id": "4663",
+      "checkpoint_generation": "0",
+      "checkpoint_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+      "next_block": "64986567",
+      "updated_at": "2026-09-19T00:00:00.000Z"
+    },
+    "canonical_utf8_hex": "7b22636861696e5f6964223a2234363633222c22636865636b706f696e745f67656e65726174696f6e223a2230222c22636865636b706f696e745f68617368223a223232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232323232222c226e6578745f626c6f636b223a223634393836353637222c2270726f746f636f6c5f76657273696f6e223a2234222c227265636f72645f74797065223a22435552534f52222c22757064617465645f6174223a22323032362d30392d31395430303a30303a30302e3030305a227d",
+    "expected_sha256": "UNVERIFIED_NORMATIVE_VECTOR",
+    "expected_artifact_id": "UNVERIFIED_NORMATIVE_VECTOR"
+  }],
+  "negative_vectors": [{
+    "vector_id": "cursor-negative-001",
+    "mutation": {
+      "field": "next_block",
+      "from": "64986567",
+      "to": "64986568"
+    },
+    "expected_error": "HASH_MISMATCH"
+  }]
+}

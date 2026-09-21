@@ -1,0 +1,36 @@
+{
+  "fixture_id": "segment-001",
+  "protocol_id": "HAHAWEEK-EVIDENCE-V4",
+  "artifact_type": "SEGMENT",
+  "domain": "HAHAWEEK-EVIDENCE-V4-SEGMENT",
+  "status": "REFERENCE_ONLY_PENDING_NORMATIVE_HASH_GRAMMAR",
+  "positive_vectors": [{
+    "vector_id": "segment-positive-001",
+    "input_object": {
+      "protocol_version": "4",
+      "segment_kind": "EVENT",
+      "generation": "0",
+      "segment_sequence": "0"
+    },
+    "canonical_utf8_hex": "7b2267656e65726174696f6e223a2230222c2270726f746f636f6c5f76657273696f6e223a2234222c227365676d656e745f6b696e64223a224556454e54222c227365676d656e745f73657175656e6365223a2230227d",
+    "expected_sha256": "98a4e799919cbdf02c4700121471beb8d91e4c3d57b7b2fc2b2f9cb49becbe3f",
+    "expected_artifact_id": "98a4e799919cbdf02c4700121471beb8d91e4c3d57b7b2fc2b2f9cb49becbe3f"
+  }],
+  "negative_vectors": [
+    {
+      "vector_id": "segment-negative-identity-001",
+      "mutation": {"field": "segment_sequence", "from": "0", "to": "1"},
+      "expected_error": "HASH_MISMATCH"
+    },
+    {
+      "vector_id": "segment-negative-body-001",
+      "mutation": {"field": "record.sequence_number", "from": "1", "to": "2"},
+      "expected_error": "BODY_HASH_MISMATCH"
+    },
+    {
+      "vector_id": "segment-negative-seal-001",
+      "mutation": {"field": "body_sha256", "from": "original", "to": "cccc..."},
+      "expected_error": "SEGMENT_HASH_MISMATCH"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HAHAWEEK V4 Golden Vector Fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixture_id",
+    "protocol_id",
+    "artifact_type",
+    "domain",
+    "positive_vectors",
+    "negative_vectors"
+  ],
+  "properties": {
+    "fixture_id": {"type": "string", "minLength": 1},
+    "protocol_id": {"const": "HAHAWEEK-EVIDENCE-V4"},
+    "artifact_type": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "minLength": 1},
+    "positive_vectors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vector_id",
+          "input_object",
+          "canonical_utf8_hex",
+          "expected_sha256"
+        ],
+        "properties": {
+          "vector_id": {"type": "string", "minLength": 1},
+          "input_object": {"type": "object"},
+          "canonical_utf8_hex": {"type": "string", "pattern": "^[0-9a-f]*$"},
+          "expected_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "expected_artifact_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "negative_vectors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vector_id",
+          "mutation",
+          "expected_error"
+        ],
+        "properties": {
+          "vector_id": {"type": "string", "minLength": 1},
+          "mutation": {"type": "object"},
+          "expected_error": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

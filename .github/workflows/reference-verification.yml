@@ -1,0 +1,26 @@
+name: Reference Verification
+
+on:
+  push:
+    branches:
+      - step71b/canonical-fixture-index
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  reference-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci
+      - name: Run RFC 8785 boundary verification
+        run: npm run verify:rfc8785
+      - name: Run full test suite
+        run: npm test
