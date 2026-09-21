@@ -36,11 +36,23 @@ for (const vector of fixture.positive_vectors) {
 }
 
 for (const vector of fixture.negative_vectors) {
-  if (!vector.expected_error) {
-    fail(vector.vector_id + ": missing expected_error");
+  let rejected = false;
+
+  try {
+    if (vector.vector_id === "rfc8785-negative-nonfinite-001") {
+      canonicalUtf8(NaN);
+    } else if (vector.vector_id === "rfc8785-negative-surrogate-001") {
+      canonicalUtf8("\ud800");
+    } else {
+      fail(vector.vector_id + ": unsupported negative vector");
+    }
+  } catch (error) {
+    rejected = true;
+  }
+
+  if (!rejected) {
+    fail(vector.vector_id + ": invalid input was accepted");
   }
 }
 
-console.log(
-  "RFC 8785 fixture verification: PASS (positive canonical-byte vectors)"
-);
+console.log("RFC 8785 fixture verification: PASS");
