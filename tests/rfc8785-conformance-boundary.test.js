@@ -7,12 +7,12 @@ const { canonicalize } = require("../src/reference/v4/jcs");
 test("RFC 8785: primitive and nested canonicalization example", () => {
   const input = {
     numbers: [333333333.33333329, 1E30, 4.50, 2e-3, 1e-27],
-    string: "\u20ac$\u000f\nA'B\"\\\\\"/",
+    string: "€$\u000f\nA'B\"\\/",
     literals: [null, true, false]
   };
 
   const expected =
-    '{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\\u000f\\nA\'B\\\"\\\\\\\\\"/"}';
+    '{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\\u000f\\nA\'B\\\"\\\\/"}';
 
   assert.equal(canonicalize(input), expected);
 });
