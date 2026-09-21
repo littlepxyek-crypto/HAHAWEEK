@@ -73,7 +73,7 @@ test('identity seam blocks reorg before processor or cursor advance', async () =
   assert.equal(cursor.get(), 100);
 });
 
-test('identity seam fails closed on identity acquisition failure', async () => {
+test('identity seam fails closed on invalid current identity', async () => {
   const cursor = makeCursor(100);
   const processed = [];
   const engine = new IngestionEngine({
@@ -81,7 +81,7 @@ test('identity seam fails closed on identity acquisition failure', async () => {
     cursor,
     confirmations: 0,
     processor: async block => processed.push(block),
-    identityProvider: async () => ({ blockNumber: 101 }),
+    identityProvider: async block => block === 100 ? identity(100) : { blockNumber: 101 },
     identityBoundary: evaluateIdentityAwareBoundary
   });
   await assert.rejects(() => engine.runOnce(), error => {
