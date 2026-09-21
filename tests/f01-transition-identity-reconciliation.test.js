@@ -144,5 +144,5 @@ const LEASE_IDENTITY = {
 
 test('F-01 lease identity golden vector is canonical', () => {
   const leaseId = canonicalHash('HAHAWEEK-EVIDENCE-V4-LEASE', LEASE_IDENTITY);
-  assert.equal(leaseId.sha256, 'LEASE_HASH_PENDING');
+  assert.equal(leaseId.sha256, '7eb8894c1f61444a66bf57ad96b88427a4280bb54a4859c1408370a48bacd53f');
 });
