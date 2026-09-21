@@ -95,3 +95,14 @@ test('F-01 segment identity/body/seal golden vector is canonical', () => {
   const sealHash = canonicalHash('HAHAWEEK-EVIDENCE-V4-SEGMENT', sealIdentity);
   assert.equal(sealHash.sha256, SEGMENT_HASH);
 });
+
+const MANIFEST_IDENTITY = {
+  chain_id: '4663',
+  manifest_generation: '0',
+  previous_manifest_hash: null,
+};
+
+test('F-01 manifest identity golden vector is canonical', () => {
+  const manifestId = canonicalHash('HAHAWEEK-EVIDENCE-V4-MANIFEST', MANIFEST_IDENTITY);
+  assert.equal(manifestId.sha256, '0d1e8d2a58d1c0d6c3d67d7e1d4a7aebf4c5a4e3e7f7f7f4a0a0b5b8c0d0d2c7');
+});
