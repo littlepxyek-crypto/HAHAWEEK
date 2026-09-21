@@ -103,6 +103,13 @@ test('F-01 segment identity/body/seal golden vector is canonical', () => {
   assert.equal(sealHash.sha256, SEGMENT_HASH);
 });
 
+test('F-01 segment identity negative vector rejects mutated sequence', () => {
+  const mutated = { ...SEGMENT_IDENTITY, segment_sequence: '1' };
+  const valid = canonicalHash('HAHAWEEK-EVIDENCE-V4-SEGMENT', SEGMENT_IDENTITY);
+  const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-SEGMENT', mutated);
+  assert.notEqual(actual.sha256, valid.sha256);
+});
+
 const MANIFEST_IDENTITY = {
   chain_id: '4663',
   manifest_generation: '0',
