@@ -132,5 +132,5 @@ const CURSOR_IDENTITY = {
 
 test('F-01 cursor identity golden vector is canonical', () => {
   const cursorId = canonicalHash('HAHAWEEK-EVIDENCE-V4-CURSOR', CURSOR_IDENTITY);
-  assert.equal(cursorId.sha256, 'CURSOR_HASH_PENDING');
+  assert.equal(cursorId.sha256, 'a34b8cdf11a16fd3a9df8c565df496a2af50bdf3f15db5f088a93b305c0209da');
 });
