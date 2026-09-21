@@ -44,9 +44,8 @@ const ACQUISITION_IDENTITY = {
   filter_hash: '0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd',
 };
 
-test('F-01 acquisition identity boundary is canonical and domain-separated', () => {
+test('F-01 acquisition identity golden vector is canonical and domain-separated', () => {
   const actual = canonicalHash('HAHAWEEK-EVIDENCE-V4-ACQUISITION', ACQUISITION_IDENTITY);
-  assert.equal(jcs(ACQUISITION_IDENTITY), jcs({ ...ACQUISITION_IDENTITY }));
-  assert.match(actual.sha256, /^[0-9a-f]{64}$/);
-  assert.equal(actual.sha256, canonicalHash('HAHAWEEK-EVIDENCE-V4-ACQUISITION', ACQUISITION_IDENTITY).sha256);
+  assert.equal(Buffer.from(actual.canonical, 'utf8').toString('hex'), '7b22636861696e5f6964223a2234363633222c2266696c7465725f68617368223a22307864646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464222c22706167696e6174696f6e5f696e646578223a2230222c2270726f76696465725f6964223a227270632d7072696d617279222c22726571756573745f73657175656e6365223a2230222c227265717565737465645f66726f6d5f626c6f636b223a22313233222c227265717565737465645f746f5f626c6f636b223a22313332227d');
+  assert.equal(actual.sha256, '74b075d427f5af63d7b2db60e5cf24db200a1cde36db68a2db9494742982aaec');
 });
