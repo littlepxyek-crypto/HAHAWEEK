@@ -49,3 +49,49 @@ test('F-01 acquisition identity golden vector is canonical and domain-separated'
   assert.equal(Buffer.from(actual.canonical, 'utf8').toString('hex'), '7b22636861696e5f6964223a2234363633222c2266696c7465725f68617368223a22307864646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464646464222c22706167696e6174696f6e5f696e646578223a2230222c2270726f76696465725f6964223a227270632d7072696d617279222c22726571756573745f73657175656e6365223a2230222c227265717565737465645f66726f6d5f626c6f636b223a22313233222c227265717565737465645f746f5f626c6f636b223a22313332227d');
   assert.equal(actual.sha256, '74b075d427f5af63d7b2db60e5cf24db200a1cde36db68a2db9494742982aaec');
 });
+
+const SEGMENT_IDENTITY = {
+  protocol_version: '4',
+  segment_kind: 'EVENT',
+  generation: '0',
+  segment_sequence: '0',
+};
+
+const SEGMENT_EVENT_RECORD = {
+  record_type: 'EVENT',
+  protocol_version: '4',
+  sequence_number: '1',
+  event_id: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  payload_hash: '0xdfa79e6f2a7097cebd92b06b874c42b6ee8c4f26c6cc576111240ca09926013c',
+  payload: {},
+};
+
+const SEGMENT_BODY_SHA256 = 'b3fe902edba2713d0d3104f6a596796028775ac08aecce4532923d531d9d6c3c';
+const SEGMENT_HASH = '4d6a06606a080dfebf92f469b1b3eedec3b045b7ad0fd36c19603829620802bf';
+
+test('F-01 segment identity/body/seal golden vector is canonical', () => {
+  const segmentId = canonicalHash('HAHAWEEK-EVIDENCE-V4-SEGMENT', SEGMENT_IDENTITY);
+  assert.equal(segmentId.sha256, '98a4e799919cbdf02c4700121471beb8d91e4c3d57b7b2fc2b2f9cb49becbe3f');
+
+  const bodyBytes = Buffer.from(jcs(SEGMENT_EVENT_RECORD) + '\n', 'utf8');
+  const bodyPreimage = Buffer.concat([
+    Buffer.from('HAHAWEEK-EVIDENCE-V4-SEGMENT', 'utf8'),
+    Buffer.from([0]),
+    bodyBytes,
+  ]);
+  const bodyHash = require('node:crypto').createHash('sha256').update(bodyPreimage).digest('hex');
+  assert.equal(bodyHash, SEGMENT_BODY_SHA256);
+
+  const sealIdentity = {
+    segment_id: '0x' + segmentId.sha256,
+    generation: '0',
+    segment_sequence: '0',
+    segment_kind: 'EVENT',
+    first_body_sequence: '1',
+    last_body_sequence: '1',
+    record_count: '1',
+    body_sha256: '0x' + bodyHash,
+  };
+  const sealHash = canonicalHash('HAHAWEEK-EVIDENCE-V4-SEGMENT', sealIdentity);
+  assert.equal(sealHash.sha256, SEGMENT_HASH);
+});
