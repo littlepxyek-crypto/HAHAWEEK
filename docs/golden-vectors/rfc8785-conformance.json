@@ -1,0 +1,42 @@
+{
+  "fixture_id": "rfc8785-boundary-001",
+  "protocol_id": "HAHAWEEK-EVIDENCE-V4",
+  "artifact_type": "JCS_CONFORMANCE",
+  "domain": "REFERENCE-RFC8785-JCS",
+  "status": "REFERENCE_ONLY_PENDING_EXECUTION",
+  "positive_vectors": [
+    {
+      "vector_id": "rfc8785-number-boundary-001",
+      "input_object": {
+        "numbers": [333333333.33333329, 1e30, 4.5, 0.002, 1e-27]
+      },
+      "expected_canonical_utf8_hex": "7b226e756d62657273223a5b3333333333333333332e333333333333332c31652b33302c342e352c302e3030322c31652d32375d7d"
+    },
+    {
+      "vector_id": "rfc8785-ordering-001",
+      "input_object": {
+        "b": 1,
+        "a": 2,
+        "😀": 3,
+        "A": 4
+      },
+      "expected_canonical_utf8_hex": "7b2241223a342c2261223a322c2262223a312c22f09f9880223a337d"
+    }
+  ],
+  "negative_vectors": [
+    {
+      "vector_id": "rfc8785-negative-nonfinite-001",
+      "mutation": {
+        "value": "NaN"
+      },
+      "expected_error": "NON_FINITE_NUMBER"
+    },
+    {
+      "vector_id": "rfc8785-negative-surrogate-001",
+      "mutation": {
+        "value": "lone high surrogate"
+      },
+      "expected_error": "LONE_SURROGATE"
+    }
+  ]
+}
