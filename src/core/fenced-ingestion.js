@@ -16,7 +16,9 @@ function createFencedIngestionEngine({ lease, leaseToken, ...options }) {
     ...options,
     processor: async (...args) => {
       assertLease();
-      return options.processor(...args);
+      const result = await options.processor(...args);
+      assertLease();
+      return result;
     },
     processorRange: options.processorRange
       ? async (...args) => {
