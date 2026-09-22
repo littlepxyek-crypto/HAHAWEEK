@@ -11,13 +11,15 @@ function createRawEventStore(db) {
       chain_id,
       block_number,
       transaction_hash,
+      block_hash,
+      transaction_index,
       log_index,
       address,
       topics_json,
       data,
       captured_at
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   return {
@@ -31,6 +33,8 @@ function createRawEventStore(db) {
         record.chain_id,
         record.block_number,
         record.transaction_hash,
+        record.block_hash ?? null,
+        record.transaction_index ?? null,
         record.log_index,
         record.address,
         JSON.stringify(record.topics),
