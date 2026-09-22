@@ -114,6 +114,20 @@ async function createDatabase(filename = DB_FILE) {
       updated_at TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS canonical_evidence (
+      evidence_id TEXT PRIMARY KEY,
+      identity_schema_version TEXT NOT NULL,
+      identity_hash TEXT NOT NULL,
+      raw_event_id TEXT NOT NULL,
+      raw_hash TEXT NOT NULL,
+      canonical_hash TEXT NOT NULL,
+      canonical_json TEXT NOT NULL,
+      interpretation_status TEXT NOT NULL,
+      provenance_json TEXT NOT NULL,
+      stored_at TEXT NOT NULL,
+      FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id)
+    );
+
     INSERT OR IGNORE INTO schema_meta
       (key, value)
     VALUES
@@ -133,7 +147,7 @@ async function createDatabase(filename = DB_FILE) {
   }
 
   db.run(
-    "UPDATE schema_meta SET value = '2' WHERE key = 'schema_version'"
+    "UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'"
   );
 
   return {
