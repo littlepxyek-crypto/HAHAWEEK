@@ -108,3 +108,84 @@ test('schema version is upgraded to repository version', async () => {
   ]);
   database.close();
 });
+
+test('repository verifies hashes and identity after database restart', async () => {
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const path = require('node:path');
+
+  const filename = path.join(
+    os.tmpdir(),
+    `hahaweek-evidence-${process.pid}-${Date.now()}.sqlite`
+  );
+
+  try {
+    const first = await createDatabase(filename);
+    const rawStore = createRawEventStore(first.db);
+    const repository = createEvidenceRepository(first.db);
+    const source = raw();
+    const canonical = createCanonicalEvidence(source);
+
+    rawStore.insert(source);
+    const inserted = repository.insert(source, canonical);
+    assert.equal(inserted.inserted, true);
+    assert.equal(repository.verify(canonical.evidence_id).verified, true);
+    first.close();
+
+    const second = await createDatabase(filename);
+    const restored = createEvidenceRepository(second.db);
+    const verification = restored.verify(canonical.evidence_id);
+
+    assert.equal(restored.count(), 1);
+    assert.equal(verification.verified, true);
+    assert.equal(verification.evidenceId, canonical.evidence_id);
+    assert.equal(verification.rawHash, inserted.rawHash);
+    assert.equal(verification.canonicalHash, inserted.canonicalHash);
+    second.close();
+  } finally {
+    if (fs.existsSync(filename)) fs.unlinkSync(filename);
+  }
+});
+
+test('repository detects raw evidence tampering', async () => {
+  const database = await createDatabase(':memory:');
+  const rawStore = createRawEventStore(database.db);
+  const repository = createEvidenceRepository(database.db);
+  const source = raw();
+  const canonical = createCanonicalEvidence(source);
+
+  rawStore.insert(source);
+  repository.insert(source, canonical);
+
+  database.db.run(
+    'UPDATE raw_events SET data = ? WHERE event_id = ?',
+    ['0xcafebabe', source.event_id]
+  );
+
+  const verification = repository.verify(canonical.evidence_id);
+  assert.equal(verification.verified, false);
+  assert.equal(verification.reason, 'RAW_HASH_MISMATCH');
+  database.close();
+});
+
+test('repository detects canonical evidence tampering', async () => {
+  const database = await createDatabase(':memory:');
+  const rawStore = createRawEventStore(database.db);
+  const repository = createEvidenceRepository(database.db);
+  const source = raw();
+  const canonical = createCanonicalEvidence(source);
+
+  rawStore.insert(source);
+  repository.insert(source, canonical);
+
+  const tamperedCanonical = { ...canonical, data: '0xcafebabe' };
+  database.db.run(
+    'UPDATE canonical_evidence SET canonical_json = ? WHERE evidence_id = ?',
+    [JSON.stringify(tamperedCanonical), canonical.evidence_id]
+  );
+
+  const verification = repository.verify(canonical.evidence_id);
+  assert.equal(verification.verified, false);
+  assert.equal(verification.reason, 'CANONICAL_HASH_MISMATCH');
+  database.close();
+});
