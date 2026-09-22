@@ -297,8 +297,7 @@ Track time-series observations:
 
 ### Contract / Risk
 
-- Contract verification
-- Ownership
+- Contract verification- Ownership
 - Permissions
 - Upgradeability
 - Mint/burn controls
@@ -599,7 +598,6 @@ git rev-parse origin/main
 - Existing Pool Bootstrap tests cover canonical ordering, missing swap, liquidity-before-creation, swap-before-liquidity, mixed pool contexts, and deterministic formation identity.
 - No production V4 activation, cursor change, raw evidence change, or authority migration is authorized by this step.
 
-
 ## Current Execution Checkpoint — 2026-09-22 (STEP 436)
 
 - STEP 435 — Formation Contract Audit: **VERIFIED / FROZEN**.
@@ -876,3 +874,15 @@ git rev-parse origin/main
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 454, after this freeze checkpoint is merged and main is verified.
+
+## STEP 454 — Derived Evidence Consumer Boundary — IN PROGRESS
+
+- STEP 453 is VERIFIED / FROZEN on main at `ef94eefb830006fd6c594ef41c46cdbbf55fc7a8`.
+- STEP 454 establishes a narrow downstream derived-consumer boundary for the frozen Formation Evidence Reference.
+- Added `src/core/derived-evidence-consumer.js`.
+- Added `tests/derived-evidence-consumer.test.js`.
+- Added `docs/STEP_454_DERIVED_EVIDENCE_CONSUMER_BOUNDARY_V0_1.md`.
+- Verification scope: DERIVED-only acceptance, lineage preservation, provenance consistency, deep output isolation, processing-metadata exclusion, and deterministic semantic output.
+- Deterministic in-memory Formation inputs only; no live authoritative capture is claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing is changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
