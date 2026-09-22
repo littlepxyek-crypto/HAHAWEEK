@@ -108,3 +108,19 @@ test('formation identity is deterministic for identical evidence', () => {
   const b = detectPoolBootstrap([...input].reverse());
   assert.equal(a.formation.formation_id, b.formation.formation_id);
 });
+
+
+test('formation detection does not mutate or retain mutable input references', () => {
+  const input = [
+    event('POOL_CREATED', 'ei:create', 100, 0, 1, { metadata: { tags: ['origin'] } }),
+    event('LIQUIDITY_ADDED', 'ei:liquidity', 101, 0, 2),
+    event('SWAP', 'ei:swap', 102, 0, 0),
+  ];
+  const before = structuredClone(input);
+  const result = detectPoolBootstrap(input);
+
+  assert.deepEqual(input, before);
+  result.formation.event_order[0].event_type = 'MUTATED';
+  result.formation.provenance_reference.evidence_ids.push('mutated');
+  assert.deepEqual(input, before);
+});
