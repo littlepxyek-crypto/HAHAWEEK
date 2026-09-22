@@ -1003,3 +1003,12 @@ git rev-parse origin/main
 - Security and Regression #1246 passed before merge.
 - Semantic determinism and processing-metadata exclusion verified.
 - No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
+
+
+## STEP 461 — Derived Consumer Contract Surface Audit — IN PROGRESS
+
+- STEP 460 is VERIFIED / FROZEN on main.
+- STEP 461 audits the exact downstream contract surface exposed by the DERIVED consumer.
+- Output keys are explicitly bounded; authority and processing fields are excluded.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
