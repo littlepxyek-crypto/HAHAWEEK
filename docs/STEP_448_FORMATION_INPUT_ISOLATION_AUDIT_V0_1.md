@@ -1,6 +1,6 @@
 # STEP 448 — Formation Input Isolation Audit v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 448
 Base: main at `d3f6d80f60f7e794d067d3bce04d1f80fbcc6e8e`
 
@@ -33,3 +33,14 @@ No trading or signing.
 
 Design Gate 2 remains OPEN.
 Production V4 remains NOT AUTHORIZED.
+
+## Verification Result
+
+- PR #100 merged.
+- Merge commit: `8a7ed7aea40a516a3f03e5f0c55cdb8f9838c9b8`.
+- Security and Regression workflow #1109 passed on the STEP 448 head.
+- Regression coverage confirms Formation detection does not mutate or retain mutable input references.
+- Main verified at the STEP 448 merge commit.
+- No Formation semantic change or authority-boundary change.
+- No cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
