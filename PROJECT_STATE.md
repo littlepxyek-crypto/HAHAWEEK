@@ -1105,3 +1105,14 @@ git rev-parse origin/main
 - It is derived, deterministic, auditable, and explicitly non-predictive.
 - No ranking, predictive score, trading, signing, raw evidence, cursor/runtime, or V4 authority is introduced.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
+
+## STEP 466 — Validated Intelligence Projection Contract — VERIFIED / FROZEN
+
+- PR #136 merged successfully.
+- Security & Regression workflow #1314 passed on the implementation head.
+- Main merge commit: `3ff0fc959d17af43382a14f49f862dece9b5bfba`.
+- Verified Formation → Historical Outcome → Validation → Intelligence Projection lineage.
+- Validation state and evidence lineage are preserved; intelligence identity is deterministic.
+- No predictive scoring, ranking, trading, signing, raw evidence, cursor/runtime, or V4 authority changes.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
