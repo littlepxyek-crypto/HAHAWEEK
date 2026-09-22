@@ -32,7 +32,7 @@ function makeEvidence(overrides = {}) {
   };
 }
 
-test("identity is deterministic and distinct from transaction hash", () => {
+test("golden identity vector reproduces canonical bytes and hash", () => {\n  const vector = require(path.join(__dirname, "..", "docs", "golden-vectors", "evidence-identity.json")).vectors[0];\n  const actual = domainSeparatedHash(vector.domain, vector.input_object);\n  assert.equal(actual.canonicalUtf8Hex, vector.canonical_utf8_hex);\n  assert.equal(actual.hash, vector.expected_hash);\n});\n\ntest("identity is deterministic and distinct from transaction hash", () => {
   const result = createEvidenceIdentity(makeEvidence());
   assert.match(result.evidence_id, /^ei:v1:[0-9a-f]{64}$/);
   assert.equal(result.identity_domain, IDENTITY_DOMAIN);
