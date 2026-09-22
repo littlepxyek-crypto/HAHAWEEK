@@ -886,3 +886,15 @@ git rev-parse origin/main
 - Deterministic in-memory Formation inputs only; no live authoritative capture is claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing is changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
+
+## STEP 454 — Derived Evidence Consumer Boundary — VERIFIED / FROZEN
+
+- PR #112 merged.
+- Merge commit: `dd9d63455a1b407ab0adbe37598ecbaf407d7cb7`.
+- Security and Regression workflow #1179 passed; `test-and-security` completed successfully.
+- Verified DERIVED-only acceptance, lineage/provenance consistency, deep output isolation, processing-metadata exclusion, and deterministic semantic output.
+- Main merged successfully; post-merge workflow has not yet appeared for the merge commit, so this checkpoint records the PR CI verification and merge, not post-merge CI.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: freeze STEP 454, then verify freeze CI before STEP 455.
