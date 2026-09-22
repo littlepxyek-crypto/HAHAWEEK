@@ -79,7 +79,7 @@ function replayAuthoritativeEvidence(envelope) {
     chain_id: envelope.chain_id,
     evidence_id: envelope.evidence_id,
     source: envelope.source,
-    events: envelope.events.map((event) => ({ ...event })),
+    events: envelope.events.map((event) => structuredClone(event)),
   };
 }
 
