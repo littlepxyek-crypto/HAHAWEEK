@@ -1,30 +1,16 @@
 ## Current Execution Checkpoint — 2026-09-22
 
-- STEP 429 — Historical Outcome contract: **VERIFIED / FROZEN**.
-- PR #68: **MERGED**.
-- Merge commit: `9d58a0c4b5040d09cf0aaddec448681112ab97f4`.
-- Post-merge Security & Regression #940: **SUCCESS**.
-- Post-merge Push on main #402: **SUCCESS**.
-- STEP 430 is now in progress: Validation Result contract.
-- Validation consumes a fixed Formation Result and Historical Outcome through a versioned validation rule.
-- Validation results are limited to `CONFIRMED`, `REJECTED`, or `INCONCLUSIVE`.
-- No raw evidence, evidence identity, repository authority, cursor, or V4 implementation is changed.
-
-- STEP 429 — Historical Outcome contract: **VERIFIED / FROZEN**.
-- PR #68: **MERGED**.
-- Merge commit: `9d58a0c4b5040d09cf0aaddec448681112ab97f4`.
-- Post-merge Security & Regression #940: **SUCCESS**.
-- Post-merge Push on main #402: **SUCCESS**.
-- Historical Outcome now enforces `observation_start >= formation_end`, explicit coverage, evidence references, deterministic outcome identity, and no-look-ahead behavior.
-- No raw evidence, evidence identity, repository authority, cursor, or V4 implementation was changed.
-
-- STEP 428 — Formation Result contract completion: **VERIFIED / FROZEN**.
-- PR #66: **MERGED**.
-- Merge commit: `ec351a82412e4d5662fbb4148a5a5cf45dd36621`.
-- Post-merge Security & Regression #926: **SUCCESS**.
-- Post-merge Push on main #398: **SUCCESS**.
-- No raw evidence, evidence identity, repository authority, cursor, or V4 implementation is changed.
-- Live Robinhood RPC evidence capture remains blocked by the previously verified network/DNS limitation; no synthetic fixture is treated as real chain evidence.
+- STEP 430 — Validation Result contract: **VERIFIED / FROZEN**.
+- PR #70: **MERGED** — initial Validation Result contract implementation.
+- PR #71: **MERGED** — validation coverage semantics correction.
+- PR #71 merge commit: `6a4022c2fdd34ce5c290f527bbff48b22cf74e9e`.
+- Post-merge Security & Regression #957: **SUCCESS**.
+- Post-merge Push on main #408: **SUCCESS**.
+- Main verified at `6a4022c2fdd34ce5c290f527bbff48b22cf74e9e`.
+- Validation now enforces: incomplete outcome coverage OR any INCONCLUSIVE criterion → `INCONCLUSIVE`; only complete coverage with a FAIL criterion → `REJECTED`; complete coverage with all criteria passing → `CONFIRMED`.
+- Validation consumes fixed Formation Result and Historical Outcome inputs through versioned rules and does not modify raw evidence, evidence identity, repository authority, cursor, or V4 implementation.
+- STEP 430 contract document is now **VERIFIED / FROZEN**.
+- Historical V4 implementation remains preserved.
 
 ## Step 427 Verification Detail
 
@@ -90,8 +76,8 @@ A milestone is not considered complete until it is pushed and synchronized.
 
 ## Current Git Checkpoint
 
-- Last verified main milestone: `181a756676a5f6504c24dd5c810c184607c55604`
-- Milestone: PR #31 — durable project-state reconciliation — merged to `main`.
+- Last verified main milestone: `6a4022c2fdd34ce5c290f527bbff48b22cf74e9e`
+- Milestone: PR #71 — Validation Result semantic correction — merged to `main`.
 - README v2: merged to `main` via PR #30.
 - CI for PR #31: passed.
 - This checkpoint records the latest verified milestone; subsequent documentation commits may advance `main` without invalidating the recorded milestone.
