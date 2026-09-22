@@ -852,3 +852,15 @@ git rev-parse origin/main
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 453, after this freeze checkpoint is merged and main is verified.
+
+
+## STEP 453 — Derived Evidence Reference Provenance Contract — IN PROGRESS
+
+- STEP 452 is VERIFIED / FROZEN on main at `f6d6d0c067375e2a5531593c6371d2e4fb01e17d`.
+- STEP 453 defines the provenance contract carried by the frozen DERIVED Formation Evidence Reference.
+- Added `tests/formation-evidence-reference-provenance.test.js`.
+- Added `docs/STEP_453_DERIVED_EVIDENCE_REFERENCE_PROVENANCE_V0_1.md`.
+- Verification scope: DERIVED lineage class, chain/evidence consistency, exclusion of processing metadata, and authority separation.
+- Deterministic in-memory Formation inputs only; no live authoritative capture is claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing is changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
