@@ -598,3 +598,18 @@ git rev-parse origin/main
 - Audit finding: `docs/MVP_FIXTURE_CONTRACT_V0_1.md` still declared `IMPLEMENTATION CANDIDATE` after the contract had been verified/frozen. This is documentation-state drift and is being corrected without changing runtime authority.
 - Existing Pool Bootstrap tests cover canonical ordering, missing swap, liquidity-before-creation, swap-before-liquidity, mixed pool contexts, and deterministic formation identity.
 - No production V4 activation, cursor change, raw evidence change, or authority migration is authorized by this step.
+
+
+## Current Execution Checkpoint — 2026-09-22 (STEP 436)
+
+- STEP 435 — Formation Contract Audit: **VERIFIED / FROZEN**.
+- PR #79: **MERGED** — formation contract audit checkpoint.
+- PR #79 merge commit: `527c618f1d157c785da7d572cfff7678783acbd3`.
+- Required Security & Regression #998: **SUCCESS**.
+- Existing `POOL_BOOTSTRAP` Formation Contract is retained without semantic rewrite.
+- Verified contract behavior includes canonical temporal ordering, evidence selection, missing-swap handling, temporal invalidity handling, mixed-pool isolation, and deterministic formation identity.
+- Formation Result contract remains VERIFIED / FROZEN from STEP 428.
+- MVP Fixture Contract is now VERIFIED / FROZEN and its documentation state is synchronized.
+- No raw evidence, runtime state, cursor, production authority, or V4 implementation was changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next engineering step: establish a dedicated authoritative-replay boundary for real blockchain evidence, keeping synthetic fixtures strictly non-authoritative.
