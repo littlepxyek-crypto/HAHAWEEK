@@ -1094,3 +1094,14 @@ git rev-parse origin/main
 - Next functional direction: validated evidence → intelligence projection → radar/document output.
 - Documentation/alignment only; no runtime, raw evidence, cursor/state, V4 authority, predictive scoring, trading, or signing changes.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
+
+## STEP 466 — Validated Intelligence Projection Contract — IN PROGRESS
+
+- STEP 465 is VERIFIED / FROZEN on main.
+- STEP 466 begins the first downstream intelligence artifact under the canonical blueprint alignment decision.
+- Added `src/core/intelligence-projection.js`, `tests/intelligence-projection.test.js`, and `docs/STEP_466_VALIDATED_INTELLIGENCE_PROJECTION_CONTRACT_V0_1.md`.
+- The projection consumes fixed Formation, Historical Outcome, and Validation inputs and preserves validation state and evidence lineage.
+- It is derived, deterministic, auditable, and explicitly non-predictive.
+- No ranking, predictive score, trading, signing, raw evidence, cursor/runtime, or V4 authority is introduced.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
