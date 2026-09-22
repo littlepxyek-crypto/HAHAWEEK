@@ -944,3 +944,11 @@ git rev-parse origin/main
 - Schema version 1 is accepted; unsupported versions and malformed identity/chain fields are rejected.
 - Deterministic in-memory inputs only; no live authoritative capture claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+
+
+## STEP 457 — Derived Consumer Schema Boundary — VERIFIED / FROZEN
+
+- PR #118 merged at a1d295f1a65b9756dbf8b29358516a529b57569b.
+- Security and Regression #1213 passed before merge.
+- Schema version and required identity/chain boundary verified.
+- No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
