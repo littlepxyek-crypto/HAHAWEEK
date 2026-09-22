@@ -995,3 +995,11 @@ git rev-parse origin/main
 - Equivalent inputs must produce equivalent outputs; processing-time metadata is excluded.
 - Deterministic in-memory inputs only; no live authoritative capture claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+
+
+## STEP 460 — Derived Consumer Determinism Audit — VERIFIED / FROZEN
+
+- PR #124 merged at 76116df27c1d693f850a2a3feb58188cde7508b5.
+- Security and Regression #1246 passed before merge.
+- Semantic determinism and processing-metadata exclusion verified.
+- No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
