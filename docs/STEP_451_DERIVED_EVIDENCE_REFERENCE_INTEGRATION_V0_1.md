@@ -1,6 +1,6 @@
 # STEP 451 — Derived Evidence Reference Integration Verification v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 451
 Scope: integration of the frozen Pool Bootstrap Formation Result with the frozen DERIVED Formation Evidence Reference boundary
 
@@ -31,3 +31,15 @@ The integration tests use deterministic in-memory Formation inputs. They do not 
 
 Design Gate 2 remains OPEN.
 Production V4 remains NOT AUTHORIZED.
+
+
+## Verification Result
+
+- PR #106 merged to main.
+- Merge commit: `74818b68cf8f34bff7b4e18b0d8b439a784eb8e5`.
+- Security and Regression workflow #1142 completed successfully.
+- Required `test-and-security` job completed successfully, including tests, dependency audit, and tracked-secret detection.
+- Verified VALID Pool Bootstrap integration into the frozen DERIVED Evidence Reference boundary.
+- Verified CANDIDATE formation cannot cross the boundary.
+- Verified authority separation remains intact.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
