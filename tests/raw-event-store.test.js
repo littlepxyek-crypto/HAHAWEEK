@@ -106,7 +106,7 @@ test('raw event survives database reload', async () => {
   assert.equal(row[4], 2);
   assert.equal(row[5], 0);
   assert.equal(row[6], '["0xtopic"]');
-  assert.equal(row[5], '0xdata');
+  assert.equal(row[7], '0xdata');
 
   second.db.close();
 });
