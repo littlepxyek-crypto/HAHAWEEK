@@ -776,3 +776,18 @@ git rev-parse origin/main
 - No Formation rule semantic rewrite, authority-boundary change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 450, derived from the frozen Formation determinism boundary.
+
+
+## STEP 450 — Formation Evidence Reference Contract — IN PROGRESS
+
+- STEP 449 is frozen on main before this branch was created.
+- Establishing a narrow DERIVED evidence-reference boundary from a VALID Formation Result.
+- The reference preserves Formation ID, rule version, chain/pool context, selected evidence IDs, event ordering, graph reference, and provenance reference.
+- Processing metadata such as created_at is intentionally excluded from the derived reference.
+- The derived reference is not AUTHORITATIVE evidence and cannot promote SYNTHETIC or DISCOVERY_ONLY data.
+- Added docs/FORMATION_EVIDENCE_REFERENCE_CONTRACT_V0_1.md.
+- Added src/core/formation-evidence-reference.js.
+- Added tests/formation-evidence-reference.test.js.
+- Tests must prove deterministic semantic output, input/output isolation, VALID-only acceptance, and lineage consistency.
+- No raw evidence, cursor, runtime state, V4 authority, predictive scoring, trading, or signing is changed by this step.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
