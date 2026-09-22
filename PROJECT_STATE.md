@@ -1052,3 +1052,11 @@ git rev-parse origin/main
 - Security & Regression #1281 passed.
 - Equivalent input construction order verified not to alter DERIVED consumer semantics.
 - No authority escalation or raw/cursor/runtime/V4 changes.
+
+
+## STEP 464 — Derived Consumer Input Validation Audit — IN PROGRESS
+
+- STEP 463 is VERIFIED / FROZEN on main.
+- STEP 464 verifies valid DERIVED input acceptance and rejection of authority/schema/identity/coverage/graph/provenance violations.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
