@@ -969,3 +969,12 @@ git rev-parse origin/main
 - Security and Regression #1224 passed before merge.
 - Complete evidence/event coverage and duplicate/missing lineage rejection verified.
 - No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
+
+
+## STEP 459 — Derived Consumer Mutation Audit — IN PROGRESS
+
+- STEP 458 is VERIFIED / FROZEN on main.
+- STEP 459 audits deep mutation isolation across the DERIVED consumer boundary.
+- Nested input and output mutations are tested for non-propagation.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
