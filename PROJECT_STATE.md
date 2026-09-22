@@ -828,3 +828,15 @@ git rev-parse origin/main
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 452, after this freeze checkpoint is merged and main is verified.
+
+
+## STEP 452 — Derived Evidence Reference Adversarial Boundary Audit — IN PROGRESS
+
+- STEP 451 is VERIFIED / FROZEN on main at merge commit `c44289af69505e7a870ed5873a0e5843a1b59dd6`.
+- STEP 452 audits the frozen DERIVED Formation Evidence Reference boundary against malformed lineage and authority-contamination inputs.
+- Added `tests/formation-evidence-reference-adversarial.test.js`.
+- Added `docs/STEP_452_DERIVED_EVIDENCE_REFERENCE_ADVERSARIAL_AUDIT_V0_1.md`.
+- Verification scope: authoritative-field non-projection, evidence/event coverage, provenance ordering, and nested output isolation.
+- Deterministic in-memory inputs only; no live blockchain capture is claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing is changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
