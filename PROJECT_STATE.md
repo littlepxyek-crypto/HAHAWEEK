@@ -12,6 +12,22 @@
 - STEP 430 contract document is now **VERIFIED / FROZEN**.
 - Historical V4 implementation remains preserved.
 
+## Current Execution Checkpoint — 2026-09-22 (STEP 431)
+
+- STEP 430 — Validation Result contract: **VERIFIED / FROZEN**.
+- STEP 431 — Validation Integration Boundary: **VERIFIED / FROZEN**.
+- PR #73: **MERGED** — validation integration boundary.
+- PR #73 merge commit: `91dae39e53a0243fc210472ce1287ffe9545c8ca`.
+- Post-merge Security & Regression #968: **SUCCESS**.
+- Post-merge Push on main #412: **SUCCESS**.
+- Main verified at `91dae39e53a0243fc210472ce1287ffe9545c8ca`.
+- The boundary accepts a fixed Formation Result and matching Historical Outcome and delegates validation semantics to the frozen Validation Result contract.
+- Non-VALID formation states are rejected at the boundary; formation ID and formation-rule-version mismatches are rejected.
+- Historical Outcome coverage semantics remain authoritative.
+- No raw evidence, canonical evidence, evidence identity, repository authority, cursor, or V4 implementation was changed.
+- STEP 431 contract document is **VERIFIED / FROZEN**.
+- Historical V4 implementation remains preserved.
+
 ## Step 427 Verification Detail
 
 - Formation integration test corrected a stale node-count assertion from 10 to the actual 11 nodes.
