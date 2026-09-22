@@ -163,3 +163,22 @@ test('rejects request.params explicitly set to undefined', () => {
   };
   assert.throws(() => replayAuthoritativeEvidence(input), /request\.params/);
 });
+
+
+test('deep-clones nested replay event data', () => {
+  const input = {
+    schema_version: '1',
+    evidence_class: 'AUTHORITATIVE',
+    chain_id: 4663,
+    source: 'rpc:test-provider',
+    evidence_id: 'ev:authoritative:nested-isolation',
+    request: { method: 'eth_getLogs', params: [] },
+    response_payload: { preserved: true },
+    observation: { block_number: 102 },
+    capture: { captured_at: '2026-01-01T00:00:00.000Z' },
+    events: [{ event_type: 'POOL_CREATED', details: { addresses: ['0xabc'] } }],
+  };
+  const replay = replayAuthoritativeEvidence(input);
+  replay.events[0].details.addresses.push('0xdef');
+  assert.deepEqual(input.events[0].details.addresses, ['0xabc']);
+});
