@@ -1,6 +1,6 @@
 # Authoritative Evidence Envelope Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 441
 Scope: preserved raw RPC evidence boundary for historical replay
 
