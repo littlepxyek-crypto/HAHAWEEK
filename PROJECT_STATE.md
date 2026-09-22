@@ -1,13 +1,18 @@
 ## Current Execution Checkpoint — 2026-09-22
 
+- STEP 429 — Historical Outcome contract: **VERIFIED / FROZEN**.
+- PR #68: **MERGED**.
+- Merge commit: `9d58a0c4b5040d09cf0aaddec448681112ab97f4`.
+- Post-merge Security & Regression #940: **SUCCESS**.
+- Post-merge Push on main #402: **SUCCESS**.
+- Historical Outcome now enforces `observation_start >= formation_end`, explicit coverage, evidence references, deterministic outcome identity, and no-look-ahead behavior.
+- No raw evidence, evidence identity, repository authority, cursor, or V4 implementation was changed.
+
 - STEP 428 — Formation Result contract completion: **VERIFIED / FROZEN**.
 - PR #66: **MERGED**.
 - Merge commit: `ec351a82412e4d5662fbb4148a5a5cf45dd36621`.
 - Post-merge Security & Regression #926: **SUCCESS**.
 - Post-merge Push on main #398: **SUCCESS**.
-- STEP 429 is now in progress: Historical Outcome contract.
-- STEP 429 scope is limited to the boundary between Formation Result and future historical observations.
-- Historical Outcome enforces `observation_start >= formation_end`, explicit coverage, evidence references, deterministic outcome identity, and no-look-ahead behavior.
 - No raw evidence, evidence identity, repository authority, cursor, or V4 implementation is changed.
 - Live Robinhood RPC evidence capture remains blocked by the previously verified network/DNS limitation; no synthetic fixture is treated as real chain evidence.
 
