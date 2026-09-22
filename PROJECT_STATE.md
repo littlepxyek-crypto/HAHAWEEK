@@ -14,22 +14,12 @@
 - Formation Result now contains the minimum canonical fields including `graph_reference`, `provenance_reference`, and `created_at`.
 - Deterministic formation identity remains independent of `created_at`.
 - No raw evidence, evidence identity, repository authority, cursor, or V4 implementation was changed.
-
-## Current Execution Checkpoint — 2026-09-22
-
 - STEP 427 — Formation Result ↔ Evidence Graph integration: **VERIFIED / FROZEN**.
 - PR #64: **MERGED**.
 - Merge commit: `202596d81114d6c02eabc41c943489099783c4d0`.
-- `main` points to the same merge commit.
-- PR #64 Security & Regression run #910: **SUCCESS**.
-- Post-merge HAHAWEEK Security and Regression run #911: **SUCCESS**.
-- Post-merge CodeQL / Push on main run #393: **SUCCESS**.
-- Step 427 verifies that a valid Pool Bootstrap Formation Result is reproducibly projectable into the Evidence Graph with exactly one reference edge per selected evidence ID.
-- No raw evidence, runtime state, cursor, or production authority was changed.
+- Step 427 integration expectation: 11 nodes, 15 edges, 3 formation `REFERENCES` edges.
 - Existing V4 implementation remains preserved.
 - Live Robinhood RPC evidence capture remains blocked by the previously verified network/DNS limitation; no synthetic fixture is treated as real chain evidence.
-- STEP 428 is now in progress: Formation Result contract completion.
-- Step 428 scope is limited to adding the missing Formation Result contract fields without changing evidence authority or formation semantics.
 
 ## Step 427 Verification Detail
 
