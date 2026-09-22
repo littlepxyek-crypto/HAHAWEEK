@@ -1,6 +1,19 @@
 # STEP 466 — Validated Intelligence Projection Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
+
+## Verification Result
+
+- PR #136 merged successfully.
+- Security & Regression workflow #1314 passed on the implementation head.
+- Main merge commit: `3ff0fc959d17af43382a14f49f862dece9b5bfba`.
+- Verified Formation → Historical Outcome → Validation → Intelligence Projection lineage.
+- Validation state is preserved without reinterpretation.
+- Evidence lineage is preserved and intelligence identity is deterministic.
+- Mutation isolation and lineage mismatch rejection are covered by tests.
+- No predictive scoring, ranking, trading, signing, raw evidence, cursor/runtime, or V4 authority changes.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
 
 ## Objective
 
