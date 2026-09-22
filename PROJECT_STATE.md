@@ -699,3 +699,16 @@ git rev-parse origin/main
 - No live backfill, cursor mutation, raw-store migration, V4 production activation, predictive scoring, or trading/signing was introduced.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next engineering focus: deterministic authoritative-evidence fixture/replay family using the frozen envelope and replay boundaries.
+
+
+## STEP 444 — Authoritative Evidence Boundary Audit — VERIFIED / FROZEN
+
+- PR #92 merged to main.
+- Merge commit: `f9e3eb5c3243fd69c69e671e7f374bb9d9da4f97`.
+- Audit synchronized STEP 443 replay coverage documentation and added focused adversarial envelope validation.
+- Verified invariants: AUTHORITATIVE-only replay, mandatory provenance, preserved response payload, offline deterministic replay, and isolation from cursor/runtime/raw-store/V4 authority.
+- No Formation Contract semantic change.
+- No live capture/backfill, cursor migration, raw-store migration, V4 activation, predictive scoring, trading, or signing.
+- Post-merge main CI is running separately; this section records the milestone merge and does not claim post-merge checks are complete.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 445 after post-merge verification.
