@@ -1060,3 +1060,15 @@ git rev-parse origin/main
 - STEP 464 verifies valid DERIVED input acceptance and rejection of authority/schema/identity/coverage/graph/provenance violations.
 - Deterministic in-memory inputs only; no live authoritative capture claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+
+
+## STEP 464 — Derived Consumer Input Validation Audit — VERIFIED / FROZEN
+
+- PR #132 merged successfully.
+- Implementation head Security & Regression #1292 passed.
+- Main merge commit: `287069c6b5fcf4f09c8a21179009bd886d5ef3e0`.
+- Verified valid DERIVED input acceptance and rejection of authority, schema, identity, coverage, graph, and provenance violations.
+- No live authoritative capture is claimed; deterministic in-memory inputs only.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next: verify and merge the STEP 464 freeze PR before advancing to the next milestone.

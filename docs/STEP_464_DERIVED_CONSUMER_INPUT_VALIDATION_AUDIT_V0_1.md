@@ -1,6 +1,22 @@
 # STEP 464 — Derived Consumer Input Validation Audit v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
+
+Verification: PR #132 merged; Security & Regression #1292 passed on the implementation head; main merge verified at `287069c6b5fcf4f09c8a21179009bd886d5ef3e0`.
+
+## Verification Result
+
+- Valid DERIVED input acceptance verified.
+- AUTHORITATIVE evidence rejected.
+- Unsupported schema version rejected.
+- Empty formation identity rejected.
+- Invalid chain ID rejected.
+- Duplicate evidence IDs rejected.
+- Event evidence outside selected evidence rejected.
+- Graph reference mismatch rejected.
+- Provenance chain mismatch rejected.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
 
 ## Objective
 
