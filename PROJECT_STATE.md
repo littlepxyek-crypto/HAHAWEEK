@@ -1012,3 +1012,11 @@ git rev-parse origin/main
 - Output keys are explicitly bounded; authority and processing fields are excluded.
 - Deterministic in-memory inputs only; no live authoritative capture claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+
+
+## STEP 461 — Derived Consumer Contract Surface Audit — VERIFIED / FROZEN
+
+- PR #126 merged.
+- Security & Regression #1259 passed.
+- Exact DERIVED consumer contract surface verified; unexpected authority and processing fields excluded.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
