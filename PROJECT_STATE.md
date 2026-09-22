@@ -803,3 +803,15 @@ git rev-parse origin/main
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 451, derived from the frozen Formation Evidence Reference boundary.
+
+
+## STEP 451 — Derived Evidence Reference Integration Verification — IN PROGRESS
+
+- STEP 450 is VERIFIED / FROZEN on main before this branch was created.
+- STEP 451 verifies the narrow integration boundary from VALID Pool Bootstrap Formation Result to the frozen DERIVED Formation Evidence Reference.
+- Added docs/STEP_451_DERIVED_EVIDENCE_REFERENCE_INTEGRATION_V0_1.md.
+- Added tests/formation-evidence-reference-integration.test.js.
+- Verification must prove VALID-only integration, preservation of Formation lineage, rejection of CANDIDATE formation, and continued DERIVED authority separation.
+- Tests use deterministic in-memory Formation inputs only; no live blockchain capture is claimed.
+- No raw evidence, cursor, runtime state, V4 authority, predictive scoring, trading, or signing is changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
