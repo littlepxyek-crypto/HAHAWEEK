@@ -28,9 +28,9 @@ test('consumer output exposes only the declared contract surface', () => {
   const result = createDerivedEvidenceConsumerInput(reference());
   assert.deepEqual(Object.keys(result).sort(), [
     'chain_id',
+    'event_order',
     'evidence_class',
     'evidence_ids',
-    'event_order',
     'formation_id',
     'formation_rule_version',
     'formation_type',
