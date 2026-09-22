@@ -27,7 +27,10 @@ test('canonical evidence is traceable to raw evidence', () => {
   const raw = sampleRaw();
   const evidence = createCanonicalEvidence(raw);
 
-  assert.equal(evidence.evidence_id, `ce:${raw.event_id}`);
+  assert.match(evidence.evidence_id, /^ei:v1:[0-9a-f]{64}$/);
+  assert.equal(evidence.identity_status, 'COMPLETE');
+  assert.equal(evidence.identity_reference.evidence_id, evidence.evidence_id);
+  assert.equal(evidence.raw_reference.event_id, raw.event_id);
   assert.equal(evidence.evidence_type, 'RAW_LOG');
   assert.equal(evidence.raw_reference.event_id, raw.event_id);
   assert.equal(evidence.provenance_reference.raw_event_id, raw.event_id);
@@ -36,6 +39,7 @@ test('canonical evidence is traceable to raw evidence', () => {
   assert.equal(evidence.location.transaction_index, 4);
   assert.equal(evidence.location.log_index, 7);
   assert.equal(evidence.interpretation_status, 'UNINTERPRETED');
+  assert.equal(evidence.identity_reference.identity_payload.log_index, '7');
 });
 
 test('canonicalization does not mutate raw evidence', () => {
@@ -67,6 +71,9 @@ test('missing block hash remains explicit unknown/null', () => {
   const evidence = createCanonicalEvidence(raw);
 
   assert.equal(evidence.location.block_hash, null);
+  assert.equal(evidence.evidence_id, null);
+  assert.equal(evidence.identity_reference, null);
+  assert.equal(evidence.identity_status, 'INCOMPLETE');
 });
 
 test('interpretation status is versioned and constrained', () => {
@@ -95,4 +102,29 @@ test('invalid raw evidence is rejected', () => {
     () => createCanonicalEvidence(raw),
     /INVALID_LOG_INDEX/
   );
+});
+
+
+test('canonical evidence identity is independent of raw event id', () => {
+  const first = sampleRaw();
+  const second = { ...sampleRaw(), event_id: 'different-acquisition-id' };
+
+  const firstEvidence = createCanonicalEvidence(first);
+  const secondEvidence = createCanonicalEvidence(second);
+
+  assert.equal(firstEvidence.evidence_id, secondEvidence.evidence_id);
+  assert.equal(firstEvidence.identity_reference.identity_hash, secondEvidence.identity_reference.identity_hash);
+  assert.equal(firstEvidence.raw_reference.event_id, first.event_id);
+  assert.equal(secondEvidence.raw_reference.event_id, second.event_id);
+});
+
+test('canonical evidence preserves incomplete identity as explicit state', () => {
+  const raw = sampleRaw();
+  raw.transaction_index = null;
+
+  const evidence = createCanonicalEvidence(raw);
+
+  assert.equal(evidence.identity_status, 'INCOMPLETE');
+  assert.equal(evidence.evidence_id, null);
+  assert.equal(evidence.identity_reference, null);
 });
