@@ -654,3 +654,16 @@ git rev-parse origin/main
 - Added `tests/authoritative-replay.test.js` covering authoritative acceptance, synthetic/discovery rejection, missing provenance, state-safety isolation, deterministic formation input, and required raw-response/capture metadata.
 - Implementation is a pure replay adapter: it does not access or mutate cursor, raw store, runtime state, or V4 authority.
 - STEP 439 remains **IN PROGRESS** until CI verifies the executable boundary and the change is reviewed, merged, and verified on `main`.
+
+
+## Current Execution Checkpoint — 2026-09-22 (STEP 440)
+
+- STEP 439 — Executable Authoritative Replay Boundary: **MERGED / MAIN VERIFIED**.
+- PR #83: **MERGED**.
+- STEP 439 merge commit: `9db1d17a45cdb484578dbcef55ecdcdb2f4b0ed7`.
+- Main verification confirmed `src/core/authoritative-replay.js` is present on `main`.
+- STEP 440 — Authoritative Replay Integration Verification: **IN PROGRESS**.
+- Added `tests/authoritative-replay-integration.test.js`.
+- Verification scope: authoritative replay → frozen POOL_BOOTSTRAP Formation Contract; input immutability; authority isolation; deterministic Formation ID; rejection of SYNTHETIC/DISCOVERY_ONLY; required provenance.
+- No cursor mutation, raw-store mutation, runtime-state mutation, V4 activation, predictive scoring, or trading is introduced.
+- STEP 440 remains IN PROGRESS until focused tests and repository regression pass, then the change is merged and `main` is verified.
