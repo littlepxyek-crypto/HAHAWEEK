@@ -30,7 +30,7 @@ function requireNonNegativeInteger(value, name) {
 
 function normalizeHex(value, name) {
   requireString(value, name);
-  if (!/^0x[0-9a-fA-F]+$/.test(value)) {
+  if (!/^0x[0-9a-fA-F]+$/i.test(value)) {
     throw new Error(`INVALID_${name.toUpperCase()}`);
   }
   return value.toLowerCase();
