@@ -92,6 +92,8 @@ function appendUnique(log, chainId) {
     chain_id: chainId,
     block_number: log.blockNumber,
     transaction_hash: log.transactionHash,
+    block_hash: log.blockHash ?? null,
+    transaction_index: log.transactionIndex ?? null,
     log_index: log.index ?? log.logIndex ?? 0,
     address: log.address,
     topics: log.topics,
