@@ -1,6 +1,6 @@
 # HAHAWEEK — Historical Outcome Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 429
 Scope: MVP `POOL_BOOTSTRAP`
 
