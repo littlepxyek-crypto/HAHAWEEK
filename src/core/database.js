@@ -120,6 +120,22 @@ async function createDatabase(filename = DB_FILE) {
       ('schema_version', '1');
   `);
 
+  // Preserve existing raw evidence while upgrading the schema in place.
+  const rawColumns = db.exec('PRAGMA table_info(raw_events)')[0]?.values ?? [];
+  const rawColumnNames = new Set(rawColumns.map(row => row[1]));
+
+  if (!rawColumnNames.has('block_hash')) {
+    db.run('ALTER TABLE raw_events ADD COLUMN block_hash TEXT');
+  }
+
+  if (!rawColumnNames.has('transaction_index')) {
+    db.run('ALTER TABLE raw_events ADD COLUMN transaction_index INTEGER');
+  }
+
+  db.run(
+    "UPDATE schema_meta SET value = '2' WHERE key = 'schema_version'"
+  );
+
   return {
     db,
 
