@@ -952,3 +952,12 @@ git rev-parse origin/main
 - Security and Regression #1213 passed before merge.
 - Schema version and required identity/chain boundary verified.
 - No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
+
+
+## STEP 458 — Derived Consumer Completeness Audit — IN PROGRESS
+
+- STEP 457 is VERIFIED / FROZEN on main.
+- STEP 458 audits complete evidence/event coverage at the DERIVED consumer boundary.
+- Missing coverage and duplicate evidence/event identifiers are rejected.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
