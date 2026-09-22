@@ -1,0 +1,52 @@
+{
+  "schema_version": "1",
+  "fixture_class": "SYNTHETIC",
+  "chain_id": 4663,
+  "formation_type": "POOL_BOOTSTRAP",
+  "vectors": [
+    {
+      "fixture_id": "PB-SYN-001",
+      "expected_state": "VALID",
+      "events": [
+        {"event_type":"POOL_CREATED","evidence_id":"ei:syn:create","chain_id":4663,"pool_id":"0xsynpool","block_number":100,"transaction_index":0,"log_index":1,"event_time":"2026-01-01T00:00:00Z"},
+        {"event_type":"LIQUIDITY_ADDED","evidence_id":"ei:syn:liquidity","chain_id":4663,"pool_id":"0xsynpool","block_number":101,"transaction_index":0,"log_index":2,"event_time":"2026-01-01T00:00:10Z"},
+        {"event_type":"SWAP","evidence_id":"ei:syn:swap","chain_id":4663,"pool_id":"0xsynpool","block_number":102,"transaction_index":0,"log_index":0,"event_time":"2026-01-01T00:00:20Z"}
+      ]
+    },
+    {
+      "fixture_id": "PB-SYN-002",
+      "expected_state": "CANDIDATE",
+      "events": [
+        {"event_type":"POOL_CREATED","evidence_id":"ei:syn2:create","chain_id":4663,"pool_id":"0xsynpool2","block_number":200,"transaction_index":0,"log_index":1},
+        {"event_type":"LIQUIDITY_ADDED","evidence_id":"ei:syn2:liquidity","chain_id":4663,"pool_id":"0xsynpool2","block_number":201,"transaction_index":0,"log_index":2}
+      ]
+    },
+    {
+      "fixture_id": "PB-SYN-003",
+      "expected_state": "PARTIAL",
+      "events": [
+        {"event_type":"LIQUIDITY_ADDED","evidence_id":"ei:syn3:liquidity","chain_id":4663,"pool_id":"0xsynpool3","block_number":299,"transaction_index":0,"log_index":0},
+        {"event_type":"POOL_CREATED","evidence_id":"ei:syn3:create","chain_id":4663,"pool_id":"0xsynpool3","block_number":300,"transaction_index":0,"log_index":1},
+        {"event_type":"SWAP","evidence_id":"ei:syn3:swap","chain_id":4663,"pool_id":"0xsynpool3","block_number":301,"transaction_index":0,"log_index":0}
+      ]
+    },
+    {
+      "fixture_id": "PB-SYN-004",
+      "expected_state": "VALID",
+      "events": [
+        {"event_type":"POOL_CREATED","evidence_id":"ei:syn4:create","chain_id":4663,"pool_id":"0xsynpool4","block_number":400,"transaction_index":0,"log_index":1},
+        {"event_type":"SWAP","evidence_id":"ei:syn4:early","chain_id":4663,"pool_id":"0xsynpool4","block_number":401,"transaction_index":0,"log_index":0},
+        {"event_type":"LIQUIDITY_ADDED","evidence_id":"ei:syn4:liquidity","chain_id":4663,"pool_id":"0xsynpool4","block_number":402,"transaction_index":0,"log_index":0},
+        {"event_type":"SWAP","evidence_id":"ei:syn4:valid","chain_id":4663,"pool_id":"0xsynpool4","block_number":403,"transaction_index":0,"log_index":0}
+      ]
+    },
+    {
+      "fixture_id": "PB-SYN-005",
+      "expected_state": "ERROR_MULTIPLE_POOL_CONTEXTS",
+      "events": [
+        {"event_type":"POOL_CREATED","evidence_id":"ei:syn5:create","chain_id":4663,"pool_id":"0xsynpool5","block_number":500,"transaction_index":0,"log_index":1},
+        {"event_type":"LIQUIDITY_ADDED","evidence_id":"ei:syn5:liquidity","chain_id":4663,"pool_id":"0xotherpool","block_number":501,"transaction_index":0,"log_index":0}
+      ]
+    }
+  ]
+}
