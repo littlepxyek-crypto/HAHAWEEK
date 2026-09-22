@@ -5,6 +5,16 @@
 - Merge commit: `9d58a0c4b5040d09cf0aaddec448681112ab97f4`.
 - Post-merge Security & Regression #940: **SUCCESS**.
 - Post-merge Push on main #402: **SUCCESS**.
+- STEP 430 is now in progress: Validation Result contract.
+- Validation consumes a fixed Formation Result and Historical Outcome through a versioned validation rule.
+- Validation results are limited to `CONFIRMED`, `REJECTED`, or `INCONCLUSIVE`.
+- No raw evidence, evidence identity, repository authority, cursor, or V4 implementation is changed.
+
+- STEP 429 — Historical Outcome contract: **VERIFIED / FROZEN**.
+- PR #68: **MERGED**.
+- Merge commit: `9d58a0c4b5040d09cf0aaddec448681112ab97f4`.
+- Post-merge Security & Regression #940: **SUCCESS**.
+- Post-merge Push on main #402: **SUCCESS**.
 - Historical Outcome now enforces `observation_start >= formation_end`, explicit coverage, evidence references, deterministic outcome identity, and no-look-ahead behavior.
 - No raw evidence, evidence identity, repository authority, cursor, or V4 implementation was changed.
 
