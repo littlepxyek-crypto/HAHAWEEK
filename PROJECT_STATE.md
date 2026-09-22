@@ -840,3 +840,15 @@ git rev-parse origin/main
 - Deterministic in-memory inputs only; no live blockchain capture is claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing is changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
+
+## STEP 452 — Derived Evidence Reference Adversarial Boundary Audit — VERIFIED / FROZEN
+
+- PR #108 merged.
+- Merge commit: `ee1494dbc16ea5d29673d5217f3e72793f4866d1`.
+- Security and Regression workflow #1155 passed; `test-and-security` completed successfully.
+- Verified authority-contamination rejection, evidence/event coverage, provenance consistency, and nested output isolation at the frozen DERIVED Evidence Reference boundary.
+- Main verified at the STEP 452 merge commit.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 453, after this freeze checkpoint is merged and main is verified.
