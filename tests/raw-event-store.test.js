@@ -29,6 +29,8 @@ function sampleEvent(id, block = 100) {
     chain_id: 4663,
     block_number: block,
     transaction_hash: `0x${id.slice(-6).padStart(6, '0')}`,
+    block_hash: `0x${'b'.repeat(64)}`,
+    transaction_index: 2,
     log_index: 0,
     address: '0x0000000000000000000000000000000000000001',
     topics: ['0xtopic'],
@@ -98,8 +100,10 @@ test('raw event survives database reload', async () => {
   assert.equal(row[0], 'event-003');
   assert.equal(row[1], 4663);
   assert.equal(row[2], 123);
-  assert.equal(row[3], 0);
-  assert.equal(row[4], '["0xtopic"]');
+  assert.equal(row[3], `0x${'b'.repeat(64)}`);
+  assert.equal(row[4], 2);
+  assert.equal(row[5], 0);
+  assert.equal(row[6], '["0xtopic"]');
   assert.equal(row[5], '0xdata');
 
   second.db.close();
