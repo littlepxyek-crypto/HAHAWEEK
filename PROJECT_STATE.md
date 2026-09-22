@@ -28,6 +28,24 @@
 - STEP 431 contract document is **VERIFIED / FROZEN**.
 - Historical V4 implementation remains preserved.
 
+## Current Execution Checkpoint — 2026-09-22 (STEP 432)
+
+- STEP 430 — Validation Result contract: **VERIFIED / FROZEN**.
+- STEP 431 — Validation Integration Boundary: **VERIFIED / FROZEN**.
+- STEP 432 — Research Report contract: **VERIFIED / FROZEN**.
+- PR #75: **MERGED** — research report contract implementation.
+- PR #75 merge commit: `8a9b5dd2e5b6d73e7312a08c9f51710b6a072b54`.
+- Post-merge Security & Regression #979: **SUCCESS**.
+- Post-merge Push on main #416: **SUCCESS**.
+- Main verified at `8a9b5dd2e5b6d73e7312a08c9f51710b6a072b54`.
+- Research Report preserves Formation, Historical Outcome, and Validation lineage.
+- Every material report claim requires evidence IDs.
+- Validation state is preserved without reinterpretation.
+- Report identity is deterministic and independent of processing time.
+- Report generation does not modify authoritative evidence, repository state, cursor, or V4 implementation.
+- STEP 432 contract document is **VERIFIED / FROZEN**.
+- Historical V4 implementation remains preserved.
+
 ## Step 427 Verification Detail
 
 - Formation integration test corrected a stale node-count assertion from 10 to the actual 11 nodes.
