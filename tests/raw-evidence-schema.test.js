@@ -7,8 +7,6 @@ const os = require('os');
 const path = require('path');
 
 const { createDatabase } = require('../src/core/database');
-const { appendUnique } = require('../src/core/raw-store');
-
 function tempDatabasePath() {
   return path.join(
     fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-schema-')),
@@ -43,6 +41,10 @@ test('raw store preserves block hash and transaction index', () => {
   process.env.HAHAWEEK_RAW_FILE = rawFile;
 
   try {
+    const rawStorePath = require.resolve('../src/core/raw-store');
+    delete require.cache[rawStorePath];
+    const { appendUnique } = require('../src/core/raw-store');
+
     const result = appendUnique({
       blockNumber: 123,
       blockHash: '0x' + 'a'.repeat(64),
