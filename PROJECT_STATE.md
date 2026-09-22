@@ -585,3 +585,16 @@ git rev-parse origin/main
 - Historical V4 implementation remains preserved.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next engineering step: audit the existing POOL_BOOTSTRAP Formation Contract and its integration boundary before adding any new formation capability.
+
+
+## Current Execution Checkpoint — 2026-09-22 (STEP 435)
+
+- STEP 434 — MVP Fixture Contract Verification & Freeze: **COMPLETED / MERGED**.
+- PR #78: **MERGED** — checkpoint documentation and verification record.
+- PR #78 merge commit: `d5d373ceeb98bf2adda7d37815832db362768775`.
+- Required Security & Regression #993: **SUCCESS**.
+- STEP 435 — Formation Contract Audit: **IN PROGRESS**.
+- Audit target: existing `POOL_BOOTSTRAP` formation semantics, temporal ordering, evidence selection, deterministic identity, and fixture/formation contract consistency.
+- Audit finding: `docs/MVP_FIXTURE_CONTRACT_V0_1.md` still declared `IMPLEMENTATION CANDIDATE` after the contract had been verified/frozen. This is documentation-state drift and is being corrected without changing runtime authority.
+- Existing Pool Bootstrap tests cover canonical ordering, missing swap, liquidity-before-creation, swap-before-liquidity, mixed pool contexts, and deterministic formation identity.
+- No production V4 activation, cursor change, raw evidence change, or authority migration is authorized by this step.
