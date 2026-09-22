@@ -978,3 +978,11 @@ git rev-parse origin/main
 - Nested input and output mutations are tested for non-propagation.
 - Deterministic in-memory inputs only; no live authoritative capture claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+
+
+## STEP 459 — Derived Consumer Mutation Audit — VERIFIED / FROZEN
+
+- PR #122 merged at d680024e186fc1d249a02126cd1d6450146a8cb2.
+- Security and Regression #1235 passed before merge.
+- Deep input/output mutation isolation verified.
+- No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
