@@ -751,3 +751,15 @@ git rev-parse origin/main
 - No Formation semantic change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 448, derived from the frozen replay isolation boundary.
+
+
+## STEP 448 — Formation Input Isolation Audit — VERIFIED / FROZEN
+
+- PR #100 merged.
+- Merge commit: `8a7ed7aea40a516a3f03e5f0c55cdb8f9838c9b8`.
+- Security and Regression workflow #1109 passed on the STEP 448 head.
+- Added regression coverage proving Pool Bootstrap Formation detection does not mutate or retain mutable input references.
+- Main verified at the STEP 448 merge commit.
+- No Formation semantic change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 449, derived from the frozen Formation input-isolation boundary.
