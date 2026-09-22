@@ -1036,3 +1036,11 @@ git rev-parse origin/main
 - Security & Regression #1270 passed.
 - Schema/lineage preservation and nested mutation isolation verified.
 - No authority escalation or raw/cursor/runtime/V4 changes.
+
+
+## STEP 463 — Derived Consumer Canonicalization Audit — IN PROGRESS
+
+- STEP 462 is VERIFIED / FROZEN on main.
+- STEP 463 verifies equivalent DERIVED references remain semantically stable across input construction order.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
