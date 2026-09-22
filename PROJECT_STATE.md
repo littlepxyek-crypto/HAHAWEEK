@@ -1028,3 +1028,11 @@ git rev-parse origin/main
 - STEP 462 verifies schema/lineage preservation and nested mutation isolation at the DERIVED consumer boundary.
 - Deterministic in-memory inputs only; no live authoritative capture claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+
+
+## STEP 462 — Derived Consumer Schema & Immutability Audit — VERIFIED / FROZEN
+
+- PR #128 merged.
+- Security & Regression #1270 passed.
+- Schema/lineage preservation and nested mutation isolation verified.
+- No authority escalation or raw/cursor/runtime/V4 changes.
