@@ -16,6 +16,8 @@
 - No raw evidence, runtime state, cursor, or production authority was changed.
 - Existing V4 implementation remains preserved.
 - Live Robinhood RPC evidence capture remains blocked by the previously verified network/DNS limitation; no synthetic fixture is treated as real chain evidence.
+- STEP 428 is now in progress: Formation Result contract completion.
+- Step 428 scope is limited to adding the missing Formation Result contract fields without changing evidence authority or formation semantics.
 
 ## Step 427 Verification Detail
 
