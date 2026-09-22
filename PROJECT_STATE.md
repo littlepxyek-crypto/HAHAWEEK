@@ -815,3 +815,16 @@ git rev-parse origin/main
 - Tests use deterministic in-memory Formation inputs only; no live blockchain capture is claimed.
 - No raw evidence, cursor, runtime state, V4 authority, predictive scoring, trading, or signing is changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
+
+## STEP 451 — Derived Evidence Reference Integration Verification — VERIFIED / FROZEN
+
+- PR #106 merged.
+- Merge commit: `74818b68cf8f34bff7b4e18b0d8b439a784eb8e5`.
+- Security and Regression workflow #1142 passed; `test-and-security` completed successfully.
+- Verified VALID Pool Bootstrap Formation → DERIVED Evidence Reference integration.
+- Verified Formation lineage preservation, CANDIDATE rejection, and authority separation.
+- Main verified at the STEP 451 merge commit.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 452, after this freeze checkpoint is merged and main is verified.
