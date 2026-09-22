@@ -147,7 +147,7 @@ async function createDatabase(filename = DB_FILE) {
   }
 
   db.run(
-    "UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'
+    "UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'"
   );
 
   return {
