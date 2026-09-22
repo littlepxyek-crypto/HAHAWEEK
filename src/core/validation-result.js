@@ -78,13 +78,10 @@ function createValidationResult(input) {
   }
 
   let result = 'CONFIRMED';
-  if (criteriaResults.some((criterion) => criterion.status === 'FAIL')) {
-    result = 'REJECTED';
-  } else if (
-    outcomeCoverage !== 'COMPLETE' ||
-    criteriaResults.some((criterion) => criterion.status === 'INCONCLUSIVE')
-  ) {
+  if (outcomeCoverage !== 'COMPLETE' || criteriaResults.some((criterion) => criterion.status === 'INCONCLUSIVE')) {
     result = 'INCONCLUSIVE';
+  } else if (criteriaResults.some((criterion) => criterion.status === 'FAIL')) {
+    result = 'REJECTED';
   }
 
   const evidenceIds = [...new Set([

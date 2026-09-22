@@ -68,6 +68,21 @@ test('incomplete historical coverage produces INCONCLUSIVE', () => {
   assert.equal(result.result, 'INCONCLUSIVE');
 });
 
+test('partial coverage cannot be silently rejected by a failed criterion', () => {
+  const result = createValidationResult(input({
+    outcome: {
+      ...input().outcome,
+      coverage_status: 'PARTIAL',
+    },
+    criteria_results: [{
+      criterion_id: 'C1',
+      status: 'FAIL',
+      evidence_ids: ['ei:partial'],
+    }],
+  }));
+  assert.equal(result.result, 'INCONCLUSIVE');
+});
+
 test('an inconclusive criterion produces INCONCLUSIVE', () => {
   const result = createValidationResult(input({
     criteria_results: [{
