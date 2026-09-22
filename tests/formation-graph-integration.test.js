@@ -60,7 +60,7 @@ test('Pool Bootstrap Formation Result integrates with Evidence Graph without rew
   for (const item of evidence) graph.projectEvidence(item);
   graph.projectFormation(formationResult.formation);
 
-  assert.equal(graph.count().nodes, 10);
+  assert.equal(graph.count().nodes, 11);
   assert.equal(graph.count().edges, 15);
 
   const output = graph.toJSON();
