@@ -100,8 +100,9 @@ function detectPoolBootstrap(events) {
 
   const selected = [created, liquidity, firstSwap];
   const evidenceIds = selected.map((event) => event.evidence_id);
+  const formationIdValue = formationId(created.chain_id, created.pool_id, evidenceIds);
   const formation = {
-    formation_id: formationId(created.chain_id, created.pool_id, evidenceIds),
+    formation_id: formationIdValue,
     formation_type: FORMATION_TYPE,
     formation_rule_version: FORMATION_RULE_VERSION,
     chain_id: created.chain_id,
@@ -119,7 +120,7 @@ function detectPoolBootstrap(events) {
     })),
     graph_reference: {
       node_type: 'FORMATION',
-      node_id: formationId(created.chain_id, created.pool_id, evidenceIds),
+      node_id: formationIdValue,
     },
     provenance_reference: {
       chain_id: created.chain_id,
