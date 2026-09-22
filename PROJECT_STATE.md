@@ -5,20 +5,27 @@
 
 ## Current Execution Checkpoint — 2026-09-22
 
-- STEP 426 — Canonical Pool Bootstrap Formation Engine: **VERIFIED / FROZEN**.
-- Merge commit: `57edffa131d8b7daf11feb3e4c37005e249e98b5`.
+- STEP 427 — Formation Result ↔ Evidence Graph integration: **VERIFIED / FROZEN**.
+- PR #64: **MERGED**.
+- Merge commit: `202596d81114d6c02eabc41c943489099783c4d0`.
 - `main` points to the same merge commit.
-- Post-merge HAHAWEEK Security and Regression run #903: **SUCCESS**.
-- Post-merge CodeQL / Push on main run #390: **SUCCESS**.
-- STEP 427 is now in progress: Formation Result ↔ Evidence Graph integration.
-- No raw evidence, runtime state, cursor, or production authority has been changed.
+- PR #64 Security & Regression run #910: **SUCCESS**.
+- Post-merge HAHAWEEK Security and Regression run #911: **SUCCESS**.
+- Post-merge CodeQL / Push on main run #393: **SUCCESS**.
+- Step 427 verifies that a valid Pool Bootstrap Formation Result is reproducibly projectable into the Evidence Graph with exactly one reference edge per selected evidence ID.
+- No raw evidence, runtime state, cursor, or production authority was changed.
 - Existing V4 implementation remains preserved.
-- Live Robinhood RPC evidence capture remains blocked by the previously verified network/DNS limitation; no synthetic fixture is being treated as real chain evidence.
+- Live Robinhood RPC evidence capture remains blocked by the previously verified network/DNS limitation; no synthetic fixture is treated as real chain evidence.
 
+## Step 427 Verification Detail
 
-> Durable engineering checkpoint for HAHAWEEK.
-> This file is the continuity source for the project across ChatGPT sessions.
-> Update it at every material engineering milestone and commit/push it with the related code.
+- Formation integration test corrected a stale node-count assertion from 10 to the actual 11 nodes.
+- Final integration expectation: 11 nodes, 15 edges, 3 formation `REFERENCES` edges.
+- Canonical evidence remains unchanged after graph projection.
+- Formation detection remains independent from graph storage.
+- Evidence Graph remains a rebuildable projection, not a source of truth.
+- `POOL_BOOTSTRAP` remains protocol-agnostic.
+- Historical V4 implementation remains preserved.
 
 ## Deep Audit Checkpoint — 2026-09-21
 

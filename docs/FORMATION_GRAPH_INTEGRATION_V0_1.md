@@ -1,6 +1,7 @@
 # HAHAWEEK — Formation ↔ Evidence Graph Integration v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
+Verification: PR #64 merged; post-merge Security & Regression #911 and CodeQL #393 succeeded.
 Step: 427
 Scope: MVP `POOL_BOOTSTRAP`
 
