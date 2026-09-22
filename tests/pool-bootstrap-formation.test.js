@@ -39,7 +39,7 @@ test('detects a valid Pool Bootstrap in canonical temporal order', () => {
     chain_id: 4663,
     evidence_ids: ['ei:create', 'ei:liquidity', 'ei:swap'],
   });
-  assert.match(result.formation.created_at, /^\\d{4}-\\d{2}-\\d{2}T/);
+  assert.match(result.formation.created_at, /^\d{4}-\d{2}-\d{2}T/);
 });
 
 test('selects the earliest valid swap by block, transaction, and log order', () => {
