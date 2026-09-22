@@ -1,6 +1,6 @@
 # Authoritative Replay Coverage Audit v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 443
 Scope: authoritative evidence envelope and replay boundary coverage
 
@@ -12,7 +12,7 @@ The frozen replay boundary and authoritative evidence envelope are implemented a
 2. The authoritative evidence fixture contract still declared `IMPLEMENTATION CANDIDATE` although STEP 442 is VERIFIED / FROZEN.
 3. The executable envelope/replay validators accepted an explicitly supplied `undefined` response payload because presence was checked by property existence alone. A preserved raw RPC response must not be represented by an undefined payload.
 
-## Required Correction
+## Corrections Applied
 
 - Synchronize the two contract documents to their verified frozen state.
 - Reject an undefined `response_payload` at both the envelope and replay boundaries.
