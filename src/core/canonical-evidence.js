@@ -1,5 +1,7 @@
 'use strict';
 
+const { createEvidenceIdentity } = require('./evidence-identity');
+
 /**
  * Canonical Evidence v0.1
  *
@@ -60,7 +62,9 @@ function createCanonicalEvidence(raw, options = {}) {
   }
 
   const canonical = {
-    evidence_id: `ce:${raw.event_id}`,
+    evidence_id: null,
+    identity_reference: null,
+    identity_status: 'INCOMPLETE',
     evidence_type: 'RAW_LOG',
     chain_id: raw.chain_id,
     location: {
@@ -98,6 +102,16 @@ function createCanonicalEvidence(raw, options = {}) {
       canonical.location.transaction_index < 0)
   ) {
     throw new Error('INVALID_TRANSACTION_INDEX');
+  }
+
+  if (
+    canonical.location.block_hash !== null &&
+    canonical.location.transaction_index !== null
+  ) {
+    const identity = createEvidenceIdentity(canonical);
+    canonical.evidence_id = identity.evidence_id;
+    canonical.identity_reference = identity;
+    canonical.identity_status = 'COMPLETE';
   }
 
   return canonical;
