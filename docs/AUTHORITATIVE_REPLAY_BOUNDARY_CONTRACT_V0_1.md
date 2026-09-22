@@ -1,6 +1,6 @@
 # Authoritative Replay Boundary Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 437
 Scope: Pool Bootstrap MVP historical replay
 
