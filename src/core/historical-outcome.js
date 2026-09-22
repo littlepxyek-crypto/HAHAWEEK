@@ -45,10 +45,20 @@ function createHistoricalOutcome(input) {
   requireObject(input, 'input');
   requireString(input.formation_id, 'formation_id');
   requireString(input.formation_rule_version, 'formation_rule_version');
+  requireString(input.formation_end, 'formation_end');
   requireString(input.outcome_rule_version ?? OUTCOME_RULE_VERSION, 'outcome_rule_version');
   requireString(input.observation_start, 'observation_start');
   requireString(input.observation_end, 'observation_end');
-  if (new Date(input.observation_end).getTime() < new Date(input.observation_start).getTime()) {
+  const formationEnd = new Date(input.formation_end).getTime();
+  const observationStart = new Date(input.observation_start).getTime();
+  const observationEnd = new Date(input.observation_end).getTime();
+  if (!Number.isFinite(formationEnd) || !Number.isFinite(observationStart) || !Number.isFinite(observationEnd)) {
+    throw new Error('INVALID_OBSERVATION_TIME');
+  }
+  if (observationStart < formationEnd) {
+    throw new Error('OBSERVATION_PRECEDES_FORMATION');
+  }
+  if (observationEnd < observationStart) {
     throw new Error('INVALID_OBSERVATION_WINDOW');
   }
   if (!Array.isArray(input.observations)) throw new Error('OBSERVATIONS_REQUIRED');
@@ -59,8 +69,8 @@ function createHistoricalOutcome(input) {
   const observations = input.observations.map(canonicalObservation);
   for (const observation of observations) {
     const time = new Date(observation.event_time).getTime();
-    const start = new Date(input.observation_start).getTime();
-    const end = new Date(input.observation_end).getTime();
+    const start = observationStart;
+    const end = observationEnd;
     if (!Number.isFinite(time) || time < start || time > end) {
       throw new Error('OBSERVATION_OUTSIDE_WINDOW');
     }
@@ -77,6 +87,7 @@ function createHistoricalOutcome(input) {
     outcome_rule_version: input.outcome_rule_version ?? OUTCOME_RULE_VERSION,
     formation_id: input.formation_id,
     formation_rule_version: input.formation_rule_version,
+    formation_end: input.formation_end,
     observation_start: input.observation_start,
     observation_end: input.observation_end,
     coverage_status: input.coverage_status,
