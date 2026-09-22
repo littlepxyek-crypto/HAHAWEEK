@@ -1044,3 +1044,11 @@ git rev-parse origin/main
 - STEP 463 verifies equivalent DERIVED references remain semantically stable across input construction order.
 - Deterministic in-memory inputs only; no live authoritative capture claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+
+
+## STEP 463 — Derived Consumer Canonicalization Audit — VERIFIED / FROZEN
+
+- PR #130 merged.
+- Security & Regression #1281 passed.
+- Equivalent input construction order verified not to alter DERIVED consumer semantics.
+- No authority escalation or raw/cursor/runtime/V4 changes.
