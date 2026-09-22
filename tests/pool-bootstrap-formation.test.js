@@ -124,3 +124,31 @@ test('formation detection does not mutate or retain mutable input references', (
   result.formation.provenance_reference.evidence_ids.push('mutated');
   assert.deepEqual(input, before);
 });
+
+
+test('formation semantic output remains deterministic across repeated detection', async () => {
+  const input = [
+    event('SWAP', 'ei:swap', 102, 0, 0),
+    event('POOL_CREATED', 'ei:create', 100, 0, 1),
+    event('LIQUIDITY_ADDED', 'ei:liquidity', 101, 0, 2),
+  ];
+
+  const first = detectPoolBootstrap(input).formation;
+  await new Promise((resolve) => setTimeout(resolve, 2));
+  const second = detectPoolBootstrap(input).formation;
+
+  assert.equal(first.formation_id, second.formation_id);
+  assert.deepEqual(first.evidence_ids, second.evidence_ids);
+  assert.deepEqual(first.event_order, second.event_order);
+  assert.deepEqual(first.graph_reference, second.graph_reference);
+  assert.deepEqual(first.provenance_reference, second.provenance_reference);
+  assert.notEqual(first.created_at, second.created_at);
+
+  first.event_order[0].event_type = 'MUTATED';
+  first.provenance_reference.evidence_ids.push('mutated');
+
+  const third = detectPoolBootstrap(input).formation;
+  assert.deepEqual(third.event_order, second.event_order);
+  assert.deepEqual(third.provenance_reference, second.provenance_reference);
+  assert.equal(third.formation_id, second.formation_id);
+});
