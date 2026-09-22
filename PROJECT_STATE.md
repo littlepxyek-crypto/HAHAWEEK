@@ -682,3 +682,20 @@ git rev-parse origin/main
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next engineering focus: establish the next deterministic authoritative-evidence fixture/replay family without bypassing the frozen replay boundary.
 \n\n## Current Execution Checkpoint — 2026-09-22 (STEP 441)\n\n- STEP 440 — Authoritative Replay Integration Verification: **VERIFIED / FROZEN**.\n- STEP 441 — Authoritative Evidence Envelope: **IN PROGRESS**.\n- Added a narrow provenance boundary for preserved raw RPC evidence before authoritative replay.\n- The implementation preserves the supplied raw response representation and required request/observation/capture provenance without normalization.\n- The envelope constructor is pure and does not access cursor, runtime state, raw-store authority, or V4 authority.\n- This step does not claim that live blockchain evidence has been captured; real AUTHORITATIVE evidence remains a separate prerequisite.\n- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.\n
+
+## Current Execution Checkpoint — 2026-09-22 (STEP 441 VERIFIED / FROZEN)
+
+- STEP 441 — Authoritative Evidence Envelope: **VERIFIED / FROZEN**.
+- PR #86: **MERGED**.
+- PR #86 merge commit: `ed0e665c5d74206d4c38fb5e996b2195db36d45c`.
+- Authoritative evidence envelope boundary is present on `main`.
+- Required CI for the final head completed successfully, including the re-run `test-and-security` check.
+- Verified envelope requirements: AUTHORITATIVE class, schema version, chain ID, source/provider, evidence ID, request provenance, preserved raw response payload, observation block context, capture metadata, and replay events.
+- Verified immutability: capture input is not mutated or aliased.
+- Verified raw-response representation is preserved without normalization.
+- Verified SYNTHETIC and DISCOVERY_ONLY evidence are rejected.
+- Verified the envelope exposes no cursor, runtime-state, raw-store authority, or V4 authority.
+- This freeze does **not** claim that live blockchain AUTHORITATIVE evidence has been captured; real preserved RPC evidence remains a separate prerequisite.
+- No live backfill, cursor mutation, raw-store migration, V4 production activation, predictive scoring, or trading/signing was introduced.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next engineering focus: deterministic authoritative-evidence fixture/replay family using the frozen envelope and replay boundaries.
