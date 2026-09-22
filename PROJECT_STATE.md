@@ -725,3 +725,16 @@ git rev-parse origin/main
 - AUTHORITATIVE remains the only accepted class at the authoritative replay boundary; SYNTHETIC and DISCOVERY_ONLY remain non-authoritative.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 446 — next deterministic evidence/replay engineering boundary, only after preserving the frozen authority constraints.
+
+
+## STEP 446 — Authoritative Replay Adversarial Boundary Audit — VERIFIED / FROZEN
+
+- PR #96 merged.
+- Merge commit: `773c65d0c737a06b2011404ed6e745adb8be35a5`.
+- Required Security and Regression workflow #1088 passed on the STEP 446 head.
+- Hardened both authoritative evidence and replay boundaries to reject explicitly undefined `request.params`.
+- Added focused regression coverage for the malformed-but-present provenance case.
+- Frozen AUTHORITATIVE-only boundary, preserved response payload requirement, provenance requirements, deterministic replay, and authority isolation remain intact.
+- No Formation semantic change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 447, derived from the frozen authority boundary rather than bypassing it.
