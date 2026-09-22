@@ -918,3 +918,12 @@ git rev-parse origin/main
 - Security and Regression #1190 passed before merge.
 - Lineage preservation and drift rejection verified across the frozen DERIVED Evidence Reference → DERIVED Consumer boundary.
 - No authority escalation, raw evidence mutation, cursor/runtime change, V4 activation, predictive scoring, trading, or signing.
+
+
+## STEP 456 — Derived Consumer Authority Audit — IN PROGRESS
+
+- STEP 455 is VERIFIED / FROZEN on main.
+- STEP 456 audits authority contamination at the DERIVED consumer boundary.
+- Tests reject AUTHORITATIVE evidence class and verify authoritative request/response, cursor/runtime, and V4 authority fields are not propagated.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
