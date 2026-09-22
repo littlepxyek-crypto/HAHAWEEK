@@ -613,3 +613,17 @@ git rev-parse origin/main
 - No raw evidence, runtime state, cursor, production authority, or V4 implementation was changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next engineering step: establish a dedicated authoritative-replay boundary for real blockchain evidence, keeping synthetic fixtures strictly non-authoritative.
+
+
+## Current Execution Checkpoint — 2026-09-22 (STEP 437)
+
+- STEP 436 — Formation Contract Freeze: **VERIFIED / FROZEN**.
+- PR #80: **MERGED**.
+- PR #80 merge commit: `912c69318f9bf0af44545f8dbcba44b1ca0937d9`.
+- Required Security & Regression #1002: **SUCCESS**.
+- Established the next engineering boundary: authoritative replay of preserved real blockchain evidence while synthetic fixtures remain strictly non-authoritative.
+- Added `docs/AUTHORITATIVE_REPLAY_BOUNDARY_CONTRACT_V0_1.md` as the STEP 437 contract candidate.
+- Contract preserves separation between SYNTHETIC, DISCOVERY_ONLY, and AUTHORITATIVE evidence classes.
+- Replay is defined as an offline derivation path and MUST NOT advance/reset production cursor, mutate production runtime state, overwrite raw evidence, promote non-authoritative data, or activate V4.
+- Required verification vectors are explicitly defined for authoritative acceptance, non-authoritative rejection, provenance validation, state safety, and deterministic formation output.
+- STEP 437 remains **IN PROGRESS** until the contract is reviewed, tested, frozen, and merged.
