@@ -927,3 +927,11 @@ git rev-parse origin/main
 - Tests reject AUTHORITATIVE evidence class and verify authoritative request/response, cursor/runtime, and V4 authority fields are not propagated.
 - Deterministic in-memory inputs only; no live authoritative capture claimed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
+
+## STEP 456 — Derived Consumer Authority Audit — VERIFIED / FROZEN
+
+- PR #116 merged at 283bf682b14eddc115ff4d781b5fa86f7e3b3ab8.
+- Security and Regression #1202 passed before merge.
+- DERIVED-only authority boundary and non-propagation of authoritative/runtime/V4 fields verified.
+- No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
