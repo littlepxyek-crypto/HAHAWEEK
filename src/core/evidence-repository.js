@@ -1,6 +1,6 @@
 'use strict';
 
-const { hashRawEvidence, hashCanonicalEvidence } = require('./evidence-identity');
+const { hashRawEvidence, hashCanonicalEvidence, createEvidenceIdentity } = require('./evidence-identity');
 
 function createEvidenceRepository(db) {
   if (!db) throw new Error('DATABASE_REQUIRED');
@@ -58,6 +58,59 @@ function createEvidenceRepository(db) {
       );
 
       return { inserted: true, evidenceId: canonical.evidence_id, rawHash, canonicalHash };
+    },
+
+    verify(evidenceId) {
+      const record = this.get(evidenceId);
+      if (!record) return { verified: false, reason: 'EVIDENCE_NOT_FOUND' };
+
+      const rawResult = db.exec(
+        `SELECT event_id, chain_id, block_number, transaction_hash, block_hash,
+                transaction_index, log_index, address, topics_json, data, captured_at
+         FROM raw_events
+         WHERE event_id = ?`,
+        [record.raw_event_id]
+      );
+
+      if (!rawResult.length || !rawResult[0].values.length) {
+        return { verified: false, reason: 'RAW_EVIDENCE_NOT_FOUND' };
+      }
+
+      const columns = rawResult[0].columns;
+      const row = rawResult[0].values[0];
+      const raw = Object.fromEntries(columns.map((column, index) => [column, row[index]]));
+      raw.topics = JSON.parse(raw.topics_json);
+      delete raw.topics_json;
+
+      const rawHash = hashRawEvidence(raw);
+      if (rawHash !== record.raw_hash) {
+        return { verified: false, reason: 'RAW_HASH_MISMATCH' };
+      }
+
+      const canonicalHash = hashCanonicalEvidence(record.canonical);
+      if (canonicalHash !== record.canonical_hash) {
+        return { verified: false, reason: 'CANONICAL_HASH_MISMATCH' };
+      }
+
+      const identity = createEvidenceIdentity(record.canonical);
+      if (
+        identity.evidence_id !== record.evidence_id ||
+        identity.identity_hash !== record.identity_hash
+      ) {
+        return { verified: false, reason: 'IDENTITY_MISMATCH' };
+      }
+
+      if (record.canonical.raw_reference?.event_id !== raw.event_id) {
+        return { verified: false, reason: 'RAW_REFERENCE_MISMATCH' };
+      }
+
+      return {
+        verified: true,
+        evidenceId: record.evidence_id,
+        rawHash,
+        canonicalHash,
+        identityHash: identity.identity_hash,
+      };
     },
 
     get(evidenceId) {
