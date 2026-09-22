@@ -117,6 +117,15 @@ function detectPoolBootstrap(events) {
       transaction_index: event.transaction_index,
       log_index: event.log_index,
     })),
+    graph_reference: {
+      node_type: 'FORMATION',
+      node_id: formationId(created.chain_id, created.pool_id, evidenceIds),
+    },
+    provenance_reference: {
+      chain_id: created.chain_id,
+      evidence_ids: evidenceIds,
+    },
+    created_at: new Date().toISOString(),
   };
 
   return { formation, state, missing: [] };
