@@ -27,7 +27,7 @@ function reference() {
 test('accepts only DERIVED authority class', () => {
   const input = reference();
   input.evidence_class = 'AUTHORITATIVE';
-  assert.throws(() => createDerivedEvidenceConsumerInput(input), /evidence_class must be DERIVED/);
+  assert.throws(() => createDerivedEvidenceConsumerInput(input), /accepts DERIVED evidence only/);
 });
 
 test('does not retain authoritative response or request material', () => {
