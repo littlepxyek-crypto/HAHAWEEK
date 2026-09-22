@@ -41,7 +41,7 @@ function validateAuthoritativeReplayEnvelope(envelope) {
   }
 
   assertNonEmptyString(envelope.request.method, 'request.method');
-  if (!Object.prototype.hasOwnProperty.call(envelope.request, 'params')) {
+  if (!Object.prototype.hasOwnProperty.call(envelope.request, 'params') || envelope.request.params === undefined) {
     fail('authoritative replay requires request.params');
   }
 

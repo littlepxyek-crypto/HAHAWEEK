@@ -147,3 +147,19 @@ test('rejects empty derived event set', () => {
     /at least one derived event/
   );
 });
+
+test('rejects request.params explicitly set to undefined', () => {
+  const input = {
+    schema_version: '1',
+    evidence_class: 'AUTHORITATIVE',
+    chain_id: 4663,
+    source: 'rpc:test-provider',
+    evidence_id: 'ev:authoritative:undefined-params',
+    request: { method: 'eth_getLogs', params: undefined },
+    response_payload: { preserved: true },
+    observation: { block_number: 102 },
+    capture: { captured_at: '2026-01-01T00:00:00.000Z' },
+    events: [{ event_type: 'POOL_CREATED', evidence_id: 'ei:create' }],
+  };
+  assert.throws(() => replayAuthoritativeEvidence(input), /request\.params/);
+});

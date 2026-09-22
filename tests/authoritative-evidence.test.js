@@ -123,3 +123,12 @@ test('does not expose cursor, runtime state, raw-store, or V4 authority', () => 
     assert.equal(Object.hasOwn(envelope, field), false);
   }
 });
+
+test('rejects request.params explicitly set to undefined', () => {
+  const input = makeInput();
+  input.request.params = undefined;
+  assert.throws(
+    () => createAuthoritativeEvidenceEnvelope(input),
+    /request\.params/
+  );
+});
