@@ -1,0 +1,52 @@
+{
+  "schema_version": "1",
+  "fixture_class": "AUTHORITATIVE",
+  "chain_id": 4663,
+  "formation_type": "POOL_BOOTSTRAP",
+  "vectors": [
+    {
+      "fixture_id": "PB-AUTH-001",
+      "expected_state": "VALID",
+      "evidence_id": "ev:auth:pb:001",
+      "source": "preserved-rpc-fixture",
+      "request": {"method":"eth_getLogs","params":[{"fromBlock":"0x64","toBlock":"0x66","address":"0x0000000000000000000000000000000000000a01"}]},
+      "response_payload": {"jsonrpc":"2.0","id":17,"result":[{"raw":"0x504f4f4c5f43524541544544"}]},
+      "observation": {"block_number":102},
+      "capture": {"captured_at":"2026-01-01T00:00:30Z"},
+      "events": [
+        {"event_type":"POOL_CREATED","evidence_id":"ev:auth:pb:001:create","chain_id":4663,"pool_id":"0xauthpool","block_number":100,"transaction_index":0,"log_index":1},
+        {"event_type":"LIQUIDITY_ADDED","evidence_id":"ev:auth:pb:001:liquidity","chain_id":4663,"pool_id":"0xauthpool","block_number":101,"transaction_index":0,"log_index":2},
+        {"event_type":"SWAP","evidence_id":"ev:auth:pb:001:swap","chain_id":4663,"pool_id":"0xauthpool","block_number":102,"transaction_index":0,"log_index":0}
+      ]
+    },
+    {
+      "fixture_id": "PB-AUTH-002",
+      "expected_state": "CANDIDATE",
+      "evidence_id": "ev:auth:pb:002",
+      "source": "preserved-rpc-fixture",
+      "request": {"method":"eth_getLogs","params":[{"fromBlock":"0xc8","toBlock":"0xc9"}]},
+      "response_payload": {"jsonrpc":"2.0","id":18,"result":[]},
+      "observation": {"block_number":201},
+      "capture": {"captured_at":"2026-01-01T00:01:00Z"},
+      "events": [
+        {"event_type":"POOL_CREATED","evidence_id":"ev:auth:pb:002:create","chain_id":4663,"pool_id":"0xauthpool2","block_number":200,"transaction_index":0,"log_index":1},
+        {"event_type":"LIQUIDITY_ADDED","evidence_id":"ev:auth:pb:002:liquidity","chain_id":4663,"pool_id":"0xauthpool2","block_number":201,"transaction_index":0,"log_index":2}
+      ]
+    },
+    {
+      "fixture_id": "PB-AUTH-003",
+      "expected_state": "PARTIAL",
+      "evidence_id": "ev:auth:pb:003",
+      "source": "preserved-rpc-fixture",
+      "request": {"method":"eth_getLogs","params":[{"fromBlock":"0x12b","toBlock":"0x12d"}]},
+      "response_payload": {"jsonrpc":"2.0","id":19,"result":[{"opaque":"preserved"}]},
+      "observation": {"block_number":301},
+      "capture": {"captured_at":"2026-01-01T00:02:00Z"},
+      "events": [
+        {"event_type":"LIQUIDITY_ADDED","evidence_id":"ev:auth:pb:003:liquidity","chain_id":4663,"pool_id":"0xauthpool3","block_number":299,"transaction_index":0,"log_index":0},
+        {"event_type":"POOL_CREATED","evidence_id":"ev:auth:pb:003:create","chain_id":4663,"pool_id":"0xauthpool3","block_number":300,"transaction_index":0,"log_index":1},
+        {"event_type":"SWAP","evidence_id":"ev:auth:pb:003:swap","chain_id":4663,"pool_id":"0xauthpool3","block_number":301,"transaction_index":0,"log_index":0}
+      ]
+    }
+  ]
+}
