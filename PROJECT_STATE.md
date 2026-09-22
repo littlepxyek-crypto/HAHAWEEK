@@ -738,3 +738,16 @@ git rev-parse origin/main
 - No Formation semantic change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 447, derived from the frozen authority boundary rather than bypassing it.
+
+
+## STEP 447 — Replay Event Isolation Audit — VERIFIED / FROZEN
+
+- PR #98 merged.
+- Merge commit: `07dfe5e63630d44dcfd288720660545b3e929859`.
+- Security and Regression workflow #1099 passed on the STEP 447 head.
+- Hardened authoritative replay event cloning from shallow to deep cloning so nested replay output cannot mutate authoritative evidence input.
+- Added regression coverage for nested event isolation.
+- Main verified at the STEP 447 merge commit.
+- No Formation semantic change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 448, derived from the frozen replay isolation boundary.
