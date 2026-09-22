@@ -45,7 +45,7 @@ function validateAuthoritativeReplayEnvelope(envelope) {
     fail('authoritative replay requires request.params');
   }
 
-  if (!Object.prototype.hasOwnProperty.call(envelope, 'response_payload')) {
+  if (!Object.prototype.hasOwnProperty.call(envelope, 'response_payload') || envelope.response_payload === undefined) {
     fail('authoritative replay requires response_payload');
   }
 

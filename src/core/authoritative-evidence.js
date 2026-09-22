@@ -42,7 +42,7 @@ function createAuthoritativeEvidenceEnvelope(input) {
     fail('authoritative evidence requires request.params');
   }
 
-  if (!Object.prototype.hasOwnProperty.call(input, 'response_payload')) {
+  if (!Object.prototype.hasOwnProperty.call(input, 'response_payload') || input.response_payload === undefined) {
     fail('authoritative evidence requires response_payload');
   }
 
