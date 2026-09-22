@@ -712,3 +712,16 @@ git rev-parse origin/main
 - Post-merge main CI is running separately; this section records the milestone merge and does not claim post-merge checks are complete.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 445 after post-merge verification.
+
+
+## STEP 445 — Post-Merge Authoritative Boundary Verification Audit — VERIFIED / FROZEN
+
+- PR #94 merged to main.
+- PR #94 merge commit: `51eab9aa47c654ac8266809924e4afbdcecc723b`.
+- STEP 445 verified the STEP 444 freeze did not alter the frozen authoritative evidence, replay, Formation, cursor, runtime-state, raw-store, or V4 authority boundaries.
+- Required `test-and-security` completed successfully on STEP 445 head `15b1a8829f9e68119ff9b0f8d9c64269ca6a5338` (workflow run #1075).
+- Main was verified at the STEP 445 merge commit.
+- No live blockchain backfill/capture, RPC ingestion redesign, cursor mutation, raw-store migration, Formation semantic change, V4 activation, predictive scoring, trading, or signing was introduced.
+- AUTHORITATIVE remains the only accepted class at the authoritative replay boundary; SYNTHETIC and DISCOVERY_ONLY remain non-authoritative.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 446 — next deterministic evidence/replay engineering boundary, only after preserving the frozen authority constraints.
