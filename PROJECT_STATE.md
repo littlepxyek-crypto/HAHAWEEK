@@ -898,3 +898,15 @@ git rev-parse origin/main
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: freeze STEP 454, then verify freeze CI before STEP 455.
+
+
+## STEP 455 — Derived Consumer Lineage Audit — IN PROGRESS
+
+- STEP 454 is VERIFIED / FROZEN on main after PR #113 merge.
+- STEP 455 audits lineage preservation across the frozen DERIVED Formation Evidence Reference → DERIVED Consumer boundary.
+- Added `tests/derived-evidence-consumer-lineage.test.js`.
+- Added `docs/STEP_455_DERIVED_CONSUMER_LINEAGE_AUDIT_V0_1.md`.
+- Verification scope: Formation identity/context preservation, evidence/event alignment, graph lineage, provenance ordering, and rejection of lineage drift.
+- Deterministic in-memory inputs only; no live authoritative capture is claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing is changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
