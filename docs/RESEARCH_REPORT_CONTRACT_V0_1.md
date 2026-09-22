@@ -1,7 +1,9 @@
 # HAHAWEEK — Research Report Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 432
+Verification: PR #75 merged; post-merge Security & Regression #979 and Push on main #416 succeeded.
+Main verified at `8a9b5dd2e5b6d73e7312a08c9f51710b6a072b54`.
 Scope: MVP `POOL_BOOTSTRAP`
 
 ## Purpose
