@@ -986,3 +986,12 @@ git rev-parse origin/main
 - Security and Regression #1235 passed before merge.
 - Deep input/output mutation isolation verified.
 - No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
+
+
+## STEP 460 — Derived Consumer Determinism Audit — IN PROGRESS
+
+- STEP 459 is VERIFIED / FROZEN on main.
+- STEP 460 audits semantic determinism of DERIVED consumer output.
+- Equivalent inputs must produce equivalent outputs; processing-time metadata is excluded.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
