@@ -667,3 +667,17 @@ git rev-parse origin/main
 - Verification scope: authoritative replay → frozen POOL_BOOTSTRAP Formation Contract; input immutability; authority isolation; deterministic Formation ID; rejection of SYNTHETIC/DISCOVERY_ONLY; required provenance.
 - No cursor mutation, raw-store mutation, runtime-state mutation, V4 activation, predictive scoring, or trading is introduced.
 - STEP 440 remains IN PROGRESS until focused tests and repository regression pass, then the change is merged and `main` is verified.
+
+
+## Current Execution Checkpoint — 2026-09-22 (STEP 440 VERIFIED)
+
+- STEP 440 — Authoritative Replay Integration Verification: **VERIFIED / FROZEN**.
+- PR #84: **MERGED**.
+- PR #84 merge commit: `6263225a62bade36c146e04d16b15cbf14d41606`.
+- Security & Regression #1023: **SUCCESS** on STEP 440 head `aa2080bebe6fd8f3a091cdf9ca1423cd99994203`.
+- Main verification confirmed `tests/authoritative-replay-integration.test.js` is present on `main`.
+- Verified authoritative replay integrates with the frozen `POOL_BOOTSTRAP` Formation Contract and produces `VALID` formation output.
+- Verified replay input immutability, authority isolation, deterministic Formation ID, rejection of SYNTHETIC/DISCOVERY_ONLY evidence, and required provenance.
+- No cursor mutation, raw-store mutation, runtime-state mutation, V4 activation, predictive scoring, or trading was introduced.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next engineering focus: establish the next deterministic authoritative-evidence fixture/replay family without bypassing the frozen replay boundary.
