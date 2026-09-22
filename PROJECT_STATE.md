@@ -763,3 +763,16 @@ git rev-parse origin/main
 - No Formation semantic change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
 - Next focus: STEP 449, derived from the frozen Formation input-isolation boundary.
+
+
+## STEP 449 — Formation Output Determinism Audit — VERIFIED / FROZEN
+
+- PR #102 merged.
+- Merge commit: `21ee238a67a02685a57e90f0051b232a2b87a012`.
+- Security and Regression workflow #1119 completed successfully.
+- Formation ID and semantic output components remain deterministic across repeated detection; `created_at` remains processing metadata and is not canonical identity.
+- Output mutation isolation verified.
+- Main verified at the STEP 449 merge commit.
+- No Formation rule semantic rewrite, authority-boundary change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 450, derived from the frozen Formation determinism boundary.
