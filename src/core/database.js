@@ -48,6 +48,8 @@ async function createDatabase(filename = DB_FILE) {
       chain_id INTEGER NOT NULL,
       block_number INTEGER NOT NULL,
       transaction_hash TEXT NOT NULL,
+      block_hash TEXT,
+      transaction_index INTEGER,
       log_index INTEGER NOT NULL,
       address TEXT NOT NULL,
       topics_json TEXT NOT NULL,
