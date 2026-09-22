@@ -5,6 +5,18 @@
 
 ## Current Execution Checkpoint — 2026-09-22
 
+- STEP 428 — Formation Result contract completion: **VERIFIED / FROZEN**.
+- PR #66: **MERGED**.
+- Merge commit: `ec351a82412e4d5662fbb4148a5a5cf45dd36621`.
+- Post-merge HAHAWEEK Security and Regression run #926: **SUCCESS**.
+- Post-merge Push on main run #398: **SUCCESS**.
+- Main is verified at the Step 428 merge commit.
+- Formation Result now contains the minimum canonical fields including `graph_reference`, `provenance_reference`, and `created_at`.
+- Deterministic formation identity remains independent of `created_at`.
+- No raw evidence, evidence identity, repository authority, cursor, or V4 implementation was changed.
+
+## Current Execution Checkpoint — 2026-09-22
+
 - STEP 427 — Formation Result ↔ Evidence Graph integration: **VERIFIED / FROZEN**.
 - PR #64: **MERGED**.
 - Merge commit: `202596d81114d6c02eabc41c943489099783c4d0`.
