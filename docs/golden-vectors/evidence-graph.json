@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "vectors": [
+    {
+      "id": "EG-001",
+      "name": "single evidence structural projection",
+      "expected_nodes": ["BLOCK", "TRANSACTION", "CONTRACT", "EVENT"],
+      "expected_edges": ["CONTAINS", "EMITS", "ASSOCIATED_WITH", "OCCURS_IN"]
+    },
+    {
+      "id": "EG-002",
+      "name": "idempotent projection",
+      "expected": "projecting identical evidence twice does not add nodes or edges"
+    },
+    {
+      "id": "EG-003",
+      "name": "formation references projected evidence",
+      "expected": "FORMATION REFERENCES EVENT"
+    },
+    {
+      "id": "EG-004",
+      "name": "unprojected formation evidence rejected",
+      "expected": "FORMATION_EVIDENCE_NOT_PROJECTED"
+    },
+    {
+      "id": "EG-005",
+      "name": "projection is non-mutating",
+      "expected": "canonical evidence remains byte-equivalent"
+    },
+    {
+      "id": "EG-006",
+      "name": "deterministic ordering",
+      "expected": "projection order does not change serialized graph"
+    }
+  ]
+}
