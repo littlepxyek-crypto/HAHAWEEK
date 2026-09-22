@@ -935,3 +935,12 @@ git rev-parse origin/main
 - Security and Regression #1202 passed before merge.
 - DERIVED-only authority boundary and non-propagation of authoritative/runtime/V4 fields verified.
 - No raw evidence, cursor/runtime state, V4 activation, predictive scoring, trading, or signing.
+
+
+## STEP 457 — Derived Consumer Schema Boundary — IN PROGRESS
+
+- STEP 456 is VERIFIED / FROZEN on main.
+- STEP 457 audits the declared DERIVED consumer schema boundary.
+- Schema version 1 is accepted; unsupported versions and malformed identity/chain fields are rejected.
+- Deterministic in-memory inputs only; no live authoritative capture claimed.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
