@@ -1,6 +1,6 @@
 # STEP 447 — Replay Event Isolation Audit v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 447
 Base: main at `14381d38c2258f5e1888de5b9f24dabf18abf212`
 
@@ -48,3 +48,14 @@ No trading or signing.
 
 Design Gate 2 remains OPEN.
 Production V4 remains NOT AUTHORIZED.
+
+## Verification Result
+
+- PR #98 merged.
+- Merge commit: `07dfe5e63630d44dcfd288720660545b3e929859`.
+- Security and Regression workflow #1099 passed on STEP 447 head.
+- Replay events now use deep cloning via `structuredClone`, preventing nested output mutation from mutating authoritative evidence input.
+- Focused adversarial regression coverage verifies nested event isolation.
+- Main verified at the STEP 447 merge commit.
+- No Formation semantic change, cursor/runtime-state change, raw-store migration, V4 activation, predictive scoring, trading, or signing.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
