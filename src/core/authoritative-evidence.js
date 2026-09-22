@@ -38,7 +38,7 @@ function createAuthoritativeEvidenceEnvelope(input) {
 
   requiredObject(input.request, 'request');
   nonEmptyString(input.request.method, 'request.method');
-  if (!Object.prototype.hasOwnProperty.call(input.request, 'params')) {
+  if (!Object.prototype.hasOwnProperty.call(input.request, 'params') || input.request.params === undefined) {
     fail('authoritative evidence requires request.params');
   }
 
