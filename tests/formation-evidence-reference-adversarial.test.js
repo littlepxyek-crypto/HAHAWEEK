@@ -23,7 +23,7 @@ function validFormation() {
   };
 }
 
-test('STEP 452 rejects DERIVED reference inputs that contain authoritative raw payload fields', () => {
+test('STEP 452 keeps authoritative raw payload fields out of the DERIVED reference', () => {
   const formation = validFormation();
   formation.response_payload = { result: 'must not cross the boundary' };
   formation.request = { method: 'eth_getLogs', params: [] };
