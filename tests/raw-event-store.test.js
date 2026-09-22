@@ -86,6 +86,8 @@ test('raw event survives database reload', async () => {
       event_id,
       chain_id,
       block_number,
+      block_hash,
+      transaction_index,
       log_index,
       topics_json,
       data
