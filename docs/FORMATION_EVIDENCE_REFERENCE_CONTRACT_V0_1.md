@@ -1,6 +1,6 @@
 # Formation Evidence Reference Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 Step: 450
 Scope: deterministic derived evidence reference emitted from a frozen Formation Result
 
@@ -74,3 +74,12 @@ AUTHORITATIVE RAW RPC CAPTURE -> AUTHORITATIVE EVIDENCE ENVELOPE -> REPLAY ADAPT
 
 Design Gate 2 remains OPEN.
 Production V4 remains NOT AUTHORIZED.
+
+## Verification Result
+
+- PR #104 merged to main.
+- Merge commit: `c191f99dafdda710c1f2b267dac28f5fb2ad7845`.
+- Security and Regression workflow #1131 completed successfully on the PR head.
+- Verified DERIVED-only formation evidence reference, VALID-only acceptance, deterministic semantic content independent of processing metadata, input/output isolation, and lineage consistency.
+- No raw evidence, cursor, runtime state, V4 authority, predictive scoring, trading, or signing was changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
