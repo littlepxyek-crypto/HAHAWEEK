@@ -864,3 +864,15 @@ git rev-parse origin/main
 - Deterministic in-memory Formation inputs only; no live authoritative capture is claimed.
 - No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing is changed.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
+
+## STEP 453 — Derived Evidence Reference Provenance Contract — VERIFIED / FROZEN
+
+- PR #110 merged.
+- Merge commit: `af60011d7f684c52abe9d58d8c627421c75a3d70`.
+- Security and Regression workflow #1166 passed; `test-and-security` completed successfully.
+- Verified DERIVED provenance class, chain/evidence consistency, processing-metadata exclusion, and authority separation.
+- Main verified at the STEP 453 merge commit.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changed.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+- Next focus: STEP 454, after this freeze checkpoint is merged and main is verified.
