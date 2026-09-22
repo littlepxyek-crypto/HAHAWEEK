@@ -627,3 +627,17 @@ git rev-parse origin/main
 - Replay is defined as an offline derivation path and MUST NOT advance/reset production cursor, mutate production runtime state, overwrite raw evidence, promote non-authoritative data, or activate V4.
 - Required verification vectors are explicitly defined for authoritative acceptance, non-authoritative rejection, provenance validation, state safety, and deterministic formation output.
 - STEP 437 remains **IN PROGRESS** until the contract is reviewed, tested, frozen, and merged.
+
+
+## Current Execution Checkpoint — 2026-09-22 (STEP 438)
+
+- STEP 437 — Authoritative Replay Boundary Contract: **VERIFIED / FROZEN**.
+- PR #81: **MERGED**.
+- PR #81 merge commit: `e05ca8f1076d68f5db577dd62210986c9b77eba0`.
+- Required Security & Regression #1007: **SUCCESS**.
+- Verified the authoritative replay boundary contract on `main`.
+- Contract status synchronized from IMPLEMENTATION CANDIDATE to VERIFIED / FROZEN.
+- Synthetic and discovery-only inputs remain non-authoritative; authoritative replay requires preserved raw blockchain evidence and provenance.
+- Replay remains an offline derivation boundary and does not authorize cursor mutation, raw evidence mutation, runtime-state mutation, V4 activation, predictive scoring, or trading.
+- STEP 438 is the documentation-state freeze only; executable replay implementation remains a subsequent step and must satisfy the frozen verification vectors.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
