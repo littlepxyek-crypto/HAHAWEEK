@@ -1116,3 +1116,11 @@ git rev-parse origin/main
 - Validation state and evidence lineage are preserved; intelligence identity is deterministic.
 - No predictive scoring, ranking, trading, signing, raw evidence, cursor/runtime, or V4 authority changes.
 - Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
+
+
+## STEP 467 — Intelligence Projection Integration Boundary — IMPLEMENTATION CANDIDATE
+
+- Branch: `step-467-intelligence-projection-integration-2026-09-23`.
+- Adds an executable integration adapter over the frozen STEP 466 projection contract.
+- Adds focused integration tests for success, determinism, mutation isolation, and lineage rejection.
+- No predictive score/ranking, trading/signing, raw-store, cursor, or V4 authority changes.
