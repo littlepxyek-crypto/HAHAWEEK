@@ -1,6 +1,6 @@
 # STEP 482 — Independent Golden Vector Verification Boundary v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 
 ## Purpose
 
@@ -65,8 +65,18 @@ This step does not:
 - modify raw evidence;
 - introduce predictive scoring, ranking, trading, signing, or publication side effects.
 
+## Verification record
+
+- Contract PR #181 merged.
+- Contract merge commit: `ea675394f03b4839d36c38baaab64728c4a88762`.
+- Security & Regression #1565 passed on the contract head.
+- Post-merge Security & Regression #1566 passed on the merge commit.
+- CodeQL #630 passed on the contract head.
+- Post-merge CodeQL #631 passed on the merge commit.
+- Freeze branch: `step-482-freeze-2026-09-23`.
+- Freeze is documentation/state-only; no verifier implementation is introduced by this freeze.
+- No production V4 authority, raw-store, cursor/runtime, checkpoint, manifest, migration, or evidence changes.
+
 ## Verification gate
 
-Implementation is eligible for merge only after the repository Security & Regression workflow passes.
-
-The boundary becomes VERIFIED/FROZEN only through a subsequent freeze step with recorded CI evidence.
+The boundary is now VERIFIED / FROZEN. Any verifier implementation must proceed as a separately scoped implementation step and must preserve this boundary.
