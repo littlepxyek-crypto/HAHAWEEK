@@ -64,3 +64,11 @@ radar_id is SHA-256 over the versioned identity payload. Evidence IDs are sorted
 - mutation isolation;
 - rejection of non-confirmed validation;
 - rejection of duplicate evidence IDs.
+
+
+## Freeze Checkpoint
+
+- Freeze branch: `step-470-freeze-2026-09-23`.
+- Freeze checkpoint preserves the verified STEP 470 contract without semantic changes.
+- Implementation PR #144 and Security & Regression #1362 remain the verification basis.
+- This checkpoint exists to freeze the documentation/state boundary before STEP 471.
