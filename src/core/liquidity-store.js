@@ -1,9 +1,13 @@
 'use strict';
 
-function createLiquidityStore(db) {
+const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
+
+function createLiquidityStore(db, options = {}) {
   if (!db) {
     throw new Error('DATABASE_REQUIRED');
   }
+
+  const legacyWriteBarrier = options.legacyWriteBarrier || createLegacyWriteBarrier();
 
   const exists = eventId => {
     const result = db.exec(`
@@ -37,6 +41,8 @@ function createLiquidityStore(db) {
           eventId,
         };
       }
+
+      legacyWriteBarrier.assertWritable();
 
       db.run(`
         INSERT INTO liquidity_events (
