@@ -34,7 +34,8 @@ function saveState(state, options = {}) {
   legacyWriteBarrier.assertWritable();
   ensureDir();
 
-  const tmp = STATE_FILE + '.tmp';
+  const stateFile = options.stateFile || STATE_FILE;
+  const tmp = stateFile + '.tmp';
 
   fs.writeFileSync(
     tmp,
@@ -48,7 +49,7 @@ function saveState(state, options = {}) {
     ) + '\n'
   );
 
-  fs.renameSync(tmp, STATE_FILE);
+  fs.renameSync(tmp, stateFile);
 }
 
 module.exports = {
