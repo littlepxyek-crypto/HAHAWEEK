@@ -1,0 +1,63 @@
+{
+  "format": "HAHAWEEK-EVIDENCE-V4-F02-REORG-SCENARIO-1",
+  "protocol": "HAHAWEEK-EVIDENCE-V4",
+  "provenance_contract": "EXPLICIT_EVIDENCE_AND_BLOCK",
+  "authoritative_history": "canonical",
+  "histories": {
+    "canonical": [
+      {
+        "transition": {
+          "evidence_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "from_state": "OBSERVED",
+          "previous_transition_hash": null,
+          "sequence": "0",
+          "to_state": "CANONICAL"
+        },
+        "transition_hash": "71ffe5282d44440cf5f9fc8635706c0e6cd3347bd7d86696916bb2fabbbc7c5c",
+        "provenance": {
+          "evidence_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "block_id": "block-A-100"
+        }
+      },
+      {
+        "transition": {
+          "evidence_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "from_state": "CANONICAL",
+          "previous_transition_hash": "0x71ffe5282d44440cf5f9fc8635706c0e6cd3347bd7d86696916bb2fabbbc7c5c",
+          "sequence": "1",
+          "to_state": "ORPHANED"
+        },
+        "transition_hash": "58fad860a8f907a2782482e1af015034c9f6f9190eca959ab3a8419e67a1210c",
+        "provenance": {
+          "evidence_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "block_id": "block-A-101"
+        }
+      }
+    ],
+    "competing": [
+      {
+        "transition": {
+          "evidence_id": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "from_state": "OBSERVED",
+          "previous_transition_hash": null,
+          "sequence": "0",
+          "to_state": "CANONICAL"
+        },
+        "transition_hash": "a5b8c9a7e5f1c3d4b6a798e1f2d3c4b5a697887766554433221100ffeeddccbb",
+        "provenance": {
+          "evidence_id": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "block_id": "block-B-100"
+        }
+      }
+    ]
+  },
+  "recovery_prefix": [
+    "71ffe5282d44440cf5f9fc8635706c0e6cd3347bd7d86696916bb2fabbbc7c5c"
+  ],
+  "expected_authoritative_sequence": "1",
+  "preserved_records": [
+    "71ffe5282d44440cf5f9fc8635706c0e6cd3347bd7d86696916bb2fabbbc7c5c",
+    "58fad860a8f907a2782482e1af015034c9f6f9190eca959ab3a8419e67a1210c",
+    "a5b8c9a7e5f1c3d4b6a798e1f2d3c4b5a697887766554433221100ffeeddccbb"
+  ]
+}
