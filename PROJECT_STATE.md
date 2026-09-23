@@ -1,3 +1,15 @@
+## STEP 488 — State Finalization — VERIFIED / FROZEN
+
+- STEP 488 F-02 Reorg / Transition Closure Audit is recorded as VERIFIED / FROZEN.
+- Audit commit: `59c0226c9a456492885fbf21064409f07355f1b8`.
+- PR #204 merged to `main`; merge commit: `897ddc5401efee1d5f7d1d1369174d4d6e9fdf3b`.
+- PR-head Test & Security, CodeQL Actions, and CodeQL JavaScript/TypeScript passed.
+- Post-merge Test & Security, CodeQL Actions, and CodeQL JavaScript/TypeScript passed on the exact merge commit.
+- Documentation-only; no production V4 activation, raw evidence, cursor/checkpoint authority, RPC acquisition, migration, or transition semantics changed.
+- Remaining F-02 closure gaps are explicitly preserved and are not declared closed by documentation alone.
+- Historical evidence remains preserved.
+- Any future semantic change requires a new explicit contract/step.
+
 ## STEP 487 — State Finalization — VERIFIED / FROZEN
 
 - STEP 487 Design Gate 2 Reconciliation Audit is recorded as VERIFIED / FROZEN.
