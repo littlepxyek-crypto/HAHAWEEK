@@ -51,11 +51,13 @@
 - Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
 
 
-## STEP 475 — Radar Documentation Record Integration Boundary — IMPLEMENTATION CANDIDATE
+## STEP 475 — Radar Documentation Record Integration Boundary — VERIFIED / FROZEN
 
-- STEP 474 is VERIFIED / FROZEN on main after freeze PR #157.
-- Branch: `step-475-radar-documentation-record-integration-2026-09-23`.
-- Establishes an integration adapter over the frozen STEP 474 Radar Documentation Record.
+- Implementation PR #158 merged successfully.
+- Implementation merge commit: `3a9a367ddf783c066cc0e6cc74bd03cfe4ccda8f`.
+- Security & Regression workflow #1444 passed successfully on implementation head `142e22620a7a07e9a3ef9d9ae870980932178046`.
+- Freeze branch: `step-475-freeze-2026-09-23`.
+- Freeze preserves the verified Radar Documentation Record integration boundary without semantic changes.
 - STEP 474 remains the sole owner of record semantics, deterministic identity, validation, lineage, and evidence rules.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-- Next gate: Security & Regression CI on the implementation head before PR merge.
+- Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
