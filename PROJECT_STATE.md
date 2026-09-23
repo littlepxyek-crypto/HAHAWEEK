@@ -1148,3 +1148,11 @@ git rev-parse origin/main
 - Security & Regression #1338 passed on the implementation head.
 - Main merge commit: `4dbfedb793650bd46ebec8708965bb6c80469412`.
 - Frozen evidence summary preserves validated intelligence lineage and evidence without prediction or mutation authority.
+
+
+## STEP 469 — Intelligence Evidence Summary Integration Boundary — IMPLEMENTATION CANDIDATE
+
+- Branch: `step-469-intelligence-evidence-summary-integration-2026-09-23`.
+- Adds an executable integration adapter over the frozen STEP 468 evidence summary contract.
+- Preserves lineage, deterministic identity, and mutation isolation.
+- No prediction, ranking, trading/signing, raw-store, cursor, or V4 authority changes.
