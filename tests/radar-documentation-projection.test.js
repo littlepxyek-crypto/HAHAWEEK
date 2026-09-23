@@ -39,9 +39,13 @@ test('documentation projection isolates caller-owned input', () => {
   const input = { radar: radar() };
   const result = createRadarDocumentationProjection(input);
   input.radar.evidence_ids.push('evidence:003');
-  result.evidence_ids.push('evidence:004');
   assert.deepEqual(result.evidence_ids, ['evidence:001', 'evidence:002']);
-  assert.equal(input.radar.evidence_ids.includes('evidence:004'), false);
+  result.evidence_ids.push('evidence:004');
+  assert.deepEqual(input.radar.evidence_ids, [
+    'evidence:001',
+    'evidence:002',
+    'evidence:003',
+  ]);
 });
 
 test('non-verified radar cannot be documented as verified radar', () => {
