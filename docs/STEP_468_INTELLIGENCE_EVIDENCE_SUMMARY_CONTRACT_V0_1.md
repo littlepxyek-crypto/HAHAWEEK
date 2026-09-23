@@ -1,6 +1,17 @@
 # STEP 468 — Intelligence Evidence Summary Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
+
+## Verification Result
+
+- PR #140 merged successfully.
+- Security & Regression workflow #1338 passed on the implementation head.
+- Main merge commit: `4dbfedb793650bd46ebec8708965bb6c80469412`.
+- Evidence summary preserves Intelligence → Formation → Outcome → Validation lineage.
+- Validation state and evidence IDs are preserved without reinterpretation.
+- Deterministic summary identity and mutation isolation are covered by tests.
+- No predictive score, ranking, trading, signing, raw-store mutation, cursor mutation, or V4 authority changes.
+
 
 ## Objective
 
