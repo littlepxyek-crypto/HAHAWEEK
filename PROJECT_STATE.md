@@ -7,3 +7,13 @@
 - Freeze preserves the verified Radar Documentation Projection contract without semantic changes.
 - No ranking, predictive scoring, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
+
+
+## STEP 473 — Radar Documentation Integration Boundary — IMPLEMENTATION CANDIDATE
+
+- STEP 472 is VERIFIED / FROZEN on main after freeze PR #153.
+- Branch: `step-473-documentation-integration-boundary-2026-09-23`.
+- Establishes an integration adapter over the frozen STEP 472 documentation projection.
+- Documentation semantics, VERIFIED-only eligibility, deterministic identity, and lineage remain owned by STEP 472.
+- No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
+- Next gate: Security & Regression CI on the implementation head before PR merge.
