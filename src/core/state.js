@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const STATE_DIR = process.env.HAHAWEEK_DATA_DIR || path.join(process.cwd(), 'data');
 const STATE_FILE = process.env.HAHAWEEK_STATE_FILE || path.join(STATE_DIR, 'state.json');
@@ -26,10 +27,15 @@ function loadState() {
   return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
 }
 
-function saveState(state) {
+function saveState(state, options = {}) {
+  const legacyWriteBarrier =
+    options.legacyWriteBarrier || createLegacyWriteBarrier();
+
+  legacyWriteBarrier.assertWritable();
   ensureDir();
 
-  const tmp = `${STATE_FILE}.tmp`;
+  const stateFile = options.stateFile || STATE_FILE;
+  const tmp = stateFile + '.tmp';
 
   fs.writeFileSync(
     tmp,
@@ -43,7 +49,7 @@ function saveState(state) {
     ) + '\n'
   );
 
-  fs.renameSync(tmp, STATE_FILE);
+  fs.renameSync(tmp, stateFile);
 }
 
 module.exports = {

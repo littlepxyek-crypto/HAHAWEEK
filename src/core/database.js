@@ -3,11 +3,15 @@
 const fs = require('fs');
 const path = require('path');
 const initSqlJs = require('sql.js');
+const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'hahaweek.sqlite');
 
-async function createDatabase(filename = DB_FILE) {
+async function createDatabase(filename = DB_FILE, options = {}) {
+  const legacyWriteBarrier =
+    options.legacyWriteBarrier || createLegacyWriteBarrier();
+
   fs.mkdirSync(path.dirname(filename), { recursive: true });
 
   const SQL = await initSqlJs({
@@ -22,15 +26,12 @@ async function createDatabase(filename = DB_FILE) {
   });
 
   let db;
-
   const inMemory = filename === ':memory:';
 
   if (inMemory) {
     db = new SQL.Database();
   } else if (fs.existsSync(filename)) {
-    db = new SQL.Database(
-      new Uint8Array(fs.readFileSync(filename))
-    );
+    db = new SQL.Database(new Uint8Array(fs.readFileSync(filename)));
   } else {
     db = new SQL.Database();
   }
@@ -101,11 +102,7 @@ async function createDatabase(filename = DB_FILE) {
       last_block INTEGER NOT NULL,
       first_timestamp INTEGER NOT NULL,
       last_timestamp INTEGER NOT NULL,
-      PRIMARY KEY (
-        chain_id,
-        pool_id,
-        window_start
-      )
+      PRIMARY KEY (chain_id, pool_id, window_start)
     );
 
     CREATE TABLE IF NOT EXISTS ingestion_state (
@@ -128,13 +125,10 @@ async function createDatabase(filename = DB_FILE) {
       FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id)
     );
 
-    INSERT OR IGNORE INTO schema_meta
-      (key, value)
-    VALUES
-      ('schema_version', '1');
+    INSERT OR IGNORE INTO schema_meta (key, value)
+    VALUES ('schema_version', '1');
   `);
 
-  // Preserve existing raw evidence while upgrading the schema in place.
   const rawColumns = db.exec('PRAGMA table_info(raw_events)')[0]?.values ?? [];
   const rawColumnNames = new Set(rawColumns.map(row => row[1]));
 
@@ -146,29 +140,24 @@ async function createDatabase(filename = DB_FILE) {
     db.run('ALTER TABLE raw_events ADD COLUMN transaction_index INTEGER');
   }
 
-  db.run(
-    "UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'"
-  );
+  db.run("UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'");
 
   return {
     db,
 
     save() {
-      if (inMemory) {
-        return;
-      }
+      if (inMemory) return;
+
+      legacyWriteBarrier.assertWritable();
 
       const data = db.export();
-      const tmp = `${filename}.tmp`;
+      const tmp = filename + '.tmp';
       fs.writeFileSync(tmp, Buffer.from(data));
       fs.renameSync(tmp, filename);
     },
 
     close() {
-      if (!inMemory) {
-        this.save();
-      }
-
+      if (!inMemory) this.save();
       db.close();
     },
   };

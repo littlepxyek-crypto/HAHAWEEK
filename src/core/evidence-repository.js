@@ -1,9 +1,13 @@
 'use strict';
 
+const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
+
 const { hashRawEvidence, hashCanonicalEvidence, createEvidenceIdentity } = require('./evidence-identity');
 
-function createEvidenceRepository(db) {
+function createEvidenceRepository(db, options = {}) {
   if (!db) throw new Error('DATABASE_REQUIRED');
+
+  const legacyWriteBarrier = options.legacyWriteBarrier || createLegacyWriteBarrier();
 
   return {
     insert(raw, canonical) {
@@ -36,6 +40,8 @@ function createEvidenceRepository(db) {
       if (!rawExists.length || !rawExists[0].values.length) {
         throw new Error('RAW_EVIDENCE_NOT_STORED');
       }
+
+      legacyWriteBarrier.assertWritable();
 
       db.run(
         `INSERT INTO canonical_evidence (

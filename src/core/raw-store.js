@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const DATA_DIR =
   process.env.HAHAWEEK_DATA_DIR || path.join(process.cwd(), 'data');
@@ -10,9 +11,10 @@ const RAW_FILE =
 
 let eventIndex = null;
 let indexedFileSignature = null;
+let indexedFilePath = null;
 
-function ensureDir() {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+function ensureDir(dataDir = DATA_DIR) {
+  fs.mkdirSync(dataDir, { recursive: true });
 }
 
 function eventId(log, chainId) {
@@ -24,31 +26,24 @@ function eventId(log, chainId) {
   ].join(':');
 }
 
-function getFileSignature() {
-  if (!fs.existsSync(RAW_FILE)) {
-    return null;
-  }
-
-  const stat = fs.statSync(RAW_FILE);
-
-  return `${stat.size}:${stat.mtimeMs}`;
+function getFileSignature(rawFile = RAW_FILE) {
+  if (!fs.existsSync(rawFile)) return null;
+  const stat = fs.statSync(rawFile);
+  return stat.size + ':' + stat.mtimeMs;
 }
 
-function buildEventIndex() {
+function buildEventIndex(rawFile = RAW_FILE) {
   const ids = new Set();
 
-  if (fs.existsSync(RAW_FILE)) {
-    const content = fs.readFileSync(RAW_FILE, 'utf8');
+  if (fs.existsSync(rawFile)) {
+    const content = fs.readFileSync(rawFile, 'utf8');
 
     for (const line of content.split('\n')) {
       if (!line) continue;
 
       try {
         const record = JSON.parse(line);
-
-        if (record.event_id) {
-          ids.add(record.event_id);
-        }
+        if (record.event_id) ids.add(record.event_id);
       } catch {
         // Preserve the append-only raw file if a historical line is malformed.
       }
@@ -56,35 +51,39 @@ function buildEventIndex() {
   }
 
   eventIndex = ids;
-  indexedFileSignature = getFileSignature();
-
+  indexedFileSignature = getFileSignature(rawFile);
+  indexedFilePath = rawFile;
   return eventIndex;
 }
 
-function ensureEventIndex() {
-  const currentSignature = getFileSignature();
+function ensureEventIndex(rawFile = RAW_FILE) {
+  const currentSignature = getFileSignature(rawFile);
 
   if (
     eventIndex === null ||
+    indexedFilePath !== rawFile ||
     indexedFileSignature !== currentSignature
   ) {
-    buildEventIndex();
+    buildEventIndex(rawFile);
   }
 
   return eventIndex;
 }
 
-function appendUnique(log, chainId) {
-  ensureDir();
+function appendUnique(log, chainId, options = {}) {
+  const legacyWriteBarrier =
+    options.legacyWriteBarrier || createLegacyWriteBarrier();
+  const rawFile = options.rawFile || RAW_FILE;
+  const dataDir = options.dataDir || path.dirname(rawFile);
+
+  legacyWriteBarrier.assertWritable();
+  ensureDir(dataDir);
 
   const id = eventId(log, chainId);
-  const ids = ensureEventIndex();
+  const ids = ensureEventIndex(rawFile);
 
   if (ids.has(id)) {
-    return {
-      inserted: false,
-      eventId: id,
-    };
+    return { inserted: false, eventId: id };
   }
 
   const record = {
@@ -101,18 +100,12 @@ function appendUnique(log, chainId) {
     captured_at: new Date().toISOString(),
   };
 
-  fs.appendFileSync(
-    RAW_FILE,
-    JSON.stringify(record) + '\n'
-  );
+  fs.appendFileSync(rawFile, JSON.stringify(record) + '\n');
 
   ids.add(id);
-  indexedFileSignature = getFileSignature();
+  indexedFileSignature = getFileSignature(rawFile);
 
-  return {
-    inserted: true,
-    eventId: id,
-  };
+  return { inserted: true, eventId: id };
 }
 
 module.exports = {

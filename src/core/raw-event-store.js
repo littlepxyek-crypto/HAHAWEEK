@@ -1,23 +1,17 @@
 'use strict';
 
-function createRawEventStore(db) {
-  if (!db) {
-    throw new Error('DATABASE_REQUIRED');
-  }
+const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
+
+function createRawEventStore(db, options = {}) {
+  if (!db) throw new Error('DATABASE_REQUIRED');
+
+  const legacyWriteBarrier =
+    options.legacyWriteBarrier || createLegacyWriteBarrier();
 
   const insertSql = `
     INSERT OR IGNORE INTO raw_events (
-      event_id,
-      chain_id,
-      block_number,
-      transaction_hash,
-      block_hash,
-      transaction_index,
-      log_index,
-      address,
-      topics_json,
-      data,
-      captured_at
+      event_id, chain_id, block_number, transaction_hash, block_hash,
+      transaction_index, log_index, address, topics_json, data, captured_at
     )
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
@@ -27,6 +21,8 @@ function createRawEventStore(db) {
       if (!record || typeof record !== 'object') {
         throw new Error('RAW_EVENT_REQUIRED');
       }
+
+      legacyWriteBarrier.assertWritable();
 
       db.run(insertSql, [
         record.event_id,
@@ -51,11 +47,7 @@ function createRawEventStore(db) {
     },
 
     count() {
-      const result = db.exec(`
-        SELECT COUNT(*)
-        FROM raw_events
-      `);
-
+      const result = db.exec('SELECT COUNT(*) FROM raw_events');
       return result[0].values[0][0];
     },
   };
