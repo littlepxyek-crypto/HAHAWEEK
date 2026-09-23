@@ -2,7 +2,7 @@
 
 ## Status
 
-IMPLEMENTATION CANDIDATE.
+VERIFIED / FROZEN.
 
 ## Implementation
 

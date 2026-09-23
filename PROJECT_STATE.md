@@ -1,3 +1,12 @@
+## STEP 479 — X Publication Envelope — VERIFIED / FROZEN
+
+- Implementation PR #172 merged.
+- Implementation merge commit: `72ba62dc02c53d6200f4dcb620d3ff8d1fbd9b93`.
+- Security & Regression #1520 passed on implementation head `aea6cfb938dfd11bd1ff4aa68bd1ed429c748d8a`.
+- Freeze branch: `step-479-freeze-2026-09-23`.
+- Freeze preserves the deterministic X publication handoff envelope boundary.
+- No external X publication/API, scheduling, prediction, ranking, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
+
 ## STEP 479 — X Publication Envelope — IMPLEMENTATION CANDIDATE
 
 - Implementation branch: `step-479-x-publication-envelope-2026-09-23`.
