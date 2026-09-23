@@ -171,18 +171,19 @@ async function createEngine() {
 async function main() {
   const engine = await createEngine();
 
-  /*
-   * Mark execution as running before processing.
-   */
-  const currentState = loadState();
-
-  saveState({
-    ...currentState,
-    status: 'RUNNING',
-    lastError: null,
-  }, { legacyWriteBarrier: engine.legacyWriteBarrier });
-
   try {
+    /*
+     * Mark execution as running before processing.
+     * H-01 may reject this write when legacy persistence is frozen.
+     */
+    const currentState = loadState();
+
+    saveState({
+      ...currentState,
+      status: 'RUNNING',
+      lastError: null,
+    }, { legacyWriteBarrier: engine.legacyWriteBarrier });
+
     const result = await engine.ingestion.runOnce();
 
     saveState({
