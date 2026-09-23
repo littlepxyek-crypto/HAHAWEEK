@@ -1197,11 +1197,11 @@ git rev-parse origin/main
 - Next: verify the STEP 470 freeze branch through Security & Regression before merging the freeze checkpoint, then verify main before starting STEP 471.
 
 
-## STEP 470 — Freeze Checkpoint — IN PROGRESS
+## STEP 470 — Freeze Checkpoint — VERIFIED / FROZEN
 
-- Freeze branch: `step-470-freeze-2026-09-23`.
-- STEP 470 implementation is already VERIFIED / FROZEN semantically; this checkpoint freezes the documentation/state boundary as a separate auditable merge.
-- Implementation PR #144 merged at `c313743ba74e66936c7c10b504f5a8a134f8878f`.
-- Security & Regression #1362 passed on the implementation head `bf8f6f04aa37fdd565bba514189b60605052d171`.
-- No runtime, raw evidence, cursor/state authority, V4 authority, predictive scoring, trading, or signing changes are introduced by this freeze checkpoint.
-- STEP 471 will not begin until the freeze checkpoint passes CI, is merged, and main is re-verified.
+- Freeze PR #147 merged successfully.
+- Freeze merge commit: `e32a5b56e38e09322c6d5304fb83ce89732fb702`.
+- Security & Regression workflow #1377 passed successfully on the freeze head `57059f232f346c8f15b0c00da826b0498adc8ed6`.
+- The freeze checkpoint preserves the verified STEP 470 radar contract without semantic changes.
+- No runtime, raw evidence, cursor/state authority, V4 authority, predictive scoring, trading, or signing changes were introduced.
+- Main must be re-verified at the freeze merge commit before STEP 471 begins.
