@@ -1,3 +1,13 @@
+## STEP 479 STATE FINALIZATION — VERIFIED / FROZEN
+
+- Implementation PR #172 merged; merge commit: `72ba62dc02c53d6200f4dcb620d3ff8d1fbd9b93`.
+- Security & Regression #1520 passed on implementation head.
+- Freeze PR #173 merged; freeze merge commit: `10b7307abb3247d01273cd4bd0b3efb1a171bee4`.
+- Security & Regression #1525 passed on freeze head `1362e18293aade0db1eed255f1dbdccb916164dc`.
+- STEP 479 is now recorded as VERIFIED / FROZEN.
+- Boundary remains limited to a deterministic publication handoff envelope.
+- No external X publication/API, scheduling, prediction, ranking, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
+
 ## STEP 479 — X Publication Envelope — VERIFIED / FROZEN
 
 - Implementation PR #172 merged.
