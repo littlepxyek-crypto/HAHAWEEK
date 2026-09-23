@@ -1,3 +1,12 @@
+## STEP 478 — X Content Validation / Publication-Readiness — IMPLEMENTATION CANDIDATE
+
+- Implementation branch: `step-478-x-content-validation-readiness-2026-09-23`.
+- Adds structural/provenance validation over the frozen STEP 477 X Content projection.
+- Research Report remains the source of truth.
+- Validation preserves `CONFIRMED`, `REJECTED`, and `INCONCLUSIVE` exactly.
+- No external X publication, API, scheduling, ranking, prediction, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
+- Verification is pending Security & Regression CI.
+
 ## STEP 478 — X Content Validation / Publication-Readiness Contract — CONTRACT DEFINITION
 
 - Branch: `step-478-x-content-validation-readiness-contract-2026-09-23`.
