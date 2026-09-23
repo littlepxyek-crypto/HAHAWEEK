@@ -1,3 +1,16 @@
+## STEP 482 — Freeze — VERIFIED / FROZEN
+
+- STEP 482 Independent Golden Vector Verification Boundary is VERIFIED / FROZEN.
+- Contract PR #181 merged; merge commit: `ea675394f03b4839d36c38baaab64728c4a88762`.
+- Security & Regression #1565 passed on the contract head.
+- Post-merge Security & Regression #1566 passed on merge commit `ea675394f03b4839d36c38baaab64728c4a88762`.
+- CodeQL #630 passed on the contract head.
+- Post-merge CodeQL #631 passed on merge commit `ea675394f03b4839d36c38baaab64728c4a88762`.
+- Freeze branch: `step-482-freeze-2026-09-23`.
+- Freeze commit for the boundary document: `80261572fef5e4cb74c9100aaefb3914676a4673`.
+- This freeze records the contract boundary only; independent verifier implementation remains a separate subsequent step.
+- No production V4 authority, raw-store, cursor/runtime, checkpoint, manifest, migration, or evidence changes.
+
 ## STEP 482 — Independent Golden Vector Verification Boundary — CONTRACT DEFINITION
 
 - Branch: `step-482-independent-golden-vector-verification-contract-2026-09-23`.
