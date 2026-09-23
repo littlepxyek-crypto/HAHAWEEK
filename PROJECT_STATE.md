@@ -1,3 +1,11 @@
+## STEP 479 — X Publication Envelope — IMPLEMENTATION CANDIDATE
+
+- Implementation branch: `step-479-x-publication-envelope-2026-09-23`.
+- Adds a deterministic handoff envelope after the frozen STEP 478 readiness boundary.
+- Research Report remains the source of truth.
+- No external X publication/API, scheduling, prediction, ranking, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
+- Verification is pending Security & Regression CI.
+
 ## STEP 479 — X Publication Envelope Boundary — CONTRACT DEFINITION
 
 - Branch: `step-479-x-publication-envelope-contract-2026-09-23`.
