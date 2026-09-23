@@ -142,6 +142,14 @@ async function createDatabase(filename = DB_FILE, options = {}) {
 
   db.run("UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'");
 
+  const isReadOnlyStatement = sql => {
+    const normalized = String(sql).trim().toUpperCase();
+    return normalized.startsWith('SELECT ')
+      || normalized.startsWith('SELECT\\n')
+      || normalized.startsWith('PRAGMA ')
+      || normalized.startsWith('EXPLAIN ');
+  };
+
   const guardedDb = {
     run(...args) {
       legacyWriteBarrier.assertWritable();
@@ -150,8 +158,30 @@ async function createDatabase(filename = DB_FILE, options = {}) {
     exec(...args) {
       return db.exec(...args);
     },
+    prepare(sql, ...args) {
+      if (!isReadOnlyStatement(sql)) {
+        legacyWriteBarrier.assertWritable();
+      }
+      const statement = db.prepare(sql, ...args);
+      return {
+        bind: (...bindArgs) => statement.bind(...bindArgs),
+        step: (...stepArgs) => {
+          if (!isReadOnlyStatement(sql)) {
+            legacyWriteBarrier.assertWritable();
+          }
+          return statement.step(...stepArgs);
+        },
+        getAsObject: (...objectArgs) => statement.getAsObject(...objectArgs),
+        get: (...getArgs) => statement.get(...getArgs),
+        reset: (...resetArgs) => statement.reset(...resetArgs),
+        free: (...freeArgs) => statement.free(...freeArgs),
+      };
+    },
     getRowsModified(...args) {
       return db.getRowsModified(...args);
+    },
+    close(...args) {
+      return db.close(...args);
     },
   };
 
