@@ -35,10 +35,9 @@ test("F-02 negative: competing predecessor fails closed", () => {
 test("F-02 negative: recovery sequence gap fails closed", () => {
   assert.throws(run(value => {
     value.recovery_prefix = [
-      value.histories.canonical[0].transition_hash,
-      "deadbeef".repeat(8)
+      value.histories.canonical[1].transition_hash
     ];
-  }), /RECOVERY_PREFIX_NOT_AUTHORITATIVE/);
+  }), /RECOVERY_PREFIX_NOT_CONTIGUOUS/);
 });
 
 test("F-02 negative: conflicting duplicate identity fails closed", () => {
@@ -52,14 +51,10 @@ test("F-02 negative: conflicting duplicate identity fails closed", () => {
 
 test("F-02 negative: cross-history identity collision fails closed", () => {
   assert.throws(run(value => {
-    const duplicate = clone(value.histories.canonical[0]);
-    duplicate.transition_hash = transitionHash({
-      ...duplicate.transition,
-      evidence_id: value.histories.competing[0].transition.evidence_id
-    });
-    duplicate.transition.evidence_id = value.histories.competing[0].transition.evidence_id;
-    duplicate.provenance.evidence_id = duplicate.transition.evidence_id;
-    duplicate.provenance.block_id = "block-C-100";
+    const duplicate = clone(value.histories.canonical[1]);
+    duplicate.transition.previous_transition_hash = value.histories.competing[0].transition_hash;
+    duplicate.transition_hash = transitionHash(duplicate.transition);
+    duplicate.provenance.block_id = "block-C-101";
     value.histories.competing.push(duplicate);
   }), /INTEGRITY_CONFLICT/);
 });
