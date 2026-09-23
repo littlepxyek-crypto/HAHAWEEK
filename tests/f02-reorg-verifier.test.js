@@ -50,6 +50,20 @@ test("F-02 negative: conflicting duplicate identity fails closed", () => {
   }), /INTEGRITY_CONFLICT|SEQUENCE_GAP|PREDECESSOR_MISMATCH/);
 });
 
+test("F-02 negative: cross-history identity collision fails closed", () => {
+  assert.throws(run(value => {
+    const duplicate = clone(value.histories.canonical[0]);
+    duplicate.transition_hash = transitionHash({
+      ...duplicate.transition,
+      evidence_id: value.histories.competing[0].transition.evidence_id
+    });
+    duplicate.transition.evidence_id = value.histories.competing[0].transition.evidence_id;
+    duplicate.provenance.evidence_id = duplicate.transition.evidence_id;
+    duplicate.provenance.block_id = "block-C-100";
+    value.histories.competing.push(duplicate);
+  }), /INTEGRITY_CONFLICT/);
+});
+
 test("F-02 negative: missing provenance fails closed", () => {
   assert.throws(run(value => {
     delete value.histories.canonical[1].provenance.block_id;
@@ -64,6 +78,12 @@ test("F-02 negative: mismatched provenance fails closed", () => {
 });
 
 test("F-02 negative: historical mutation is detected", () => {
+  const value = clone(fixture);
+  value.histories.canonical[1].transition.to_state = "CANONICAL";
+  assert.throws(() => validateScenario(value), /TRANSITION_DIGEST_MISMATCH/);
+});
+
+test("F-02 negative: preserved inventory omission is rejected", () => {
   const value = clone(fixture);
   value.preserved_records.pop();
   assert.throws(() => validateScenario(value), /HISTORICAL_RECORD_NOT_PRESERVED/);
