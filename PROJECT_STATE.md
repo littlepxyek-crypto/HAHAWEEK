@@ -1,3 +1,13 @@
+## STEP 478 — X Content Validation / Publication-Readiness Boundary — VERIFIED / FROZEN
+
+- Implementation PR #168 merged successfully.
+- Implementation merge commit: `4e4eb3101c5f1c000fc28e4bcde932ff486b95a3`.
+- Security & Regression workflow #1495 passed successfully on implementation head `4cf08758ba8174222482c61ab6b0c4b1694b001b`.
+- Freeze branch: `step-478-freeze-2026-09-23`.
+- Freeze preserves structural/provenance validation and deterministic publication-readiness semantics without semantic changes.
+- Research Report remains the source of truth; STEP 477 remains the X Content projection boundary.
+- No external X publication/API, prediction, ranking, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
+
 ## STEP 478 — X Content Validation / Publication-Readiness — IMPLEMENTATION CANDIDATE
 
 - Implementation branch: `step-478-x-content-validation-readiness-2026-09-23`.
