@@ -1179,3 +1179,19 @@ git rev-parse origin/main
 - Added `src/core/validated-radar-record.js`, `tests/validated-radar-record.test.js`, and `docs/STEP_470_VALIDATED_RADAR_RECORD_CONTRACT_V0_1.md`.
 - Contract is derived, deterministic, evidence-carrying, and non-predictive.
 - No ranking, predictive score, trading, signing, raw-store, cursor/runtime, or V4 authority is introduced.
+
+
+## STEP 470 — Validated Radar Record Contract — VERIFIED / FROZEN
+
+- STEP 469 is VERIFIED / FROZEN on main.
+- PR #144 merged successfully.
+- Merge commit: `c313743ba74e66936c7c10b504f5a8a134f8878f`.
+- Implementation head: `bf8f6f04aa37fdd565bba514189b60605052d171`.
+- Security & Regression workflow #1362 passed successfully on the implementation head.
+- Verified CONFIRMED-only emission of VERIFIED radar records; REJECTED and INCONCLUSIVE remain historical states.
+- Verified deterministic radar identity, evidence lineage, mutation isolation, and duplicate evidence rejection through the STEP 470 focused contract tests.
+- Radar remains an auditable derived output, not a prediction, ranking, trading instruction, or future-performance guarantee.
+- No raw evidence, cursor/runtime state, V4 authority, predictive scoring, trading, or signing changes.
+- Freeze documentation updated on branch `step-470-freeze-2026-09-23`.
+- Main merge commit was checked and no post-merge workflow run was present at verification time; no post-merge CI success is claimed.
+- Next: verify the STEP 470 freeze branch through Security & Regression before merging the freeze checkpoint, then verify main before starting STEP 471.
