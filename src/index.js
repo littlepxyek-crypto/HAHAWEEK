@@ -74,7 +74,9 @@ async function createEngine() {
 
   const rawEventStore = createRawEventStore(database.db, { legacyWriteBarrier });
 
-  const cursor = new BlockCursor();
+  const cursor = new BlockCursor({
+    saveState: state => saveState(state, { legacyWriteBarrier }),
+  });
 
   const rawLogs = new RawLogIngestion({
     provider,
@@ -178,7 +180,7 @@ async function main() {
     ...currentState,
     status: 'RUNNING',
     lastError: null,
-  });
+  }, { legacyWriteBarrier: engine.legacyWriteBarrier });
 
   try {
     const result = await engine.ingestion.runOnce();
