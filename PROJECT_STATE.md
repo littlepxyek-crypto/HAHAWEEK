@@ -1156,3 +1156,16 @@ git rev-parse origin/main
 - Adds an executable integration adapter over the frozen STEP 468 evidence summary contract.
 - Preserves lineage, deterministic identity, and mutation isolation.
 - No prediction, ranking, trading/signing, raw-store, cursor, or V4 authority changes.
+
+
+## STEP 469 — Intelligence Evidence Summary Integration Boundary — VERIFIED / FROZEN
+
+- PR #142 merged successfully.
+- Merge commit: `99696ac00b9c5e3af32904195eb2a91b4c7a4ef6`.
+- Implementation head: `3703698c8b36e36c43a970e39852dc2f4410ae38`.
+- Security & Regression workflow #1350 passed on the implementation head.
+- Executable integration delegates to the frozen STEP 468 evidence-summary contract.
+- Deterministic summary identity, lineage rejection, and mutation isolation are covered by focused tests.
+- No predictive score, ranking, trading, signing, raw-store mutation, cursor mutation, or V4 authority changes.
+- Post-merge workflow for the merge commit returned no runs at verification time; no post-merge CI success is claimed.
+- Next: freeze documentation/state checkpoint, verify freeze CI, then proceed to the next functional milestone.
