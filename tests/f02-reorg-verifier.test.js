@@ -80,7 +80,7 @@ test("F-02 negative: mismatched provenance fails closed", () => {
 test("F-02 negative: historical mutation is detected", () => {
   const value = clone(fixture);
   value.histories.canonical[1].transition.to_state = "CANONICAL";
-  assert.throws(() => validateScenario(value), /TRANSITION_DIGEST_MISMATCH/);
+  assert.throws(() => validateScenario(value), /INVALID_TRANSITION_EDGE/);
 });
 
 test("F-02 negative: preserved inventory omission is rejected", () => {
