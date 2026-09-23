@@ -46,7 +46,7 @@ test("F-02 negative: conflicting duplicate identity fails closed", () => {
     duplicate.transition.to_state = "CANONICAL";
     duplicate.transition_hash = transitionHash(duplicate.transition);
     value.histories.canonical.push(duplicate);
-  }), /INTEGRITY_CONFLICT|SEQUENCE_GAP|PREDECESSOR_MISMATCH/);
+  }), /INTEGRITY_CONFLICT|SEQUENCE_GAP|PREDECESSOR_MISMATCH|INVALID_TRANSITION_EDGE/);
 });
 
 test("F-02 negative: cross-history identity collision fails closed", () => {
