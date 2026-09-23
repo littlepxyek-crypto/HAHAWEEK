@@ -1124,3 +1124,11 @@ git rev-parse origin/main
 - Adds an executable integration adapter over the frozen STEP 466 projection contract.
 - Adds focused integration tests for success, determinism, mutation isolation, and lineage rejection.
 - No predictive score/ranking, trading/signing, raw-store, cursor, or V4 authority changes.
+
+
+## STEP 467 — Intelligence Projection Integration Boundary — VERIFIED / FROZEN
+
+- PR #138 merged successfully.
+- Security & Regression #1326 passed on the implementation head.
+- Main merge commit: `61f56eaa3ffb05d20ce204a5e5fbea0480ba5eb0`.
+- Frozen integration boundary delegates to STEP 466 and preserves read-only, non-predictive authority.
