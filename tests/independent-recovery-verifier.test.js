@@ -19,6 +19,15 @@ function vector(id) {
   return found;
 }
 
+function cursorRecordForRecovery(v) {
+  const checkpoint = {
+    hash: v.checkpoint.hash,
+    generation: v.checkpoint.input.generation,
+  };
+  const verified = verifyCursor(v.cursor.input, checkpoint);
+  return { input: v.cursor.input, hash: verified.hash };
+}
+
 test("independent verifier accepts the valid checkpoint digest", () => {
   const v = vector("checkpoint-genesis-valid");
   const result = verifyCheckpoint(v.input, v.manifest);
@@ -90,10 +99,7 @@ test("independent verifier accepts the valid recovery chain", () => {
     input: v.checkpoint.input,
     hash: v.checkpoint.hash,
   };
-  const cursor = {
-    input: v.cursor.input,
-    hash: `0x${vector("cursor-genesis-valid").expected_hash}`,
-  };
+  const cursor = cursorRecordForRecovery(v);
 
   const result = verifyRecovery({
     manifest: v.manifest,
@@ -111,10 +117,7 @@ test("independent verifier fails closed on corrupt segments", () => {
     input: v.checkpoint.input,
     hash: v.checkpoint.hash,
   };
-  const cursor = {
-    input: v.cursor.input,
-    hash: `0x${vector("cursor-genesis-valid").expected_hash}`,
-  };
+  const cursor = cursorRecordForRecovery(v);
 
   assert.throws(
     () => verifyRecovery({
@@ -130,10 +133,7 @@ test("independent verifier fails closed on corrupt segments", () => {
 test("independent verifier rejects invalid acquisition position", () => {
   const v = vector("recovery-valid-chain");
   const checkpoint = { input: v.checkpoint.input, hash: v.checkpoint.hash };
-  const cursor = {
-    input: v.cursor.input,
-    hash: `0x${vector("cursor-genesis-valid").expected_hash}`,
-  };
+  const cursor = cursorRecordForRecovery(v);
 
   assert.throws(
     () => verifyRecovery({
