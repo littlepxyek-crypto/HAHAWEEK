@@ -2,7 +2,7 @@
 
 ## Status
 
-IMPLEMENTATION CANDIDATE.
+VERIFIED / FROZEN.
 
 ## Purpose
 
@@ -66,3 +66,14 @@ Malformed, inconsistent, tampered, or unverifiable envelopes fail closed. No fal
 7. No external delivery side effect exists.
 8. No source-of-truth or V4 authority is mutated.
 9. Invalid or tampered envelopes fail closed.
+
+## Verification Record
+
+- Implementation PR: #177
+- Implementation merge commit: `29cf5885f1a7586b465903e558360ae8db588fb7`
+- PR Security & Regression: #1546 — PASS
+- Post-merge Security & Regression: #1547 — PASS
+- Post-merge CodeQL: #623 — PASS
+- Freeze branch: `step-481-freeze-2026-09-23`
+
+STEP 481 is frozen after successful implementation, regression/security verification, and post-merge CodeQL verification. No additional implementation changes are permitted under this step without a new explicitly scoped step.
