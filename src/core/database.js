@@ -142,8 +142,21 @@ async function createDatabase(filename = DB_FILE, options = {}) {
 
   db.run("UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'");
 
+  const guardedDb = {
+    run(...args) {
+      legacyWriteBarrier.assertWritable();
+      return db.run(...args);
+    },
+    exec(...args) {
+      return db.exec(...args);
+    },
+    getRowsModified(...args) {
+      return db.getRowsModified(...args);
+    },
+  };
+
   return {
-    db,
+    db: guardedDb,
 
     save() {
       if (inMemory) return;
