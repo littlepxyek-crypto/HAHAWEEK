@@ -6,7 +6,6 @@
 - Freeze branch: `step-472-freeze-2026-09-23`.
 - Freeze preserves the verified Radar Documentation Projection contract without semantic changes.
 - No ranking, predictive scoring, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-- Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
 
 ## STEP 473 — Radar Documentation Integration Boundary — IMPLEMENTATION CANDIDATE
 
@@ -15,7 +14,6 @@
 - Establishes an integration adapter over the frozen STEP 472 documentation projection.
 - Documentation semantics, VERIFIED-only eligibility, deterministic identity, and lineage remain owned by STEP 472.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-- Next gate: Security & Regression CI on the implementation head before PR merge.
 
 ## STEP 473 — Freeze Checkpoint — VERIFIED / FROZEN
 
@@ -25,7 +23,6 @@
 - Freeze branch: `step-473-freeze-2026-09-23`.
 - Freeze preserves the verified STEP 473 documentation integration boundary without semantic changes.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-- Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
 
 ## STEP 474 — Radar Documentation Record Contract — IMPLEMENTATION CANDIDATE
 
@@ -34,7 +31,6 @@
 - Establishes a stable record boundary from the frozen Radar Documentation Projection.
 - Preserves verified state, lineage, evidence, deterministic identity, and mutation isolation.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-- Next gate: Security & Regression CI on the implementation head before PR merge.
 
 ## STEP 474 — Freeze Checkpoint — VERIFIED / FROZEN
 
@@ -44,7 +40,6 @@
 - Freeze branch: `step-474-freeze-2026-09-23`.
 - Freeze preserves the verified Radar Documentation Record contract without semantic changes.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-- Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
 
 ## STEP 475 — Radar Documentation Record Integration Boundary — VERIFIED / FROZEN
 
@@ -59,16 +54,14 @@
 - STEP 474 remains the sole owner of record semantics, deterministic identity, validation, lineage, and evidence rules.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 
-## STEP 476 — Research Report Integration Boundary — IMPLEMENTATION CANDIDATE
+## STEP 476 — Research Report Integration Boundary — VERIFIED / FROZEN
 
-- STEP 475 is VERIFIED / FROZEN on main after freeze PR #159 and state finalization PR #160.
-- State finalization PR #160 merged successfully.
-- State finalization merge commit: `90a110378a7ef843ad759406e42293fc1b594c80`.
-- Branch: `step-476-research-report-integration-2026-09-23`.
-- Establishes an integration adapter for the existing Research Report contract.
-- Supports the canonical DATA → EVIDENCE → ANALYSIS → REPORT → X CONTENT flow and DOCUMENT stage.
+- Implementation PR #161 merged successfully.
+- Implementation merge commit: `aa40ed85daeee491cc5b511e1517bb2394fcc5d2`.
+- Security & Regression workflow #1459 passed successfully on implementation head `239e92bdfacace556f96827530311d53f3f08a64`.
+- Freeze branch: `step-476-freeze-2026-09-23`.
+- Freeze preserves the verified Research Report integration boundary without semantic changes.
 - Existing Research Report construction, claim/evidence linkage, formation/outcome/validation relationships, validation-result constraints, provenance, and deterministic report identity remain authoritative.
 - No new intelligence semantics are introduced.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-- Verification target: delegation, deterministic identity, mutation isolation, relationship validation, and validation-result constraints.
-- Next gate: Security & Regression CI on the STEP 476 implementation candidate before PR merge.
+- Next gate: Security & Regression CI on the STEP 476 freeze checkpoint before merging the freeze PR.
