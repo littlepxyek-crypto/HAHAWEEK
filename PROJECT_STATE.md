@@ -1,3 +1,21 @@
+## STEP 484 — State Finalization — VERIFIED / FROZEN
+
+- STEP 484 Independent Golden Vector Coverage is recorded as VERIFIED / FROZEN after coverage implementation, contract resolution, freeze validation, and freeze merge.
+- Coverage contract PR #189 merged; merge commit: `8626e4999bf24c9cd48555a29e3e6affdc5667ff`.
+- Transition golden-vector contract resolution PR #192 merged; merge commit: `65c5d2ed3a814ebd01c306b783b922586e3bd0da`.
+- Coverage implementation PR #193 merged; merge commit: `c5dfe2656a71a03623fc644984885d8dd8fa46f9`.
+- PR #193 Security & Regression passed; post-merge Security & Regression, CodeQL Actions, and CodeQL JavaScript/TypeScript all passed.
+- Freeze PR #194 merged; freeze merge commit: `3340df79949d706b1e0de7c82fa2d85d51ff87eb`.
+- Freeze head `e2d944c5c2faabd535947cdeebed305329b3e609` passed Security & Regression and CodeQL verification before merge.
+- A separate CodeQL check initially reported a configuration warning, then completed successfully with no new alerts in code changed by PR #194.
+- Post-merge check-runs queried on freeze merge commit `3340df79949d706b1e0de7c82fa2d85d51ff87eb` returned no check-runs at verification time; no post-merge run is claimed or fabricated.
+- The frozen in-scope corpus is exactly 3 V4 fixtures / 5 vectors: `event-identity.json`, `payload-event-identity.json`, and `transition.json` under `docs/golden-vectors/`.
+- STEP 483 remains the independent cryptographic verifier boundary; STEP 484 establishes complete deterministic corpus coverage only.
+- PR #190 remains preserved as the historical failed coverage attempt; PR #192 remains preserved as the explicit transition `expected_hash` representation resolution.
+- No production V4 authority, raw evidence, cursor, checkpoint, manifest, migration, runtime, RPC/network, prediction, ranking, trading, signing, or publication semantics were changed by STEP 484.
+- State finalization records the completed STEP 484 lifecycle and does not alter production authority.
+- State finalization branch: `step-484-state-finalization-2026-09-23`.
+
 ## STEP 483 — State Finalization — VERIFIED / FROZEN
 
 - STEP 483 Independent Golden Vector Verifier is recorded as VERIFIED / FROZEN after implementation and freeze validation.
