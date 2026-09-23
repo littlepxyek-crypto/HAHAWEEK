@@ -35,6 +35,7 @@ const { createDatabase } = require('./core/database');
 const { createRawEventStore } = require('./core/raw-event-store');
 const { appendUnique } = require('./core/raw-store');
 const { loadState, saveState } = require('./core/state');
+const { createLegacyWriteBarrier } = require('./core/legacy-write-freeze');
 
 const {
   POOL_MANAGER,
@@ -67,10 +68,11 @@ function createRelevantLogFilter() {
 
 async function createEngine() {
   const provider = createProvider();
+  const legacyWriteBarrier = createLegacyWriteBarrier();
 
-  const database = await createDatabase();
+  const database = await createDatabase(undefined, { legacyWriteBarrier });
 
-  const rawEventStore = createRawEventStore(database.db);
+  const rawEventStore = createRawEventStore(database.db, { legacyWriteBarrier });
 
   const cursor = new BlockCursor();
 
@@ -78,7 +80,7 @@ async function createEngine() {
     provider,
 
     appendUnique: (log, chainId) => {
-      const raw = appendUnique(log, chainId);
+      const raw = appendUnique(log, chainId, { legacyWriteBarrier });
 
       if (raw.inserted) {
         rawEventStore.insert({
@@ -160,6 +162,7 @@ async function createEngine() {
     provider,
     database,
     ingestion,
+    legacyWriteBarrier,
   };
 }
 
@@ -184,7 +187,7 @@ async function main() {
       ...loadState(),
       status: 'IDLE',
       lastError: null,
-    });
+    }, { legacyWriteBarrier: engine.legacyWriteBarrier });
 
     if (shutdownRequested) {
       console.log('HAHAWEEK SCAN: graceful shutdown complete');
@@ -206,7 +209,7 @@ async function main() {
       ...loadState(),
       status: 'FAILED',
       lastError: message,
-    });
+    }, { legacyWriteBarrier: engine.legacyWriteBarrier });
 
     throw error;
   } finally {
