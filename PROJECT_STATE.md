@@ -1,3 +1,13 @@
+## STEP 477 — X Content Projection Boundary — VERIFIED / FROZEN
+
+- Implementation PR #164 merged successfully.
+- Implementation merge commit: `c11a6c84acac4505fe04a6dd985e5cbbc2778b29`.
+- Security & Regression workflow #1474 passed successfully on implementation head `26fbd93f74f6f01adb666007066de539a76debc9`.
+- Freeze branch: `step-477-freeze-2026-09-23`.
+- Freeze records the verified X Content projection boundary without semantic changes.
+- Research Report remains the source of truth; X Content is a derived projection only.
+- No external X publication, prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
+
 ## STEP 472 — Freeze Checkpoint — VERIFIED / FROZEN
 
 - Implementation PR #152 merged successfully.
