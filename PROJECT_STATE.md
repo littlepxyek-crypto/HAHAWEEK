@@ -1140,3 +1140,11 @@ git rev-parse origin/main
 - Adds a deterministic evidence-summary projection over validated intelligence.
 - Preserves Formation/Outcome/Validation lineage and evidence IDs.
 - No prediction, ranking, trading/signing, raw-store, cursor, or V4 authority changes.
+
+
+## STEP 468 — Intelligence Evidence Summary Contract — VERIFIED / FROZEN
+
+- PR #140 merged successfully.
+- Security & Regression #1338 passed on the implementation head.
+- Main merge commit: `4dbfedb793650bd46ebec8708965bb6c80469412`.
+- Frozen evidence summary preserves validated intelligence lineage and evidence without prediction or mutation authority.
