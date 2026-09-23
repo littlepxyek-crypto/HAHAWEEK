@@ -1227,3 +1227,14 @@ git rev-parse origin/main
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Main merge commit was checked; no post-merge workflow run was present, so no post-merge CI success is claimed.
 - STEP 471 is ready for final closeout verification before STEP 472 begins.
+
+
+## STEP 472 — Radar Documentation Projection Contract — IMPLEMENTATION CANDIDATE
+
+- STEP 471 is VERIFIED / FROZEN on main after PR #151 closeout.
+- Branch: `step-472-radar-documentation-projection-2026-09-23`.
+- Establishes the next canonical blueprint boundary: VERIFIED Radar Record → Documentation Projection.
+- Documentation preserves radar lineage and evidence without creating new intelligence semantics.
+- The projection is deterministic, mutation-isolated, and explicitly historical/non-predictive.
+- No ranking, predictive scoring, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
+- Next gate: Security & Regression CI on the implementation head before PR merge.
