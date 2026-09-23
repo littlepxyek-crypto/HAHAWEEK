@@ -1,3 +1,12 @@
+## STEP 478 — X Content Validation / Publication-Readiness Contract — CONTRACT DEFINITION
+
+- Branch: `step-478-x-content-validation-readiness-contract-2026-09-23`.
+- Contract document: `docs/STEP_478_X_CONTENT_VALIDATION_READINESS_CONTRACT_V0_1.md`.
+- Scope is limited to structural/provenance validation of the frozen STEP 477 X Content projection.
+- Research Report remains the source of truth.
+- No external X publication, API calls, scheduling, ranking, prediction, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
+- Implementation and verification are intentionally not claimed yet.
+
 ## STEP 477 — X Content Projection Boundary — VERIFIED / FROZEN
 
 - Implementation PR #164 merged successfully.
