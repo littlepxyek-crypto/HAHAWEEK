@@ -28,7 +28,7 @@ function createXPublicationEnvelope(input) {
 
   const verifiedReadiness = validateXContentPublicationReadiness({
     projection,
-    research_report: researchReport,
+    research_report: structuredClone(input.research_report),
   });
 
   if (readiness.readiness_version !== verifiedReadiness.readiness_version) {
