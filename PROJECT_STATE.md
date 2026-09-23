@@ -1220,11 +1220,10 @@ git rev-parse origin/main
 
 ## STEP 471 — Freeze Checkpoint — VERIFIED / FROZEN
 
-- Implementation PR #149 merged successfully.
-- Implementation merge commit: `cb2b0c5be04156a09d7e54e7c9b842a37486bc39`.
-- Security & Regression workflow #1388 passed successfully on implementation head `0c59c9d185f100491fa9dcfd76d5612592fa1e96`.
-- STEP 471 integration boundary preserves frozen STEP 470 semantics and introduces no new intelligence semantics.
+- Freeze PR #150 merged successfully.
+- Freeze merge commit: `604c62bb8996a54b062d7a08429fe2fee6560e40`.
+- Security & Regression workflow #1393 passed successfully on freeze head `03effb4aa01f7d9e7bbaef3415d9967b271461c1`.
+- Freeze preserves the verified STEP 471 integration boundary without semantic changes.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Main merge commit was checked; no post-merge workflow run was present, so no post-merge CI success is claimed.
-- Freeze branch: `step-471-freeze-2026-09-23`.
-- Next gate: Security & Regression on the freeze head before merging the freeze checkpoint.
+- STEP 471 is ready for final closeout verification before STEP 472 begins.
