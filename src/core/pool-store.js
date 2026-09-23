@@ -1,9 +1,13 @@
 'use strict';
 
-function createPoolStore(db) {
+const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
+
+function createPoolStore(db, options = {}) {
   if (!db) {
     throw new Error('DATABASE_REQUIRED');
   }
+
+  const legacyWriteBarrier = options.legacyWriteBarrier || createLegacyWriteBarrier();
 
   const exists = poolId => {
     const result = db.exec(`
@@ -33,6 +37,8 @@ function createPoolStore(db) {
           poolId,
         };
       }
+
+      legacyWriteBarrier.assertWritable();
 
       db.run(`
         INSERT INTO pools (
