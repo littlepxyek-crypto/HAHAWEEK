@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const DATA_DIR =
   process.env.HAHAWEEK_DATA_DIR || path.join(process.cwd(), 'data');
@@ -25,13 +26,9 @@ function eventId(log, chainId) {
 }
 
 function getFileSignature() {
-  if (!fs.existsSync(RAW_FILE)) {
-    return null;
-  }
-
+  if (!fs.existsSync(RAW_FILE)) return null;
   const stat = fs.statSync(RAW_FILE);
-
-  return `${stat.size}:${stat.mtimeMs}`;
+  return stat.size + ':' + stat.mtimeMs;
 }
 
 function buildEventIndex() {
@@ -45,10 +42,7 @@ function buildEventIndex() {
 
       try {
         const record = JSON.parse(line);
-
-        if (record.event_id) {
-          ids.add(record.event_id);
-        }
+        if (record.event_id) ids.add(record.event_id);
       } catch {
         // Preserve the append-only raw file if a historical line is malformed.
       }
@@ -57,34 +51,31 @@ function buildEventIndex() {
 
   eventIndex = ids;
   indexedFileSignature = getFileSignature();
-
   return eventIndex;
 }
 
 function ensureEventIndex() {
   const currentSignature = getFileSignature();
 
-  if (
-    eventIndex === null ||
-    indexedFileSignature !== currentSignature
-  ) {
+  if (eventIndex === null || indexedFileSignature !== currentSignature) {
     buildEventIndex();
   }
 
   return eventIndex;
 }
 
-function appendUnique(log, chainId) {
+function appendUnique(log, chainId, options = {}) {
+  const legacyWriteBarrier =
+    options.legacyWriteBarrier || createLegacyWriteBarrier();
+
+  legacyWriteBarrier.assertWritable();
   ensureDir();
 
   const id = eventId(log, chainId);
   const ids = ensureEventIndex();
 
   if (ids.has(id)) {
-    return {
-      inserted: false,
-      eventId: id,
-    };
+    return { inserted: false, eventId: id };
   }
 
   const record = {
@@ -101,18 +92,12 @@ function appendUnique(log, chainId) {
     captured_at: new Date().toISOString(),
   };
 
-  fs.appendFileSync(
-    RAW_FILE,
-    JSON.stringify(record) + '\n'
-  );
+  fs.appendFileSync(RAW_FILE, JSON.stringify(record) + '\n');
 
   ids.add(id);
   indexedFileSignature = getFileSignature();
 
-  return {
-    inserted: true,
-    eventId: id,
-  };
+  return { inserted: true, eventId: id };
 }
 
 module.exports = {
