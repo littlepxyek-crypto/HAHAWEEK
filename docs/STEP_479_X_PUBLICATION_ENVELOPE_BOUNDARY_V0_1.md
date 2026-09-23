@@ -2,7 +2,44 @@
 
 ## Status
 
-CONTRACT DEFINITION — NOT YET VERIFIED / FROZEN.
+IMPLEMENTATION CANDIDATE.
+
+## Implementation
+
+`src/core/x-publication-envelope.js` creates a deterministic handoff envelope only from a valid STEP 477 X Content projection, its authoritative Research Report, and a matching STEP 478 readiness result.
+
+The implementation verifies:
+
+- readiness version and identity;
+- report identity;
+- validation result;
+- content-item identity coverage;
+- claim/evidence traceability through the validated projection;
+- deterministic envelope identity;
+- mutation isolation.
+
+## Boundary
+
+The envelope is a derived delivery artifact. It is not a source of truth.
+
+`envelope_id` is deterministic from the verified readiness, report, validation state, content items, and provenance reference.
+
+## External side effects
+
+None.
+
+STEP 479 does not call X/Twitter APIs, publish, schedule, retry delivery, sign requests, execute transactions, trade, rank, score, or predict.
+
+## Acceptance
+
+1. Only verified readiness can produce an envelope.
+2. Readiness and content identities agree.
+3. Report and validation state are preserved exactly.
+4. Content remains traceable to claims and evidence.
+5. Identical inputs produce identical envelope identity.
+6. Caller-owned inputs are not mutated.
+7. Mismatched inputs fail closed.
+8. No external publication side effect exists.
 
 ## Purpose
 
