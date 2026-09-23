@@ -1,6 +1,6 @@
 # STEP 470 — Validated Radar Record Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 
 ## Objective
 
@@ -49,6 +49,13 @@ radar_id is SHA-256 over the versioned identity payload. Evidence IDs are sorted
 - No trading or signing.
 - No raw-store, cursor, runtime, or V4 authority.
 - Historical outcome is preserved as lineage, not used as a forward-looking guarantee.
+
+## Verification
+
+- Implementation PR #144 merged to main.
+- Merge commit: `c313743ba74e66936c7c10b504f5a8a134f8878f`.
+- Security & Regression workflow #1362 passed successfully on the implementation head.
+- Main merge commit was checked; no post-merge workflow run was present at verification time, so no post-merge CI success is claimed.
 
 ## Verification Target
 
