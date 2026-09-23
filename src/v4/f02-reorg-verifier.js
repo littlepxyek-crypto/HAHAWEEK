@@ -126,7 +126,7 @@ function validateScenario(input) {
   }
   assert(summaries[input.authoritative_history], "UNKNOWN_AUTHORITATIVE_HISTORY");
 
-  const index = indexRecords(Object.values(input.histories).flat());
+  const index = indexRecords(Object.values(input.histories));
   const authoritative = input.histories[input.authoritative_history];
 
   assert(input.recovery_prefix.length > 0, "EMPTY_RECOVERY_PREFIX");
