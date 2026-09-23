@@ -1169,3 +1169,13 @@ git rev-parse origin/main
 - No predictive score, ranking, trading, signing, raw-store mutation, cursor mutation, or V4 authority changes.
 - Post-merge workflow for the merge commit returned no runs at verification time; no post-merge CI success is claimed.
 - Next: freeze documentation/state checkpoint, verify freeze CI, then proceed to the next functional milestone.
+
+
+## STEP 470 — Validated Radar Record Contract — IN PROGRESS
+
+- STEP 469 is VERIFIED / FROZEN on main after PR #143 merge.
+- STEP 470 establishes the first blueprint-aligned Radar output contract over the frozen Intelligence Evidence Summary.
+- Radar eligibility is restricted to CONFIRMED validation; REJECTED and INCONCLUSIVE remain historical states and are not emitted as VERIFIED radar records.
+- Added `src/core/validated-radar-record.js`, `tests/validated-radar-record.test.js`, and `docs/STEP_470_VALIDATED_RADAR_RECORD_CONTRACT_V0_1.md`.
+- Contract is derived, deterministic, evidence-carrying, and non-predictive.
+- No ranking, predictive score, trading, signing, raw-store, cursor/runtime, or V4 authority is introduced.
