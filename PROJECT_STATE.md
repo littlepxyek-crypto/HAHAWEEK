@@ -1,3 +1,17 @@
+## STEP 492 — Design Gate 2 Remaining-Control Readiness Audit — VERIFIED / FROZEN
+
+- STEP 492 records the post-STEP-491 Design Gate 2 readiness boundary.
+- Documentation-only; current main baseline: `d89d43a2390b1370da84e8f9aba4a9657e4c3979`.
+- STEP 489, STEP 490, and STEP 491 remain preserved as completed lifecycle evidence.
+- Design Gate 2 remains NOT PASSED.
+- F-03 has executable authority/recovery evidence at the test boundary, but production V4 authority cutover remains unproven.
+- Existing F-03 production-integration branches are stale relative to current main and must not be merged directly.
+- Future production integration requires a new reviewed contract against current main.
+- Remaining Gate 2 controls are preserved rather than inferred closed.
+- No runtime, raw evidence, cursor/checkpoint authority, SQLite migration, RPC acquisition, transition semantics, or historical artifacts are changed.
+- Historical project-state entries remain preserved below this entry.
+- Any future semantic implementation requires a separate explicit contract/step.
+
 ## STEP 491 — State Reconciliation / Finalization — VERIFIED / FROZEN
 
 - STEP 491 reconciles `PROJECT_STATE.md` with the completed STEP 489–490 F-02 reorg/transition closure lifecycle.
