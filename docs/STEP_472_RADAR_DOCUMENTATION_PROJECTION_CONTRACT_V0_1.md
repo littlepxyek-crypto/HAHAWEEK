@@ -1,10 +1,10 @@
 # STEP 472 — Radar Documentation Projection Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 
 ## Objective
 
-Complete the next canonical blueprint boundary by projecting a VERIFIED Radar Record into an auditable documentation artifact.
+Project a VERIFIED Radar Record into an auditable documentation artifact.
 
 ## Boundary
 
@@ -22,14 +22,10 @@ The projection records lineage and evidence already established by prior frozen 
 - The output explicitly states that it is historical documentation, not a prediction or future-performance guarantee.
 - No ranking, predictive scoring, trading, signing, raw-store mutation, cursor/runtime mutation, or V4 authority is introduced.
 
-## Verification Target
+## Verification
 
-- valid projection;
-- deterministic document identity;
-- mutation isolation;
-- rejection of non-VERIFIED radar;
-- duplicate evidence rejection.
+Security & Regression workflow #1406 passed on the implementation head.
 
-## Scope
+## Freeze
 
-This is a documentation projection only. It does not alter the canonical blueprint or the frozen Radar semantics.
+Implementation PR #152 merged successfully. The freeze checkpoint records the verified contract without semantic changes.
