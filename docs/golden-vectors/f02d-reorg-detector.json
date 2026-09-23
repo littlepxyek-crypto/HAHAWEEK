@@ -1,0 +1,58 @@
+{
+  "schema": "hahaweek-f02d-reorg-detector-golden-vectors-v1",
+  "cases": [
+    {
+      "id": "continuous-adjacent",
+      "input": {
+        "previousBlockNumber": 100,
+        "previousHash": "0xaaa",
+        "currentBlockNumber": 101,
+        "currentHash": "0xbbb",
+        "currentParentHash": "0xaaa"
+      },
+      "expected": "CONTINUOUS"
+    },
+    {
+      "id": "parent-mismatch",
+      "input": {
+        "previousBlockNumber": 100,
+        "previousHash": "0xaaa",
+        "currentBlockNumber": 101,
+        "currentHash": "0xccc",
+        "currentParentHash": "0xbbb"
+      },
+      "expected": "REORG_DETECTED"
+    },
+    {
+      "id": "block-gap",
+      "input": {
+        "previousBlockNumber": 100,
+        "previousHash": "0xaaa",
+        "currentBlockNumber": 102,
+        "currentHash": "0xccc",
+        "currentParentHash": "0xaaa"
+      },
+      "expected": "INVALID_INPUT"
+    },
+    {
+      "id": "missing-parent",
+      "input": {
+        "previousBlockNumber": 100,
+        "previousHash": "0xaaa",
+        "currentBlockNumber": 101,
+        "currentHash": "0xbbb"
+      },
+      "expected": "INVALID_INPUT"
+    },
+    {
+      "id": "missing-previous-hash",
+      "input": {
+        "previousBlockNumber": 100,
+        "currentBlockNumber": 101,
+        "currentHash": "0xbbb",
+        "currentParentHash": "0xaaa"
+      },
+      "expected": "INVALID_INPUT"
+    }
+  ]
+}

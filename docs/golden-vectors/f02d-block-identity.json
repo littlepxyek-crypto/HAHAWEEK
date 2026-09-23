@@ -1,0 +1,11 @@
+{
+  "schema": "hahaweek-f02d-block-identity-golden-vectors-v1",
+  "cases": [
+    {"id":"valid-genesis","input":{"chainId":4663,"blockNumber":0,"blockHash":"0xaaa","parentHash":"0x0","observedAt":"2026-09-21T00:00:00.000Z"},"expected":"VALID"},
+    {"id":"valid-block","input":{"chainId":4663,"blockNumber":101,"blockHash":"0xbbb","parentHash":"0xaaa","observedAt":"2026-09-21T00:00:01.000Z"},"expected":"VALID"},
+    {"id":"invalid-chain","input":{"chainId":0,"blockNumber":101,"blockHash":"0xbbb","parentHash":"0xaaa","observedAt":"2026-09-21T00:00:01.000Z"},"expected":"INVALID_INPUT"},
+    {"id":"invalid-block-number","input":{"chainId":4663,"blockNumber":-1,"blockHash":"0xbbb","parentHash":"0xaaa","observedAt":"2026-09-21T00:00:01.000Z"},"expected":"INVALID_INPUT"},
+    {"id":"missing-hash","input":{"chainId":4663,"blockNumber":101,"parentHash":"0xaaa","observedAt":"2026-09-21T00:00:01.000Z"},"expected":"INVALID_INPUT"},
+    {"id":"missing-parent","input":{"chainId":4663,"blockNumber":101,"blockHash":"0xbbb","observedAt":"2026-09-21T00:00:01.000Z"},"expected":"INVALID_INPUT"}
+  ]
+}
