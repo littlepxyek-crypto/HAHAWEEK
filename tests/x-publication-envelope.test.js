@@ -36,7 +36,7 @@ test('preserves readiness and evidence traceability', () => {
   const value = input();
   const envelope = createXPublicationEnvelope(value);
   assert.equal(envelope.readiness_id, value.readiness.readiness_id);
-  assert.equal(envelope.report_id, value.research_report.report_id);
+  assert.equal(envelope.report_id, value.projection.report_id);
   assert.deepEqual(envelope.content_items[0].evidence_ids, value.projection.content_items[0].evidence_ids);
 });
 
