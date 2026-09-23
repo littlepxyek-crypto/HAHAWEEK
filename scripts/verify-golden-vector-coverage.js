@@ -20,6 +20,7 @@ const KNOWN_OUT_OF_SCOPE_FIXTURES = Object.freeze([
   "docs/golden-vectors/evidence-graph.json",
   "docs/golden-vectors/evidence-identity.json",
   "docs/golden-vectors/source-independence.json",
+  "docs/golden-vectors/f02-reorg-scenario.json",
 ]);
 
 const GOLDEN_VECTOR_DIR = path.join("docs", "golden-vectors");

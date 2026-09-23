@@ -1,0 +1,63 @@
+{
+  "format": "HAHAWEEK-EVIDENCE-V4-F02-REORG-SCENARIO-1",
+  "protocol": "HAHAWEEK-EVIDENCE-V4",
+  "provenance_contract": "EXPLICIT_EVIDENCE_AND_BLOCK",
+  "authoritative_history": "canonical",
+  "histories": {
+    "canonical": [
+      {
+        "transition": {
+          "evidence_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "from_state": "OBSERVED",
+          "previous_transition_hash": null,
+          "sequence": "0",
+          "to_state": "CANONICAL"
+        },
+        "transition_hash": "71ffe5282d44440cf5f9fc8635706c0e6cd3347bd7d86696916bb2fabbbc7c5c",
+        "provenance": {
+          "evidence_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "block_id": "block-A-100"
+        }
+      },
+      {
+        "transition": {
+          "evidence_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "from_state": "CANONICAL",
+          "previous_transition_hash": "71ffe5282d44440cf5f9fc8635706c0e6cd3347bd7d86696916bb2fabbbc7c5c",
+          "sequence": "1",
+          "to_state": "ORPHANED"
+        },
+        "transition_hash": "c58c2c0235ded50646ad5ac9d707ecd2b25c5653ad2a892d7c3f128e53f967fe",
+        "provenance": {
+          "evidence_id": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "block_id": "block-A-101"
+        }
+      }
+    ],
+    "competing": [
+      {
+        "transition": {
+          "evidence_id": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "from_state": "OBSERVED",
+          "previous_transition_hash": null,
+          "sequence": "0",
+          "to_state": "CANONICAL"
+        },
+        "transition_hash": "fcc7fba2ab918c68d17944a9b4f76ffc4290e141c4156ea7a557de13ac0f363d",
+        "provenance": {
+          "evidence_id": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "block_id": "block-B-100"
+        }
+      }
+    ]
+  },
+  "recovery_prefix": [
+    "71ffe5282d44440cf5f9fc8635706c0e6cd3347bd7d86696916bb2fabbbc7c5c"
+  ],
+  "expected_authoritative_sequence": "1",
+  "preserved_records": [
+    "71ffe5282d44440cf5f9fc8635706c0e6cd3347bd7d86696916bb2fabbbc7c5c",
+    "c58c2c0235ded50646ad5ac9d707ecd2b25c5653ad2a892d7c3f128e53f967fe",
+    "fcc7fba2ab918c68d17944a9b4f76ffc4290e141c4156ea7a557de13ac0f363d"
+  ]
+}
