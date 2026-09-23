@@ -56,7 +56,7 @@ test('preserves all validation states', () => {
 
 test('rejects tampered envelope identity', () => {
   const value = envelope();
-  value.report_id = 'research-report-v1:tampered';
+  value.envelope_id = 'x-publication-envelope-v1:tampered';
   assert.throws(() => createPublicationDeliveryAdapterResult({ envelope: value }), /ENVELOPE_ID_MISMATCH/);
 });
 
