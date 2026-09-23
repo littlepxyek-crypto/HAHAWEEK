@@ -1,6 +1,6 @@
 # STEP 474 — Radar Documentation Record Contract v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 
 ## Objective
 Create a stable, auditable record from the frozen Radar Documentation Projection.
