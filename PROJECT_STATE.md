@@ -1216,3 +1216,15 @@ git rev-parse origin/main
 - CONFIRMED-only eligibility, deterministic identity, evidence lineage, and duplicate-evidence rejection remain owned by STEP 470.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Next gate: Security & Regression CI on the implementation head before PR merge.
+
+
+## STEP 471 — Freeze Checkpoint — VERIFIED / FROZEN
+
+- Implementation PR #149 merged successfully.
+- Implementation merge commit: `cb2b0c5be04156a09d7e54e7c9b842a37486bc39`.
+- Security & Regression workflow #1388 passed successfully on implementation head `0c59c9d185f100491fa9dcfd76d5612592fa1e96`.
+- STEP 471 integration boundary preserves frozen STEP 470 semantics and introduces no new intelligence semantics.
+- No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
+- Main merge commit was checked; no post-merge workflow run was present, so no post-merge CI success is claimed.
+- Freeze branch: `step-471-freeze-2026-09-23`.
+- Next gate: Security & Regression on the freeze head before merging the freeze checkpoint.
