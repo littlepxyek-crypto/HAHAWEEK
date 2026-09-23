@@ -1,3 +1,11 @@
+## STEP 480 — Publication Delivery Adapter Boundary — CONTRACT DEFINITION
+
+- Defines the smallest auditable interface boundary after the frozen STEP 479 publication envelope.
+- Contract only; no external X API, credentials, scheduling, retry, signing, or network transport.
+- Research Report remains source of truth; STEP 479 remains immutable handoff envelope owner.
+- No raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
+- Verification pending Security & Regression CI.
+
 ## STEP 479 STATE FINALIZATION — VERIFIED / FROZEN
 
 - Implementation PR #172 merged; merge commit: `72ba62dc02c53d6200f4dcb620d3ff8d1fbd9b93`.
