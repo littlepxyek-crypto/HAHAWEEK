@@ -1,3 +1,19 @@
+## STEP 499 — H-01 State Reconciliation — VERIFIED / FROZEN
+
+- STEP 494 H-01 Legacy Write Freeze contract PR #210 merged to main.
+- STEP 495 recorded the H-01 implementation lifecycle and deferred closure pending direct-write coverage.
+- STEP 497 defined the remaining H-01 direct database-handle boundary contract; PR #213 merged to main as b62cefb1a81c9d8ec65765edb5942fe4d42ee125.
+- STEP 498 implemented the guarded database boundary; PR #214 merged to main as a4cfa333f5a74329022890d03f61112ed462490f.
+- The guarded database facade prevents direct legacy database mutation after LEGACY_FROZEN while preserving required read/lifecycle compatibility; prepared writes are guarded at creation/execution boundaries.
+- PR #214 head 1f31b83ea9db2905c4f06b797a2b1a6f25909033 passed HAHAWEEK Tests and Security & Regression; PR CodeQL completed successfully.
+- Exact merge commit a4cfa333f5a74329022890d03f61112ed462490f passed post-merge HAHAWEEK Tests, Security & Regression, and Push-on-main CodeQL verification.
+- H-01 acceptance evidence is therefore reconciled as VERIFIED / FROZEN at the legacy database write boundary.
+- Freeze semantics remain fail-closed; no legacy write may bypass the shared barrier after LEGACY_FROZEN.
+- No V4 production authority activation, RPC change, SQLite schema migration, cursor reset, checkpoint authority change, or historical artifact deletion was introduced by STEP 498/499.
+- Design Gate 2 remains NOT PASSED; H-02 and remaining controls are not implicitly closed by this reconciliation.
+- Historical project-state entries remain preserved below this entry.
+- Any future H-01 semantic change requires a new explicit contract/step.
+
 ## STEP 495 — H-01 Legacy Write Freeze — MERGED / POST-MERGE EVIDENCE PENDING
 
 - STEP 494 H-01 contract PR #210 was merged before implementation.
