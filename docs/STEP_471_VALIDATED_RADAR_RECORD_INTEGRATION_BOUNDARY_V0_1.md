@@ -1,6 +1,6 @@
 # STEP 471 — Validated Radar Record Integration Boundary v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 
 ## Objective
 
@@ -39,3 +39,17 @@ The adapter performs structural boundary checks and deep-clones caller-owned inp
 ## Scope
 
 This step adds only the integration boundary. It does not alter the frozen STEP 470 contract or canonical blueprint.
+
+
+## Verification
+
+- Implementation PR #149 merged successfully.
+- Implementation merge commit: `cb2b0c5be04156a09d7e54e7c9b842a37486bc39`.
+- Security & Regression workflow #1388 passed successfully on implementation head `0c59c9d185f100491fa9dcfd76d5612592fa1e96`.
+- Main merge commit was checked; no post-merge workflow run was present, so no post-merge CI success is claimed.
+
+## Freeze Checkpoint
+
+- Freeze branch: `step-471-freeze-2026-09-23`.
+- This checkpoint records the verified STEP 471 boundary without semantic changes.
+- STEP 470 remains the semantic authority for Validated Radar Record construction.
