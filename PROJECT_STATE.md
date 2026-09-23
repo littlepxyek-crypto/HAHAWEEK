@@ -1,3 +1,19 @@
+## STEP 491 — State Reconciliation / Finalization — VERIFIED / FROZEN
+
+- STEP 491 reconciles `PROJECT_STATE.md` with the completed STEP 489–490 F-02 reorg/transition closure lifecycle.
+- STEP 489 contract PR #206 merged to `main`; merge commit: `f88c8c65688f9d32830f531cee3c9d7edca27f56`.
+- STEP 490 independent F-02 verifier PR #207 merged to `main`; merge commit: `4cde7ccc5840766ddbcf22bd446d5a30e195ca25`.
+- STEP 490 PR-head Test & Security completed successfully, including `npm test`, V4 verification, V4 coverage verification, dependency audit, and tracked-secret detection.
+- The F-02 verifier remains an independent offline/audit-only boundary and does not import production ingestion, raw-store, SQLite runtime, cursor runtime, or network providers.
+- The F-02 fixture preserves canonical/orphan coexistence, competing-history isolation, predecessor/sequence continuity, persisted-prefix recovery, deterministic replay, duplicate/integrity-conflict classification, and explicit provenance linkage.
+- The CI workflow permission boundary is restricted to `contents: read`.
+- A post-merge workflow run for merge commit `4cde7ccc5840766ddbcf22bd446d5a30e195ca25` was not available through the verification endpoint at reconciliation time; no post-merge result is claimed or fabricated.
+- Therefore STEP 491 records the exact evidence boundary: PR-head verification is GREEN, while post-merge CI evidence is UNAVAILABLE at this checkpoint.
+- Design Gate 2 is not declared closed by this documentation/state reconciliation.
+- No production V4 activation, raw evidence mutation, cursor/checkpoint authority change, RPC acquisition change, SQLite migration, transition-semantic change, or historical artifact deletion is introduced.
+- Historical STEP 488 and earlier project-state entries remain preserved below this entry.
+- Any future semantic change requires a new explicit contract/step.
+
 ## STEP 488 — State Finalization — VERIFIED / FROZEN
 
 - STEP 488 F-02 Reorg / Transition Closure Audit is recorded as VERIFIED / FROZEN.
