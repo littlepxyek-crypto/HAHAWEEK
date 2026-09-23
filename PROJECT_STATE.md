@@ -1,3 +1,16 @@
+## STEP 487 — State Finalization — VERIFIED / FROZEN
+
+- STEP 487 Design Gate 2 Reconciliation Audit is recorded as VERIFIED / FROZEN.
+- Audit commit: `b74e4a74812b7a415df592c22eb2c36df3dea66d`.
+- PR #202 merged to `main`; merge commit: `8eaf3cc4f88bcdd2f50eda13c5a27ab7bef20d21`.
+- PR-head Test & Security, CodeQL Actions, and CodeQL JavaScript/TypeScript checks passed.
+- Post-merge Test & Security, CodeQL Actions, and CodeQL JavaScript/TypeScript checks passed on the exact merge commit.
+- STEP 487 is documentation-only and does not change production runtime, raw evidence, cursor/checkpoint authority, SQLite authority, RPC acquisition, migration state, V4 activation, or golden-vector contents.
+- The reconciliation distinguishes verified evidence from unresolved Gate 2 controls; no unresolved control is declared closed by documentation alone.
+- Remaining evidence gaps are explicitly preserved for the next authorized step.
+- Historical artifacts remain preserved.
+- Any future semantic change requires a new explicit contract/step.
+
 ## STEP 486 — State Finalization — VERIFIED / FROZEN
 
 - STEP 486 Project State Reconciliation is recorded as VERIFIED / FROZEN.
