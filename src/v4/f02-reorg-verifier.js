@@ -93,12 +93,19 @@ function validateHistory(history, historyName) {
 
 function indexRecords(histories) {
   const index = new Map();
+  const identities = new Map();
   for (const history of histories) {
     for (const record of history) {
       const existing = index.get(record.transition_hash);
       if (existing && JSON.stringify(existing) !== JSON.stringify(record)) {
         throw new Error("HASH_COLLISION");
       }
+      const identity = record.transition.evidence_id + ":" + record.transition.sequence;
+      const prior = identities.get(identity);
+      if (prior && prior !== record.transition_hash) {
+        throw new Error("INTEGRITY_CONFLICT:" + identity);
+      }
+      identities.set(identity, record.transition_hash);
       index.set(record.transition_hash, record);
     }
   }
