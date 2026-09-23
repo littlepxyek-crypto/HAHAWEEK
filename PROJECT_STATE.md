@@ -1,3 +1,18 @@
+## STEP 485 — State Finalization — VERIFIED / FROZEN
+
+- STEP 485 Independent Checkpoint/Cursor Recovery Verifier is recorded as VERIFIED / FROZEN after contract definition, independent implementation, freeze validation, state finalization, merge, and post-merge verification.
+- Contract PR #196 merged; contract merge commit: `dce0be6aeccc1135bdd3dbad3f5cebdfb5078207`.
+- Independent implementation PR #197 passed Security & Regression and CodeQL gates after the recovery-input cursor-digest fix commit `da37e3e5b3d45fd78ddc489b71ac7166088bc2fd`.
+- Freeze PR #198 merged; freeze commit: `858bc25803b0fc2ee536aac5c343d9a0356f9e91`; merge commit: `eb2388b7117f83fb8521d7b05a48653e1edcd219`.
+- State finalization PR #199 merged; merge commit: `38ffd8fe0240d6519e3cca794e5059d5f433dd91`.
+- Post-merge Security & Regression, CodeQL Actions, and CodeQL JavaScript/TypeScript all passed on merge commit `38ffd8fe0240d6519e3cca794e5059d5f433dd91`.
+- Frozen boundary covers independent offline checkpoint/cursor recovery verification: exact-key and lexical validation, canonical digest verification, checkpoint/manifest linkage, cursor/checkpoint linkage, generation ordering, stored digest verification, fail-closed recovery, and acquisition-position prerequisite.
+- Independence is preserved: no `src/reference/v4/*` imports, local canonicalization/domain-separated SHA-256, no RPC/network access, and no production runtime mutation.
+- Historical PR #28 remains preserved and is not merged; it is historical evidence rather than current implementation authority.
+- No golden-vector content, production state, cursor authority, raw evidence, SQLite, RPC, or runtime semantics were changed by STEP 485.
+- Any future semantic change requires a new explicit contract/step.
+- State finalization branch: `step-485-state-finalization-2026-09-23`.
+
 ## STEP 484 — State Finalization — VERIFIED / FROZEN
 
 - STEP 484 Independent Golden Vector Coverage is recorded as VERIFIED / FROZEN after coverage implementation, contract resolution, freeze validation, and freeze merge.
