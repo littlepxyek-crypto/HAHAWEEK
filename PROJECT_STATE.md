@@ -6,13 +6,13 @@
 - PR-head HAHAWEEK Tests completed successfully.
 - PR-head HAHAWEEK Security and Regression completed successfully.
 - PR #211 CodeQL completed successfully after the implementation merge; both analysis jobs passed.
-- Exact implementation merge commit `0881a99db37a137dc7e8c15294349e1be6fdb11d` has completed successful HAHAWEEK Tests and Security and Regression runs. One redundant Security and Regression run was cancelled; a separate run succeeded. Post-merge CodeQL was still in progress at this checkpoint.
+- Exact implementation merge commit `0881a99db37a137dc7e8c15294349e1be6fdb11d` has completed successful HAHAWEEK Tests and Security and Regression runs. One redundant Security and Regression run was cancelled; a separate run succeeded. Post-merge CodeQL completed successfully on the exact merge commit.
 - H-01 runtime scope implemented: explicit `LEGACY_ACTIVE` / `LEGACY_FROZEN` barrier, persistent freeze marker, fail-closed legacy persistence, and tests for bypass, malformed state, and no-partial-mutation.
 - No V4 production authority activation, cursor reset, RPC change, SQLite schema migration, or historical artifact deletion was introduced by the implementation.
-- H-01 is **not yet declared VERIFIED/FROZEN** pending exact merge-commit CodeQL completion and remaining coverage review.
+- H-01 is **not yet declared VERIFIED/FROZEN** pending remaining direct-write/freeze-state coverage review.
 - Design Gate 2 remains **NOT PASSED**.
 - Historical project-state entries remain preserved.
-- Next action: verify exact merge-commit CodeQL and remaining direct-write/freeze-state coverage; only then finalize H-01 state and evaluate H-02.
+- Next action: review remaining direct-write/freeze-state coverage; only then finalize H-01 state and evaluate H-02.
 
 ## STEP 492 — Design Gate 2 Remaining-Control Readiness Audit — VERIFIED / FROZEN
 
