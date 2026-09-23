@@ -1132,3 +1132,11 @@ git rev-parse origin/main
 - Security & Regression #1326 passed on the implementation head.
 - Main merge commit: `61f56eaa3ffb05d20ce204a5e5fbea0480ba5eb0`.
 - Frozen integration boundary delegates to STEP 466 and preserves read-only, non-predictive authority.
+
+
+## STEP 468 — Intelligence Evidence Summary Contract — IMPLEMENTATION CANDIDATE
+
+- Branch: `step-468-intelligence-evidence-summary-contract-2026-09-23`.
+- Adds a deterministic evidence-summary projection over validated intelligence.
+- Preserves Formation/Outcome/Validation lineage and evidence IDs.
+- No prediction, ranking, trading/signing, raw-store, cursor, or V4 authority changes.
