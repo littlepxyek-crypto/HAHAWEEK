@@ -1,3 +1,19 @@
+## STEP 495 — H-01 Legacy Write Freeze — MERGED / POST-MERGE EVIDENCE PENDING
+
+- STEP 494 H-01 contract PR #210 was merged before implementation.
+- H-01 implementation PR #211 was merged to `main`; merge commit: `0881a99db37a137dc7e8c15294349e1be6fdb11d`.
+- Implementation head verified before merge: `890c05b6c60c419739b781d0163332ea06d0ed92`.
+- PR-head HAHAWEEK Tests completed successfully.
+- PR-head HAHAWEEK Security and Regression completed successfully.
+- PR #211 CodeQL was still running at the time of merge and therefore is not claimed as green.
+- The exact merge commit currently has no workflow runs available through the verification endpoint; post-merge CI is therefore **UNAVAILABLE**, not GREEN.
+- H-01 runtime scope implemented: explicit `LEGACY_ACTIVE` / `LEGACY_FROZEN` barrier, persistent freeze marker, fail-closed legacy persistence, and tests for bypass, malformed state, and no-partial-mutation.
+- No V4 production authority activation, cursor reset, RPC change, SQLite schema migration, or historical artifact deletion was introduced by the implementation.
+- H-01 is **not yet declared VERIFIED/FROZEN** because exact merge-commit post-merge evidence is unavailable.
+- Design Gate 2 remains **NOT PASSED**.
+- Historical project-state entries remain preserved.
+- Next action: obtain/verify exact post-merge CI evidence; only then finalize H-01 state and evaluate H-02.
+
 ## STEP 492 — Design Gate 2 Remaining-Control Readiness Audit — VERIFIED / FROZEN
 
 - STEP 492 records the post-STEP-491 Design Gate 2 readiness boundary.
