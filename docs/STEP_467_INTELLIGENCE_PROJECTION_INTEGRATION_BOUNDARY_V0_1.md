@@ -1,6 +1,16 @@
 # STEP 467 — Intelligence Projection Integration Boundary v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
+
+## Verification Result
+
+- PR #138 merged successfully.
+- Security & Regression workflow #1326 passed on the implementation head.
+- Main merge commit: `61f56eaa3ffb05d20ce204a5e5fbea0480ba5eb0`.
+- Integration delegates semantics to the frozen STEP 466 contract.
+- Lineage consistency, validation-state preservation, determinism, and mutation isolation are verified.
+- No predictive score, ranking, trading, signing, raw-store mutation, cursor mutation, or V4 authority changes.
+
 
 ## Objective
 
