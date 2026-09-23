@@ -165,6 +165,10 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       const statement = db.prepare(sql, ...args);
       return {
         bind: (...bindArgs) => statement.bind(...bindArgs),
+        run: (...runArgs) => {
+          legacyWriteBarrier.assertWritable();
+          return statement.run(...runArgs);
+        },
         step: (...stepArgs) => {
           if (!isReadOnlyStatement(sql)) {
             legacyWriteBarrier.assertWritable();
