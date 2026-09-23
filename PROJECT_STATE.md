@@ -1,3 +1,13 @@
+## STEP 482 — Independent Golden Vector Verification Boundary — CONTRACT DEFINITION
+
+- Branch: `step-482-independent-golden-vector-verification-contract-2026-09-23`.
+- Contract: `docs/STEP_482_INDEPENDENT_GOLDEN_VECTOR_VERIFICATION_BOUNDARY_V0_1.md`.
+- Scope is limited to independent offline verification of committed V4 golden-vector artifacts.
+- Verifier must not import production V4 reference modules or runtime/ingestion state.
+- Verification must be deterministic and fail closed on malformed vectors, canonical-byte mismatch, or hash mismatch.
+- No production V4 authority, raw-store, cursor/runtime, checkpoint, manifest, migration, or evidence changes.
+- Implementation and verification are intentionally not claimed yet.
+
 ## STEP 481 — State Finalization — VERIFIED / FROZEN
 
 - STEP 481 Publication Delivery Adapter Implementation is VERIFIED / FROZEN.
