@@ -1,13 +1,16 @@
-## STEP 483 — Independent Golden Vector Verifier — IMPLEMENTATION CANDIDATE
+## STEP 483 — State Finalization — VERIFIED / FROZEN
 
-- Branch: `step-483-independent-golden-vector-verifier-2026-09-23`.
-- Implements an independent offline verifier over the committed checkpoint/cursor/recovery golden-vector artifact.
-- Verifier independently canonicalizes JSON and computes domain-separated SHA-256 without importing `src/reference/v4/*`.
-- Verifier validates vector schema, duplicate identities, deterministic expected outcomes, canonical/hash commitments, and fail-closed recovery cases.
-- Tests cover positive verification, frozen hash reproduction, duplicate identity rejection, tampered hash rejection, malformed input rejection, and recovery fail-closed behavior.
-- Implementation boundary: `docs/STEP_483_INDEPENDENT_GOLDEN_VECTOR_VERIFIER_IMPLEMENTATION_BOUNDARY_V0_1.md`.
-- Security & Regression / CodeQL verification is pending; VERIFIED / FROZEN is not claimed.
-- No production V4 authority, raw-store, cursor/runtime, checkpoint, manifest, migration, evidence, RPC, network, prediction, ranking, trading, signing, or publication changes.
+- STEP 483 Independent Golden Vector Verifier is recorded as VERIFIED / FROZEN after implementation and freeze validation.
+- Implementation PR #186 merged; implementation merge commit: `c5e6544ba4e57f0d937f5a3be08cc125059302e3`.
+- Post-merge Security & Regression #1592 passed on implementation merge commit.
+- Post-merge CodeQL / Push on main #641 passed on implementation merge commit.
+- Freeze PR #187 merged; freeze merge commit: `2b9729432a15ecc7dbbf225412d88465ae97fe0b`.
+- Security & Regression #1595 passed on freeze PR head `885122dd618b2ab5165b4d7479ebf884e70f1202`.
+- The freeze documentation preserves the independent verifier boundary; no verifier semantics, golden vectors, production V4 authority, raw evidence, cursor, checkpoint, manifest, migration, or runtime authority were changed.
+- The independent verifier remains offline/audit-only and does not import `src/reference/v4/*`.
+- State finalization records the completed STEP 483 lifecycle and does not alter production authority.
+- Historical artifacts and the pre-existing `step-483-freeze-2026-09-23` branch remain preserved; the freeze used `step-483-freeze-r2-2026-09-23` to avoid overwriting historical state.
+- No raw-store, cursor/runtime, checkpoint, manifest, migration, evidence, RPC/network, prediction, ranking, trading, signing, or publication changes.
 
 ## STEP 482 — State Finalization — VERIFIED / FROZEN
 
