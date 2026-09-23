@@ -1,3 +1,14 @@
+## STEP 483 — Independent Golden Vector Verifier — IMPLEMENTATION CANDIDATE
+
+- Branch: `step-483-independent-golden-vector-verifier-2026-09-23`.
+- Implements an independent offline verifier over the committed checkpoint/cursor/recovery golden-vector artifact.
+- Verifier independently canonicalizes JSON and computes domain-separated SHA-256 without importing `src/reference/v4/*`.
+- Verifier validates vector schema, duplicate identities, deterministic expected outcomes, canonical/hash commitments, and fail-closed recovery cases.
+- Tests cover positive verification, frozen hash reproduction, duplicate identity rejection, tampered hash rejection, malformed input rejection, and recovery fail-closed behavior.
+- Implementation boundary: `docs/STEP_483_INDEPENDENT_GOLDEN_VECTOR_VERIFIER_IMPLEMENTATION_BOUNDARY_V0_1.md`.
+- Security & Regression / CodeQL verification is pending; VERIFIED / FROZEN is not claimed.
+- No production V4 authority, raw-store, cursor/runtime, checkpoint, manifest, migration, evidence, RPC, network, prediction, ranking, trading, signing, or publication changes.
+
 ## STEP 482 — State Finalization — VERIFIED / FROZEN
 
 - STEP 482 Independent Golden Vector Verification Boundary is VERIFIED / FROZEN after freeze PR #182.
