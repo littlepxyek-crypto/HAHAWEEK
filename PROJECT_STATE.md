@@ -1195,3 +1195,14 @@ git rev-parse origin/main
 - Freeze documentation updated on branch `step-470-freeze-2026-09-23`.
 - Main merge commit was checked and no post-merge workflow run was present at verification time; no post-merge CI success is claimed.
 - Next: verify the STEP 470 freeze branch through Security & Regression before merging the freeze checkpoint, then verify main before starting STEP 471.
+
+
+## STEP 471 — Validated Radar Integration Boundary — IN PROGRESS
+
+- STEP 470 is VERIFIED / FROZEN on main after PR #145 merge.
+- STEP 471 establishes the executable integration boundary between the frozen Validated Radar Record contract and downstream HAHAWEEK consumers.
+- Added `src/core/validated-radar-integration.js`, `tests/validated-radar-integration.test.js`, and `docs/STEP_471_VALIDATED_RADAR_INTEGRATION_BOUNDARY_V0_1.md`.
+- The integration delegates radar semantics to STEP 470; it does not redefine validation eligibility, radar identity, or evidence semantics.
+- Focused verification covers valid delegation, deterministic output, mutation isolation, and rejection of non-CONFIRMED validation.
+- No prediction, ranking, trading, signing, raw-store, cursor/runtime, Discord, or V4 authority is introduced.
+- Design Gate 2 remains OPEN; production V4 remains NOT AUTHORIZED.
