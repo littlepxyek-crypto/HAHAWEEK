@@ -1,3 +1,11 @@
+## STEP 479 — X Publication Envelope Boundary — CONTRACT DEFINITION
+
+- Branch: `step-479-x-publication-envelope-contract-2026-09-23`.
+- Contract: `docs/STEP_479_X_PUBLICATION_ENVELOPE_BOUNDARY_V0_1.md`.
+- Scope is limited to a deterministic, immutable handoff envelope after STEP 478.
+- No external X publication/API, scheduling, prediction, ranking, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
+- Implementation and verification are intentionally not claimed yet.
+
 ## STEP 478 — State Finalization — VERIFIED / FROZEN
 
 - Implementation PR #168 merged successfully.
