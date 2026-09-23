@@ -2,7 +2,14 @@
 
 ## Status
 
-IMPLEMENTATION CANDIDATE.
+VERIFIED / FROZEN.
+
+## Freeze evidence
+
+- Implementation PR #168 merged successfully.
+- Implementation merge commit: `4e4eb3101c5f1c000fc28e4bcde932ff486b95a3`.
+- Security & Regression workflow #1495 passed successfully on implementation head `4cf08758ba8174222482c61ab6b0c4b1694b001b`.
+- This freeze preserves the verified STEP 478 validation/readiness boundary without semantic changes.
 
 ## Implementation
 
