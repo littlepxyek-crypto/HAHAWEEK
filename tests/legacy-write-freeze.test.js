@@ -15,6 +15,7 @@ const {
 const { appendUnique } = require('../src/core/raw-store');
 const { createRawEventStore } = require('../src/core/raw-event-store');
 const { createDatabase } = require('../src/core/database');
+const { createDatabase } = require('../src/core/database');
 const { saveState } = require('../src/core/state');
 
 function tempDir() {
@@ -103,10 +104,8 @@ test('H-01 blocks raw SQLite mutation without changing existing rows', () => {
     filename: path.join(dir, 'legacy-write-state.json'),
   });
 
-  const db = new (require('sql.js').Database)();
-  db.run('CREATE TABLE raw_events (event_id TEXT PRIMARY KEY, value TEXT)');
-
-  const store = createRawEventStore(db, { legacyWriteBarrier: barrier });
+  const database = await createDatabase(':memory:', { legacyWriteBarrier: barrier });
+  const store = createRawEventStore(database.db, { legacyWriteBarrier: barrier });
 
   assert.equal(
     store.insert({
@@ -141,6 +140,7 @@ test('H-01 blocks raw SQLite mutation without changing existing rows', () => {
   );
 
   assert.equal(store.count(), 1);
+  database.db.close();
 });
 
 test('H-01 blocks database file persistence and preserves bytes', async () => {
