@@ -12,8 +12,8 @@ const RAW_FILE =
 let eventIndex = null;
 let indexedFileSignature = null;
 
-function ensureDir() {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+function ensureDir(dataDir = DATA_DIR) {
+  fs.mkdirSync(dataDir, { recursive: true });
 }
 
 function eventId(log, chainId) {
@@ -25,17 +25,17 @@ function eventId(log, chainId) {
   ].join(':');
 }
 
-function getFileSignature() {
-  if (!fs.existsSync(RAW_FILE)) return null;
-  const stat = fs.statSync(RAW_FILE);
+function getFileSignature(rawFile = RAW_FILE) {
+  if (!fs.existsSync(rawFile)) return null;
+  const stat = fs.statSync(rawFile);
   return stat.size + ':' + stat.mtimeMs;
 }
 
-function buildEventIndex() {
+function buildEventIndex(rawFile = RAW_FILE) {
   const ids = new Set();
 
-  if (fs.existsSync(RAW_FILE)) {
-    const content = fs.readFileSync(RAW_FILE, 'utf8');
+  if (fs.existsSync(rawFile)) {
+    const content = fs.readFileSync(rawFile, 'utf8');
 
     for (const line of content.split('\n')) {
       if (!line) continue;
@@ -50,15 +50,15 @@ function buildEventIndex() {
   }
 
   eventIndex = ids;
-  indexedFileSignature = getFileSignature();
+  indexedFileSignature = getFileSignature(rawFile);
   return eventIndex;
 }
 
-function ensureEventIndex() {
-  const currentSignature = getFileSignature();
+function ensureEventIndex(rawFile = RAW_FILE) {
+  const currentSignature = getFileSignature(rawFile);
 
   if (eventIndex === null || indexedFileSignature !== currentSignature) {
-    buildEventIndex();
+    buildEventIndex(rawFile);
   }
 
   return eventIndex;
@@ -67,12 +67,14 @@ function ensureEventIndex() {
 function appendUnique(log, chainId, options = {}) {
   const legacyWriteBarrier =
     options.legacyWriteBarrier || createLegacyWriteBarrier();
+  const rawFile = options.rawFile || RAW_FILE;
+  const dataDir = options.dataDir || path.dirname(rawFile);
 
   legacyWriteBarrier.assertWritable();
-  ensureDir();
+  ensureDir(dataDir);
 
   const id = eventId(log, chainId);
-  const ids = ensureEventIndex();
+  const ids = ensureEventIndex(rawFile);
 
   if (ids.has(id)) {
     return { inserted: false, eventId: id };
@@ -92,10 +94,10 @@ function appendUnique(log, chainId, options = {}) {
     captured_at: new Date().toISOString(),
   };
 
-  fs.appendFileSync(RAW_FILE, JSON.stringify(record) + '\n');
+  fs.appendFileSync(rawFile, JSON.stringify(record) + '\n');
 
   ids.add(id);
-  indexedFileSignature = getFileSignature();
+  indexedFileSignature = getFileSignature(rawFile);
 
   return { inserted: true, eventId: id };
 }
