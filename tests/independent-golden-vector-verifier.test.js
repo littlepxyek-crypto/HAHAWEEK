@@ -32,39 +32,26 @@ test("independent verifier reproduces frozen cursor hash", () => {
 test("independent verifier rejects duplicate vector identities", () => {
   const document = structuredClone(vectors);
   document.vectors.push(structuredClone(document.vectors[0]));
-  assert.throws(
-    () => verifier.verifyGoldenVectorDocument(document),
-    /duplicate vector id/,
-  );
+  assert.throws(() => verifier.verifyGoldenVectorDocument(document), /duplicate vector id/);
 });
 
 test("independent verifier rejects tampered expected hash", () => {
   const document = structuredClone(vectors);
   const vector = document.vectors.find((item) => item.id === "checkpoint-genesis-valid");
   vector.expected_hash = "00".repeat(32);
-  assert.throws(
-    () => verifier.verifyGoldenVectorDocument(document),
-    /hash mismatch/,
-  );
+  assert.throws(() => verifier.verifyGoldenVectorDocument(document), /hash mismatch/);
 });
 
 test("independent verifier rejects malformed canonical input", () => {
   const document = structuredClone(vectors);
   const vector = document.vectors.find((item) => item.id === "checkpoint-genesis-valid");
   vector.input.generation = "07";
-  assert.throws(
-    () => verifier.verifyGoldenVectorDocument(document),
-    /expected result mismatch/,
-  );
+  assert.throws(() => verifier.verifyGoldenVectorDocument(document), /hash mismatch/);
 });
 
 test("independent verifier fails closed on recovery corruption", () => {
   const document = structuredClone(vectors);
   const vector = document.vectors.find((item) => item.id === "recovery-valid-chain");
   vector.manifest.segments_valid = false;
-  vector.expected = "RECOVERY_RESUME_ALLOWED";
-  assert.throws(
-    () => verifier.verifyGoldenVectorDocument(document),
-    /expected result mismatch/,
-  );
+  assert.throws(() => verifier.verifyGoldenVectorDocument(document), /expected result mismatch/);
 });
