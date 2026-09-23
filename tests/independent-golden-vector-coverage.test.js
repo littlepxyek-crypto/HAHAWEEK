@@ -63,10 +63,7 @@ test("STEP 484 fails closed when an inventory fixture is missing", () => {
 
     assert.throws(
       () =>
-        coverage.verifyCoverage({
-          repoRoot: tempRoot,
-          inventory: ["docs/golden-vectors/event-identity.json"],
-        }),
+        coverage.verifyCoverage({ repoRoot: tempRoot }),
       /unsupported or unexpected golden-vector fixture|V4 fixture inventory mismatch/,
     );
   } finally {
