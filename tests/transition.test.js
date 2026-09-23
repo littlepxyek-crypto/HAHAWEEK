@@ -32,8 +32,8 @@ test("V4 transition golden vectors reproduce canonical bytes and hashes", () => 
   for (const vector of vectorSet.vectors) {
     const actual = domainSeparatedHash(vector.domain, vector.input_object);
     assert.equal(actual.canonicalUtf8Hex, vector.canonical_utf8_hex);
-    assert.equal(`0x${actual.hash}`, vector.expected_hash);
-    assert.equal(hashTransition(vector.input_object), vector.expected_hash);
+    assert.equal(actual.hash, vector.expected_hash);
+    assert.equal(hashTransition(vector.input_object), `0x${vector.expected_hash}`);
   }
 });
 
