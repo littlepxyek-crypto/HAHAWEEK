@@ -1,13 +1,17 @@
-## STEP 483 — Independent Golden Vector Verifier — IMPLEMENTATION CANDIDATE
+## STEP 483 — Independent Golden Vector Verifier — VERIFIED / FROZEN
 
-- Branch: `step-483-independent-golden-vector-verifier-2026-09-23`.
-- Implements an independent offline verifier over the committed checkpoint/cursor/recovery golden-vector artifact.
-- Verifier independently canonicalizes JSON and computes domain-separated SHA-256 without importing `src/reference/v4/*`.
-- Verifier validates vector schema, duplicate identities, deterministic expected outcomes, canonical/hash commitments, and fail-closed recovery cases.
-- Tests cover positive verification, frozen hash reproduction, duplicate identity rejection, tampered hash rejection, malformed input rejection, and recovery fail-closed behavior.
-- Implementation boundary: `docs/STEP_483_INDEPENDENT_GOLDEN_VECTOR_VERIFIER_IMPLEMENTATION_BOUNDARY_V0_1.md`.
-- Security & Regression / CodeQL verification is pending; VERIFIED / FROZEN is not claimed.
+- Implementation PR #184 merged; merge commit: `fb1abed86f85a9275e02b2ee7cf5951c75ca2205`.
+- Implementation head: `2948f4a88d7b9dc02fd65bd719b2eb206fe41d4a`.
+- Security & Regression #1582 passed on the implementation head.
+- Security & Regression #1583 passed on PR verification.
+- CodeQL #637 passed on PR verification.
+- Post-merge Security & Regression #1584 passed on merge commit `fb1abed86f85a9275e02b2ee7cf5951c75ca2205`.
+- Post-merge CodeQL / Push on main #638 passed on merge commit `fb1abed86f85a9275e02b2ee7cf5951c75ca2205`.
+- Freeze branch: `step-483-freeze-2026-09-23`.
+- Freeze document commit: `ff62267ec6b7b66af5b588c87ca872e05b35d01c`.
+- Freeze records the independently auditable verifier implementation without semantic changes.
 - No production V4 authority, raw-store, cursor/runtime, checkpoint, manifest, migration, evidence, RPC, network, prediction, ranking, trading, signing, or publication changes.
+
 
 ## STEP 482 — State Finalization — VERIFIED / FROZEN
 
