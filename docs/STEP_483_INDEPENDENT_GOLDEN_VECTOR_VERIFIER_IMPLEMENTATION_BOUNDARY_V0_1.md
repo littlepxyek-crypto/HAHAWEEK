@@ -1,6 +1,6 @@
 # STEP 483 — Independent Golden Vector Verifier Implementation Boundary v0.1
 
-Status: IMPLEMENTATION CANDIDATE
+Status: VERIFIED / FROZEN
 
 ## Purpose
 
@@ -33,11 +33,23 @@ The implementation MUST NOT:
 
 The canonicalization and hashing logic is intentionally duplicated independently for verification purposes. Agreement with production reference code is an observed verification result, not a dependency.
 
-## Verification
+## Verification Record
 
-The implementation is considered verified only after repository Security & Regression CI passes on the implementation head.
+Implementation PR: #184  
+Implementation merge commit: `fb1abed86f85a9275e02b2ee7cf5951c75ca2205`  
+Implementation head: `2948f4a88d7b9dc02fd65bd719b2eb206fe41d4a`  
+Security & Regression pre-merge #1582: PASS  
+Security & Regression PR verification #1583: PASS  
+CodeQL PR #637: PASS  
+Post-merge Security & Regression #1584: PASS  
+Post-merge CodeQL / Push on main #638: PASS  
+Freeze branch: `step-483-freeze-2026-09-23`
 
-A later freeze step must record the implementation commit and CI evidence before this boundary is considered VERIFIED / FROZEN.
+The implementation is VERIFIED / FROZEN after the recorded implementation and post-merge verification gates passed.
+
+## Freeze Boundary
+
+This freeze records the independently auditable verifier implementation exactly as merged. No additional semantic implementation changes are permitted under STEP 483. Any further implementation change requires a new explicitly scoped step.
 
 ## Non-goals
 
