@@ -135,7 +135,7 @@ function validateScenario(input) {
   const prefixPositions = input.recovery_prefix.map(hash => authoritative.findIndex(r => r.transition_hash === hash));
   assert(prefixPositions.every((v, i) => v === i), "RECOVERY_PREFIX_NOT_CONTIGUOUS");
 
-  const replay = authoritative.slice(input.recovery_prefix.length);
+  const replay = authoritative.slice(input.recovery_prefix.length).map(r => r.transition_hash);
   const clean = authoritative.map(r => r.transition_hash);
   const recovered = [...input.recovery_prefix, ...replay];
   assert(JSON.stringify(clean) === JSON.stringify(recovered), "REPLAY_DIVERGENCE");
