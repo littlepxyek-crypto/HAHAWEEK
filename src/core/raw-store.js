@@ -11,6 +11,7 @@ const RAW_FILE =
 
 let eventIndex = null;
 let indexedFileSignature = null;
+let indexedFilePath = null;
 
 function ensureDir(dataDir = DATA_DIR) {
   fs.mkdirSync(dataDir, { recursive: true });
@@ -51,13 +52,18 @@ function buildEventIndex(rawFile = RAW_FILE) {
 
   eventIndex = ids;
   indexedFileSignature = getFileSignature(rawFile);
+  indexedFilePath = rawFile;
   return eventIndex;
 }
 
 function ensureEventIndex(rawFile = RAW_FILE) {
   const currentSignature = getFileSignature(rawFile);
 
-  if (eventIndex === null || indexedFileSignature !== currentSignature) {
+  if (
+    eventIndex === null ||
+    indexedFilePath !== rawFile ||
+    indexedFileSignature !== currentSignature
+  ) {
     buildEventIndex(rawFile);
   }
 
