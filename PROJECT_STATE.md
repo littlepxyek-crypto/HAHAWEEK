@@ -1205,3 +1205,14 @@ git rev-parse origin/main
 - The freeze checkpoint preserves the verified STEP 470 radar contract without semantic changes.
 - No runtime, raw evidence, cursor/state authority, V4 authority, predictive scoring, trading, or signing changes were introduced.
 - Main must be re-verified at the freeze merge commit before STEP 471 begins.
+
+
+## STEP 471 — Validated Radar Record Integration Boundary — IMPLEMENTATION CANDIDATE
+
+- STEP 470 is VERIFIED / FROZEN on main after the freeze checkpoint merge.
+- Branch: `step-471-radar-integration-boundary-2026-09-23`.
+- Adds `src/core/validated-radar-record-integration.js`, focused integration tests, and the STEP 471 boundary specification.
+- The adapter delegates radar semantics to the frozen STEP 470 contract and deep-clones caller-owned input.
+- CONFIRMED-only eligibility, deterministic identity, evidence lineage, and duplicate-evidence rejection remain owned by STEP 470.
+- No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
+- Next gate: Security & Regression CI on the implementation head before PR merge.
