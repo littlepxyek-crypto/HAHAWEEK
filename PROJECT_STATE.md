@@ -8,7 +8,6 @@
 - No ranking, predictive scoring, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
 
-
 ## STEP 473 — Radar Documentation Integration Boundary — IMPLEMENTATION CANDIDATE
 
 - STEP 472 is VERIFIED / FROZEN on main after freeze PR #153.
@@ -17,7 +16,6 @@
 - Documentation semantics, VERIFIED-only eligibility, deterministic identity, and lineage remain owned by STEP 472.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Next gate: Security & Regression CI on the implementation head before PR merge.
-
 
 ## STEP 473 — Freeze Checkpoint — VERIFIED / FROZEN
 
@@ -29,7 +27,6 @@
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
 
-
 ## STEP 474 — Radar Documentation Record Contract — IMPLEMENTATION CANDIDATE
 
 - STEP 473 is VERIFIED / FROZEN on main after freeze PR #155.
@@ -38,7 +35,6 @@
 - Preserves verified state, lineage, evidence, deterministic identity, and mutation isolation.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Next gate: Security & Regression CI on the implementation head before PR merge.
-
 
 ## STEP 474 — Freeze Checkpoint — VERIFIED / FROZEN
 
@@ -49,7 +45,6 @@
 - Freeze preserves the verified Radar Documentation Record contract without semantic changes.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 - Next gate: Security & Regression CI on the freeze checkpoint before merging the freeze PR.
-
 
 ## STEP 475 — Radar Documentation Record Integration Boundary — VERIFIED / FROZEN
 
@@ -63,4 +58,17 @@
 - Freeze preserves the verified Radar Documentation Record integration boundary without semantic changes.
 - STEP 474 remains the sole owner of record semantics, deterministic identity, validation, lineage, and evidence rules.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-- Next gate: define and verify the STEP 476 scope before implementation.
+
+## STEP 476 — Research Report Integration Boundary — IMPLEMENTATION CANDIDATE
+
+- STEP 475 is VERIFIED / FROZEN on main after freeze PR #159 and state finalization PR #160.
+- State finalization PR #160 merged successfully.
+- State finalization merge commit: `90a110378a7ef843ad759406e42293fc1b594c80`.
+- Branch: `step-476-research-report-integration-2026-09-23`.
+- Establishes an integration adapter for the existing Research Report contract.
+- Supports the canonical DATA → EVIDENCE → ANALYSIS → REPORT → X CONTENT flow and DOCUMENT stage.
+- Existing Research Report construction, claim/evidence linkage, formation/outcome/validation relationships, validation-result constraints, provenance, and deterministic report identity remain authoritative.
+- No new intelligence semantics are introduced.
+- No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
+- Verification target: delegation, deterministic identity, mutation isolation, relationship validation, and validation-result constraints.
+- Next gate: Security & Regression CI on the STEP 476 implementation candidate before PR merge.
