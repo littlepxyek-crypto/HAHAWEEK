@@ -1,10 +1,14 @@
-## STEP 480 — Publication Delivery Adapter Boundary — CONTRACT DEFINITION
+## STEP 480 — State Finalization — VERIFIED / FROZEN
 
-- Defines the smallest auditable interface boundary after the frozen STEP 479 publication envelope.
-- Contract only; no external X API, credentials, scheduling, retry, signing, or network transport.
-- Research Report remains source of truth; STEP 479 remains immutable handoff envelope owner.
+- STEP 480 Publication Delivery Adapter Boundary is VERIFIED / FROZEN.
+- Contract commit: `6498509b1045b7e0f8a4f4cc3fa6497a6242bcd6`.
+- PR #175 merged; merge commit: `93af9423d6410e733925d6c9124b168c2f7d53ff`.
+- Security & Regression #1534 passed on the contract head.
+- Post-merge Security & Regression #1535 passed on merge commit `93af9423d6410e733925d6c9124b168c2f7d53ff`.
+- CodeQL push run #618 passed on the same merge commit.
+- STEP 480 remains contract-only; no external X API, credentials, scheduling, retry, signing, or network transport.
+- Research Report remains the source of truth; STEP 479 remains the immutable publication-envelope owner.
 - No raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
-- Verification pending Security & Regression CI.
 
 ## STEP 479 STATE FINALIZATION — VERIFIED / FROZEN
 
