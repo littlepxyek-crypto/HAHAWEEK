@@ -108,7 +108,7 @@ function indexRecords(histories) {
 function validateScenario(input) {
   const original = JSON.stringify(input);
   assert(input && input.format === "HAHAWEEK-EVIDENCE-V4-F02-REORG-SCENARIO-1", "INVALID_FORMAT");
-  assert(Array.isArray(input.histories) && input.histories.length >= 2, "INSUFFICIENT_HISTORIES");
+  assert(input.histories && typeof input.histories === "object" && !Array.isArray(input.histories) && Object.keys(input.histories).length >= 2, "INSUFFICIENT_HISTORIES");
   assert(typeof input.authoritative_history === "string", "MISSING_AUTHORITATIVE_HISTORY");
   assert(Array.isArray(input.recovery_prefix), "MISSING_RECOVERY_PREFIX");
   assert(input.provenance_contract === "EXPLICIT_EVIDENCE_AND_BLOCK", "INVALID_PROVENANCE_CONTRACT");
