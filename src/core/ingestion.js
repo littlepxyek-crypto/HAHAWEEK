@@ -179,13 +179,16 @@ class IngestionEngine {
            * before the unchanged cursor barrier may advance.
            */
           lastProcessingContext = processingContext;
-          lastAuthorityOutcome = this.authorityGate({
+          const authorityInput = {
             checkpointCommitted: true,
             fromBlock,
             toBlock,
             blockNumber: toBlock,
-            processingContext,
-          });
+          };
+          if (processingContext !== undefined) {
+            authorityInput.processingContext = processingContext;
+          }
+          lastAuthorityOutcome = this.authorityGate(authorityInput);
           this.cursor.advance(toBlock);
 
           processed += toBlock - fromBlock + 1;
