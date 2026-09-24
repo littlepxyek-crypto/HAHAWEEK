@@ -166,16 +166,23 @@ class IngestionEngine {
           /*
            * DO NOT advance cursor before this resolves.
            */
-          await this.processorRange(
+          const processingContext = await this.processorRange(
             fromBlock,
             toBlock
           );
 
           /*
            * Batch completed successfully.
-           * Now and only now advance the checkpoint.
+           * Authority must accept the exact verified context
+           * before the unchanged cursor barrier may advance.
            */
-          this.authorityGate({ checkpointCommitted: true, fromBlock, toBlock, blockNumber: toBlock });
+          this.authorityGate({
+            checkpointCommitted: true,
+            fromBlock,
+            toBlock,
+            blockNumber: toBlock,
+            processingContext,
+          });
           this.cursor.advance(toBlock);
 
           processed += toBlock - fromBlock + 1;
