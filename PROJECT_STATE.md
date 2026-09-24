@@ -1,3 +1,20 @@
+## STEP 591 — Operator Acceptance & Surveillance Compatibility — VERIFIED / RECONCILED
+
+- Contract: `docs/STEP_591_OPERATOR_ACCEPTANCE_SURVEILLANCE_COMPATIBILITY_CONTRACT_V0_1.md`.
+- Contract PR #371 merged as `a6b14dbfffc78af6d6ef1c63478e0e35f2edd7ad`.
+- Exact merge-commit `test`: SUCCESS.
+- Exact merge-commit `test-and-security`: SUCCESS.
+- Exact merge-commit CodeQL Analyze (actions): SUCCESS.
+- Exact merge-commit CodeQL Analyze (javascript-typescript): SUCCESS.
+- Exact merge SHA verified: `a6b14dbfffc78af6d6ef1c63478e0e35f2edd7ad`.
+- Operator Acceptance boundary is repository-grounded; no invented operational procedure was introduced.
+- Existing semantic owners, authority boundary, BlockCursor ordering, single-writer fence, and fail-closed recovery remain unchanged.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No raw/canonical evidence mutation, cursor advancement, authority grant, automated action/trading, historical rewrite, evidence deletion, silent normalization, or V4 activation occurred.
+- V4 production activation remains INACTIVE; Gate 2 is not implied.
+- Reconciliation: `docs/STEP_591_OPERATOR_ACCEPTANCE_SURVEILLANCE_COMPATIBILITY_RECONCILIATION_V0_1.md`.
+- Next STEP: STEP 592.
+
 ## STEP 590 — Runtime Canonical Lineage / Processing Context Integration — VERIFIED / RECONCILED
 
 - Baseline main commit for implementation: `dd5c11195ff8b423db000d9a0d28101ee453ba53`.
