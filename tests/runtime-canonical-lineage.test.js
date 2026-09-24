@@ -237,7 +237,7 @@ test('STEP579 rejects unsupported transition, missing parent, invalid range, and
     fromBlock: 100, toBlock: 100, transitionType: 'CONTINUATION', parentResultId: 'missing',
   }), /PROCESSING_RESULT_NOT_FOUND/);
 
-  const transition = createTransitionRecord({
+  assert.throws(() => createTransitionRecord({
     evidenceId: 'ei:v1:test',
     fromState: 'CANONICAL',
     toState: 'OBSERVED',
@@ -245,8 +245,7 @@ test('STEP579 rejects unsupported transition, missing parent, invalid range, and
     previousTransitionHash: null,
     provenance: { block_id: '4663:100:x' },
     committedAt: '2026-09-24T08:00:00.000Z',
-  });
-  assert.throws(() => transition, /TRANSITION_EDGE_INVALID/);
+  }), /TRANSITION_EDGE_INVALID/);
 
   const state = fence.getState();
   state.expiresAt = 0;
@@ -294,6 +293,6 @@ test('STEP579 transition predecessor integrity is fail-closed', async () => {
     fromBlock: 100, toBlock: 100, transitionType: 'INITIAL', generation: '1',
     provenance: { contract: 'STEP-579' }, committedAt: '2026-09-24T08:01:00.000Z',
   });
-  database.db.run("UPDATE sqlite_sequence SET seq=seq WHERE name='canonical_transitions'");
+  // No AUTOINCREMENT state exists; predecessor verification is exercised by the persisted chain itself.
   assert.equal(readTransitions(database, evidenceId)[0].sequence, '0');
 });
