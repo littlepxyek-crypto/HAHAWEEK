@@ -1,3 +1,17 @@
+## STEP 576 — Runtime Canonical Decision Input Contract — VERIFIED / FROZEN / RECONCILED
+
+- Starting/main commit inspected: `5ef01879cb201351bc36fc5b1a0441179b32a936`.
+- Contract: `docs/STEP_576_RUNTIME_CANONICAL_DECISION_INPUT_CONTRACT_V0_1.md`.
+- PR #335 merged to main as `9f428631341aca2394b7bc80d7fb024e1e08ea3c`.
+- PR-head `f524207eb102091d5e799a42a2beeaf5ff0b6641`: HAHAWEEK Tests `35983592391` SUCCESS; HAHAWEEK Security and Regression `35983592444` SUCCESS.
+- Review/comment evidence recorded on PR #335; no self-approval claim.
+- Contract freezes confirmation-safe canonical block-header chain evidence as the runtime canonical-decision input, exact decision-head/range semantics, parent linkage, immutable branch history, persistence/recovery, replay, writer-fence, conflict/fail-closed behavior, and golden-vector requirements.
+- No production runtime code, schema, cursor, historical evidence, STEP 563, STEP 568, F-03 authority, or V4 activation changed.
+- Exact merge commit `9f428631341aca2394b7bc80d7fb024e1e08ea3c` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
+- Reconciliation: `docs/STEP_576_RUNTIME_CANONICAL_DECISION_INPUT_RECONCILIATION_V0_1.md`.
+- STEP 576 is VERIFIED / FROZEN / RECONCILED.
+- Next STEP: STEP 577 — Runtime Canonical Decision Input Implementation Design & Analysis.
+
 ## STEP 575 — Runtime Canonical Decision Input / Lineage Implementation Readiness Analysis — BLOCKED / RECONCILED
 
 - Starting/main commit inspected: `ea6a8eff32b5c45d43e6ffed575db9c43ae7ff36`.
