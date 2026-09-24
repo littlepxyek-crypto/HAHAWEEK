@@ -97,12 +97,19 @@ function appendUnique(log, chainId, options = {}) {
     captured_at: new Date().toISOString(),
   };
 
+  const digest = rawEventDigest(record);
+
+  if (ids.has(id)) {
+    if (ids.get(id) !== digest) throw new Error('INTEGRITY_CONFLICT');
+    return { inserted: false, eventId: id, digest, status: 'IDEMPOTENT' };
+  }
+
   fs.appendFileSync(rawFile, JSON.stringify(record) + '\n');
 
   ids.set(id, digest);
   indexedFileSignature = getFileSignature(rawFile);
 
-  return { inserted: true, eventId: id };
+  return { inserted: true, eventId: id, digest, status: 'INSERTED' };
 }
 
 module.exports = {
