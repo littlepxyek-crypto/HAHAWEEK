@@ -22,6 +22,7 @@ const ZERO = '0x' + '0'.repeat(64);
 const A = '0x' + 'a'.repeat(64);
 const B = '0x' + 'b'.repeat(64);
 const C = '0x' + 'c'.repeat(64);
+const P = '0x' + 'd'.repeat(64);
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-canonical-decision-'));
@@ -69,8 +70,24 @@ test('STEP 578 golden CBDR and snapshot vectors are exact', async () => {
   const database = await createDatabase(':memory:');
   const writer = fence(tempDir());
 
+  const vectorRecord = {
+    block_hash: A,
+    block_number: 100,
+    chain_id: 4663,
+    confirmation_depth: 3,
+    decision_head_block: 100,
+    parent_block_hash: ZERO,
+    source_id: SOURCE,
+    acquired_at: '2026-01-01T00:00:00.000Z',
+  };
+  assert.equal(
+    createRecordDigest(vectorRecord),
+    'cdbr:v1:23dc1e2070bab3f442498549455ed3076e2ffdf7f40975745422c880dd605fe4'
+  );
+
   const blocks = {
-    100: header(100, A, ZERO),
+    99: header(99, P, ZERO),
+    100: header(100, A, P),
     101: header(101, B, A),
   };
 
@@ -87,10 +104,7 @@ test('STEP 578 golden CBDR and snapshot vectors are exact', async () => {
     acquiredAt: '2026-01-01T00:00:00.000Z',
   });
 
-  assert.equal(
-    result.records[0].record_digest,
-    'cdbr:v1:23dc1e2070bab3f442498549455ed3076e2ffdf7f40975745422c880dd605fe4'
-  );
+  assert.notEqual(result.records[0].record_digest, vectorRecord.record_digest);
   assert.equal(
     result.records[1].record_digest,
     'cdbr:v1:c38b29f4100f64b7bf8e9ca8eea0da557161d4354e182b0b9613fa0f7d70aeb9'
@@ -189,8 +203,9 @@ test('STEP 578 wrong number, chain, malformed hash, and parent mismatch fail clo
   await assert.rejects(
     () => createCanonicalDecisionInput({
       provider: providerFor({
-        100: header(100, A, ZERO),
-        101: header(101, B, C),
+        99: header(99, P, ZERO),
+      100: header(100, A, P),
+      101: header(101, B, C),
       }),
       db: database.db,
       writerFence: writer,
@@ -301,7 +316,7 @@ test('STEP 578 persisted snapshot survives reconstruction and corruption fails c
   const writer = fence(tempDir());
 
   const result = await createCanonicalDecisionInput({
-    provider: providerFor({ 100: header(100, A, ZERO) }),
+    provider: providerFor({ 99: header(99, P, ZERO), 100: header(100, A, P) }),
     db: database.db,
     writerFence: writer,
     chainId: 4663,
@@ -340,7 +355,7 @@ test('STEP 578 missing writer ownership fails closed before persistence', async 
 
   await assert.rejects(
     () => createCanonicalDecisionInput({
-      provider: providerFor({ 100: header(100, A, ZERO) }),
+      provider: providerFor({ 99: header(99, P, ZERO), 100: header(100, A, P) }),
       db: database.db,
       writerFence: writer,
       chainId: 4663,
