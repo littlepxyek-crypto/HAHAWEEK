@@ -119,7 +119,7 @@ for (const [field, value, error] of [
 test('STEP 545 identical authority replay is deterministic', async () => {
   const source = makeAuthority(101);
   const { engine, cursor } = makeEngine({
-    sourceFactory: () => source,
+    sourceFactory: () => source.authority,
   });
 
   const first = await engine.runOnce();
