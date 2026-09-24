@@ -458,6 +458,9 @@ test('F-03 ambiguous exact-range chains fail closed', async () => {
 
   second.segment.segmentId = 'segment-2';
   second.manifest.manifestId = 'manifest-2';
+  second.manifest.manifestDigest = 'c'.repeat(64);
+  second.checkpoint.manifestDigest = second.manifest.manifestDigest;
+  second.checkpoint.checkpointDigest = checkpointDigestFor(second.checkpoint.generation, second.checkpoint.manifestDigest);
   second.manifest.segmentId = second.segment.segmentId;
   second.checkpoint.manifestId = second.manifest.manifestId;
   second.segment.provenance = provenance({
