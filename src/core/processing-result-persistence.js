@@ -326,7 +326,7 @@ function persistProcessingResult({ database, processingResult, writerFence }) {
   );
   const ordered = members.map((member, ordinal) => ({ ...member, ordinal }));
   const digest = hashEvidenceSet(result, ordered);
-  const provenanceJson = canonicalUtf8(result.provenance);
+  const provenanceJson = canonicalUtf8(result.provenance).toString('utf8');
 
   const existing = database.db.exec(
     'SELECT result_id, processing_execution_id, parent_result_id, transition_type, from_block, to_block, generation, status, canonicality_status, empty_result, evidence_set_digest, provenance_json, committed_at FROM processing_results WHERE result_id = ?',
