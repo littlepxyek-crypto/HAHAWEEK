@@ -1,3 +1,15 @@
+## STEP 565 — V4 Runtime Processing-Result / Generation Context Boundary — VERIFIED / RECONCILED
+
+- STEP 565 contract/analysis/design PR #313 merged to main as `095c15cbac05c23f64e61adfde751f75cfe10a1e`.
+- PR-head `6f5919d78855aa26261155f3e4dac0246ab96dad`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS; CodeQL NEUTRAL.
+- Repository inspection confirmed canonical_evidence and F-03 segment/manifest/checkpoint persistence exist, but no first-class durable processing-result context currently carries processing-result identity, generation, explicit canonical acceptance, evidence membership, and reorg/canonicality lineage as required.
+- STEP 565 freezes the missing boundary rather than manufacturing semantics from cursor, timestamp, writer fence, expected authority, checkpoint digest, randomness, or hash truncation.
+- No production code, schema, cursor, evidence, authority, or V4 activation was changed.
+- Exact merge commit `095c15cbac05c23f64e61adfde751f75cfe10a1e` has no associated PR-triggered workflow runs/statuses at reconciliation time; no post-merge CI GREEN is claimed.
+- Reconciliation: `docs/STEP_565_V4_RUNTIME_PROCESSING_RESULT_GENERATION_CONTEXT_RECONCILIATION_V0_1.md`.
+- V4 production activation remains INACTIVE.
+- Next STEP: STEP 566 — Durable Processing-Result / Generation Persistence Contract.
+
 ## STEP 564 — V4 Evidence Commitment & Generation Derivation Implementation — VERIFIED / RECONCILED
 
 - STEP 564 implementation PR #311 merged to `main` as `78f7f0b1ec5a3c2776e9dd4ed21a32b3849b1dbf`.
