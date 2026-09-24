@@ -1,3 +1,19 @@
+## STEP 594 — Canonical System Definition — VERIFIED / RECONCILED
+
+- Contract: `docs/STEP_594_CANONICAL_SYSTEM_DEFINITION_CONTRACT_V0_1.md`.
+- Contract PR #379 merged as `ef611ddac41832ffccaa4b7d91039b42e72db8db`.
+- Exact contract merge checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Reconciliation: `docs/STEP_594_CANONICAL_SYSTEM_DEFINITION_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #380 merged as `2172f6e0cc5acff3ce009056be9292528ecfa799`.
+- Exact reconciliation merge checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Canonical definition is frozen as documentation/contract only: HAHAWEEK is an evidence-first blockchain research and engineering system for reconstructing early on-chain formations from preserved evidence through deterministic acquisition, canonical processing, lineage, validation, durable processing results, and auditable derived outputs.
+- Authoritative foundation remains preserved evidence and verified processing state; existing semantic owners for canonical decision, lineage/transition/generation, durable processing-result verification, processing context, authority, and cursor remain unchanged.
+- Operator Acceptance remains repository-grounded; no invented command/procedure was introduced.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No raw/canonical evidence mutation, cursor advancement, authority grant, automated action/trading, schema migration, new dependency, new writer/authority/cursor semantics, historical rewrite, evidence deletion, or V4 activation occurred.
+- V4 production activation remains INACTIVE; Gate 2 is not implied.
+- Next STEP: STEP 595.
+
 ## STEP 593 — Operator Operability Execution Verification — VERIFIED / RECONCILED
 
 - Contract: `docs/STEP_593_OPERATOR_OPERABILITY_EXECUTION_VERIFICATION_CONTRACT_V0_1.md`.
