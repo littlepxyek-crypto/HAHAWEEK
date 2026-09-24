@@ -1,3 +1,18 @@
+## STEP 561 — V4 Submitted Authority Producer Contract — VERIFIED / FROZEN
+
+- STEP 561 contract PR #305 merged to `main` as `996d7d1633bb67da555584b11677a625bc8b05f6`.
+- Contract commit: `60dfd2772f0006799e581cc97421711744119f1a`.
+- PR-head HAHAWEEK Tests run `35973363154` completed successfully.
+- PR-head HAHAWEEK Security and Regression run `35973363572` completed successfully.
+- Contract defines the missing independent submitted/live authority producer boundary identified by STEP 560.
+- Contract preserves source separation between submitted/live authority and durable F-03 expected authority, exact range/cursor semantics, cryptographic binding, durability ordering, recovery/reorg/concurrency fail-closed behavior, and inactive V4 activation.
+- No production code, cursor semantics, historical evidence, RPC/provider behavior, schema, or V4 activation was changed.
+- Formal self-approval was not possible because the PR owner cannot approve their own PR; review/comment evidence is recorded.
+- Exact workflow lookup for merge commit `996d7d1633bb67da555584b11677a625bc8b05f6` returned no associated workflow runs at reconciliation time; no post-merge CI GREEN result is claimed.
+- Reconciliation document: `docs/STEP_561_V4_SUBMITTED_AUTHORITY_PRODUCER_CONTRACT_RECONCILIATION_V0_1.md`.
+- STEP 561 is VERIFIED / FROZEN.
+- Next STEP: STEP 562 — V4 Submitted Authority Producer Implementation.
+
 ## STEP 560 — V4 Production Implementation Boundary Finding — BLOCKED / RECONCILED
 
 - STEP 560 analysis PR #303 merged to `main` as `0217bf88d33392adf5d155d55e066249fbc1044c`.
