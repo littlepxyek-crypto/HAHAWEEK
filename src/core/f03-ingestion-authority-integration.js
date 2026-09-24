@@ -1,15 +1,26 @@
 'use strict';
 
 /**
- * STEP 529–545 — production-boundary authority adapter.
+ * STEP 529–547 — production-boundary authority adapter.
  *
  * The adapter remains the fail-closed authority gate immediately before
- * cursor advancement. STEP 545 requires cryptographic binding validation
- * against an independently supplied expected authority commitment.
+ * cursor advancement. STEP 547 requires the expected authority commitments
+ * to come from a distinct explicit source for the exact processed range.
  */
 
-function createAuthorityGate({ authorityFactory, authorityValidator, authorityBindingValidator }) {
+function createAuthorityGate({
+  authorityFactory,
+  expectedAuthorityFactory,
+  authorityValidator,
+  authorityBindingValidator,
+}) {
   if (typeof authorityFactory !== 'function') throw new Error('AUTHORITY_FACTORY_REQUIRED');
+  if (typeof expectedAuthorityFactory !== 'function') {
+    throw new Error('AUTHORITY_EXPECTED_SOURCE_REQUIRED');
+  }
+  if (authorityFactory === expectedAuthorityFactory) {
+    throw new Error('AUTHORITY_EXPECTED_SOURCE_MUST_BE_DISTINCT');
+  }
   if (typeof authorityValidator !== 'function') throw new Error('AUTHORITY_VALIDATOR_REQUIRED');
   if (typeof authorityBindingValidator !== 'function') {
     throw new Error('AUTHORITY_BINDING_VALIDATOR_REQUIRED');
@@ -18,16 +29,29 @@ function createAuthorityGate({ authorityFactory, authorityValidator, authorityBi
   return ({ fromBlock, toBlock, checkpointCommitted }) => {
     if (checkpointCommitted !== true) throw new Error('CHECKPOINT_NOT_COMMITTED');
 
-    const source = authorityFactory({ fromBlock, toBlock });
+    const authority = authorityFactory({ fromBlock, toBlock });
+    const expected = expectedAuthorityFactory({ fromBlock, toBlock });
 
-    if (!source || typeof source !== 'object' || !source.authority || !source.expected) {
-      throw new Error('AUTHORITY_BINDING_SOURCE_REQUIRED');
+    if (!authority || typeof authority !== 'object') {
+      throw new Error('AUTHORITY_SOURCE_INVALID');
     }
 
-    const authority = authorityValidator(source.authority);
-    authorityBindingValidator(source.authority, source.expected);
+    if (!expected || typeof expected !== 'object') {
+      throw new Error('AUTHORITY_EXPECTED_SOURCE_INVALID');
+    }
 
-    return authority;
+    if (authority === expected) {
+      throw new Error('AUTHORITY_EXPECTED_SOURCE_SELF_REFERENCE');
+    }
+
+    if (authority.cursorBlock !== toBlock || expected.cursorBlock !== toBlock) {
+      throw new Error('AUTHORITY_RANGE_MISMATCH');
+    }
+
+    const validated = authorityValidator(authority);
+    authorityBindingValidator(authority, expected);
+
+    return validated;
   };
 }
 
