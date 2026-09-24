@@ -27,7 +27,7 @@ test('raw evidence schema exposes canonical block location fields', async () => 
     "SELECT value FROM schema_meta WHERE key = 'schema_version'"
   )[0].values[0][0];
 
-  assert.equal(version, '5');
+  assert.equal(version, '6');
   database.close();
 });
 
