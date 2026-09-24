@@ -377,7 +377,10 @@ function createBaseSchema(db) {
     CANONICAL_DECISION_DDL.records,
     CANONICAL_DECISION_DDL.snapshots,
     CANONICAL_DECISION_DDL.blocks,
-  ].join('\n'));
+    RUNTIME_LINEAGE_DDL.transitions,
+    RUNTIME_LINEAGE_DDL.lineage,
+    RUNTIME_LINEAGE_DDL.triggers,
+  ].join('\\n'));
 }
 
 function migrateV3ToV4(db) {
@@ -592,21 +595,35 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       assertProcessingResultSchema(db);
       migrateV5ToV6(db);
       assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
     } else if (version === 4) {
       migrateV4ToV5(db);
       migrateV5ToV6(db);
       assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
     } else if (version === 5) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
       assertProcessingResultSchema(db);
       migrateV5ToV6(db);
       assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
     } else if (version === 6) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
       assertProcessingResultSchema(db);
       assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
+    } else if (version === 7) {
+      assertRequiredBaseSchema(db);
+      assertF03Schema(db);
+      assertProcessingResultSchema(db);
+      assertCanonicalDecisionSchema(db);
+      assertRuntimeLineageSchema(db);
     } else {
       throw new Error('UNSUPPORTED_SCHEMA_VERSION');
     }
@@ -690,6 +707,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
         assertF03Schema(db);
         assertProcessingResultSchema(db);
         assertCanonicalDecisionSchema(db);
+        assertRuntimeLineageSchema(db);
       }
     },
     close() {
