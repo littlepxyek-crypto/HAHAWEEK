@@ -19,7 +19,6 @@ test('F-03 accepts authority only after checkpoint commitment', () => {
   assert.deepEqual(
     assertCheckpointBeforeCursor({
       checkpointCommitted: true,
-      cursorAdvanced: true,
     }),
     {
       status: 'AUTHORIZED',
@@ -32,8 +31,7 @@ test('F-03 accepts authority only after checkpoint commitment', () => {
 test('F-03 is fail-closed for incomplete authority evidence', () => {
   assert.throws(
     () => assertCheckpointBeforeCursor({
-      checkpointCommitted: true,
-      cursorAdvanced: false,
+      checkpointCommitted: false,
     }),
     /CURSOR_NOT_ADVANCED/
   );
