@@ -70,7 +70,7 @@ function createRelevantLogFilter() {
   };
 }
 
-async function createEngine({ authorityFactory } = {}) {
+async function createEngine({ authorityFactory, expectedAuthorityFactory } = {}) {
   const provider = createProvider();
   const writerFence = createWriterFence();
   writerFence.acquire();
@@ -159,6 +159,9 @@ async function createEngine({ authorityFactory } = {}) {
   const productionAuthorityFactory = authorityFactory || (() => {
     throw new Error('AUTHORITY_SOURCE_REQUIRED');
   });
+  const productionExpectedAuthorityFactory = expectedAuthorityFactory || (() => {
+    throw new Error('AUTHORITY_EXPECTED_SOURCE_REQUIRED');
+  });
 
   const ingestion = new IngestionEngine({
     provider,
@@ -170,6 +173,7 @@ async function createEngine({ authorityFactory } = {}) {
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,
+      expectedAuthorityFactory: productionExpectedAuthorityFactory,
       authorityValidator: assertProductionAuthority,
       authorityBindingValidator: assertAuthorityBinding,
     }),
