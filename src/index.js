@@ -193,6 +193,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
       expectedAuthorityFactory: productionExpectedAuthorityFactory,
       authorityValidator: assertProductionAuthority,
       authorityBindingValidator: assertAuthorityBinding,
+      writerFence,
     }),
   });
 
