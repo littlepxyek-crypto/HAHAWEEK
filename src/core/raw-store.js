@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
+const { rawEventDigest } = require('./raw-event-digest');
 
 const DATA_DIR =
   process.env.HAHAWEEK_DATA_DIR || path.join(process.cwd(), 'data');
@@ -33,7 +34,7 @@ function getFileSignature(rawFile = RAW_FILE) {
 }
 
 function buildEventIndex(rawFile = RAW_FILE) {
-  const ids = new Set();
+  const ids = new Map();
 
   if (fs.existsSync(rawFile)) {
     const content = fs.readFileSync(rawFile, 'utf8');
@@ -43,7 +44,7 @@ function buildEventIndex(rawFile = RAW_FILE) {
 
       try {
         const record = JSON.parse(line);
-        if (record.event_id) ids.add(record.event_id);
+        if (record.event_id) ids.set(record.event_id, rawEventDigest(record));
       } catch {
         // Preserve the append-only raw file if a historical line is malformed.
       }
@@ -81,10 +82,6 @@ function appendUnique(log, chainId, options = {}) {
 
   const id = eventId(log, chainId);
   const ids = ensureEventIndex(rawFile);
-
-  if (ids.has(id)) {
-    return { inserted: false, eventId: id };
-  }
 
   const record = {
     event_id: id,
