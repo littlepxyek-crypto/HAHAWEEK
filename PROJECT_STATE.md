@@ -1,3 +1,16 @@
+## STEP 520 — Design Gate 2 Control Reconciliation — VERIFIED / FROZEN
+
+- STEP 519 Gate 2 re-review contract PR #235 merged to `main` as `76b44a14408f1bd80fb6625e97f3b3639a1f04df`.
+- PR #235 head `e9f7305394e6be233f84704b0e71f8f1fda3407d` passed HAHAWEEK Tests and HAHAWEEK Security and Regression.
+- Exact post-merge workflow runs for `76b44a14408f1bd80fb6625e97f3b3639a1f04df` were unavailable through the workflow endpoint at reconciliation time; no post-merge GREEN result is claimed.
+- Reconciliation records F-01, F-02, F-04 and F-05 as VERIFIED / FROZEN within their audited executable/offline evidence boundaries.
+- F-03 remains CONDITIONAL because production V4 authority cutover remains unproven.
+- H-01, H-02, H-03, H-04 and H-05 are VERIFIED / FROZEN within their previously reconciled evidence boundaries.
+- Gate 2 remains NOT PASSED because the acceptance condition requiring enforceable legacy/V4 authority cutover is not yet evidenced, and F-03 remains conditional.
+- No production V4 activation, RPC/provider change, cursor/checkpoint authority change, SQLite migration, historical rewrite/deletion, or production evidence mutation was introduced.
+- Historical project-state entries remain preserved.
+- Any future semantic change requires a new reviewed contract/step.
+
 ## STEP 518 — F-05 State Reconciliation — VERIFIED / FROZEN
 
 - STEP 516 F-05 RPC Acquisition Provenance Contract PR #232 merged to `main` as `f5563a9786294c5c801d98a483622f39444f3c1d`.
