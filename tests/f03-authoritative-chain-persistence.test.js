@@ -143,7 +143,7 @@ async function createFileDatabase(dir, filename = 'hahaweek.sqlite') {
   return { ...authority, database };
 }
 
-test('F-03 fresh database is schema 4 with all authoritative-chain tables', async () => {
+test('F-03 fresh database is schema 5 with all authoritative-chain tables', async () => {
   const dir = tempDir();
   const { database, writerFence } = await createFileDatabase(dir);
 
