@@ -1,3 +1,17 @@
+## STEP 563 — V4 Evidence Commitment & Generation Derivation Contract — VERIFIED / FROZEN
+
+- STEP 563 contract PR #309 merged to `main` as `0090484f2f800cb6aa6723a1270c006026da198d`.
+- Contract commit: `7061215535334d6ed2065c562ee21eb953ac87e0`.
+- PR-head HAHAWEEK Tests run `35974061794` completed successfully.
+- PR-head HAHAWEEK Security and Regression run `35974061824` completed successfully.
+- The contract freezes exact-range canonical evidence selection/order, domain-separated segment leaf/segment commitments, deterministic manifest commitments, reuse of existing F-03 checkpoint derivation, explicit generation supplied by canonical processing result/context, provenance, replay, reorg, concurrency, and fail-closed boundaries.
+- Generation is not manufactured by the submitted authority producer and cannot be copied from durable expected authority, cursor, wall-clock time, writer-fence number, or arbitrary hash truncation.
+- No production code, cursor state, RPC/provider behavior, SQLite schema, historical evidence, or V4 activation was changed.
+- Exact workflow lookup for merge commit `0090484f2f800cb6aa6723a1270c006026da198d` returned no associated workflow runs; no post-merge CI GREEN result is claimed.
+- Reconciliation: `docs/STEP_563_V4_EVIDENCE_COMMITMENT_GENERATION_DERIVATION_RECONCILIATION_V0_1.md`.
+- STEP 563 is VERIFIED / FROZEN within the contract acceptance boundary.
+- Next STEP: STEP 564 — V4 Evidence Commitment & Generation Derivation Implementation.
+
 ## STEP 562 — V4 Submitted Authority Producer Implementation — BLOCKED / RECONCILED
 
 - STEP 562 analysis PR #307 merged to `main` as `a86e44720a33d067b668ebc70c5681bfed80b510`.
