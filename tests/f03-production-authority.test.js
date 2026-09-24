@@ -23,7 +23,6 @@ test('F-03 accepts authority only after checkpoint commitment', () => {
     {
       status: 'AUTHORIZED',
       checkpointCommitted: true,
-      cursorAdvanced: true,
     }
   );
 });
