@@ -33,7 +33,7 @@ function makeEngine({authorityFactory, expectedAuthorityFactory, cursor}) {
     },
     expectedAuthorityFactory: ({fromBlock,toBlock}) => {
       const value = expectedAuthorityFactory({fromBlock,toBlock});
-      return value ? {...value,fromBlock,toBlock} : value;
+      return value ? {...value,fromBlock:value.fromBlock ?? fromBlock,toBlock:value.toBlock ?? toBlock} : value;
     },
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
