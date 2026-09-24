@@ -1,3 +1,16 @@
+## STEP 518 — F-05 State Reconciliation — VERIFIED / FROZEN
+
+- STEP 516 F-05 RPC Acquisition Provenance Contract PR #232 merged to `main` as `f5563a9786294c5c801d98a483622f39444f3c1d`.
+- STEP 517 F-05 independent RPC provenance verifier PR #233 merged to `main` as `9f73c6dca3ce1bcd50a84d84a11a3046aa5ff9d4`.
+- Corrected PR-head commit `61cc94a72ce4fc0f64441067542a3beb06163d8e` passed HAHAWEEK Tests and HAHAWEEK Security and Regression.
+- F-05 evidence covers explicit provider/endpoint identity, chain identity, request/page identity, acquisition context, response digest, deterministic normalization linkage, block/receipt cross-checks, deterministic replay, same-identity/different-digest integrity conflict, incomplete provenance, mismatch failure, and provider/network failure fail-closed behavior.
+- The verifier remains offline and deterministic. It does not change live RPC ingestion, provider selection, cursor/checkpoint authority, SQLite schema, production evidence, or historical artifacts.
+- Exact post-merge workflow evidence for merge commit `9f73c6dca3ce1bcd50a84d84a11a3046aa5ff9d4` was unavailable at reconciliation time; therefore no exact post-merge GREEN result is claimed.
+- F-05 is reconciled as VERIFIED / FROZEN within the available executable evidence boundary.
+- Design Gate 2 remains NOT PASSED because the Gate 2 state document has not yet established all F/H controls as closed or dispositioned for final acceptance.
+- Historical project-state entries remain preserved below this entry.
+- Any future F-05 semantic change requires a new reviewed contract/step.
+
 ## STEP 515 — F-04 State Reconciliation — VERIFIED / FROZEN
 
 - STEP 513 F-04 Legacy Migration Verification Contract PR #229 merged to main as `811d0acc531a847e06e486ff35549e23285b8eda`.
