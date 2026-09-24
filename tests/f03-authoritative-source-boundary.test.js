@@ -91,12 +91,6 @@ test('STEP 547 rejects a missing expected source before cursor advancement', asy
 
 test('STEP 547 rejects self-derived expected authority', () => {
   const source = makeAuthority(101).authority;
-  const gate = createAuthorityGate({
-    authorityFactory: () => ({...source,fromBlock:101,toBlock:101}),
-    expectedAuthorityFactory: () => ({...source,fromBlock:101,toBlock:101}),
-    authorityValidator: assertProductionAuthority,
-    authorityBindingValidator: assertAuthorityBinding,
-  });
   const expected = source;
   const selfGate = createAuthorityGate({
     authorityFactory: () => expected,
@@ -108,8 +102,7 @@ test('STEP 547 rejects self-derived expected authority', () => {
     () => selfGate({fromBlock:101,toBlock:101,checkpointCommitted:true}),
     /AUTHORITY_EXPECTED_SOURCE_SELF_REFERENCE/
   );
-  assert.equal(typeof gate, 'function');
-  return;
+
 
   await assert.rejects(engine.runOnce(), /AUTHORITY_EXPECTED_SOURCE_SELF_REFERENCE/);
   assert.equal(c.get(), 100);
