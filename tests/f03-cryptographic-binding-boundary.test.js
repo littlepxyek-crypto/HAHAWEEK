@@ -89,7 +89,7 @@ test('STEP 545 rejects tampered binding before cursor advancement', async () => 
   source.authority.bindingDigest = 'c'.repeat(64);
 
   const { engine, cursor } = makeEngine({
-    sourceFactory: () => source,
+    sourceFactory: () => source.authority,
   });
 
   await assert.rejects(engine.runOnce(), /AUTHORITY_BINDING_CONFLICT/);
