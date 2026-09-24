@@ -26,8 +26,20 @@ function createAuthorityGate({
     throw new Error('AUTHORITY_BINDING_VALIDATOR_REQUIRED');
   }
 
-  return ({ fromBlock, toBlock, checkpointCommitted }) => {
+  return ({ fromBlock, toBlock, checkpointCommitted, processingContext }) => {
     if (checkpointCommitted !== true) throw new Error('CHECKPOINT_NOT_COMMITTED');
+    if (!processingContext || typeof processingContext !== 'object') {
+      throw new Error('PROCESSING_CONTEXT_MISSING');
+    }
+    if (processingContext.status !== 'VERIFIED') {
+      throw new Error('PROCESSING_CONTEXT_NOT_VERIFIED');
+    }
+    if (processingContext.fromBlock !== fromBlock || processingContext.toBlock !== toBlock) {
+      throw new Error('PROCESSING_CONTEXT_RANGE_MISMATCH');
+    }
+    if (typeof processingContext.generation !== 'string' || processingContext.generation.length === 0) {
+      throw new Error('PROCESSING_CONTEXT_GENERATION_MISSING');
+    }
 
     const authority = authorityFactory({ fromBlock, toBlock });
     const expected = expectedAuthorityFactory({ fromBlock, toBlock });
@@ -55,6 +67,13 @@ function createAuthorityGate({
 
     const validated = authorityValidator(authority);
     authorityBindingValidator(authority, expected);
+
+    if (validated.generation !== processingContext.generation) {
+      throw new Error('AUTHORITY_GENERATION_CONTEXT_MISMATCH');
+    }
+    if (validated.cursorBlock !== processingContext.toBlock) {
+      throw new Error('AUTHORITY_CURSOR_CONTEXT_MISMATCH');
+    }
 
     return validated;
   };
