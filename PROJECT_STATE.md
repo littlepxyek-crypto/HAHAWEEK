@@ -1,3 +1,20 @@
+## STEP 592 — Operator Operability & Reproducible Runbook — VERIFIED / RECONCILED
+
+- Contract: `docs/STEP_592_OPERATOR_OPERABILITY_REPRODUCIBLE_RUNBOOK_CONTRACT_V0_1.md`.
+- Contract commit: `fba160e2bb6f2ae45fd46b8ab8a18272d0179c53`.
+- Contract PR #373 merged as `359a7a9e5557126577d09cdb5aa090293826cfb5`.
+- Reconciliation: `docs/STEP_592_OPERATOR_OPERABILITY_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #374 merged as `0d61dc27b5ed07a8ad3a3ea5b3b9e8ac75bf5420`.
+- Exact reconciliation PR-head checks: test SUCCESS; test-and-security SUCCESS; CodeQL SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Exact merge-commit `0d61dc27b5ed07a8ad3a3ea5b3b9e8ac75bf5420` checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Human Operator Acceptance is explicitly frozen: the operator must be able to operate HAHAWEEK reproducibly from repository-grounded procedures without violating frozen technical semantics.
+- No invented command/procedure is authorized; repository remains operational source of truth.
+- Frozen semantic owners, authority boundary, BlockCursor ordering, single-writer fence, fail-closed recovery, historical evidence, and cursor integrity remain unchanged.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No raw/canonical evidence mutation, cursor advancement, authority grant, automated action/trading, historical rewrite, evidence deletion, silent normalization, schema migration, new dependency, or new writer/authority/cursor semantics occurred.
+- V4 production activation remains INACTIVE; Gate 2 is not implied.
+- Next STEP: STEP 593.
+
 ## STEP 591 — Operator Acceptance & Surveillance Compatibility — VERIFIED / RECONCILED
 
 - Contract: `docs/STEP_591_OPERATOR_ACCEPTANCE_SURVEILLANCE_COMPATIBILITY_CONTRACT_V0_1.md`.
