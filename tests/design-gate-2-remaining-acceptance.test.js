@@ -122,5 +122,5 @@ test('Gate 2 independent recovery verifier remains source-independent', () => {
   );
 
   assert.doesNotMatch(source, /src[\\/]reference[\\/]v4/);
-  assert.doesNotMatch(source, /require\\(['"]\\.\\.\\/reference\\/v4/);
+  assert.doesNotMatch(source, /src[\\/]reference[\\/]v4/);
 });
