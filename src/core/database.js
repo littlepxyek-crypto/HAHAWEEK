@@ -343,7 +343,7 @@ function assertProcessingResultSchema(db) {
   }
 }
 
-function createDatabase(filename = DB_FILE, options = {}) {
+async function createDatabase(filename = DB_FILE, options = {}) {
   const legacyWriteBarrier =
     options.legacyWriteBarrier || createLegacyWriteBarrier();
 
