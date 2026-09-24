@@ -699,3 +699,19 @@
 - Offline F-02/F-03 verifiers remain validation boundaries and were not promoted to runtime authority.
 - V4 production activation remains INACTIVE.
 - STEP 571 is the next step: Runtime Canonical Processing / Generation Lineage Boundary Contract.
+
+
+## STEP 571 — Runtime Canonical Processing / Generation Lineage Boundary — VERIFIED / RECONCILED
+
+- Starting repository state inspected at `1cc3bac9515929d68dc4011ce80c35b78b6d4ce4`.
+- Contract: `docs/STEP_571_RUNTIME_CANONICAL_PROCESSING_GENERATION_LINEAGE_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract PR #325 merged as `5a0326b11a1c33f994f6d9f0887be8c15dd721ef`.
+- PR-head HAHAWEEK Security and Regression run #35980950581 passed.
+- PR-head HAHAWEEK Tests run #35980950721 passed.
+- Review comment recorded on PR #325; self-approval was not claimed.
+- Post-merge workflow/status query for exact merge commit returned no associated runs/statuses; no post-merge CI GREEN is claimed.
+- STEP 571 is contract-only. No production code, schema, cursor, historical evidence, frozen commitment formulas, expected-authority path, or V4 activation changed.
+- Existing F-02 transition semantics remain authoritative.
+- Generation remains owned by canonical processing lineage and is never manufactured by persistence, expected authority, cursor, timestamp, writer fence, checkpoint, manifest, randomness, or default values.
+- V4 production activation remains INACTIVE.
+- STEP 572 is next: Runtime Canonical Processing / Generation Lineage Implementation Analysis.
