@@ -99,7 +99,7 @@ function appendUnique(log, chainId, options = {}) {
 
   fs.appendFileSync(rawFile, JSON.stringify(record) + '\n');
 
-  ids.add(id);
+  ids.set(id, digest);
   indexedFileSignature = getFileSignature(rawFile);
 
   return { inserted: true, eventId: id };
