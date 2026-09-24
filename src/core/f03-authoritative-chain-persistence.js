@@ -461,6 +461,11 @@ function commitF03AuthorityChain({ database, writerFence, segment, manifest, che
     if (checkpointClass === 'INTEGRITY_CONFLICT') throw new Error('F03_INTEGRITY_CONFLICT');
     if (checkpointClass === 'NOT_FOUND') insertCheckpoint(database.db, validCheckpoint);
 
+    const fullyIdempotent =
+      segmentClass === 'IDEMPOTENT' &&
+      manifestClass === 'IDEMPOTENT' &&
+      checkpointClass === 'IDEMPOTENT';
+
     const linkedSegment = readOne(
       database.db,
       'SELECT segment_id, from_block, to_block, segment_digest, generation, provenance_json, committed_at FROM f03_segments WHERE segment_id = ?',
@@ -496,7 +501,7 @@ function commitF03AuthorityChain({ database, writerFence, segment, manifest, che
     }
 
     return {
-      status: 'COMMITTED',
+      status: fullyIdempotent ? 'IDEMPOTENT' : 'COMMITTED',
       segmentId: validSegment.segmentId,
       manifestId: validManifest.manifestId,
       checkpointDigest: validCheckpoint.checkpointDigest,

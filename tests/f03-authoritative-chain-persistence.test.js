@@ -267,7 +267,7 @@ test('F-03 identical retry is idempotent and does not duplicate rows', async () 
   });
 
   assert.equal(first.status, 'COMMITTED');
-  assert.equal(second.status, 'COMMITTED');
+  assert.equal(second.status, 'IDEMPOTENT');
   assert.equal(database.db.exec('SELECT COUNT(*) FROM f03_segments')[0].values[0][0], 1);
   assert.equal(database.db.exec('SELECT COUNT(*) FROM f03_manifests')[0].values[0][0], 1);
   assert.equal(database.db.exec('SELECT COUNT(*) FROM f03_checkpoints')[0].values[0][0], 1);
@@ -396,6 +396,177 @@ test('F-03 submitted authority cannot manufacture expected cursor boundary', asy
   );
 
   assert.equal(database.db.exec('SELECT COUNT(*) FROM f03_segments')[0].values[0][0], 0);
+
+  database.close();
+  writerFence.release();
+});
+
+
+test('F-03 read path is SELECT-only and non-mutating', async () => {
+  const dir = tempDir();
+  const { database, writerFence } = await createFileDatabase(dir);
+  const fixture = chainFixture();
+  commitF03AuthorityChain({ database, writerFence, ...fixture });
+
+  const before = database.snapshot();
+  const first = readF03AuthorityChain({ database, fromBlock: 100, toBlock: 109 });
+  const second = readF03AuthorityChain({ database, fromBlock: 100, toBlock: 109 });
+
+  assert.deepEqual(first, second);
+  assert.deepEqual(database.snapshot(), before);
+
+  database.close();
+  writerFence.release();
+});
+
+test('F-03 restart after failed durable export has no durable authority', async () => {
+  const dir = tempDir();
+  const file = path.join(dir, 'failed-export.sqlite');
+  const fixture = chainFixture();
+
+  const first = await createFileDatabase(dir, 'failed-export.sqlite');
+  first.database.save = () => {
+    throw new Error('SIMULATED_DURABLE_SAVE_FAILURE');
+  };
+
+  assert.throws(
+    () => commitF03AuthorityChain({
+      database: first.database,
+      writerFence: first.writerFence,
+      ...fixture,
+    }),
+    /F03_DURABLE_SAVE_FAILED/
+  );
+
+  first.writerFence.release();
+
+  const second = await createFileDatabase(dir, 'failed-export.sqlite');
+  assert.throws(
+    () => readF03AuthorityChain({ database: second.database, fromBlock: 100, toBlock: 109 }),
+    /F03_CHAIN_NOT_FOUND/
+  );
+
+  second.database.close();
+  second.writerFence.release();
+});
+
+test('F-03 ambiguous exact-range chains fail closed', async () => {
+  const dir = tempDir();
+  const { database, writerFence } = await createFileDatabase(dir);
+  const first = chainFixture();
+  const second = chainFixture();
+
+  second.segment.segmentId = 'segment-2';
+  second.manifest.manifestId = 'manifest-2';
+  second.manifest.manifestDigest = 'c'.repeat(64);
+  second.checkpoint.manifestDigest = second.manifest.manifestDigest;
+  second.checkpoint.checkpointDigest = checkpointDigestFor(second.checkpoint.generation, second.checkpoint.manifestDigest);
+  second.manifest.segmentId = second.segment.segmentId;
+  second.checkpoint.manifestId = second.manifest.manifestId;
+  second.segment.provenance = provenance({
+    recordType: 'segment',
+    recordId: second.segment.segmentId,
+    table: 'f03_segments',
+    key: second.segment.segmentId,
+    artifactId: second.segment.segmentId,
+    generation: second.segment.generation,
+    integrityDigest: second.segment.segmentDigest,
+    committedAt: second.segment.committedAt,
+    fromBlock: 100,
+    toBlock: 109,
+  });
+  second.manifest.provenance = provenance({
+    recordType: 'manifest',
+    recordId: second.manifest.manifestId,
+    table: 'f03_manifests',
+    key: second.manifest.manifestId,
+    artifactId: second.manifest.manifestId,
+    upstreamRecordId: second.segment.segmentId,
+    generation: second.manifest.generation,
+    integrityDigest: second.manifest.manifestDigest,
+    committedAt: second.manifest.committedAt,
+  });
+  second.checkpoint.provenance = provenance({
+    recordType: 'checkpoint',
+    recordId: second.checkpoint.checkpointDigest,
+    table: 'f03_checkpoints',
+    key: second.checkpoint.checkpointDigest,
+    artifactId: second.checkpoint.checkpointDigest,
+    upstreamRecordId: second.manifest.manifestId,
+    generation: second.checkpoint.generation,
+    integrityDigest: second.checkpoint.checkpointDigest,
+    committedAt: second.checkpoint.committedAt,
+  });
+
+  commitF03AuthorityChain({ database, writerFence, ...first });
+  commitF03AuthorityChain({ database, writerFence, ...second });
+
+  assert.throws(
+    () => readF03AuthorityChain({ database, fromBlock: 100, toBlock: 109 }),
+    /F03_CHAIN_AMBIGUOUS/
+  );
+
+  database.close();
+  writerFence.release();
+});
+
+test('F-03 missing downstream links fail closed', async () => {
+  const dir = tempDir();
+  const { database, writerFence } = await createFileDatabase(dir);
+  const fixture = chainFixture();
+  commitF03AuthorityChain({ database, writerFence, ...fixture });
+
+  database.db.run('DELETE FROM f03_checkpoints WHERE checkpoint_digest = ?', [fixture.checkpoint.checkpointDigest]);
+  assert.throws(
+    () => readF03AuthorityChain({ database, fromBlock: 100, toBlock: 109 }),
+    /F03_CHECKPOINT_NOT_FOUND/
+  );
+
+  database.close();
+  writerFence.release();
+});
+
+test('F-03 malformed provenance fails before authoritative write', async () => {
+  const dir = tempDir();
+  const { database, writerFence } = await createFileDatabase(dir);
+  const fixture = chainFixture();
+  delete fixture.segment.provenance.integrityDigest;
+
+  assert.throws(
+    () => commitF03AuthorityChain({ database, writerFence, ...fixture }),
+    /F03_PROVENANCE_INTEGRITYDIGEST_MISSING/
+  );
+
+  assert.equal(database.db.exec('SELECT COUNT(*) FROM f03_segments')[0].values[0][0], 0);
+
+  database.close();
+  writerFence.release();
+});
+
+test('F-03 writer fence blocks a competing writer', async () => {
+  const dir = tempDir();
+  const first = createWriterFence({
+    filename: path.join(dir, 'writer-fence-state.json'),
+    ownerId: 'first',
+  });
+  const second = createWriterFence({
+    filename: path.join(dir, 'writer-fence-state.json'),
+    ownerId: 'second',
+  });
+
+  first.acquire();
+  assert.throws(() => second.acquire(), /WRITER_FENCE_BUSY|WRITER_FENCE_HELD/);
+  first.release();
+});
+
+test('F-03 chain commit never creates runtime cursor state', async () => {
+  const dir = tempDir();
+  const { database, writerFence } = await createFileDatabase(dir);
+  const fixture = chainFixture();
+
+  commitF03AuthorityChain({ database, writerFence, ...fixture });
+
+  assert.equal(fs.existsSync(path.join(dir, 'state.json')), false);
 
   database.close();
   writerFence.release();
