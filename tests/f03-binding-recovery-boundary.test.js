@@ -8,7 +8,11 @@ function engineWithAuthority({authorityFactory,authorityValidator,cursor}) {
     provider:{getBlockNumber:async()=>101},cursor,confirmations:0,
     processor:async()=>{},processorRange:async()=>{},
     batchSize:1,maxBatchesPerRun:1,
-    authorityGate:createAuthorityGate({authorityFactory,authorityValidator})
+    authorityGate:createAuthorityGate({
+      authorityFactory,
+      authorityValidator,
+      authorityBindingValidator:()=>({status:'BOUND'})
+    })
   });
 }
 
@@ -17,7 +21,10 @@ test('F-03 boundary rejects manifest/checkpoint binding mismatch',async()=>{
   const cursor={get:()=>cursorValue,advance:n=>{cursorValue=n;}};
   const engine=engineWithAuthority({
     cursor,
-    authorityFactory:()=>({segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:101}),
+    authorityFactory:()=>({
+      authority:{segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:101},
+      expected:{segmentId:'seg-101',manifestDigest:'m102',checkpointDigest:'c102',generation:'g1',cursorBlock:101}
+    }),
     authorityValidator:record=>{
       if(record.manifestDigest!=='m102') throw new Error('AUTHORITY_BINDING_MISMATCH');
       return record;
@@ -32,7 +39,7 @@ test('F-03 boundary recovery reuses deterministic authority and advances once',a
   const authority={segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:101};
   const engine=engineWithAuthority({
     cursor,
-    authorityFactory:()=>authority,
+    authorityFactory:()=>({authority,expected:authority}),
     authorityValidator:record=>{
       attempts++;
       if(attempts===1) throw new Error('AUTHORITY_TRANSIENT_FAILURE');
