@@ -357,16 +357,6 @@ function canonicalEvidenceForRange({ database, evidenceRepository, snapshot, fro
     if (canonical.identity_status !== 'COMPLETE') fail('CANONICAL_EVIDENCE_IDENTITY_INCOMPLETE');
     evidenceRepository.insert(raw, canonical);
     observedEvidence.add(canonical.evidence_id);
-    const previousState = latestState(database, canonical.evidence_id);
-    if (!previousState) {
-      appendTransition(database, {
-        evidenceId: canonical.evidence_id,
-        fromState: 'OBSERVED',
-        toState: 'OBSERVED',
-        provenance: { ...provenance, evidence_id: canonical.evidence_id, block_id: `${raw.chain_id}:${raw.block_number}:${raw.block_hash}` },
-        committedAt,
-      });
-    }
   }
 
   // The frozen F-02 edge set does not permit OBSERVED->ORPHANED.
@@ -384,12 +374,12 @@ function canonicalEvidenceForRange({ database, evidenceRepository, snapshot, fro
     if (acceptedHash === undefined) fail('CANONICAL_DECISION_BLOCK_MISSING');
     const state = latestState(database, evidenceId);
     if (location.block_hash === acceptedHash) {
-      if (state === 'OBSERVED') {
+      if (state === null) {
         appendTransition(database, {
           evidenceId,
           fromState: 'OBSERVED',
           toState: 'CANONICAL',
-          provenance: { ...provenance, evidence_id: evidenceId, block_id: `${record.canonical.chain_id}:${location.block_number}:${location.block_hash}` },
+          provenance: { ...provenance, evidence_id: evidenceId, block_id: String(record.canonical.chain_id) + ':' + String(location.block_number) + ':' + String(location.block_hash) },
           committedAt,
         });
       } else if (state !== 'CANONICAL') {
@@ -404,7 +394,7 @@ function canonicalEvidenceForRange({ database, evidenceRepository, snapshot, fro
         provenance: { ...provenance, evidence_id: evidenceId, block_id: `${record.canonical.chain_id}:${location.block_number}:${location.block_hash}` },
         committedAt,
       });
-    } else if (state !== 'OBSERVED') {
+    } else if (state !== null && state !== 'ORPHANED') {
       fail('CANONICAL_STATE_INVALID');
     }
   }
