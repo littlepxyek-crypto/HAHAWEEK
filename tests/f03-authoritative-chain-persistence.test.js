@@ -303,7 +303,7 @@ test('F-03 identity conflict fails closed without replacement', async () => {
     },
   };
 
-  await assert.rejects(
+  assert.throws(
     () => commitF03AuthorityChain({ database, writerFence, ...conflicting }),
     /F03_INTEGRITY_CONFLICT/
   );
@@ -368,7 +368,7 @@ test('F-03 failed durable save restores pre-commit in-memory state', async () =>
     throw new Error('SIMULATED_DURABLE_SAVE_FAILURE');
   };
 
-  await assert.rejects(
+  assert.throws(
     () => commitF03AuthorityChain({
       database,
       writerFence,
