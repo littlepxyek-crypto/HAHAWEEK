@@ -1,3 +1,22 @@
+## STEP 587 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design — VERIFIED / RECONCILED
+
+- Baseline main commit inspected: `74908d8c44fe181b2beadf3db1547889dce92b98`.
+- Contract PR #359 merged as `74908d8c44fe181b2beadf3db1547889dce92b98`.
+- Analysis: `docs/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
+- Analysis/design PR #360 merged as `e60b8852e148e8d307afaa6648ebca4247109d2b`.
+- PR-head HAHAWEEK Tests run `36005612820`: SUCCESS.
+- PR-head HAHAWEEK Security and Regression run `36005612764`: SUCCESS.
+- PR-head CodeQL dynamic run `36005611546`: SUCCESS.
+- Post-merge HAHAWEEK Tests run `36005789810`: SUCCESS.
+- Post-merge HAHAWEEK Security and Regression run `36005789484`: SUCCESS.
+- Post-merge Push on main / CodeQL run `36005789841`: SUCCESS.
+- Review/comment evidence recorded on PR #360; no self-approval claim.
+- Repository-grounded blocker: INITIAL/REORG_REPLACEMENT generation establishment is not contractually sourced; no production implementation bypassed it.
+- V4 production activation remains INACTIVE.
+- Reconciliation: `docs/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_RECONCILIATION_V0_1.md`.
+- Next STEP: STEP 588 — Runtime Generation Establishment Contract.
+
 ## STEP 586 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design Contract — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `3a5544cfc47d931d2159ebd142cb356bc86a42b4`.
