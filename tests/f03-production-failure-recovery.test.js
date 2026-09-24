@@ -2,88 +2,76 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { createEngine } = require('../src/index');
+const { IngestionEngine } = require('../src/core/ingestion');
+const { createAuthorityGate } = require('../src/core/f03-ingestion-authority-integration');
+const { assertProductionAuthority } = require('../src/core/f03-production-authority-record');
 
-function isolatedEnv() {
-  const fs = require('node:fs');
-  const os = require('node:os');
-  const path = require('node:path');
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-f03-recovery-'));
-  process.env.HAHAWEEK_DATA_DIR = dir;
-  fs.mkdirSync(dir, { recursive: true });
-  process.env.HAHAWEEK_STATE_FILE = path.join(dir, 'state.json');
-  process.env.HAHAWEEK_RAW_FILE = path.join(dir, 'raw-events.jsonl');
-  return dir;
-}
-
-function cleanup(engine) {
-  engine.database.close();
-  engine.writerFence.release();
-  engine.provider.destroy();
+function makeEngine(authorityFactory, cursor) {
+  return new IngestionEngine({
+    provider: { getBlockNumber: async () => 101 },
+    cursor,
+    confirmations: 0,
+    processor: async () => {},
+    processorRange: async () => {},
+    batchSize: 1,
+    maxBatchesPerRun: 1,
+    authorityGate: createAuthorityGate({
+      authorityFactory,
+      authorityValidator: assertProductionAuthority,
+    }),
+  });
 }
 
 test('F-03 production boundary fails closed and preserves cursor on authority rejection', async () => {
-  isolatedEnv();
-  const engine = await createEngine({
-    authorityFactory: () => {
-      throw new Error('AUTHORITY_REJECTED');
+  let cursorValue = 100;
+  const advances = [];
+  const cursor = {
+    get: () => cursorValue,
+    advance: (block) => {
+      advances.push(block);
+      cursorValue = block;
     },
-  });
+  };
 
-  try {
-    assert.throws(
-      () => engine.ingestion.authorityGate({
-        checkpointCommitted: true,
-        fromBlock: 101,
-        toBlock: 101,
-      }),
-      /AUTHORITY_REJECTED/
-    );
-  } finally {
-    cleanup(engine);
-  }
+  const engine = makeEngine(() => {
+    throw new Error('AUTHORITY_REJECTED');
+  }, cursor);
+
+  await assert.rejects(() => engine.runOnce(), /AUTHORITY_REJECTED/);
+  assert.equal(cursorValue, 100);
+  assert.deepEqual(advances, []);
 });
 
 test('F-03 production boundary can retry the same authority range after rejection', async () => {
-  isolatedEnv();
+  let cursorValue = 100;
   let reject = true;
   const seen = [];
-
-  const engine = await createEngine({
-    authorityFactory: ({ fromBlock, toBlock }) => {
-      seen.push([fromBlock, toBlock]);
-      if (reject) throw new Error('AUTHORITY_REJECTED');
-      return {
-        segmentId: `seg-${fromBlock}-${toBlock}`,
-        manifestDigest: 'm101',
-        checkpointDigest: 'c101',
-        generation: 'g1',
-        cursorBlock: toBlock,
-      };
+  const cursor = {
+    get: () => cursorValue,
+    advance: (block) => {
+      cursorValue = block;
     },
-  });
+  };
 
-  try {
-    assert.throws(
-      () => engine.ingestion.authorityGate({
-        checkpointCommitted: true,
-        fromBlock: 101,
-        toBlock: 101,
-      }),
-      /AUTHORITY_REJECTED/
-    );
+  const engine = makeEngine(({ fromBlock, toBlock }) => {
+    seen.push([fromBlock, toBlock]);
+    if (reject) throw new Error('AUTHORITY_REJECTED');
+    return {
+      segmentId: `seg-${fromBlock}-${toBlock}`,
+      manifestDigest: 'm101',
+      checkpointDigest: 'c101',
+      generation: 'g1',
+      cursorBlock: toBlock,
+    };
+  }, cursor);
 
-    reject = false;
+  await assert.rejects(() => engine.runOnce(), /AUTHORITY_REJECTED/);
+  assert.equal(cursorValue, 100);
 
-    const authorized = engine.ingestion.authorityGate({
-      checkpointCommitted: true,
-      fromBlock: 101,
-      toBlock: 101,
-    });
+  reject = false;
+  const result = await engine.runOnce();
 
-    assert.equal(authorized.status, 'AUTHORIZED');
-    assert.deepEqual(seen, [[101, 101], [101, 101]]);
-  } finally {
-    cleanup(engine);
-  }
+  assert.equal(result.cursor, 101);
+  assert.equal(cursorValue, 101);
+  assert.deepEqual(seen, [[101, 101], [101, 101]]);
 });
