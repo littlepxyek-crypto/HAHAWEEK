@@ -1,3 +1,20 @@
+## STEP 581 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design — VERIFIED / RECONCILED
+
+- Contract PR #345 merged as `ea99db0886d03df884f96360d8b5e58fa7cf7495`.
+- Analysis/design PR #346 merged as `f8e84d86dc9fd35d6ebbec9d8236bd202bfa2f20`.
+- Contract: `docs/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
+- Analysis: `docs/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
+- Reconciliation: `docs/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
+- PR #346 final-head HAHAWEEK Tests: SUCCESS.
+- PR #346 final-head HAHAWEEK Security and Regression: SUCCESS.
+- PR #346 final-head V4 golden-vector verification and coverage: SUCCESS.
+- Actual PR #346 diff contains documentation only; no production runtime, schema, cursor, authority, historical evidence, or V4 changes.
+- STEP 581 establishes the implementation sequence: canonical decision snapshot → exact raw ingestion → STEP 579 lineage → STEP 568 durable verification → exact-context authority binding → cursor.
+- Fail-closed requirements for integrity, writer fence, persistence, replay, restart, reorg, concurrency, authority, and cursor are frozen in the design.
+- V4 production activation remains INACTIVE.
+- Next STEP: STEP 582 — Runtime Canonical Lineage / Processing Context Integration Implementation Contract.
+
 ## STEP 580 — Runtime Canonical Lineage / Processing Context Integration Boundary — VERIFIED / RECONCILED
 
 - Contract PR #343 merged to main as `e5c6127e0c545164060b700ede38dff6ef0bfa98`.
