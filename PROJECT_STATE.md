@@ -1,3 +1,23 @@
+## STEP 578 — Runtime Canonical Decision Input Persistence/API Implementation — VERIFIED / RECONCILED
+
+- Baseline main commit inspected: `5e408f0ce097e50ee7c2f09141ce545530b2ccd0`.
+- Implementation: `src/core/canonical-decision-input.js`.
+- Schema upgraded additively from v5 to v6 with canonical decision tables.
+- PR #339 merged to main as `dfb38c1d69cb2531423e54a459686f262d4c75d2`.
+- Initial CI failure was investigated from actual workflow logs and corrected; no production semantics were weakened.
+- Final PR-head test: SUCCESS.
+- Final PR-head test-and-security: SUCCESS.
+- Final PR-head Analyze (actions): SUCCESS.
+- Final PR-head Analyze (javascript-typescript): SUCCESS.
+- Final PR-head CodeQL: SUCCESS.
+- Review/comment evidence recorded on PR #339; no self-approval claim.
+- Exact merge commit post-merge test: SUCCESS; test-and-security: SUCCESS; CodeQL: SUCCESS.
+- Exact merge commit static analyses were still running at reconciliation time; no all-post-merge-static-analysis GREEN claim is made.
+- No STEP 576 contract, STEP 563, STEP 568, cursor, F-03 authority, historical evidence, or V4 activation was changed.
+- Reconciliation: `docs/STEP_578_RUNTIME_CANONICAL_DECISION_INPUT_PERSISTENCE_RECONCILIATION_V0_1.md`.
+- STEP 578 is VERIFIED / RECONCILED.
+- Next STEP: STEP 579 — Runtime Canonical Lineage Integration Implementation.
+
 ## STEP 577 — Runtime Canonical Decision Input Implementation Design & Analysis — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `435c2562cd0c83c096ecc1cb40133bad053b5aa3`.
