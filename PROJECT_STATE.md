@@ -1,3 +1,23 @@
+## STEP 545 — F-03 Cryptographic Binding Boundary Reconciliation — VERIFIED / CONDITIONAL
+
+- STEP 545 contract PR #265 merged to main.
+- STEP 545 implementation PR #266 merged to main as `cc09aefa0552c9f9f865c4d62319e17b8b4c1264`.
+- The implementation enforces STEP 544 cryptographic binding at the existing F-03 ingestion authority gate immediately before cursor advancement.
+- PR-head initial tests failed only because six pre-existing F-03 fixtures had not been adapted to the tightened STEP 545 gate contract; production code was not weakened.
+- Corrected PR-head HAHAWEEK Tests run `35952147779` and HAHAWEEK Security and Regression run `35952147735` completed successfully.
+- Direct evidence covers valid binding, missing/tampered binding, segment/manifest/checkpoint/generation/cursor commitment mismatch, cursor preservation on rejection, and deterministic replay.
+- Exact workflow lookup for merge commit `cc09aefa0552c9f9f865c4d62319e17b8b4c1264` returned no associated PR-triggered workflow runs; no post-merge CI GREEN result is claimed.
+- F-03 remains CONDITIONAL. Gate 2 remains NOT PASSED.
+- No V4 production activation, cursor reset, RPC/provider change, SQLite migration, historical rewrite/deletion, or evidence mutation was introduced.
+- STEP 527–544 historical artifacts remain preserved individually; the prior PROJECT_STATE ledger was stale at STEP 526 and is not rewritten here.
+- Any future semantic F-03 change requires a new reviewed contract/step.
+
+## STEP 527–544 — Historical Continuity Note
+
+- STEP 527–544 were merged after the previous PROJECT_STATE top entry and remain preserved in their individual contracts, implementation/test artifacts, PRs, merge commits, and reconciliation documents.
+- This note intentionally does not rewrite those historical artifacts or fabricate missing post-merge CI evidence.
+- The repository HEAD and individual step artifacts are the source of truth for those completed steps.
+
 ## STEP 526 — F-03 Authority State Reconciliation — CONDITIONAL
 
 - STEP 523 authority-chain completeness contract PR #239 merged to `main`; merge commit: `86a42f2521af5e0d7cdd838f7a46ecc4d6649fae`.
