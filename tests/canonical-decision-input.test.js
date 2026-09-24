@@ -437,7 +437,7 @@ test('STEP 578 schema migrates v5 databases additively through v7', async () => 
   const migrated = await createDatabase(filename);
   assert.equal(
     dbRow(migrated, "SELECT value AS value FROM schema_meta WHERE key = 'schema_version'").value,
-    '6'
+    '7'
   );
   assert.equal(dbRow(migrated, 'SELECT COUNT(*) AS count FROM canonical_block_decisions').count, 0);
   assert.equal(dbRow(migrated, 'SELECT COUNT(*) AS count FROM raw_events').count, 0);
