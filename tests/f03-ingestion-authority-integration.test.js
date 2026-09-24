@@ -27,8 +27,8 @@ function makeSource(cursorBlock = 110) {
 
 function makeGate(factory) {
   return createAuthorityGate({
-    authorityFactory: factory,
-    expectedAuthorityFactory: () => makeSource(110).expected,
+    authorityFactory: ({fromBlock,toBlock}) => ({...factory({fromBlock,toBlock}),fromBlock,toBlock}),
+    expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...makeSource(toBlock).expected,fromBlock,toBlock}),
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
   });
