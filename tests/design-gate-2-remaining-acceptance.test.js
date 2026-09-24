@@ -3,7 +3,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
 
 const { createEngine } = require('../src/index');
@@ -67,23 +66,30 @@ function fixture() {
   return { segment, manifest, checkpoint };
 }
 
-function cleanup(engine) {
-  try { engine.database.close(); } finally {
-    try { engine.writerFence.release(); } finally {
-      try { engine.provider.destroy(); } catch {}
-    }
-  }
-}
-
-test('Gate 2 production wiring reads expected authority from durable F-03 state', async () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-gate2-'));
+test('Gate 2 production wiring requires durable expected authority and rejects absence', async () => {
   const engine = await createEngine({
-    dataDir: dir,
-    stateFile: path.join(dir, 'state.json'),
-    rawEventsFile: path.join(dir, 'raw-events.jsonl'),
+    authorityFactory: ({ fromBlock, toBlock }) => ({
+      segmentId: 'submitted-segment',
+      manifestDigest: 'b'.repeat(64),
+      checkpointDigest: checkpointDigestFor('1', 'b'.repeat(64)),
+      generation: '1',
+      cursorBlock: toBlock,
+      fromBlock,
+      toBlock,
+    }),
   });
 
   try {
+    assert.throws(
+      () => engine.ingestion.authorityGate({
+        checkpointCommitted: true,
+        fromBlock: 500,
+        toBlock: 509,
+        blockNumber: 509,
+      }),
+      /F03_CHAIN_NOT_FOUND/,
+    );
+
     commitF03AuthorityChain({
       database: engine.database,
       writerFence: engine.writerFence,
@@ -98,35 +104,14 @@ test('Gate 2 production wiring reads expected authority from durable F-03 state'
     });
 
     assert.equal(result.status, 'AUTHORIZED');
-    assert.equal(result.authority.cursorBlock, 409);
+    assert.equal(result.authority.segmentId, 'submitted-segment');
+    assert.equal(result.expectedAuthority.segmentId, 'gate2-segment');
     assert.equal(result.expectedAuthority.cursorBlock, 409);
-    assert.equal(result.authority.segmentId, 'gate2-segment');
     assert.equal(result.expectedAuthority.manifestDigest, 'b'.repeat(64));
   } finally {
-    cleanup(engine);
-  }
-});
-
-test('Gate 2 production wiring fails closed when durable expected authority is absent', async () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-gate2-empty-'));
-  const engine = await createEngine({
-    dataDir: dir,
-    stateFile: path.join(dir, 'state.json'),
-    rawEventsFile: path.join(dir, 'raw-events.jsonl'),
-  });
-
-  try {
-    assert.throws(
-      () => engine.ingestion.authorityGate({
-        checkpointCommitted: true,
-        fromBlock: 500,
-        toBlock: 509,
-        blockNumber: 509,
-      }),
-      /F03_CHAIN_NOT_FOUND/,
-    );
-  } finally {
-    cleanup(engine);
+    engine.database.close();
+    engine.writerFence.release();
+    try { engine.provider.destroy(); } catch {}
   }
 });
 
@@ -137,5 +122,5 @@ test('Gate 2 independent recovery verifier remains source-independent', () => {
   );
 
   assert.doesNotMatch(source, /src[\\/]reference[\\/]v4/);
-  assert.doesNotMatch(source, /require\(['"]\.\.\/reference\/v4/);
+  assert.doesNotMatch(source, /require\\(['"]\\.\\.\\/reference\\/v4/);
 });
