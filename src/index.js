@@ -37,7 +37,8 @@ const { appendUnique } = require('./core/raw-store');
 const { loadState, saveState } = require('./core/state');
 const { createLegacyWriteBarrier } = require('./core/legacy-write-freeze');
 const { createWriterFence } = require('./core/single-writer-fence');
-const { assertCheckpointBeforeCursor } = require('./core/f03-production-authority');
+const { assertProductionAuthority } = require('./core/f03-production-authority-record');
+const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
 
 const {
   POOL_MANAGER,
@@ -68,7 +69,7 @@ function createRelevantLogFilter() {
   };
 }
 
-async function createEngine() {
+async function createEngine({ authorityFactory } = {}) {
   const provider = createProvider();
   const writerFence = createWriterFence();
   writerFence.acquire();
@@ -154,6 +155,10 @@ async function createEngine() {
     return result;
   };
 
+  const productionAuthorityFactory = authorityFactory || (() => {
+    throw new Error('AUTHORITY_SOURCE_REQUIRED');
+  });
+
   const ingestion = new IngestionEngine({
     provider,
     cursor,
@@ -162,8 +167,9 @@ async function createEngine() {
     processorRange,
     batchSize: CHUNK_SIZE,
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
-    authorityGate: ({ checkpointCommitted }) => assertCheckpointBeforeCursor({
-      checkpointCommitted,
+    authorityGate: createAuthorityGate({
+      authorityFactory: productionAuthorityFactory,
+      authorityValidator: assertProductionAuthority,
     }),
   });
 
