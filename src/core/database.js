@@ -7,7 +7,55 @@ const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'hahaweek.sqlite');
-const SCHEMA_VERSION = 4;
+const SCHEMA_VERSION = 5;
+
+const PROCESSING_RESULT_DDL = {
+  results: [
+    'CREATE TABLE processing_results (',
+    '  result_id TEXT PRIMARY KEY,',
+    '  processing_execution_id TEXT NOT NULL,',
+    '  parent_result_id TEXT NULL,',
+    '  transition_type TEXT NOT NULL,',
+    '  from_block INTEGER NOT NULL,',
+    '  to_block INTEGER NOT NULL,',
+    '  generation TEXT NOT NULL,',
+    '  status TEXT NOT NULL,',
+    '  canonicality_status TEXT NOT NULL,',
+    '  empty_result INTEGER NOT NULL,',
+    '  evidence_set_digest TEXT NOT NULL,',
+    '  provenance_json TEXT NOT NULL,',
+    '  committed_at TEXT NOT NULL,',
+    '  CHECK (from_block >= 0),',
+    '  CHECK (to_block >= 0),',
+    '  CHECK (from_block <= to_block),',
+    '  CHECK (empty_result IN (0,1)),',
+    "  CHECK (status = 'ACCEPTED'),",
+    "  CHECK (canonicality_status = 'CANONICAL'),",
+    "  CHECK (transition_type IN ('INITIAL','CONTINUATION','REORG_REPLACEMENT')),",
+    '  UNIQUE (processing_execution_id),',
+    '  FOREIGN KEY (parent_result_id) REFERENCES processing_results(result_id)',
+    ');',
+  ].join('\n'),
+  evidence: [
+    'CREATE TABLE processing_result_evidence (',
+    '  result_id TEXT NOT NULL,',
+    '  ordinal INTEGER NOT NULL,',
+    '  evidence_id TEXT NOT NULL,',
+    '  raw_event_id TEXT NOT NULL,',
+    '  identity_hash TEXT NOT NULL,',
+    '  raw_hash TEXT NOT NULL,',
+    '  canonical_hash TEXT NOT NULL,',
+    '  block_number INTEGER NOT NULL,',
+    '  transaction_index INTEGER NOT NULL,',
+    '  log_index INTEGER NOT NULL,',
+    '  PRIMARY KEY (result_id, ordinal),',
+    '  FOREIGN KEY (result_id) REFERENCES processing_results(result_id),',
+    '  FOREIGN KEY (evidence_id) REFERENCES canonical_evidence(evidence_id),',
+    '  FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id),',
+    '  UNIQUE (result_id, evidence_id)',
+    ');',
+  ].join('\n'),
+};
 
 const F03_DDL = {
   segments: [
@@ -223,10 +271,12 @@ function createBaseSchema(db) {
     'CREATE TABLE flow_windows (chain_id INTEGER NOT NULL, pool_id TEXT NOT NULL, window_start INTEGER NOT NULL, window_end INTEGER NOT NULL, swap_count INTEGER NOT NULL, unique_sender_count INTEGER NOT NULL, total_amount0 TEXT NOT NULL, total_amount1 TEXT NOT NULL, first_block INTEGER NOT NULL, last_block INTEGER NOT NULL, first_timestamp INTEGER NOT NULL, last_timestamp INTEGER NOT NULL, PRIMARY KEY (chain_id, pool_id, window_start));',
     'CREATE TABLE ingestion_state (key TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);',
     'CREATE TABLE canonical_evidence (evidence_id TEXT PRIMARY KEY, identity_schema_version TEXT NOT NULL, identity_hash TEXT NOT NULL, raw_event_id TEXT NOT NULL, raw_hash TEXT NOT NULL, canonical_hash TEXT NOT NULL, canonical_json TEXT NOT NULL, interpretation_status TEXT NOT NULL, provenance_json TEXT NOT NULL, stored_at TEXT NOT NULL, FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id));',
-    "INSERT INTO schema_meta (key, value) VALUES ('schema_version', '4');",
+    "INSERT INTO schema_meta (key, value) VALUES ('schema_version', '5');",
     F03_DDL.segments,
     F03_DDL.manifests,
     F03_DDL.checkpoints,
+    PROCESSING_RESULT_DDL.results,
+    PROCESSING_RESULT_DDL.evidence,
   ].join('\n'));
 }
 
@@ -246,6 +296,52 @@ function migrateV3ToV4(db) {
     if (!committed) {
       try { db.run('ROLLBACK'); } catch {}
     }
+  }
+}
+
+function migrateV4ToV5(db) {
+  assertRequiredBaseSchema(db);
+  assertF03Schema(db);
+  db.run('BEGIN');
+  let committed = false;
+  try {
+    db.run(PROCESSING_RESULT_DDL.results);
+    db.run(PROCESSING_RESULT_DDL.evidence);
+    db.run("UPDATE schema_meta SET value = '5' WHERE key = 'schema_version'");
+    db.run('COMMIT');
+    committed = true;
+  } finally {
+    if (!committed) {
+      try { db.run('ROLLBACK'); } catch {}
+    }
+  }
+}
+
+function assertProcessingResultSchema(db) {
+  if (!hasTable(db, 'processing_results') || !hasTable(db, 'processing_result_evidence')) {
+    throw new Error('PROCESSING_RESULT_TABLE_MISSING');
+  }
+  const resultColumns = db.exec('PRAGMA table_info(processing_results)')[0]?.values ?? [];
+  const expectedResult = [
+    ['result_id','TEXT',0,1],['processing_execution_id','TEXT',1,0],['parent_result_id','TEXT',0,0],
+    ['transition_type','TEXT',1,0],['from_block','INTEGER',1,0],['to_block','INTEGER',1,0],
+    ['generation','TEXT',1,0],['status','TEXT',1,0],['canonicality_status','TEXT',1,0],
+    ['empty_result','INTEGER',1,0],['evidence_set_digest','TEXT',1,0],['provenance_json','TEXT',1,0],
+    ['committed_at','TEXT',1,0],
+  ];
+  if (resultColumns.length !== expectedResult.length ||
+      resultColumns.some((c,i) => c[1] !== expectedResult[i][0] || c[2] !== expectedResult[i][1] || c[3] !== expectedResult[i][2] || c[5] !== expectedResult[i][3])) {
+    throw new Error('PROCESSING_RESULT_SCHEMA_INVALID');
+  }
+  const evidenceColumns = db.exec('PRAGMA table_info(processing_result_evidence)')[0]?.values ?? [];
+  const expectedEvidence = [
+    ['result_id','TEXT',1,1],['ordinal','INTEGER',1,2],['evidence_id','TEXT',1,0],['raw_event_id','TEXT',1,0],
+    ['identity_hash','TEXT',1,0],['raw_hash','TEXT',1,0],['canonical_hash','TEXT',1,0],
+    ['block_number','INTEGER',1,0],['transaction_index','INTEGER',1,0],['log_index','INTEGER',1,0],
+  ];
+  if (evidenceColumns.length !== expectedEvidence.length ||
+      evidenceColumns.some((c,i) => c[1] !== expectedEvidence[i][0] || c[2] !== expectedEvidence[i][1] || c[3] !== expectedEvidence[i][2] || c[5] !== expectedEvidence[i][3])) {
+    throw new Error('PROCESSING_RESULT_EVIDENCE_SCHEMA_INVALID');
   }
 }
 
@@ -276,15 +372,21 @@ async function createDatabase(filename = DB_FILE, options = {}) {
     if (existing) throw new Error('SCHEMA_VERSION_MISSING');
     createBaseSchema(db);
     assertF03Schema(db);
+    assertProcessingResultSchema(db);
   } else {
     const version = schemaVersion(db);
 
     if (version === 3) {
       migrateV3ToV4(db);
-      assertF03Schema(db);
+      migrateV4ToV5(db);
+      assertProcessingResultSchema(db);
     } else if (version === 4) {
+      migrateV4ToV5(db);
+      assertProcessingResultSchema(db);
+    } else if (version === 5) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
+      assertProcessingResultSchema(db);
     } else {
       throw new Error('UNSUPPORTED_SCHEMA_VERSION');
     }
@@ -366,6 +468,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
           throw new Error('DATABASE_RESTORE_SCHEMA_INVALID');
         }
         assertF03Schema(db);
+        assertProcessingResultSchema(db);
       }
     },
     close() {

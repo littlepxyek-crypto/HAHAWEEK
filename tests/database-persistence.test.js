@@ -138,7 +138,7 @@ test('schema version is persisted', async () => {
     WHERE key = 'schema_version'
   `);
 
-  assert.equal(rows[0].values[0][0], '4');
+  assert.equal(rows[0].values[0][0], '5');
 
   database.close();
 });
