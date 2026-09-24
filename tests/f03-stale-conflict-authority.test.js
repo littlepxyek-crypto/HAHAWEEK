@@ -45,4 +45,3 @@ test('F-03 rejects same-generation checkpoint binding conflict',()=>{
     {...BASE,checkpointDigest:'c2',generation:'g1',cursorBlock:101}
   ),/AUTHORITY_CHECKPOINT_CONFLICT/);
 });
-});
