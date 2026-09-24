@@ -13,7 +13,8 @@ function createAuthorityGate({
   expectedAuthorityFactory,
   authorityValidator,
   authorityBindingValidator,
-}) {
+  writerFence,
+) {
   if (typeof authorityFactory !== 'function') throw new Error('AUTHORITY_FACTORY_REQUIRED');
   if (typeof expectedAuthorityFactory !== 'function') {
     throw new Error('AUTHORITY_EXPECTED_SOURCE_REQUIRED');
@@ -25,8 +26,12 @@ function createAuthorityGate({
   if (typeof authorityBindingValidator !== 'function') {
     throw new Error('AUTHORITY_BINDING_VALIDATOR_REQUIRED');
   }
+  if (!writerFence || typeof writerFence.assertOwned !== 'function') {
+    throw new Error('AUTHORITY_WRITER_FENCE_REQUIRED');
+  }
 
   return ({ fromBlock, toBlock, checkpointCommitted, processingContext }) => {
+    writerFence.assertOwned();
     if (checkpointCommitted !== true) throw new Error('CHECKPOINT_NOT_COMMITTED');
     if (!processingContext || typeof processingContext !== 'object') {
       throw new Error('PROCESSING_CONTEXT_MISSING');
@@ -74,6 +79,7 @@ function createAuthorityGate({
     if (validated.cursorBlock !== processingContext.toBlock) {
       throw new Error('AUTHORITY_CURSOR_CONTEXT_MISMATCH');
     }
+    writerFence.assertOwned();
 
     return validated;
   };
