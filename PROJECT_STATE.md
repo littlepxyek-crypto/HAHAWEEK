@@ -1,3 +1,20 @@
+## STEP 593 — Operator Operability Execution Verification — VERIFIED / RECONCILED
+
+- Contract: `docs/STEP_593_OPERATOR_OPERABILITY_EXECUTION_VERIFICATION_CONTRACT_V0_1.md`.
+- Contract PR #376 merged as `21bc8802e571e14e6d17866d245f630f98c75878`.
+- Exact contract merge commit checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Reconciliation: `docs/STEP_593_OPERATOR_OPERABILITY_EXECUTION_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #377 merged as `3214dde6c3222fa699f6c440f9841b68681d4778`.
+- Exact reconciliation PR-head checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Exact reconciliation merge commit `3214dde6c3222fa699f6c440f9841b68681d4778` checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Human Operator Acceptance is verified against the repository-grounded execution boundary; no invented command/procedure was introduced.
+- Recovery remains fail-closed: no cursor reset, historical rewrite, evidence deletion, silent normalization, authority bypass, writer bypass, or manual canonical mutation to force success.
+- Frozen semantic owners, authority boundary, BlockCursor ordering, single-writer fence, historical evidence, and cursor integrity remain unchanged.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No raw/canonical evidence mutation, cursor advancement, authority grant, automated action/trading, schema migration, new dependency, new writer/authority/cursor semantics, or V4 activation occurred.
+- V4 production activation remains INACTIVE; Gate 2 is not implied.
+- Next STEP: STEP 594.
+
 ## STEP 592 — Operator Operability & Reproducible Runbook — VERIFIED / RECONCILED
 
 - Contract: `docs/STEP_592_OPERATOR_OPERABILITY_REPRODUCIBLE_RUNBOOK_CONTRACT_V0_1.md`.
