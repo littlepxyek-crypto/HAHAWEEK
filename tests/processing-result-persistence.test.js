@@ -106,7 +106,7 @@ test('fresh database is schema v6 and preserves F-03 tables', async () => {
   const f = fixture();
   const db = await createDatabase(f.databaseFile);
   assert.equal(SCHEMA_VERSION, 6);
-  assert.equal(db.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '5');
+  assert.equal(db.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '6');
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='f03_segments'")[0].values.length, 1);
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='processing_results'")[0].values.length, 1);
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='processing_result_evidence'")[0].values.length, 1);
@@ -126,7 +126,7 @@ test('v4 database migrates additively through v6', async () => {
   db.close();
 
   const migrated = await createDatabase(f.databaseFile);
-  assert.equal(migrated.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '5');
+  assert.equal(migrated.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '6');
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_segments'")[0].values.length, 1);
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_manifests'")[0].values.length, 1);
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_checkpoints'")[0].values.length, 1);
