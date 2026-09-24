@@ -1,24 +1,20 @@
 'use strict';
 
 /**
- * F-03 production-boundary evidence helper.
+ * F-03 production-boundary evidence gate.
  *
- * This helper does not activate V4 authority. It makes the required
- * checkpoint-before-cursor invariant explicit for tests and audit.
+ * This is a narrow checkpoint-before-cursor guard. It does not activate
+ * the V4 authority chain; Gate 2 remains conditional until that cutover
+ * is independently proven.
  */
-function assertCheckpointBeforeCursor({ checkpointCommitted, cursorAdvanced }) {
+function assertCheckpointBeforeCursor({ checkpointCommitted }) {
   if (checkpointCommitted !== true) {
     throw new Error('CHECKPOINT_NOT_COMMITTED');
-  }
-
-  if (cursorAdvanced !== true) {
-    throw new Error('CURSOR_NOT_ADVANCED');
   }
 
   return {
     status: 'AUTHORIZED',
     checkpointCommitted: true,
-    cursorAdvanced: true,
   };
 }
 
