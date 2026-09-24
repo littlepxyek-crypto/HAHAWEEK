@@ -240,6 +240,18 @@ async function main() {
     console.log(`Safe head: ${result.safeHead}`);
     console.log(`Processed: ${result.processed}`);
     console.log(`Cursor: ${result.cursor}`);
+    if (result.processingContext) {
+      console.log(`Processing context: ${result.processingContext.status}`);
+      console.log(`Range: ${result.processingContext.fromBlock}-${result.processingContext.toBlock}`);
+      console.log(`Result ID: ${result.processingContext.processingResultId}`);
+      console.log(`Execution ID: ${result.processingContext.processingExecutionId}`);
+      console.log(`Lineage ID: ${result.processingContext.lineageId}`);
+      console.log(`Transition: ${result.processingContext.transitionType}`);
+      console.log(`Generation: ${result.processingContext.generation}`);
+      console.log(`Evidence set digest: ${result.processingContext.evidenceSetDigest}`);
+      console.log(`Authority: ${result.authorityOutcome?.status || 'UNKNOWN'}`);
+      console.log(`Cursor outcome: ${result.cursor}`);
+    }
   } catch (error) {
     const message =
       error instanceof Error
