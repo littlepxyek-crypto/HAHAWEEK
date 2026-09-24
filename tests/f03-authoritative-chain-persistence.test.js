@@ -187,7 +187,7 @@ test('F-03 unsupported schema versions fail closed', async () => {
   const dir = tempDir();
   const file = path.join(dir, 'unsupported.sqlite');
   const first = await createFileDatabase(dir, 'unsupported.sqlite');
-  first.database.db.run("UPDATE schema_meta SET value = '5' WHERE key = 'schema_version'");
+  first.database.db.run("UPDATE schema_meta SET value = '6' WHERE key = 'schema_version'");
   first.database.save();
   first.database.close();
   first.writerFence.release();
