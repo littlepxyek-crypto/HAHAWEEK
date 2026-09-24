@@ -40,6 +40,7 @@ const { createWriterFence } = require('./core/single-writer-fence');
 const { assertProductionAuthority } = require('./core/f03-production-authority-record');
 const { assertAuthorityBinding } = require('./core/f03-authority-binding');
 const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
+const { readF03AuthorityChain } = require('./core/f03-authoritative-chain-persistence');
 
 const {
   POOL_MANAGER,
@@ -68,6 +69,13 @@ function createRelevantLogFilter() {
     address: POOL_MANAGER,
     topics: [EVENT_TOPICS],
   };
+}
+
+function createDurableExpectedAuthorityFactory(database) {
+  if (!database || !database.db) throw new Error('AUTHORITY_EXPECTED_DATABASE_REQUIRED');
+
+  return ({ fromBlock, toBlock }) =>
+    readF03AuthorityChain({ database, fromBlock, toBlock });
 }
 
 async function createEngine({ authorityFactory, expectedAuthorityFactory } = {}) {
@@ -159,9 +167,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
   const productionAuthorityFactory = authorityFactory || (() => {
     throw new Error('AUTHORITY_SOURCE_REQUIRED');
   });
-  const productionExpectedAuthorityFactory = expectedAuthorityFactory || (() => {
-    throw new Error('AUTHORITY_EXPECTED_SOURCE_REQUIRED');
-  });
+  const productionExpectedAuthorityFactory = expectedAuthorityFactory || createDurableExpectedAuthorityFactory(database);
 
   const ingestion = new IngestionEngine({
     provider,
@@ -261,5 +267,6 @@ if (require.main === module) {
 module.exports = {
   createEngine,
   createRelevantLogFilter,
+  createDurableExpectedAuthorityFactory,
   main,
 };
