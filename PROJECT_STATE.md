@@ -1,3 +1,17 @@
+## STEP 573 — Runtime Canonical Lineage / Transition-History Implementation Contract — VERIFIED / FROZEN
+
+- Repository baseline inspected at main commit `3c27293236a107751a31c189c5c906a0b9548556`.
+- Contract: `docs/STEP_573_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_CONTRACT_V0_1.md`.
+- PR #329 merged to main as `eb5b9ec0f1e6f73b6cf57e04578413223ba105b7`.
+- PR-head `0ed1d888791ba1035ffb6cead6a59860b64ce9b9`: HAHAWEEK Tests run `35981900043` SUCCESS; HAHAWEEK Security and Regression run `35981900028` SUCCESS.
+- Review/comment evidence recorded on PR #329; no self-approval claim.
+- Contract freezes immutable canonical transition history, exact F-02 states/edges, deterministic transition integrity, canonical/reorg lineage ownership, INITIAL/CONTINUATION/REORG_REPLACEMENT generation semantics, deterministic processing-result/execution identity requirements, replay/recovery, writer/concurrency, additive migration boundary, and golden-vector/test requirements.
+- STEP 563 formulas and STEP 568 schema/digest semantics remain unchanged; no production code, cursor behavior, historical evidence, or V4 activation changed.
+- Exact merge commit `eb5b9ec0f1e6f73b6cf57e04578413223ba105b7` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
+- Reconciliation: `docs/STEP_573_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- STEP 573 is VERIFIED / FROZEN at the contract boundary.
+- Next STEP: STEP 574 — Runtime Canonical Lineage / Transition-History Implementation Design & Analysis.
+
 ## STEP 572 — Runtime Canonical Processing / Generation Lineage Implementation Analysis — BLOCKED / RECONCILED
 
 - Starting/main commit inspected: `bc7b2312387d53b00f3ad5fa0d32bac6c347a717`.
