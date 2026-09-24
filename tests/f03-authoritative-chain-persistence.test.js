@@ -176,18 +176,18 @@ test('F-03 schema 3 migrates in place through schema 7 and preserves existing ro
   first.database.db.run("DROP TABLE f03_manifests");
   first.database.db.run("DROP TABLE f03_segments");
   first.database.db.run("UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'");
-  database.db.run('DROP TRIGGER canonical_transitions_no_update');
-  database.db.run('DROP TRIGGER canonical_transitions_no_delete');
-  database.db.run('DROP TRIGGER canonical_lineage_no_update');
-  database.db.run('DROP TRIGGER canonical_lineage_no_delete');
-  database.db.run('DROP TABLE canonical_lineage');
-  database.db.run('DROP TABLE canonical_transitions');
+  first.database.db.run('DROP TRIGGER canonical_transitions_no_update');
+  first.database.db.run('DROP TRIGGER canonical_transitions_no_delete');
+  first.database.db.run('DROP TRIGGER canonical_lineage_no_update');
+  first.database.db.run('DROP TRIGGER canonical_lineage_no_delete');
+  first.database.db.run('DROP TABLE canonical_lineage');
+  first.database.db.run('DROP TABLE canonical_transitions');
   first.database.save();
   first.database.close();
   first.writerFence.release();
 
   const second = await createFileDatabase(dir);
-  assert.equal(second.database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '6');
+  assert.equal(second.database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '7');
   assert.equal(second.database.db.exec("SELECT event_id FROM raw_events WHERE event_id = 'legacy-1'")[0].values[0][0], 'legacy-1');
 
   second.database.close();
