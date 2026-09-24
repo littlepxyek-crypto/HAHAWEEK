@@ -376,7 +376,8 @@ function createDatabase(filename = DB_FILE, options = {}) {
 
     if (version === 3) {
       migrateV3ToV4(db);
-      assertF03Schema(db);
+      migrateV4ToV5(db);
+      assertProcessingResultSchema(db);
     } else if (version === 4) {
       migrateV4ToV5(db);
       assertProcessingResultSchema(db);
