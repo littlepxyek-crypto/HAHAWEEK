@@ -79,7 +79,7 @@ const RUNTIME_LINEAGE_DDL = {
     "  CHECK (length(sequence) > 0 AND sequence NOT GLOB '*[^0-9]*'),",
     '  UNIQUE (evidence_id, sequence)',
     ');',
-  ].join('\\n'),
+  ].join('\n'),
   lineage: [
     'CREATE TABLE canonical_lineage (',
     '  lineage_id TEXT PRIMARY KEY,',
@@ -97,13 +97,13 @@ const RUNTIME_LINEAGE_DDL = {
     '  CHECK (from_block <= to_block),',
     "  CHECK (transition_type IN ('INITIAL','CONTINUATION','REORG_REPLACEMENT')),",
     ');',
-  ].join('\\n'),
+  ].join('\n'),
   triggers: [
     "CREATE TRIGGER canonical_transitions_no_update BEFORE UPDATE ON canonical_transitions BEGIN SELECT RAISE(ABORT, 'CANONICAL_TRANSITIONS_APPEND_ONLY'); END;",
     "CREATE TRIGGER canonical_transitions_no_delete BEFORE DELETE ON canonical_transitions BEGIN SELECT RAISE(ABORT, 'CANONICAL_TRANSITIONS_APPEND_ONLY'); END;",
     "CREATE TRIGGER canonical_lineage_no_update BEFORE UPDATE ON canonical_lineage BEGIN SELECT RAISE(ABORT, 'CANONICAL_LINEAGE_APPEND_ONLY'); END;",
     "CREATE TRIGGER canonical_lineage_no_delete BEFORE DELETE ON canonical_lineage BEGIN SELECT RAISE(ABORT, 'CANONICAL_LINEAGE_APPEND_ONLY'); END;",
-  ].join('\\n'),
+  ].join('\n'),
 };
 
 const PROCESSING_RESULT_DDL = {
@@ -380,7 +380,7 @@ function createBaseSchema(db) {
     RUNTIME_LINEAGE_DDL.transitions,
     RUNTIME_LINEAGE_DDL.lineage,
     RUNTIME_LINEAGE_DDL.triggers,
-  ].join('\\n'));
+  ].join('\n'));
 }
 
 function migrateV3ToV4(db) {
