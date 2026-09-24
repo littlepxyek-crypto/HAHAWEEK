@@ -143,11 +143,11 @@ async function createFileDatabase(dir, filename = 'hahaweek.sqlite') {
   return { ...authority, database };
 }
 
-test('F-03 fresh database is schema 5 with all authoritative-chain tables', async () => {
+test('F-03 fresh database is schema 6 with all authoritative-chain tables', async () => {
   const dir = tempDir();
   const { database, writerFence } = await createFileDatabase(dir);
 
-  assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '5');
+  assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '6');
   for (const table of ['f03_segments', 'f03_manifests', 'f03_checkpoints']) {
     assert.equal(database.db.exec(
       "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
@@ -159,7 +159,7 @@ test('F-03 fresh database is schema 5 with all authoritative-chain tables', asyn
   writerFence.release();
 });
 
-test('F-03 schema 3 migrates in place and preserves existing rows', async () => {
+test('F-03 schema 3 migrates in place through schema 6 and preserves existing rows', async () => {
   const dir = tempDir();
   const file = path.join(dir, 'hahaweek.sqlite');
   const first = await createFileDatabase(dir);
@@ -167,6 +167,9 @@ test('F-03 schema 3 migrates in place and preserves existing rows', async () => 
   first.database.db.run(
     "INSERT INTO raw_events (event_id, chain_id, block_number, transaction_hash, log_index, address, topics_json, data, captured_at) VALUES ('legacy-1', 4663, 100, '0xtx', 0, '0xpool', '[]', '0x', '2026-09-24T05:00:00.000Z')"
   );
+  first.database.db.run("DROP TABLE canonical_decision_snapshot_blocks");
+  first.database.db.run("DROP TABLE canonical_decision_snapshots");
+  first.database.db.run("DROP TABLE canonical_block_decisions");
   first.database.db.run("DROP TABLE processing_result_evidence");
   first.database.db.run("DROP TABLE processing_results");
   first.database.db.run("DROP TABLE f03_checkpoints");
@@ -178,7 +181,7 @@ test('F-03 schema 3 migrates in place and preserves existing rows', async () => 
   first.writerFence.release();
 
   const second = await createFileDatabase(dir);
-  assert.equal(second.database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '5');
+  assert.equal(second.database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '6');
   assert.equal(second.database.db.exec("SELECT event_id FROM raw_events WHERE event_id = 'legacy-1'")[0].values[0][0], 'legacy-1');
 
   second.database.close();
@@ -189,7 +192,7 @@ test('F-03 unsupported schema versions fail closed', async () => {
   const dir = tempDir();
   const file = path.join(dir, 'unsupported.sqlite');
   const first = await createFileDatabase(dir, 'unsupported.sqlite');
-  first.database.db.run("UPDATE schema_meta SET value = '6' WHERE key = 'schema_version'");
+  first.database.db.run("UPDATE schema_meta SET value = '7' WHERE key = 'schema_version'");
   first.database.save();
   first.database.close();
   first.writerFence.release();
