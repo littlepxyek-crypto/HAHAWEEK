@@ -1,3 +1,18 @@
+## STEP 511 — H-05 State Reconciliation — VERIFIED / FROZEN
+
+- STEP 509 H-05 repository test matrix contract PR #225 merged as `bd572c561e9b7029e2f362b960ee0cfa2cd6ead8`.
+- STEP 510 H-05 repository test matrix PR #226 merged as `ac90e6dfa529b89a52de0631290b4a8df5a6bb94`.
+- PR-head Tests and Security & Regression for STEP 510 were GREEN.
+- The matrix maps F-01/F-02/F-03/F-04/F-05 and H-01/H-02/H-03/H-04/H-05 to executable tests or explicit conditional dispositions.
+- F-04 remains CONDITIONAL / NOT ACTIVATED because no dedicated migration authority evidence was manufactured by this step.
+- F-05 remains CONDITIONAL because the current matrix covers the existing RPC/acquisition test boundary but does not claim the full future provenance contract as closed.
+- H-01 through H-04 retain their previously reconciled status; the matrix does not replace their authority.
+- Exact merge-commit workflow endpoint for `ac90e6dfa529b89a52de0631290b4a8df5a6bb94` returned no workflow runs at reconciliation time; therefore no exact post-merge GREEN result is claimed.
+- Design Gate 2 remains NOT PASSED because not all F-controls and H-controls are closed.
+- No V4 production activation, RPC endpoint change, cursor/checkpoint authority change, SQLite schema migration, historical rewrite/deletion, or predictive/trading/signing/publication behavior was introduced.
+- Historical state remains preserved.
+- Future semantic changes require a new reviewed contract/step.
+
 ## STEP 508 — H-04 State Reconciliation — VERIFIED / FROZEN
 
 - STEP 506 H-04 Durability / Crash Recovery contract PR #222 merged to main as `7402e0219fb1c45b5c14b2cac9d7ef8f2b96f71d`.
