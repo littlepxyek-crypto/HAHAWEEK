@@ -63,7 +63,7 @@ function makeEngine({ sourceFactory, cursor = makeCursor() }) {
 
 test('STEP 545 accepts valid cryptographically bound authority at cursor boundary', async () => {
   const { engine, cursor } = makeEngine({
-    sourceFactory: () => makeAuthority(101),
+    sourceFactory: () => makeAuthority(101).authority,
   });
 
   const result = await engine.runOnce();
@@ -77,7 +77,7 @@ test('STEP 545 rejects missing binding before cursor advancement', async () => {
   delete source.authority.bindingDigest;
 
   const { engine, cursor } = makeEngine({
-    sourceFactory: () => source,
+    sourceFactory: () => source.authority,
   });
 
   await assert.rejects(engine.runOnce(), /AUTHORITY_BINDING_DIGEST_INVALID/);
