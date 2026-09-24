@@ -5,8 +5,14 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { createEngine } = require('../src/index');
+const { createDatabase } = require('../src/core/database');
+const { createLegacyWriteBarrier } = require('../src/core/legacy-write-freeze');
+const { createWriterFence } = require('../src/core/single-writer-fence');
+const { createAuthorityGate } = require('../src/core/f03-ingestion-authority-integration');
+const { createDurableExpectedAuthorityFactory } = require('../src/index');
 const { checkpointDigestFor, commitF03AuthorityChain } = require('../src/core/f03-authoritative-chain-persistence');
+const { assertProductionAuthority } = require('../src/core/f03-production-authority-record');
+const { assertAuthorityBinding } = require('../src/core/f03-authority-binding');
 
 function fixture() {
   const generation = '1';
@@ -31,57 +37,75 @@ function fixture() {
     committedAt,
   });
 
-  const segment = {
-    segmentId,
-    fromBlock: 400,
-    toBlock: 409,
-    segmentDigest,
-    generation,
-    committedAt,
-    provenance: provenance('segment', segmentId, 'f03_segments', segmentId, segmentId, segmentDigest, undefined, {
+  return {
+    segment: {
+      segmentId,
       fromBlock: 400,
       toBlock: 409,
-    }),
+      segmentDigest,
+      generation,
+      committedAt,
+      provenance: provenance('segment', segmentId, 'f03_segments', segmentId, segmentId, segmentDigest, undefined, {
+        fromBlock: 400,
+        toBlock: 409,
+      }),
+    },
+    manifest: {
+      manifestId,
+      manifestDigest,
+      generation,
+      segmentId,
+      segmentDigest,
+      committedAt,
+      provenance: provenance('manifest', manifestId, 'f03_manifests', manifestId, manifestId, manifestDigest, segmentId),
+    },
+    checkpoint: {
+      checkpointDigest,
+      generation,
+      manifestId,
+      manifestDigest,
+      committedAt,
+      provenance: provenance('checkpoint', checkpointDigest, 'f03_checkpoints', checkpointDigest, checkpointDigest, checkpointDigest, manifestId),
+    },
   };
-
-  const manifest = {
-    manifestId,
-    manifestDigest,
-    generation,
-    segmentId,
-    segmentDigest,
-    committedAt,
-    provenance: provenance('manifest', manifestId, 'f03_manifests', manifestId, manifestId, manifestDigest, segmentId),
-  };
-
-  const checkpoint = {
-    checkpointDigest,
-    generation,
-    manifestId,
-    manifestDigest,
-    committedAt,
-    provenance: provenance('checkpoint', checkpointDigest, 'f03_checkpoints', checkpointDigest, checkpointDigest, checkpointDigest, manifestId),
-  };
-
-  return { segment, manifest, checkpoint };
 }
 
-test('Gate 2 production wiring requires durable expected authority and rejects absence', async () => {
-  const engine = await createEngine({
-    authorityFactory: ({ fromBlock, toBlock }) => ({
-      segmentId: 'submitted-segment',
-      manifestDigest: 'b'.repeat(64),
-      checkpointDigest: checkpointDigestFor('1', 'b'.repeat(64)),
-      generation: '1',
-      cursorBlock: toBlock,
-      fromBlock,
-      toBlock,
-    }),
+test('Gate 2 production boundary uses durable expected authority and rejects absence', async () => {
+  const dir = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'hahaweek-gate2-'));
+  const writerFence = createWriterFence({
+    filename: path.join(dir, 'writer-fence.json'),
+    ownerId: 'gate2-test',
+  });
+  writerFence.acquire();
+
+  const barrier = createLegacyWriteBarrier({
+    filename: path.join(dir, 'legacy-state.json'),
+    writerFence,
+  });
+
+  const database = await createDatabase(path.join(dir, 'hahaweek.sqlite'), {
+    legacyWriteBarrier: barrier,
   });
 
   try {
+    const expectedAuthorityFactory = createDurableExpectedAuthorityFactory(database);
+    const authorityGate = createAuthorityGate({
+      authorityFactory: ({ fromBlock, toBlock }) => ({
+        segmentId: 'submitted-segment',
+        manifestDigest: 'b'.repeat(64),
+        checkpointDigest: checkpointDigestFor('1', 'b'.repeat(64)),
+        generation: '1',
+        cursorBlock: toBlock,
+        fromBlock,
+        toBlock,
+      }),
+      expectedAuthorityFactory,
+      authorityValidator: assertProductionAuthority,
+      authorityBindingValidator: assertAuthorityBinding,
+    });
+
     assert.throws(
-      () => engine.ingestion.authorityGate({
+      () => authorityGate({
         checkpointCommitted: true,
         fromBlock: 500,
         toBlock: 509,
@@ -91,12 +115,12 @@ test('Gate 2 production wiring requires durable expected authority and rejects a
     );
 
     commitF03AuthorityChain({
-      database: engine.database,
-      writerFence: engine.writerFence,
+      database,
+      writerFence,
       ...fixture(),
     });
 
-    const result = engine.ingestion.authorityGate({
+    const result = authorityGate({
       checkpointCommitted: true,
       fromBlock: 400,
       toBlock: 409,
@@ -109,10 +133,22 @@ test('Gate 2 production wiring requires durable expected authority and rejects a
     assert.equal(result.expectedAuthority.cursorBlock, 409);
     assert.equal(result.expectedAuthority.manifestDigest, 'b'.repeat(64));
   } finally {
-    engine.database.close();
-    engine.writerFence.release();
-    try { engine.provider.destroy(); } catch {}
+    database.close();
+    writerFence.release();
   }
+});
+
+test('Gate 2 production wiring binds the durable reader as the default expected source', () => {
+  const source = fs.readFileSync(
+    path.join(__dirname, '..', 'src', 'index.js'),
+    'utf8',
+  );
+
+  assert.match(
+    source,
+    /expectedAuthorityFactory \|\| createDurableExpectedAuthorityFactory\(database\)/,
+  );
+  assert.match(source, /readF03AuthorityChain/);
 });
 
 test('Gate 2 independent recovery verifier remains source-independent', () => {
@@ -121,6 +157,5 @@ test('Gate 2 independent recovery verifier remains source-independent', () => {
     'utf8',
   );
 
-  assert.doesNotMatch(source, /src[\\/]reference[\\/]v4/);
   assert.doesNotMatch(source, /src[\\/]reference[\\/]v4/);
 });
