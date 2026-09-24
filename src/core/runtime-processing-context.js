@@ -81,16 +81,19 @@ function resolveTransition({ database, snapshot, fromBlock, toBlock, requestedTr
   if (exact.length > 1) fail('PROCESSING_CONTEXT_LINEAGE_CONFLICT');
   if (exact.length === 1) {
     const existingSnapshot = snapshotForLineage(database, exact[0]);
-    for (let block = fromBlock; block <= toBlock; block += 1) {
-      if (blockHash(existingSnapshot, block) !== blockHash(snapshot, block)) {
-        fail('PROCESSING_CONTEXT_REPLAY_CANONICAL_MISMATCH');
-      }
+    const sameCanonical = Array.from(
+      { length: toBlock - fromBlock + 1 },
+      (_, index) => fromBlock + index
+    ).every(block =>
+      blockHash(existingSnapshot, block) === blockHash(snapshot, block)
+    );
+    if (sameCanonical) {
+      return {
+        transitionType: exact[0].transitionType,
+        parentResultId: exact[0].parentResultId,
+        generation: exact[0].generation,
+      };
     }
-    return {
-      transitionType: exact[0].transitionType,
-      parentResultId: exact[0].parentResultId,
-      generation: exact[0].generation,
-    };
   }
 
   if (candidates.length === 0) {
