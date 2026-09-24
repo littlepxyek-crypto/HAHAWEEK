@@ -1,3 +1,20 @@
+## STEP 596 — V4 Production Boundary Contract — VERIFIED / RECONCILED
+
+- Contract: `docs/STEP_596_V4_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract commit: `0152788f945b758b1da681290096dd75d28cd724`.
+- Contract PR #387 merged as `6681b89dcffb36335c598a87fb947e3060ede797`.
+- Contract merge-commit checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Gate 2 remains PASS and is explicitly distinct from V4 production implementation status and V4 production authority activation.
+- V4 production authority remains INACTIVE / BLOCKED; STEP 596 did not activate V4 production authority.
+- Post-merge reconciliation: `docs/STEP_596_V4_PRODUCTION_BOUNDARY_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #388 merged as `7557ac5b46ef96642bdc4d32f767fb991124c7db`.
+- Reconciliation PR-head checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Operator Acceptance remains repository-grounded; no command or procedure was invented.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No production runtime implementation, schema migration, cursor reset/advance, authority ownership change, new writer/lock, live RPC cutover, evidence deletion, historical rewrite, silent normalization, automated action/trading, or predictive/ranking authority was introduced.
+- Historical artifacts, frozen contracts, golden vectors, tests, and valid implementations remain preserved.
+- Next phase within STEP 596: Analysis → Design → Code only if Analysis establishes an authorized, repository-grounded production implementation boundary.
+
 ## STEP 595 — Design Gate 2 State Reconciliation — VERIFIED / RECONCILED
 
 - Contract: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_CONTRACT_V0_1.md`.
