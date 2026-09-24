@@ -128,7 +128,7 @@ test('STEP 545 identical authority replay is deterministic', async () => {
 
   const replayCursor = makeCursor(100);
   const replay = makeEngine({
-    sourceFactory: () => source,
+    sourceFactory: () => source.authority,
     cursor: replayCursor,
   });
   const second = await replay.engine.runOnce();
