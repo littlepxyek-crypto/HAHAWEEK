@@ -1,3 +1,17 @@
+## STEP 548 — F-03 Durable Authority Source Contract — MERGED / VERIFIED / CONDITIONAL
+
+- STEP 548 contract PR #272 merged to `main` as `4abc61ddc4021018782012fc6373114fc8f59e46`.
+- Contract commit was `7a3edbfa5fabc554328f7264efc266da37ff459d`.
+- PR-head HAHAWEEK Tests run `35953300701` completed successfully.
+- PR-head HAHAWEEK Security and Regression run `35953300700` completed successfully.
+- The contract requires expected authority commitments to resolve from durable persisted evidence/checkpoint state for the exact processed range, with fail-closed handling for missing evidence/linkage, wrong range, malformed records, and submitted-authority manufacture.
+- STEP 548 is contract-only; no durable-source runtime implementation is claimed.
+- Exact workflow lookup for merge commit `4abc61ddc4021018782012fc6373114fc8f59e46` returned no associated workflow runs at reconciliation time; no post-merge CI GREEN result is claimed.
+- Reconciliation document: `docs/STEP_548_F03_DURABLE_AUTHORITY_SOURCE_RECONCILIATION_V0_1.md`.
+- F-03 remains CONDITIONAL and Design Gate 2 remains NOT PASSED.
+- No V4 production activation, cursor reset/semantic change, historical rewrite/deletion, RPC/provider change, SQLite migration, or production evidence mutation was introduced.
+- Next explicit step: implement and independently test the durable expected-authority source boundary under a new reviewed implementation contract.
+
 ## STEP 547 — F-03 Authoritative Source Boundary — VERIFIED / CONDITIONAL
 
 - STEP 547 implementation PR #270 merged to main as `3796670af0677c187fa73898042777a697cbfbe0`.
