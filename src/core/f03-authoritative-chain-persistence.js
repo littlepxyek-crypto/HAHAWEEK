@@ -2,7 +2,7 @@
 
 const crypto = require('node:crypto');
 
-const DIGEST64 = /^[0-9a-f]{64}$/;
+const DIGEST64 = /^(?:[0-9a-f]{64}|0x[0-9a-f]{64})$/;
 const CHECKPOINT_DIGEST = /^0x[0-9a-f]{64}$/;
 const GENERATION = /^(0|[1-9][0-9]*)$/;
 const MAX_UINT64 = 18446744073709551615n;
@@ -189,13 +189,17 @@ function validateManifest(record) {
 
 function checkpointDigestFor(generation, manifestDigest) {
   assertGeneration(generation);
-  if (!CHECKPOINT_DIGEST.test(manifestDigest)) {
+  if (!DIGEST64.test(manifestDigest)) {
     throw new Error('F03_CHECKPOINT_MANIFEST_DIGEST_INVALID');
   }
 
+  const canonicalManifestHash = manifestDigest.startsWith('0x')
+    ? manifestDigest
+    : '0x' + manifestDigest;
+
   const input = {
     generation,
-    manifest_hash: manifestDigest,
+    manifest_hash: canonicalManifestHash,
   };
 
   return '0x' + crypto.createHash('sha256')
@@ -209,7 +213,7 @@ function validateCheckpoint(record) {
   const checkpointDigest = assertCheckpointDigest(record.checkpointDigest);
   const generation = assertGeneration(record.generation);
   if (typeof record.manifestId !== 'string' || record.manifestId === '') throw new Error('F03_CHECKPOINT_MANIFEST_ID_INVALID');
-  const manifestDigest = assertCheckpointDigest(record.manifestDigest);
+  const manifestDigest = assertDigest(record.manifestDigest, 'F03_CHECKPOINT_MANIFEST_DIGEST_INVALID');
   const committedAt = assertTimestamp(record.committedAt, 'F03_COMMITTED_AT_INVALID');
 
   const expectedDigest = checkpointDigestFor(generation, manifestDigest);
@@ -366,7 +370,7 @@ function verifyChainRows(segment, manifest, checkpoint, fromBlock, toBlock) {
   assertDigest(segment.segment_digest, 'F03_SEGMENT_DIGEST_INVALID');
   assertDigest(manifest.manifest_digest, 'F03_MANIFEST_DIGEST_INVALID');
   assertCheckpointDigest(checkpoint.checkpoint_digest);
-  assertCheckpointDigest(checkpoint.manifest_digest);
+  assertDigest(checkpoint.manifest_digest, 'F03_CHECKPOINT_MANIFEST_DIGEST_INVALID');
 
   const expectedCheckpointDigest = checkpointDigestFor(checkpoint.generation, checkpoint.manifest_digest);
   if (checkpoint.checkpoint_digest !== expectedCheckpointDigest) {
