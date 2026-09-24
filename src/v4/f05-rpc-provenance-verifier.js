@@ -24,10 +24,12 @@ function fail(code, message) {
   throw error;
 }
 
+function acquisitionIdentity(input) { return { provider: input.provider.id, endpoint: input.provider.endpoint, chain: input.chain.id, request: input.request.id, method: input.request.method, page: input.request.page, context: input.context }; }
+
 function verifyAcquisition(input) {
   if (!input || input.format !== 'HAHAWEEK-F05-RPC-PROVENANCE-1') fail('MALFORMED_PROVENANCE', 'invalid format');
   if (!input.provider || !input.chain || !input.request || !input.response || !input.normalized || !input.manifest) fail('INCOMPLETE_PROVENANCE', 'required provenance sections missing');
-  if (!input.provider.id || !input.chain.id || !input.request.id || !input.request.method) fail('INCOMPLETE_PROVENANCE', 'identity incomplete');
+  if (!input.provider.id || !input.provider.endpoint || !input.chain.id || !input.request.id || !input.request.method || input.request.page == null || !input.context || !input.context.acquired_at) fail('INCOMPLETE_PROVENANCE', 'identity/context incomplete');
 
   const responseDigest = digestWithoutField(input.response, 'digest');
   if (responseDigest !== input.response.digest) fail('RESPONSE_DIGEST_MISMATCH', 'response digest mismatch');
@@ -45,13 +47,9 @@ function verifyAcquisition(input) {
     if (input.receipt_check.response_digest !== responseDigest) fail('CROSSCHECK_MISMATCH', 'receipt response mismatch');
   }
 
-  const identity = {
-    provider: input.provider.id,
-    chain: input.chain.id,
-    request: input.request.id,
-    method: input.request.method,
-    page: input.request.page ?? null
-  };
+  if (input.failure) fail('PROVIDER_FAILURE', 'failed acquisition cannot become valid evidence');
+
+  const identity = acquisitionIdentity(input);
   const acquisitionDigest = digest({
     identity,
     response_digest: responseDigest,
@@ -65,4 +63,16 @@ function verifyAcquisition(input) {
   return { status: 'VERIFIED', acquisition_digest: acquisitionDigest, response_digest: responseDigest, normalized_digest: normalizedDigest };
 }
 
-module.exports = { verifyAcquisition, canonical, digest };
+function verifyAcquisitionSet(inputs) {
+  const seen = new Map();
+  for (const input of inputs) {
+    const result = verifyAcquisition(input);
+    const key = digest(acquisitionIdentity(input));
+    const prior = seen.get(key);
+    if (prior && prior !== result.acquisition_digest) fail('INTEGRITY_CONFLICT', 'same acquisition identity has different digest');
+    seen.set(key, result.acquisition_digest);
+  }
+  return { status: 'VERIFIED', count: seen.size };
+}
+
+module.exports = { verifyAcquisition, verifyAcquisitionSet, acquisitionIdentity, canonical, digest };
