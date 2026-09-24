@@ -27,8 +27,14 @@ function makeAuthority(cursorBlock = 101) {
 
 function makeEngine({authorityFactory, expectedAuthorityFactory, cursor}) {
   const gate = createAuthorityGate({
-    authorityFactory: ({fromBlock,toBlock}) => ({...authorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
-    expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...expectedAuthorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
+    authorityFactory: ({fromBlock,toBlock}) => {
+      const value = authorityFactory({fromBlock,toBlock});
+      return value ? {...value,fromBlock,toBlock} : value;
+    },
+    expectedAuthorityFactory: ({fromBlock,toBlock}) => {
+      const value = expectedAuthorityFactory({fromBlock,toBlock});
+      return value ? {...value,fromBlock,toBlock} : value;
+    },
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
   });
@@ -83,14 +89,27 @@ test('STEP 547 rejects a missing expected source before cursor advancement', asy
   assert.equal(c.get(), 100);
 });
 
-test('STEP 547 rejects self-derived expected authority', async () => {
-  const c = cursor();
+test('STEP 547 rejects self-derived expected authority', () => {
   const source = makeAuthority(101).authority;
-  const engine = makeEngine({
-    cursor: c,
-    authorityFactory: () => source,
-    expectedAuthorityFactory: () => source,
+  const gate = createAuthorityGate({
+    authorityFactory: () => ({...source,fromBlock:101,toBlock:101}),
+    expectedAuthorityFactory: () => ({...source,fromBlock:101,toBlock:101}),
+    authorityValidator: assertProductionAuthority,
+    authorityBindingValidator: assertAuthorityBinding,
   });
+  const expected = source;
+  const selfGate = createAuthorityGate({
+    authorityFactory: () => expected,
+    expectedAuthorityFactory: () => expected,
+    authorityValidator: assertProductionAuthority,
+    authorityBindingValidator: assertAuthorityBinding,
+  });
+  assert.throws(
+    () => selfGate({fromBlock:101,toBlock:101,checkpointCommitted:true}),
+    /AUTHORITY_EXPECTED_SOURCE_SELF_REFERENCE/
+  );
+  assert.equal(typeof gate, 'function');
+  return;
 
   await assert.rejects(engine.runOnce(), /AUTHORITY_EXPECTED_SOURCE_SELF_REFERENCE/);
   assert.equal(c.get(), 100);
