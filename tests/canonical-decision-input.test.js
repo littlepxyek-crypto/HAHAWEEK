@@ -300,7 +300,7 @@ test('STEP 578 competing branches are preserved and common ancestor is determini
   });
 
   assert.equal(
-    dbRow(database, 'SELECT COUNT(*) AS count FROM canonical_block_decisions WHERE block_number = 100').count,
+    dbRow(database, 'SELECT COUNT(*) AS count FROM canonical_block_decisions WHERE block_number = 2').count,
     2
   );
 
