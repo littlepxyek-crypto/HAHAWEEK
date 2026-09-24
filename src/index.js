@@ -38,6 +38,7 @@ const { loadState, saveState } = require('./core/state');
 const { createLegacyWriteBarrier } = require('./core/legacy-write-freeze');
 const { createWriterFence } = require('./core/single-writer-fence');
 const { assertProductionAuthority } = require('./core/f03-production-authority-record');
+const { assertAuthorityBinding } = require('./core/f03-authority-binding');
 const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
 
 const {
@@ -170,6 +171,7 @@ async function createEngine({ authorityFactory } = {}) {
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,
       authorityValidator: assertProductionAuthority,
+      authorityBindingValidator: assertAuthorityBinding,
     }),
   });
 
