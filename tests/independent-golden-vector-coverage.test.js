@@ -13,6 +13,7 @@ test("STEP 484 inventory covers the complete committed V4 fixture corpus", () =>
     "docs/golden-vectors/event-identity.json",
     "docs/golden-vectors/payload-event-identity.json",
     "docs/golden-vectors/transition.json",
+    "docs/golden-vectors/v4-evidence-commitment.json",
   ]);
 
   assert.deepEqual(
@@ -25,15 +26,15 @@ test("STEP 484 verifies every committed V4 fixture exactly once", () => {
   const result = coverage.verifyCoverage({ repoRoot: path.join(__dirname, "..") });
 
   assert.equal(result.status, "VERIFIED");
-  assert.equal(result.fixture_count, 3);
-  assert.equal(result.vector_count, 5);
+  assert.equal(result.fixture_count, 4);
+  assert.equal(result.vector_count, 10);
   assert.deepEqual(
     result.fixtures.map((fixture) => fixture.fixture),
     coverage.V4_GOLDEN_VECTOR_FIXTURES,
   );
   assert.deepEqual(
     result.fixtures.map((fixture) => fixture.status),
-    ["VERIFIED", "VERIFIED", "VERIFIED"],
+    ["VERIFIED", "VERIFIED", "VERIFIED", "VERIFIED"],
   );
 });
 
