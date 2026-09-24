@@ -1,3 +1,16 @@
+## STEP 566 — Durable Processing-Result / Generation Persistence Contract — VERIFIED / RECONCILED
+
+- STEP 566 contract/analysis/design PR #315 merged to main as `6bb0ede2cb557cde5d5b7ea71b3f197f75f3fd11`.
+- PR-head `6d1d19b6f67162d62348dcec2a5071874d3e0f60`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS; CodeQL NEUTRAL; Actions analysis SUCCESS.
+- Repository inspection established no first-class durable processing-result/generation context existed before STEP 566.
+- Contract freezes immutable processing-result records plus immutable ordered evidence membership, explicit generation lineage, exact range, canonicality, idempotence/conflict, recovery, reorg, and concurrency semantics.
+- Generation is never manufactured by persistence and cannot come from cursor, expected authority, checkpoint digest, writer fence, wall clock, randomness, or hash truncation.
+- No production code, schema, cursor, evidence, authority, RPC behavior, or V4 activation changed.
+- Exact merge commit `6bb0ede2cb557cde5d5b7ea71b3f197f75f3fd11` has no associated PR-triggered workflow runs/statuses; no post-merge CI GREEN is claimed.
+- Reconciliation: `docs/STEP_566_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_RECONCILIATION_V0_1.md`.
+- V4 production activation remains INACTIVE.
+- Next STEP: STEP 567 — Durable Processing-Result / Generation Persistence Implementation Contract.
+
 ## STEP 565 — V4 Runtime Processing-Result / Generation Context Boundary — VERIFIED / RECONCILED
 
 - STEP 565 contract/analysis/design PR #313 merged to main as `095c15cbac05c23f64e61adfde751f75cfe10a1e`.
