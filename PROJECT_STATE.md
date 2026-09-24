@@ -1,3 +1,18 @@
+## STEP 580 — Runtime Canonical Lineage / Processing Context Integration Boundary — VERIFIED / RECONCILED
+
+- Contract PR #343 merged to main as `e5c6127e0c545164060b700ede38dff6ef0bfa98`.
+- Contract: `docs/STEP_580_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_BOUNDARY_CONTRACT_V0_1.md`.
+- Reconciliation: `docs/STEP_580_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
+- CI synchronization note: `docs/STEP_580_CI_RULESET_SYNCHRONIZATION_NOTE_V0_1.md`.
+- PR-head required CI passed: HAHAWEEK Tests and HAHAWEEK Security and Regression.
+- Post-merge main required CI passed: HAHAWEEK Tests and HAHAWEEK Security and Regression.
+- Post-merge security evidence: 619/620 tests passed, 1 skipped; npm audit reported 0 vulnerabilities; tracked-secret baseline passed.
+- Initial merge block was root-caused to the contract branch being three commits behind main under the strict ruleset; branch was synchronized and fresh required CI passed before merge.
+- Removed `cancel-in-progress` from the required security workflow for ruleset compatibility; no production runtime semantics changed.
+- No historical evidence, frozen formulas, cursor, authority semantics, or V4 activation were changed.
+- V4 production activation remains INACTIVE.
+- Next STEP: STEP 581 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design.
+
 ## STEP 579 — Runtime Canonical Lineage Integration Implementation — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `67261beefe8a2ca11ae23d0fa77f68cbddaff409`.
