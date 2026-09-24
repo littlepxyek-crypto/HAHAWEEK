@@ -12,6 +12,7 @@ class IngestionEngine {
     processorRange,
     batchSize,
       maxBatchesPerRun,
+    authorityGate,
   }) {
     if (!provider) {
       throw new Error('PROVIDER_REQUIRED');
@@ -67,6 +68,7 @@ class IngestionEngine {
     this.processorRange = processorRange;
     this.batchSize = batchSize;
     this.maxBatchesPerRun = maxBatchesPerRun ?? Infinity;
+    this.authorityGate = authorityGate || (() => ({ status: 'UNGUARDED' }));
     this.running = false;
   }
 
@@ -173,6 +175,7 @@ class IngestionEngine {
            * Batch completed successfully.
            * Now and only now advance the checkpoint.
            */
+          this.authorityGate({ checkpointCommitted: true, blockNumber: toBlock });
           this.cursor.advance(toBlock);
 
           processed += toBlock - fromBlock + 1;
@@ -206,6 +209,7 @@ class IngestionEngine {
         /*
          * Cursor advances ONLY after successful processing.
          */
+        this.authorityGate({ checkpointCommitted: true, blockNumber: block });
         this.cursor.advance(block);
 
         processed += 1;
