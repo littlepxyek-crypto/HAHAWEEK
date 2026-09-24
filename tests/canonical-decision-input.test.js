@@ -104,7 +104,7 @@ test('STEP 578 golden CBDR and snapshot vectors are exact', async () => {
     acquiredAt: '2026-01-01T00:00:00.000Z',
   });
 
-  assert.notEqual(result.records[0].record_digest, vectorRecord.record_digest);
+  assert.equal(result.records[0].parent_block_hash, P);
   assert.equal(
     result.records[1].record_digest,
     'cdbr:v1:c38b29f4100f64b7bf8e9ca8eea0da557161d4354e182b0b9613fa0f7d70aeb9'
@@ -204,8 +204,8 @@ test('STEP 578 wrong number, chain, malformed hash, and parent mismatch fail clo
     () => createCanonicalDecisionInput({
       provider: providerFor({
         99: header(99, P, ZERO),
-      100: header(100, A, P),
-      101: header(101, B, C),
+        100: header(100, A, P),
+        101: header(101, B, C),
       }),
       db: database.db,
       writerFence: writer,
@@ -225,7 +225,8 @@ test('STEP 578 identical replay is deterministic and idempotent', async () => {
   const database = await createDatabase(':memory:');
   const writer = fence(tempDir());
   const provider = providerFor({
-    100: header(100, A, ZERO),
+    99: header(99, P, ZERO),
+    100: header(100, A, P),
     101: header(101, B, A),
   });
 
