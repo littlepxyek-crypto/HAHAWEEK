@@ -30,6 +30,13 @@ function assertWriter(writerFence) {
   writerFence.assertOwned();
 }
 
+function deepFreeze(value) {
+  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+  Object.freeze(value);
+  for (const child of Object.values(value)) deepFreeze(child);
+  return value;
+}
+
 function queryLineages(database, fromBlock, toBlock) {
   const rows = database.db.exec(
     'SELECT lineage_id FROM canonical_lineage WHERE from_block <= ? AND to_block >= ? ORDER BY from_block, to_block, lineage_id',
@@ -232,7 +239,7 @@ async function createVerifiedProcessingContext({
       emptyResult: lineage.canonicalEvidenceIds.length === 0,
       evidenceSetDigest: lineage.canonicalEvidenceSetDigest,
       lineageId: lineage.lineageId,
-      provenance: Object.freeze({
+      provenance: deepFreeze({
         ...lineage.provenance,
         canonical_decision_snapshot_id: decisionSnapshot.snapshot_id,
       }),
