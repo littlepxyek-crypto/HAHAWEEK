@@ -12,6 +12,7 @@ const V4_GOLDEN_VECTOR_FIXTURES = Object.freeze([
   "docs/golden-vectors/event-identity.json",
   "docs/golden-vectors/payload-event-identity.json",
   "docs/golden-vectors/transition.json",
+  "docs/golden-vectors/v4-evidence-commitment.json",
 ]);
 
 const KNOWN_OUT_OF_SCOPE_FIXTURES = Object.freeze([

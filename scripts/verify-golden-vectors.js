@@ -12,7 +12,7 @@ const DEFAULT_FIXTURE = path.join(
   "payload-event-identity.json"
 );
 
-const DOMAIN_PATTERN = /^HAHAWEEK-EVIDENCE-V4-[A-Z0-9-]+$/;
+const DOMAIN_PATTERN = /^HAHAWEEK-EVIDENCE-V4-[A-Z0-9.-]+$/;
 const HASH_PATTERN = /^[0-9a-f]{64}$/;
 const HEX_PATTERN = /^(?:[0-9a-f]{2})*$/;
 
