@@ -472,7 +472,9 @@ function createCanonicalDecisionInput({
         [snapshotId]
       );
 
-      if (!existingSnapshot) {
+      if (existingSnapshot) {
+        reconstructSnapshot(db, snapshotId);
+      } else {
         db.run(
           `INSERT INTO canonical_decision_snapshots
             (snapshot_id, chain_id, from_block, to_block, decision_head_block,
