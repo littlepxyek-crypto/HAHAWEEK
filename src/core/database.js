@@ -35,7 +35,7 @@ const PROCESSING_RESULT_DDL = {
     '  UNIQUE (processing_execution_id),',
     '  FOREIGN KEY (parent_result_id) REFERENCES processing_results(result_id)',
     ');',
-  ].join('\\n'),
+  ].join('\n'),
   evidence: [
     'CREATE TABLE processing_result_evidence (',
     '  result_id TEXT NOT NULL,',
