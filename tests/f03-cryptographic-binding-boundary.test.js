@@ -40,8 +40,8 @@ function makeCursor(start = 100) {
 
 function makeEngine({ sourceFactory, cursor = makeCursor() }) {
   const gate = createAuthorityGate({
-    authorityFactory: sourceFactory,
-    expectedAuthorityFactory: () => makeAuthority(101).expected,
+    authorityFactory: ({fromBlock,toBlock}) => ({...sourceFactory({fromBlock,toBlock}),fromBlock,toBlock}),
+    expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...makeAuthority(toBlock).expected,fromBlock,toBlock}),
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
   });
