@@ -41,6 +41,7 @@ const { assertProductionAuthority } = require('./core/f03-production-authority-r
 const { assertAuthorityBinding } = require('./core/f03-authority-binding');
 const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
 const { readF03AuthorityChain } = require('./core/f03-authoritative-chain-persistence');
+const { createVerifiedProcessingContext } = require('./core/runtime-processing-context');
 
 const {
   POOL_MANAGER,
@@ -142,26 +143,36 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
   };
 
   const processorRange = async (fromBlock, toBlock) => {
-    const result = await rawLogs.ingestRange(
+    const context = await createVerifiedProcessingContext({
+      database,
+      provider,
+      writerFence,
+      confirmations: CONFIRMATIONS,
+      chainId: CHAIN_ID,
       fromBlock,
       toBlock,
-      createRelevantLogFilter()
-    );
+      provenance: {
+        component: 'runtime-processing-context',
+        range: `${fromBlock}-${toBlock}`,
+      },
+      rawIngest: async (rangeFrom, rangeTo) => {
+        const result = await rawLogs.ingestRange(
+          rangeFrom,
+          rangeTo,
+          createRelevantLogFilter()
+        );
 
-    /*
-     * Persist only after the complete batch succeeds.
-     * IngestionEngine advances the cursor only after
-     * processorRange resolves successfully.
-     */
-    database.save();
+        console.log(
+          `Blocks ${rangeFrom}-${rangeTo}: fetched=${result.fetched}` +
+          ` inserted=${result.inserted}` +
+          ` duplicates=${result.duplicates}`
+        );
 
-    console.log(
-      `Blocks ${fromBlock}-${toBlock}: fetched=${result.fetched}` +
-      ` inserted=${result.inserted}` +
-      ` duplicates=${result.duplicates}`
-    );
+        return result;
+      },
+    });
 
-    return result;
+    return context;
   };
 
   const productionAuthorityFactory = authorityFactory || (() => {
@@ -182,6 +193,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
       expectedAuthorityFactory: productionExpectedAuthorityFactory,
       authorityValidator: assertProductionAuthority,
       authorityBindingValidator: assertAuthorityBinding,
+      writerFence,
     }),
   });
 
@@ -228,6 +240,18 @@ async function main() {
     console.log(`Safe head: ${result.safeHead}`);
     console.log(`Processed: ${result.processed}`);
     console.log(`Cursor: ${result.cursor}`);
+    if (result.processingContext) {
+      console.log(`Processing context: ${result.processingContext.status}`);
+      console.log(`Range: ${result.processingContext.fromBlock}-${result.processingContext.toBlock}`);
+      console.log(`Result ID: ${result.processingContext.processingResultId}`);
+      console.log(`Execution ID: ${result.processingContext.processingExecutionId}`);
+      console.log(`Lineage ID: ${result.processingContext.lineageId}`);
+      console.log(`Transition: ${result.processingContext.transitionType}`);
+      console.log(`Generation: ${result.processingContext.generation}`);
+      console.log(`Evidence set digest: ${result.processingContext.evidenceSetDigest}`);
+      console.log(`Authority: ${result.authorityOutcome?.status || 'UNKNOWN'}`);
+      console.log(`Cursor outcome: ${result.cursor}`);
+    }
   } catch (error) {
     const message =
       error instanceof Error

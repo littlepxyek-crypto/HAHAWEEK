@@ -151,6 +151,8 @@ class IngestionEngine {
        */
       if (typeof this.processorRange === 'function') {
         let batchesProcessed = 0;
+        let lastProcessingContext = null;
+        let lastAuthorityOutcome = null;
 
         for (
           let fromBlock = current + 1;
@@ -166,16 +168,27 @@ class IngestionEngine {
           /*
            * DO NOT advance cursor before this resolves.
            */
-          await this.processorRange(
+          const processingContext = await this.processorRange(
             fromBlock,
             toBlock
           );
 
           /*
            * Batch completed successfully.
-           * Now and only now advance the checkpoint.
+           * Authority must accept the exact verified context
+           * before the unchanged cursor barrier may advance.
            */
-          this.authorityGate({ checkpointCommitted: true, fromBlock, toBlock, blockNumber: toBlock });
+          lastProcessingContext = processingContext;
+          const authorityInput = {
+            checkpointCommitted: true,
+            fromBlock,
+            toBlock,
+            blockNumber: toBlock,
+          };
+          if (processingContext !== undefined) {
+            authorityInput.processingContext = processingContext;
+          }
+          lastAuthorityOutcome = this.authorityGate(authorityInput);
           this.cursor.advance(toBlock);
 
           processed += toBlock - fromBlock + 1;
@@ -187,6 +200,8 @@ class IngestionEngine {
           latestBlock,
           safeHead,
           cursor: this.cursor.get(),
+          processingContext: lastProcessingContext,
+          authorityOutcome: lastAuthorityOutcome,
         };
       }
 
