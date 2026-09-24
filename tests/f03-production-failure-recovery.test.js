@@ -18,6 +18,7 @@ function makeEngine(authorityFactory, cursor) {
     authorityGate: createAuthorityGate({
       authorityFactory,
       authorityValidator: assertProductionAuthority,
+      authorityBindingValidator: () => ({status:'BOUND'}),
     }),
   });
 }
@@ -56,13 +57,14 @@ test('F-03 production boundary can retry the same authority range after rejectio
   const engine = makeEngine(({ fromBlock, toBlock }) => {
     seen.push([fromBlock, toBlock]);
     if (reject) throw new Error('AUTHORITY_REJECTED');
-    return {
+    const authority={
       segmentId: `seg-${fromBlock}-${toBlock}`,
       manifestDigest: 'm101',
       checkpointDigest: 'c101',
       generation: 'g1',
       cursorBlock: toBlock,
     };
+    return {authority,expected:authority};
   }, cursor);
 
   await assert.rejects(() => engine.runOnce(), /AUTHORITY_REJECTED/);

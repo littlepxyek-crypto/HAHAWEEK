@@ -1,34 +1,82 @@
 'use strict';
-const test=require('node:test'); const assert=require('node:assert/strict');
-const {createAuthorityGate}=require('../src/core/f03-ingestion-authority-integration');
-const {assertProductionAuthority}=require('../src/core/f03-production-authority-record');
 
-test('F-03 production boundary adapter validates complete authority before cursor',()=>{
-  const gate=createAuthorityGate({
-    authorityFactory:({fromBlock,toBlock})=>({
-      segmentId:'segment:'+fromBlock+':'+toBlock,
-      manifestDigest:'manifest-digest',
-      checkpointDigest:'checkpoint-digest',
-      generation:'g1',
-      cursorBlock:toBlock,
-    }),
-    authorityValidator:assertProductionAuthority,
+const test = require('node:test');
+const assert = require('node:assert/strict');
+
+const { createAuthorityGate } = require('../src/core/f03-ingestion-authority-integration');
+const { assertProductionAuthority } = require('../src/core/f03-production-authority-record');
+const { assertAuthorityBinding, createAuthorityBindingDigest } = require('../src/core/f03-authority-binding');
+
+function makeSource(cursorBlock = 110) {
+  const expected = {
+    segmentId: 'segment:' + cursorBlock,
+    manifestDigest: 'manifest-digest-' + cursorBlock,
+    checkpointDigest: 'checkpoint-digest-' + cursorBlock,
+    generation: 'g1',
+    cursorBlock,
+  };
+
+  return {
+    authority: {
+      ...expected,
+      bindingDigest: createAuthorityBindingDigest(expected),
+    },
+    expected,
+  };
+}
+
+function makeGate(factory) {
+  return createAuthorityGate({
+    authorityFactory: factory,
+    authorityValidator: assertProductionAuthority,
+    authorityBindingValidator: assertAuthorityBinding,
   });
-  assert.equal(gate({fromBlock:101,toBlock:110,checkpointCommitted:true}).status,'AUTHORIZED');
+}
+
+test('F-03 production boundary adapter validates complete cryptographically bound authority before cursor', () => {
+  const gate = makeGate(() => makeSource(110));
+  assert.equal(
+    gate({fromBlock:101,toBlock:110,checkpointCommitted:true}).status,
+    'AUTHORIZED'
+  );
 });
 
-test('F-03 adapter fails closed when authority is incomplete',()=>{
-  const gate=createAuthorityGate({
-    authorityFactory:()=>({segmentId:'s1'}),
-    authorityValidator:assertProductionAuthority,
-  });
-  assert.throws(()=>gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),/AUTHORITY_MANIFESTDIGEST_MISSING/);
+test('F-03 adapter fails closed when authority is incomplete', () => {
+  const source = makeSource(110);
+  delete source.authority.manifestDigest;
+
+  const gate = makeGate(() => source);
+  assert.throws(
+    () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
+    /AUTHORITY_MANIFESTDIGEST_MISSING/
+  );
 });
 
-test('F-03 adapter rejects checkpoint before authority construction',()=>{
-  const gate=createAuthorityGate({
-    authorityFactory:()=>{ throw new Error('MUST_NOT_BE_CALLED'); },
-    authorityValidator:assertProductionAuthority,
+test('F-03 adapter fails closed when cryptographic source envelope is incomplete', () => {
+  const gate = makeGate(() => ({authority: makeSource(110).authority}));
+  assert.throws(
+    () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
+    /AUTHORITY_BINDING_SOURCE_REQUIRED/
+  );
+});
+
+test('F-03 adapter rejects checkpoint before authority construction', () => {
+  const gate = makeGate(() => {
+    throw new Error('MUST_NOT_BE_CALLED');
   });
-  assert.throws(()=>gate({fromBlock:101,toBlock:110,checkpointCommitted:false}),/CHECKPOINT_NOT_COMMITTED/);
+  assert.throws(
+    () => gate({fromBlock:101,toBlock:110,checkpointCommitted:false}),
+    /CHECKPOINT_NOT_COMMITTED/
+  );
+});
+
+test('F-03 adapter rejects a valid structural authority with a tampered binding', () => {
+  const source = makeSource(110);
+  source.authority.bindingDigest = 'c'.repeat(64);
+
+  const gate = makeGate(() => source);
+  assert.throws(
+    () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
+    /AUTHORITY_BINDING_CONFLICT/
+  );
 });

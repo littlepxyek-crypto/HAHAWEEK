@@ -8,8 +8,12 @@ test('F-03 production boundary consumes complete authority record before cursor'
   const events=[]; let cursorValue=100;
   const cursor={get:()=>cursorValue,advance:n=>{events.push(['cursor',n]);cursorValue=n;}};
   const authorityGate=createAuthorityGate({
-    authorityFactory:({fromBlock,toBlock})=>({segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:toBlock,fromBlock}),
-    authorityValidator:record=>{events.push(['authority',record.cursorBlock]); return assertProductionAuthority(record);}
+    authorityFactory:({fromBlock,toBlock})=>({
+      authority:{segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:toBlock,fromBlock},
+      expected:{segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:toBlock,fromBlock}
+    }),
+    authorityValidator:record=>{events.push(['authority',record.cursorBlock]); return assertProductionAuthority(record);},
+    authorityBindingValidator:()=>({status:'BOUND'})
   });
   const engine=new IngestionEngine({
     provider:{getBlockNumber:async()=>101},cursor,confirmations:0,
@@ -27,8 +31,12 @@ test('F-03 production boundary rejects incomplete authority before cursor',async
   let cursorValue=100;
   const cursor={get:()=>cursorValue,advance:n=>{cursorValue=n;}};
   const authorityGate=createAuthorityGate({
-    authorityFactory:()=>({segmentId:'seg-101'}),
-    authorityValidator:assertProductionAuthority
+    authorityFactory:()=>({
+      authority:{segmentId:'seg-101'},
+      expected:{segmentId:'seg-101'}
+    }),
+    authorityValidator:assertProductionAuthority,
+    authorityBindingValidator:()=>({status:'BOUND'})
   });
   const engine=new IngestionEngine({
     provider:{getBlockNumber:async()=>101},cursor,confirmations:0,
