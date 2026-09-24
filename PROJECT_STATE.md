@@ -1,3 +1,13 @@
+## STEP 546 — F-03 Authoritative Commitment Source Contract — MERGED / READY FOR IMPLEMENTATION
+
+- STEP 546 contract PR #268 merged to main as `0b1f15199f6cbef79e4eff5368cf7990fe90e1c4`.
+- PR-head HAHAWEEK Tests run `35952336033` and HAHAWEEK Security and Regression run `35952336037` completed successfully.
+- The contract requires expected authority commitments to come from a distinct explicit source for the exact processed range before STEP 544 cryptographic binding validation.
+- No runtime code, V4 activation, cursor reset, historical rewrite/deletion, RPC/provider change, or SQLite migration was introduced.
+- Exact post-merge workflow lookup returned no associated PR-triggered workflow runs; no post-merge CI GREEN result is claimed.
+- F-03 remains CONDITIONAL and Gate 2 remains NOT PASSED.
+- Implementation is the next explicit step.
+
 ## STEP 545 — F-03 Cryptographic Binding Boundary Reconciliation — VERIFIED / CONDITIONAL
 
 - STEP 545 contract PR #265 merged to main.
