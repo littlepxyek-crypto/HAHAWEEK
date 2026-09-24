@@ -1,3 +1,18 @@
+## STEP 502 — H-02 State Reconciliation — VERIFIED / FROZEN
+
+- STEP 500 H-02 duplicate/collision contract was merged to `main`.
+- STEP 501 implemented deterministic raw-event digest classification across legacy SQLite raw-event storage and append-only JSONL storage.
+- Same identity + same digest is classified as `IDEMPOTENT`.
+- Same identity + different digest is classified as `INTEGRITY_CONFLICT`; legacy `INSERT OR IGNORE` no longer silently defines a digest mismatch as a duplicate.
+- STEP 501 PR #217 was merged with exact merge commit `4356d443ab9fe12ea39a73b7f1b910b181539c9e`.
+- PR-head Tests, Security & Regression, and both CodeQL analyses completed successfully.
+- Exact merge commit post-merge HAHAWEEK Tests, Security & Regression, CodeQL Actions, and CodeQL JavaScript/TypeScript completed successfully.
+- H-02 acceptance evidence is reconciled as VERIFIED / FROZEN at the legacy raw-event duplicate/collision boundary.
+- No V4 production authority activation, RPC change, cursor reset, checkpoint authority change, SQLite schema migration, or historical artifact deletion was introduced by STEP 500–502.
+- Design Gate 2 remains NOT PASSED; H-03 and remaining controls are not implicitly closed.
+- Historical project-state entries remain preserved below this entry.
+- Any future H-02 semantic change requires a new explicit contract/step.
+
 ## STEP 499 — H-01 State Reconciliation — VERIFIED / FROZEN
 
 - STEP 494 H-01 Legacy Write Freeze contract PR #210 merged to main.
