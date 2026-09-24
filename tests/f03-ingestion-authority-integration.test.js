@@ -28,6 +28,7 @@ function makeSource(cursorBlock = 110) {
 function makeGate(factory) {
   return createAuthorityGate({
     authorityFactory: factory,
+    expectedAuthorityFactory: () => makeSource(110).expected,
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
   });
@@ -53,7 +54,7 @@ test('F-03 adapter fails closed when authority is incomplete', () => {
 });
 
 test('F-03 adapter fails closed when cryptographic source envelope is incomplete', () => {
-  const gate = makeGate(() => ({authority: makeSource(110).authority}));
+  const gate = makeGate(() => makeSource(110).authority);
   assert.throws(
     () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
     /AUTHORITY_BINDING_SOURCE_REQUIRED/
