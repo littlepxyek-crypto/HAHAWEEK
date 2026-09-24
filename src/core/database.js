@@ -27,7 +27,7 @@ const CANONICAL_DECISION_DDL = {
     '  CHECK (confirmation_depth >= 0),',
     '  UNIQUE (chain_id, block_number, block_hash)',
     ');',
-  ].join('\\n'),
+  ].join('\n'),
   snapshots: [
     'CREATE TABLE canonical_decision_snapshots (',
     '  snapshot_id TEXT PRIMARY KEY,',
@@ -45,7 +45,7 @@ const CANONICAL_DECISION_DDL = {
     '  CHECK (decision_head_block >= 0),',
     '  CHECK (confirmation_depth >= 0)',
     ');',
-  ].join('\\n'),
+  ].join('\n'),
   blocks: [
     'CREATE TABLE canonical_decision_snapshot_blocks (',
     '  snapshot_id TEXT NOT NULL,',
@@ -58,7 +58,7 @@ const CANONICAL_DECISION_DDL = {
     '  FOREIGN KEY (snapshot_id) REFERENCES canonical_decision_snapshots(snapshot_id),',
     '  FOREIGN KEY (record_digest) REFERENCES canonical_block_decisions(record_digest)',
     ');',
-  ].join('\\n'),
+  ].join('\n'),
 };
 
 const PROCESSING_RESULT_DDL = {
