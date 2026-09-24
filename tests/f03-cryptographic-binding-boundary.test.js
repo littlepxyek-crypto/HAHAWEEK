@@ -108,7 +108,7 @@ for (const [field, value, error] of [
     source.authority[field] = value;
 
     const { engine, cursor } = makeEngine({
-      sourceFactory: () => source,
+      sourceFactory: () => source.authority,
     });
 
     await assert.rejects(engine.runOnce(), new RegExp(error));
