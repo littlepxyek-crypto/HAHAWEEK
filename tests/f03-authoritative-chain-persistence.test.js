@@ -200,7 +200,7 @@ test('F-03 unsupported schema versions fail closed', async () => {
   authority.writerFence.release();
 });
 
-test('F-03 schema 4 missing required table fails closed', async () => {
+test('F-03 schema 5 missing required table fails closed', async () => {
   const dir = tempDir();
   const file = path.join(dir, 'malformed.sqlite');
   const first = await createFileDatabase(dir, 'malformed.sqlite');
