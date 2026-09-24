@@ -1,3 +1,20 @@
+## STEP 588 — Runtime Generation Establishment Contract — VERIFIED / RECONCILED
+
+- Baseline main commit inspected: `9fe4976dbc32ba3a16fad4465b32f2816383a8a6`.
+- Contract: `docs/STEP_588_RUNTIME_GENERATION_ESTABLISHMENT_CONTRACT_V0_1.md`.
+- Contract PR #362 merged as `1245fa00307e36e45756e1100a8bcbf89e2cf0b5`.
+- PR-head HAHAWEEK Tests run `36006610872`: SUCCESS.
+- PR-head HAHAWEEK Security and Regression run `36006611099`: SUCCESS.
+- PR-head CodeQL dynamic run `36006608964`: SUCCESS.
+- Post-merge HAHAWEEK Tests run `36006852477`: SUCCESS.
+- Post-merge HAHAWEEK Security and Regression run `36006852370`: SUCCESS.
+- Post-merge Push on main / CodeQL run `36006851752`: SUCCESS.
+- Review/comment evidence recorded on PR #362; no self-approval claim.
+- Generation semantics are now contractually frozen and independent of authority/cursor state.
+- V4 production activation remains INACTIVE.
+- Reconciliation: `docs/STEP_588_RUNTIME_GENERATION_ESTABLISHMENT_CONTRACT_RECONCILIATION_V0_1.md`.
+- Next STEP: STEP 589 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design.
+
 ## STEP 587 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `74908d8c44fe181b2beadf3db1547889dce92b98`.
