@@ -9,8 +9,8 @@ function engineWithAuthority({authorityFactory,expectedAuthorityFactory,authorit
     processor:async()=>{},processorRange:async()=>{},
     batchSize:1,maxBatchesPerRun:1,
     authorityGate:createAuthorityGate({
-      authorityFactory,
-      expectedAuthorityFactory,
+      authorityFactory: ({fromBlock,toBlock}) => ({...authorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
+      expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...expectedAuthorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
       authorityValidator,
       authorityBindingValidator:()=>({status:'BOUND'})
     })
