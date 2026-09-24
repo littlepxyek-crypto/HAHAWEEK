@@ -167,6 +167,9 @@ test('F-03 schema 3 migrates in place through schema 6 and preserves existing ro
   first.database.db.run(
     "INSERT INTO raw_events (event_id, chain_id, block_number, transaction_hash, log_index, address, topics_json, data, captured_at) VALUES ('legacy-1', 4663, 100, '0xtx', 0, '0xpool', '[]', '0x', '2026-09-24T05:00:00.000Z')"
   );
+  first.database.db.run("DROP TABLE canonical_decision_snapshot_blocks");
+  first.database.db.run("DROP TABLE canonical_decision_snapshots");
+  first.database.db.run("DROP TABLE canonical_block_decisions");
   first.database.db.run("DROP TABLE processing_result_evidence");
   first.database.db.run("DROP TABLE processing_results");
   first.database.db.run("DROP TABLE f03_checkpoints");
