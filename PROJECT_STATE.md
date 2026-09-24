@@ -1,3 +1,20 @@
+## STEP 582 — Runtime Canonical Lineage / Processing Context Integration Contract — VERIFIED / RECONCILED
+
+- Baseline main commit inspected: `16717bcbb115e954ad6e35ba7d333c880f2f2482`.
+- Contract: `docs/STEP_582_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
+- Contract PR #348 merged as `e98d7e33d659dd6c1e0d174acfbcfb9c79eb6ee9`.
+- PR-head HAHAWEEK Tests run `35994157666`: SUCCESS.
+- PR-head HAHAWEEK Security and Regression run `35994157733`: SUCCESS.
+- PR-head CodeQL dynamic run `35994155208`: SUCCESS.
+- Post-merge HAHAWEEK Tests run `35994312513`: SUCCESS.
+- Post-merge HAHAWEEK Security and Regression run `35994312502`: SUCCESS.
+- Post-merge Push on main / CodeQL run `35994312338`: SUCCESS.
+- Review/comment evidence recorded on PR #348; no self-approval claim.
+- Contract phase is limited to the implementation boundary. No production runtime, schema, cursor, historical evidence, frozen STEP 568/579 semantics, or V4 activation changed.
+- V4 production activation remains INACTIVE.
+- Reconciliation: `docs/STEP_582_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_CONTRACT_RECONCILIATION_V0_1.md`.
+- Next STEP: STEP 583 — Runtime Canonical Lineage / Processing Context Integration Implementation Analysis & Design.
+
 ## STEP 581 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design — VERIFIED / RECONCILED
 
 - Contract PR #345 merged as `ea99db0886d03df884f96360d8b5e58fa7cf7495`.
