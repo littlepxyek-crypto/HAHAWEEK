@@ -36,6 +36,7 @@ const { createRawEventStore } = require('./core/raw-event-store');
 const { appendUnique } = require('./core/raw-store');
 const { loadState, saveState } = require('./core/state');
 const { createLegacyWriteBarrier } = require('./core/legacy-write-freeze');
+const { createWriterFence } = require('./core/single-writer-fence');
 
 const {
   POOL_MANAGER,
@@ -68,7 +69,9 @@ function createRelevantLogFilter() {
 
 async function createEngine() {
   const provider = createProvider();
-  const legacyWriteBarrier = createLegacyWriteBarrier();
+  const writerFence = createWriterFence();
+  writerFence.acquire();
+  const legacyWriteBarrier = createLegacyWriteBarrier({ writerFence });
 
   const database = await createDatabase(undefined, { legacyWriteBarrier });
 
@@ -165,6 +168,7 @@ async function createEngine() {
     database,
     ingestion,
     legacyWriteBarrier,
+    writerFence,
   };
 }
 
@@ -217,6 +221,7 @@ async function main() {
     throw error;
   } finally {
     engine.database.close();
+    engine.writerFence.release();
     engine.provider.destroy();
 
     process.removeListener('SIGINT', handleSIGINT);

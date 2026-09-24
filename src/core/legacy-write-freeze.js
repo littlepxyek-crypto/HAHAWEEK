@@ -52,6 +52,11 @@ function createLegacyWriteBarrier(options = {}) {
     assertWritable() {
       const state = validateState(readState());
       if (state === FROZEN_STATE) throw new LegacyWriteFreezeError();
+
+      if (options.writerFence) {
+        options.writerFence.assertOwned();
+      }
+
       return true;
     },
 
