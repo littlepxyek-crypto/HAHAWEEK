@@ -186,6 +186,7 @@ function assertF03Schema(db) {
     ],
     [
       { table: 'f03_segments', from: 'segment_id', to: 'segment_id' },
+      { table: 'f03_segments', from: 'segment_digest', to: 'segment_digest' },
     ]
   );
 
@@ -203,6 +204,7 @@ function assertF03Schema(db) {
     ],
     [
       { table: 'f03_manifests', from: 'manifest_id', to: 'manifest_id' },
+      { table: 'f03_manifests', from: 'manifest_digest', to: 'manifest_digest' },
     ]
   );
 
