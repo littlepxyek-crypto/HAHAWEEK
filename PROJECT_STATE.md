@@ -1,3 +1,15 @@
+## STEP 567 — Durable Processing-Result / Generation Persistence Implementation Contract — VERIFIED / RECONCILED
+
+- PR #317 merged to main as `b346887a7ba454625b0fa5fb07b93465e705fd10`.
+- PR-head `083112b145d2e6d3c4aa5f1fafe3a18ba55cd9a5`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS; CodeQL NEUTRAL; Actions analysis successful where reported.
+- Contract freezes additive schema v4→v5 and immutable processing-result/evidence-membership persistence.
+- Generation remains canonical-processing lineage supplied; persistence never manufactures it.
+- No production code/schema/cursor/evidence/authority/RPC/V4 activation change in this contract stage.
+- Exact merge commit `b346887a7ba454625b0fa5fb07b93465e705fd10` has no associated workflow runs; no post-merge CI GREEN is claimed.
+- Reconciliation: `docs/STEP_567_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- V4 production activation remains INACTIVE.
+- Next STEP: STEP 568 — Durable Processing-Result / Generation Persistence Implementation.
+
 ## STEP 566 — Durable Processing-Result / Generation Persistence Contract — VERIFIED / RECONCILED
 
 - STEP 566 contract/analysis/design PR #315 merged to main as `6bb0ede2cb557cde5d5b7ea71b3f197f75f3fd11`.
