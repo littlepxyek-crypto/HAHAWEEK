@@ -100,7 +100,7 @@ test('generation is supplied by processing result and missing generation fails c
 
 test('range mutation fails closed', () => {
   const a = makeRecord('raw-a', 100, 0, 0, '22', '11');
-  const result = makeResult([a], { toBlock: 100 });
+  const result = makeResult([a], { fromBlock: 101 });
 
   assert.throws(
     () => deriveV4EvidenceCommitment({
