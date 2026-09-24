@@ -99,7 +99,6 @@ test('STEP 550 expected-authority factory reads only the durable F-03 chain', as
     fromBlock: 200,
     toBlock: 209,
     segmentId: 'segment-550',
-    segmentId: 'segment-550',
     manifestId: 'manifest-550',
     manifestDigest: 'b'.repeat(64),
     checkpointDigest: checkpointDigestFor('1', 'b'.repeat(64)),
