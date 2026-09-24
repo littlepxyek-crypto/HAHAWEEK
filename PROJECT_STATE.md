@@ -1,3 +1,14 @@
+## STEP 547 — F-03 Authoritative Source Boundary — VERIFIED / CONDITIONAL
+
+- STEP 547 implementation PR #270 merged to main as `3796670af0677c187fa73898042777a697cbfbe0`.
+- Corrected PR-head HAHAWEEK Tests run `35953067589` and Security and Regression run `35953067643` completed successfully.
+- The F-03 authority gate now requires a distinct explicit expected-authority source and exact processed-range metadata before structural and cryptographic validation can authorize cursor advancement.
+- Initial CI failures were isolated to test fixtures/helpers; production code was not weakened.
+- Exact post-merge workflow lookup returned no associated PR-triggered runs; no post-merge CI GREEN result is claimed.
+- F-03 remains CONDITIONAL. Gate 2 remains NOT PASSED.
+- No V4 activation, cursor reset, historical rewrite/deletion, RPC/provider change, or SQLite migration was introduced.
+- Next explicit gap: bind the expected authority source to durable evidence/checkpoint state.
+
 ## STEP 546 — F-03 Authoritative Commitment Source Contract — MERGED / READY FOR IMPLEMENTATION
 
 - STEP 546 contract PR #268 merged to main as `0b1f15199f6cbef79e4eff5368cf7990fe90e1c4`.
