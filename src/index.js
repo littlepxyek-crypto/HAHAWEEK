@@ -37,6 +37,7 @@ const { appendUnique } = require('./core/raw-store');
 const { loadState, saveState } = require('./core/state');
 const { createLegacyWriteBarrier } = require('./core/legacy-write-freeze');
 const { createWriterFence } = require('./core/single-writer-fence');
+const { assertCheckpointBeforeCursor } = require('./core/f03-production-authority');
 
 const {
   POOL_MANAGER,
@@ -161,6 +162,10 @@ async function createEngine() {
     processorRange,
     batchSize: CHUNK_SIZE,
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
+    authorityGate: ({ checkpointCommitted }) => assertCheckpointBeforeCursor({
+      checkpointCommitted,
+      cursorAdvanced: true,
+    }),
   });
 
   return {
