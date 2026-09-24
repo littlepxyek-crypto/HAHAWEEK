@@ -176,7 +176,7 @@ test('F-03 schema 3 migrates in place and preserves existing rows', async () => 
   first.writerFence.release();
 
   const second = await createFileDatabase(dir);
-  assert.equal(second.database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '4');
+  assert.equal(second.database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '5');
   assert.equal(second.database.db.exec("SELECT event_id FROM raw_events WHERE event_id = 'legacy-1'")[0].values[0][0], 'legacy-1');
 
   second.database.close();
