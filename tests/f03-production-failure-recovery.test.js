@@ -16,8 +16,8 @@ function makeEngine(authorityFactory, expectedAuthorityFactory, cursor) {
     batchSize: 1,
     maxBatchesPerRun: 1,
     authorityGate: createAuthorityGate({
-      authorityFactory,
-      expectedAuthorityFactory,
+      authorityFactory: ({fromBlock,toBlock}) => ({...authorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
+      expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...expectedAuthorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
       authorityValidator: assertProductionAuthority,
       authorityBindingValidator: () => ({status:'BOUND'}),
     }),
