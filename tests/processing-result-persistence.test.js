@@ -116,6 +116,9 @@ test('fresh database is schema v6 and preserves F-03 tables', async () => {
 test('v4 database migrates additively through v6', async () => {
   const f = fixture();
   const db = await createDatabase(f.databaseFile);
+  db.db.run("DROP TABLE canonical_decision_snapshot_blocks");
+  db.db.run("DROP TABLE canonical_decision_snapshots");
+  db.db.run("DROP TABLE canonical_block_decisions");
   db.db.run("DROP TABLE processing_result_evidence");
   db.db.run("DROP TABLE processing_results");
   db.db.run("UPDATE schema_meta SET value='4' WHERE key='schema_version'");
