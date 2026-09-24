@@ -33,6 +33,6 @@ test('F-03 is fail-closed for incomplete authority evidence', () => {
     () => assertCheckpointBeforeCursor({
       checkpointCommitted: false,
     }),
-    /CURSOR_NOT_ADVANCED/
+    /CHECKPOINT_NOT_COMMITTED/
   );
 });
