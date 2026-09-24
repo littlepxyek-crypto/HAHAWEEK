@@ -1,3 +1,18 @@
+## STEP 508 — H-04 State Reconciliation — VERIFIED / FROZEN
+
+- STEP 506 H-04 Durability / Crash Recovery contract PR #222 merged to main as `7402e0219fb1c45b5c14b2cac9d7ef8f2b96f71d`.
+- STEP 507 H-04 durability/recovery verification PR #223 merged to main as `417b80b16ecdc0d9da315398f17a9230f039ce2d`.
+- H-04 evidence demonstrates evidence persistence before cursor advancement at the tested boundary.
+- Crash after evidence persistence but before cursor advancement leaves the persisted evidence available for deterministic replay.
+- Restart replay of the same evidence is classified `IDEMPOTENT`; the cursor then advances.
+- Evidence-processing failure leaves the cursor at its prior persisted block.
+- Exact merge-commit workflow endpoint for `417b80b16ecdc0d9da315398f17a9230f039ce2d` returned no workflow runs at reconciliation time; therefore no exact post-merge GREEN result is claimed.
+- H-04 closure is limited to the executable evidence available: PR-head Tests and Security & Regression were GREEN; exact post-merge CI evidence is unavailable.
+- No V4 production authority activation, RPC change, cursor semantic reset, checkpoint authority change, SQLite schema migration, historical rewrite/deletion, or predictive/trading/signing/publication behavior was introduced.
+- Design Gate 2 remains NOT PASSED; H-05 and remaining F-controls are not implicitly closed.
+- Historical project-state entries remain preserved below this entry.
+- Any future H-04 semantic change requires a new explicit contract/step.
+
 ## STEP 505 — H-03 State Reconciliation — VERIFIED / FROZEN
 
 - STEP 503 H-03 Single Writer / Fencing contract PR #219 merged to main as `494f40ee983a69541b0dc7782c62e043dd7bb6f1`.
