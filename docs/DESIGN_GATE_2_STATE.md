@@ -19,8 +19,8 @@ Status: VERIFIED / FROZEN
 Independent offline F-02 evidence covers gap/fork/reorg, canonical/orphan coexistence, predecessor/sequence continuity, recovery, replay, duplicate and integrity-conflict classification within the audited boundary. Exact post-merge CI was unavailable at reconciliation time.
 
 ### F-03 — Checkpoint / cursor authority
-Status: CONDITIONAL
-Executable checkpoint/cursor recovery evidence exists, but production V4 authority cutover remains unproven. This is a Gate 2 blocker.
+Status: VERIFIED / FROZEN
+Durable segment -> manifest -> checkpoint persistence, exact cursor boundary, durable expected-authority sourcing, restart/failure recovery, writer fencing, provenance/linkage validation, and executable regression evidence are reconciled. Production V4 authority cutover remains inactive and is not implied by this F-03 closure.
 
 ### F-04 — Legacy migration
 Status: VERIFIED / FROZEN
