@@ -81,3 +81,7 @@ STEP 554 Implementation Contract
 → Post-Merge Verification
 → Reconciliation
 → STEP 556 Contract Amendment.
+
+## 11. Required-check recovery
+
+The repository rule initially reported the required `test-and-security` check as cancelled despite its underlying job completing successfully. The job was rerun through GitHub Actions and completed successfully. The reconciliation branch was then updated so the fresh head receives a new required-check evaluation before merge. No production behavior is changed.
