@@ -23,6 +23,7 @@ test('F-03 accepts same-generation monotonic authority',()=>{
     {...BASE,generation:'g1',cursorBlock:100},
     {...BASE,generation:'g1',cursorBlock:101}
   ),{status:'CONTINUOUS',...BASE,generation:'g1',cursorBlock:101});
+});
 
 test('F-03 rejects same-generation segment binding conflict',()=>{
   assert.throws(()=>assertAuthorityContinuity(
