@@ -335,7 +335,7 @@ function assertProcessingResultSchema(db) {
   }
   const evidenceColumns = db.exec('PRAGMA table_info(processing_result_evidence)')[0]?.values ?? [];
   const expectedEvidence = [
-    ['result_id','TEXT',1,0],['ordinal','INTEGER',1,0],['evidence_id','TEXT',1,0],['raw_event_id','TEXT',1,0],
+    ['result_id','TEXT',1,1],['ordinal','INTEGER',1,2],['evidence_id','TEXT',1,0],['raw_event_id','TEXT',1,0],
     ['identity_hash','TEXT',1,0],['raw_hash','TEXT',1,0],['canonical_hash','TEXT',1,0],
     ['block_number','INTEGER',1,0],['transaction_index','INTEGER',1,0],['log_index','INTEGER',1,0],
   ];
