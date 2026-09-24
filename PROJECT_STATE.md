@@ -1,3 +1,18 @@
+## STEP 574 — Runtime Canonical Lineage / Transition-History Implementation Design & Analysis — VERIFIED / RECONCILED
+
+- Starting/main commit inspected: `62075e423fdeb628da2de4f3cd111112383052a2`.
+- Design/analysis: `docs/STEP_574_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_DESIGN_ANALYSIS_V0_1.md`.
+- PR #331 merged to main as `d4527cf37e5aef87d49bca5ead53706881e9e57e`.
+- PR-head `7e47ce4f1124f62d36c89662e090f3cca8f04616`: HAHAWEEK Tests run `35982440631` SUCCESS; HAHAWEEK Security and Regression run `35982440755` SUCCESS.
+- Review/comment evidence recorded on PR #331; no self-approval claim.
+- Design defines the smallest repository-compatible runtime lineage boundary, additive schema v5→v6 proposal, reuse of existing F-02 transition hashing, canonical-state reconstruction, deterministic processing identities, recovery/concurrency behavior, and integration ordering.
+- Design explicitly identifies the remaining canonical-decision input gap: repository cannot safely infer canonicality from RPC presence, so production implementation must fail closed unless an approved canonical-decision source exists.
+- No production code, schema migration, cursor behavior, historical evidence, STEP 563 formulas, STEP 568 semantics, or V4 activation changed.
+- Exact merge commit `d4527cf37e5aef87d49bca5ead53706881e9e57e` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
+- Reconciliation: `docs/STEP_574_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- STEP 574 is VERIFIED / RECONCILED.
+- Next STEP: STEP 575 — Runtime Canonical Decision Input / Lineage Implementation Readiness Analysis.
+
 ## STEP 573 — Runtime Canonical Lineage / Transition-History Implementation Contract — VERIFIED / FROZEN
 
 - Repository baseline inspected at main commit `3c27293236a107751a31c189c5c906a0b9548556`.
