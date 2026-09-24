@@ -95,7 +95,7 @@ const RUNTIME_LINEAGE_DDL = {
     '  CHECK (from_block >= 0),',
     '  CHECK (to_block >= 0),',
     '  CHECK (from_block <= to_block),',
-    "  CHECK (transition_type IN ('INITIAL','CONTINUATION','REORG_REPLACEMENT')),",
+    "  CHECK (transition_type IN ('INITIAL','CONTINUATION','REORG_REPLACEMENT'))",
     ');',
   ].join('\n'),
   triggers: [
