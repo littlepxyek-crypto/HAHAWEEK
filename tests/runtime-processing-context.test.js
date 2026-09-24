@@ -10,7 +10,7 @@ const { createDatabase } = require('../src/core/database');
 const { createWriterFence } = require('../src/core/single-writer-fence');
 const { createVerifiedProcessingContext } = require('../src/core/runtime-processing-context');
 
-const HASH = n => '0x' + String(n).padStart(2, '0').repeat(32);
+const HASH = n => '0x' + Number(n).toString(16).padStart(2, '0').repeat(32);
 
 function raw(eventId, block, hash) {
   return {
