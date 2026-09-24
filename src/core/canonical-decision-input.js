@@ -323,6 +323,17 @@ function findBranchCommonAncestor(db, { chainId, firstBlockHash, secondBlockHash
       chain.set(row.block_hash, row);
 
       if (row.block_number === 0) break;
+
+      const parent = queryOne(
+        db,
+        `SELECT record_digest
+           FROM canonical_block_decisions
+          WHERE chain_id = ? AND block_hash = ?
+          ORDER BY block_number DESC`,
+        [chainId, row.parent_block_hash]
+      );
+
+      if (!parent) break;
       currentHash = row.parent_block_hash;
     }
 
