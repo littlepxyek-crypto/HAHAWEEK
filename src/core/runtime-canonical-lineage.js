@@ -482,13 +482,6 @@ async function acceptCanonicalLineage({
       committedAt,
     };
 
-    writerFence.assertOwned();
-    const verifiedResult = persistProcessingResult({
-      database,
-      processingResult,
-      writerFence,
-    });
-
     const lineageId = deriveLineageId({
       transitionType,
       parentResultId: parentResultId ?? null,
@@ -497,6 +490,22 @@ async function acceptCanonicalLineage({
       generation: resolvedGeneration,
       processingResultId,
     });
+    const existingLineage = database.db.exec(
+      'SELECT lineage_id FROM canonical_lineage WHERE lineage_id = ?',
+      [lineageId]
+    );
+    if (existingLineage.length && existingLineage[0].values.length === 1) {
+      writerFence.assertOwned();
+      return reconstructLineage(database, lineageId);
+    }
+
+    writerFence.assertOwned();
+    const verifiedResult = persistProcessingResult({
+      database,
+      processingResult,
+      writerFence,
+    });
+
     const lineageProvenanceJson = canonicalUtf8(processingResult.provenance).toString('utf8');
 
     writerFence.assertOwned();
