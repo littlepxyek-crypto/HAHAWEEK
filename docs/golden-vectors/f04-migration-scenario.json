@@ -1,0 +1,40 @@
+{
+  "format": "HAHAWEEK-F04-MIGRATION-SCENARIO-1",
+  "sources": [
+    {
+      "id": "source-A",
+      "bytes": "unit-A",
+      "byte_count": 6,
+      "digest": "200940967c2beebe215148ead2ea4d58a2cbc06785f85c130de9fb618ad6482e"
+    }
+  ],
+  "units": [
+    {
+      "id": "unit-A",
+      "source_id": "source-A",
+      "bytes": "unit-A",
+      "digest": "200940967c2beebe215148ead2ea4d58a2cbc06785f85c130de9fb618ad6482e"
+    }
+  ],
+  "dispositions": [
+    {
+      "unit_id": "unit-A",
+      "type": "MIGRATED",
+      "result_id": "result-A",
+      "provenance": { "source_unit_id": "unit-A" }
+    }
+  ],
+  "results": [
+    {
+      "id": "result-A",
+      "bytes": "result-A",
+      "digest": "466112d72ef8a65cb0597abd2e81c5e766252037967915dda6cf30378484841c"
+    }
+  ],
+  "manifest": {
+    "source_digest": "70c4090e07f6a7b09fd4340e692aff3678a60dddb47ec5f0b16cb7ebe8cae9f4",
+    "unit_count": 1,
+    "disposition_count": 1,
+    "verification_digest": "fcdbf1d48c969763768d25c4fd59b928ad0425c0362a8bbc778ab4e9185701fa"
+  }
+}
