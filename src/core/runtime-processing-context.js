@@ -68,7 +68,12 @@ function resolveTransition({ database, snapshot, fromBlock, toBlock, requestedTr
   const candidates = queryLineages(database, fromBlock, toBlock)
     .map(id => reconstructLineage(database, id));
 
-  if (fromBlock === 0 && candidates.length === 0) {
+  if (candidates.length === 0) {
+    if (requestedTransitionType === 'CONTINUATION' || requestedTransitionType === 'REORG_REPLACEMENT') {
+      fail(requestedTransitionType === 'CONTINUATION'
+        ? 'PROCESSING_CONTEXT_PARENT_MISSING'
+        : 'PROCESSING_CONTEXT_REORG_PARENT_AMBIGUOUS');
+    }
     return { transitionType: 'INITIAL', parentResultId: null, generation: '1' };
   }
 
