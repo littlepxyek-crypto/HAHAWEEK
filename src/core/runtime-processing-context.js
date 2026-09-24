@@ -68,6 +68,24 @@ function resolveTransition({ database, snapshot, fromBlock, toBlock, requestedTr
   const candidates = queryLineages(database, fromBlock, toBlock)
     .map(id => reconstructLineage(database, id));
 
+  const exact = candidates.filter(lineage =>
+    lineage.fromBlock === fromBlock && lineage.toBlock === toBlock
+  );
+  if (exact.length > 1) fail('PROCESSING_CONTEXT_LINEAGE_CONFLICT');
+  if (exact.length === 1) {
+    const existingSnapshot = snapshotForLineage(database, exact[0]);
+    for (let block = fromBlock; block <= toBlock; block += 1) {
+      if (blockHash(existingSnapshot, block) !== blockHash(snapshot, block)) {
+        fail('PROCESSING_CONTEXT_REPLAY_CANONICAL_MISMATCH');
+      }
+    }
+    return {
+      transitionType: exact[0].transitionType,
+      parentResultId: exact[0].parentResultId,
+      generation: exact[0].generation,
+    };
+  }
+
   if (candidates.length === 0) {
     if (requestedTransitionType === 'CONTINUATION' || requestedTransitionType === 'REORG_REPLACEMENT') {
       fail(requestedTransitionType === 'CONTINUATION'
