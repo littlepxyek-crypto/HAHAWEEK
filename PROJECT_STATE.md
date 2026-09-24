@@ -1,3 +1,17 @@
+## STEP 505 — H-03 State Reconciliation — VERIFIED / FROZEN
+
+- STEP 503 H-03 Single Writer / Fencing contract PR #219 merged to main as `494f40ee983a69541b0dc7782c62e043dd7bb6f1`.
+- STEP 504 H-03 implementation PR #220 merged to main as `9382dc78b587cb26f4c90d94062b5b235f32aae7`.
+- H-03 implementation provides persistent writer identity, lease expiry, monotonically increasing fence value, fail-closed stale/expired/malformed authority checks, and serialized fence-state transitions.
+- Covered legacy writes are bound to the existing shared H-01 legacy write barrier; valid fencing cannot bypass `LEGACY_FROZEN`.
+- H-03 tests passed at PR head, including acquisition, renewal/release, contention, expiry/supersession, malformed state, and stale-fence barrier rejection.
+- Exact merge-commit CI endpoint was checked for `9382dc78b587cb26f4c90d94062b5b235f32aae7` and returned no workflow runs at reconciliation time; therefore no exact post-merge GREEN result is claimed.
+- H-03 closure is limited to the executable evidence available: implementation and PR-head test/security evidence are GREEN; exact post-merge CI evidence is unavailable.
+- No V4 production authority activation, RPC change, cursor semantic reset/advance, checkpoint authority change, SQLite schema migration, historical rewrite/deletion, or predictive/trading/signing/publication behavior was introduced.
+- Design Gate 2 remains NOT PASSED; H-04 and remaining controls are not implicitly closed.
+- Historical project-state entries remain preserved below this entry.
+- Any future H-03 semantic change requires a new explicit contract/step.
+
 ## STEP 502 — H-02 State Reconciliation — VERIFIED / FROZEN
 
 - STEP 500 H-02 duplicate/collision contract was merged to `main`.
