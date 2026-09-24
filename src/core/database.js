@@ -7,7 +7,7 @@ const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'hahaweek.sqlite');
-const SCHEMA_VERSION = 6;
+const SCHEMA_VERSION = 7;
 
 const CANONICAL_DECISION_DDL = {
   records: [
@@ -58,6 +58,51 @@ const CANONICAL_DECISION_DDL = {
     '  FOREIGN KEY (snapshot_id) REFERENCES canonical_decision_snapshots(snapshot_id),',
     '  FOREIGN KEY (record_digest) REFERENCES canonical_block_decisions(record_digest)',
     ');',
+  ].join('\n'),
+};
+
+const RUNTIME_LINEAGE_DDL = {
+  transitions: [
+    'CREATE TABLE canonical_transitions (',
+    '  transition_id TEXT PRIMARY KEY,',
+    '  evidence_id TEXT NOT NULL,',
+    '  from_state TEXT NOT NULL,',
+    '  to_state TEXT NOT NULL,',
+    '  sequence TEXT NOT NULL,',
+    '  previous_transition_hash TEXT NULL,',
+    '  transition_hash TEXT NOT NULL UNIQUE,',
+    '  provenance_json TEXT NOT NULL,',
+    '  committed_at TEXT NOT NULL,',
+    "  CHECK (from_state IN ('OBSERVED','CANONICAL','ORPHANED')),",
+    "  CHECK (to_state IN ('OBSERVED','CANONICAL','ORPHANED')),",
+    "  CHECK ((from_state = 'OBSERVED' AND to_state = 'CANONICAL') OR (from_state = 'CANONICAL' AND to_state = 'ORPHANED')),",
+    "  CHECK (length(sequence) > 0 AND sequence NOT GLOB '*[^0-9]*'),",
+    '  UNIQUE (evidence_id, sequence)',
+    ');',
+  ].join('\n'),
+  lineage: [
+    'CREATE TABLE canonical_lineage (',
+    '  lineage_id TEXT PRIMARY KEY,',
+    '  from_block INTEGER NOT NULL,',
+    '  to_block INTEGER NOT NULL,',
+    '  processing_result_id TEXT NOT NULL UNIQUE,',
+    '  parent_result_id TEXT NULL,',
+    '  transition_type TEXT NOT NULL,',
+    '  generation TEXT NOT NULL,',
+    '  canonical_evidence_set_digest TEXT NOT NULL,',
+    '  provenance_json TEXT NOT NULL,',
+    '  committed_at TEXT NOT NULL,',
+    '  CHECK (from_block >= 0),',
+    '  CHECK (to_block >= 0),',
+    '  CHECK (from_block <= to_block),',
+    "  CHECK (transition_type IN ('INITIAL','CONTINUATION','REORG_REPLACEMENT'))",
+    ');',
+  ].join('\n'),
+  triggers: [
+    "CREATE TRIGGER canonical_transitions_no_update BEFORE UPDATE ON canonical_transitions BEGIN SELECT RAISE(ABORT, 'CANONICAL_TRANSITIONS_APPEND_ONLY'); END;",
+    "CREATE TRIGGER canonical_transitions_no_delete BEFORE DELETE ON canonical_transitions BEGIN SELECT RAISE(ABORT, 'CANONICAL_TRANSITIONS_APPEND_ONLY'); END;",
+    "CREATE TRIGGER canonical_lineage_no_update BEFORE UPDATE ON canonical_lineage BEGIN SELECT RAISE(ABORT, 'CANONICAL_LINEAGE_APPEND_ONLY'); END;",
+    "CREATE TRIGGER canonical_lineage_no_delete BEFORE DELETE ON canonical_lineage BEGIN SELECT RAISE(ABORT, 'CANONICAL_LINEAGE_APPEND_ONLY'); END;",
   ].join('\n'),
 };
 
@@ -323,7 +368,7 @@ function createBaseSchema(db) {
     'CREATE TABLE flow_windows (chain_id INTEGER NOT NULL, pool_id TEXT NOT NULL, window_start INTEGER NOT NULL, window_end INTEGER NOT NULL, swap_count INTEGER NOT NULL, unique_sender_count INTEGER NOT NULL, total_amount0 TEXT NOT NULL, total_amount1 TEXT NOT NULL, first_block INTEGER NOT NULL, last_block INTEGER NOT NULL, first_timestamp INTEGER NOT NULL, last_timestamp INTEGER NOT NULL, PRIMARY KEY (chain_id, pool_id, window_start));',
     'CREATE TABLE ingestion_state (key TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);',
     'CREATE TABLE canonical_evidence (evidence_id TEXT PRIMARY KEY, identity_schema_version TEXT NOT NULL, identity_hash TEXT NOT NULL, raw_event_id TEXT NOT NULL, raw_hash TEXT NOT NULL, canonical_hash TEXT NOT NULL, canonical_json TEXT NOT NULL, interpretation_status TEXT NOT NULL, provenance_json TEXT NOT NULL, stored_at TEXT NOT NULL, FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id));',
-    "INSERT INTO schema_meta (key, value) VALUES ('schema_version', '6');",
+    "INSERT INTO schema_meta (key, value) VALUES ('schema_version', '7');",
     F03_DDL.segments,
     F03_DDL.manifests,
     F03_DDL.checkpoints,
@@ -332,6 +377,9 @@ function createBaseSchema(db) {
     CANONICAL_DECISION_DDL.records,
     CANONICAL_DECISION_DDL.snapshots,
     CANONICAL_DECISION_DDL.blocks,
+    RUNTIME_LINEAGE_DDL.transitions,
+    RUNTIME_LINEAGE_DDL.lineage,
+    RUNTIME_LINEAGE_DDL.triggers,
   ].join('\n'));
 }
 
@@ -374,6 +422,27 @@ function migrateV5ToV6(db) {
   }
 }
 
+function migrateV6ToV7(db) {
+  assertRequiredBaseSchema(db);
+  assertF03Schema(db);
+  assertProcessingResultSchema(db);
+  assertCanonicalDecisionSchema(db);
+  db.run('BEGIN');
+  let committed = false;
+  try {
+    db.run(RUNTIME_LINEAGE_DDL.transitions);
+    db.run(RUNTIME_LINEAGE_DDL.lineage);
+    db.run(RUNTIME_LINEAGE_DDL.triggers);
+    db.run("UPDATE schema_meta SET value = '7' WHERE key = 'schema_version'");
+    db.run('COMMIT');
+    committed = true;
+  } finally {
+    if (!committed) {
+      try { db.run('ROLLBACK'); } catch {}
+    }
+  }
+}
+
 function assertCanonicalDecisionTable(db, tableName, expectedColumns, expectedForeignKeys = []) {
   if (!hasTable(db, tableName)) throw new Error('CANONICAL_DECISION_TABLE_MISSING_' + tableName.toUpperCase());
   const columns = db.exec('PRAGMA table_info(' + tableName + ')')[0]?.values ?? [];
@@ -391,6 +460,35 @@ function assertCanonicalDecisionTable(db, tableName, expectedColumns, expectedFo
     const found = foreignKeys.some(row => row[2] === expected.table && row[3] === expected.from && row[4] === expected.to);
     if (!found) throw new Error('CANONICAL_DECISION_FOREIGN_KEYS_INVALID_' + tableName.toUpperCase());
   }
+}
+
+function assertRuntimeLineageTable(db, tableName, expectedColumns, expectedForeignKeys = []) {
+  if (!hasTable(db, tableName)) throw new Error('RUNTIME_LINEAGE_TABLE_MISSING_' + tableName.toUpperCase());
+  const columns = db.exec('PRAGMA table_info(' + tableName + ')')[0]?.values ?? [];
+  if (columns.length !== expectedColumns.length || columns.some((c, i) =>
+    c[1] !== expectedColumns[i][0] || c[2] !== expectedColumns[i][1] ||
+    c[3] !== expectedColumns[i][2] || c[5] !== expectedColumns[i][3]
+  )) {
+    throw new Error('RUNTIME_LINEAGE_SCHEMA_INVALID_' + tableName.toUpperCase());
+  }
+  const foreignKeys = db.exec('PRAGMA foreign_key_list(' + tableName + ')')[0]?.values ?? [];
+  if (foreignKeys.length !== expectedForeignKeys.length) throw new Error('RUNTIME_LINEAGE_FOREIGN_KEYS_INVALID_' + tableName.toUpperCase());
+}
+
+function assertRuntimeLineageSchema(db) {
+  assertRuntimeLineageTable(db, 'canonical_transitions', [
+    ['transition_id','TEXT',0,1],['evidence_id','TEXT',1,0],['from_state','TEXT',1,0],
+    ['to_state','TEXT',1,0],['sequence','TEXT',1,0],['previous_transition_hash','TEXT',0,0],
+    ['transition_hash','TEXT',1,0],['provenance_json','TEXT',1,0],['committed_at','TEXT',1,0],
+  ]);
+  assertRuntimeLineageTable(db, 'canonical_lineage', [
+    ['lineage_id','TEXT',0,1],['from_block','INTEGER',1,0],['to_block','INTEGER',1,0],
+    ['processing_result_id','TEXT',1,0],['parent_result_id','TEXT',0,0],['transition_type','TEXT',1,0],
+    ['generation','TEXT',1,0],['canonical_evidence_set_digest','TEXT',1,0],
+    ['provenance_json','TEXT',1,0],['committed_at','TEXT',1,0],
+  ]);
+  const triggers = db.exec("SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('canonical_transitions_no_update','canonical_transitions_no_delete','canonical_lineage_no_update','canonical_lineage_no_delete')")[0]?.values ?? [];
+  if (triggers.length !== 4) throw new Error('RUNTIME_LINEAGE_APPEND_ONLY_TRIGGERS_MISSING');
 }
 
 function assertCanonicalDecisionSchema(db) {
@@ -497,21 +595,35 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       assertProcessingResultSchema(db);
       migrateV5ToV6(db);
       assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
     } else if (version === 4) {
       migrateV4ToV5(db);
       migrateV5ToV6(db);
       assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
     } else if (version === 5) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
       assertProcessingResultSchema(db);
       migrateV5ToV6(db);
       assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
     } else if (version === 6) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
       assertProcessingResultSchema(db);
       assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
+    } else if (version === 7) {
+      assertRequiredBaseSchema(db);
+      assertF03Schema(db);
+      assertProcessingResultSchema(db);
+      assertCanonicalDecisionSchema(db);
+      assertRuntimeLineageSchema(db);
     } else {
       throw new Error('UNSUPPORTED_SCHEMA_VERSION');
     }
@@ -595,6 +707,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
         assertF03Schema(db);
         assertProcessingResultSchema(db);
         assertCanonicalDecisionSchema(db);
+        assertRuntimeLineageSchema(db);
       }
     },
     close() {

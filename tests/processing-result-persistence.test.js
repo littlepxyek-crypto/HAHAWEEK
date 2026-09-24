@@ -102,18 +102,18 @@ function writerFence(file) {
   return fence;
 }
 
-test('fresh database is schema v6 and preserves F-03 tables', async () => {
+test('fresh database is schema v7 and preserves F-03 tables', async () => {
   const f = fixture();
   const db = await createDatabase(f.databaseFile);
-  assert.equal(SCHEMA_VERSION, 6);
-  assert.equal(db.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '6');
+  assert.equal(SCHEMA_VERSION, 7);
+  assert.equal(db.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '7');
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='f03_segments'")[0].values.length, 1);
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='processing_results'")[0].values.length, 1);
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='processing_result_evidence'")[0].values.length, 1);
   db.close();
 });
 
-test('v4 database migrates additively through v6', async () => {
+test('v4 database migrates additively through v7', async () => {
   const f = fixture();
   const db = await createDatabase(f.databaseFile);
   db.db.run("DROP TABLE canonical_decision_snapshot_blocks");
@@ -121,12 +121,18 @@ test('v4 database migrates additively through v6', async () => {
   db.db.run("DROP TABLE canonical_block_decisions");
   db.db.run("DROP TABLE processing_result_evidence");
   db.db.run("DROP TABLE processing_results");
+  db.db.run('DROP TRIGGER canonical_transitions_no_update');
+  db.db.run('DROP TRIGGER canonical_transitions_no_delete');
+  db.db.run('DROP TRIGGER canonical_lineage_no_update');
+  db.db.run('DROP TRIGGER canonical_lineage_no_delete');
+  db.db.run('DROP TABLE canonical_lineage');
+  db.db.run('DROP TABLE canonical_transitions');
   db.db.run("UPDATE schema_meta SET value='4' WHERE key='schema_version'");
   db.save();
   db.close();
 
   const migrated = await createDatabase(f.databaseFile);
-  assert.equal(migrated.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '6');
+  assert.equal(migrated.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '7');
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_segments'")[0].values.length, 1);
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_manifests'")[0].values.length, 1);
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_checkpoints'")[0].values.length, 1);
