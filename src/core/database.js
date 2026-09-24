@@ -7,7 +7,59 @@ const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'hahaweek.sqlite');
-const SCHEMA_VERSION = 5;
+const SCHEMA_VERSION = 6;
+
+const CANONICAL_DECISION_DDL = {
+  records: [
+    'CREATE TABLE canonical_block_decisions (',
+    '  record_digest TEXT PRIMARY KEY,',
+    '  chain_id INTEGER NOT NULL,',
+    '  block_number INTEGER NOT NULL,',
+    '  block_hash TEXT NOT NULL,',
+    '  parent_block_hash TEXT NOT NULL,',
+    '  decision_head_block INTEGER NOT NULL,',
+    '  confirmation_depth INTEGER NOT NULL,',
+    '  source_id TEXT NOT NULL,',
+    '  acquired_at TEXT NOT NULL,',
+    '  CHECK (chain_id >= 0),',
+    '  CHECK (block_number >= 0),',
+    '  CHECK (decision_head_block >= 0),',
+    '  CHECK (confirmation_depth >= 0),',
+    '  UNIQUE (chain_id, block_number, block_hash)',
+    ');',
+  ].join('\\n'),
+  snapshots: [
+    'CREATE TABLE canonical_decision_snapshots (',
+    '  snapshot_id TEXT PRIMARY KEY,',
+    '  chain_id INTEGER NOT NULL,',
+    '  from_block INTEGER NOT NULL,',
+    '  to_block INTEGER NOT NULL,',
+    '  decision_head_block INTEGER NOT NULL,',
+    '  confirmation_depth INTEGER NOT NULL,',
+    '  source_id TEXT NOT NULL,',
+    '  created_at TEXT NOT NULL,',
+    '  CHECK (chain_id >= 0),',
+    '  CHECK (from_block >= 0),',
+    '  CHECK (to_block >= 0),',
+    '  CHECK (from_block <= to_block),',
+    '  CHECK (decision_head_block >= 0),',
+    '  CHECK (confirmation_depth >= 0)',
+    ');',
+  ].join('\\n'),
+  blocks: [
+    'CREATE TABLE canonical_decision_snapshot_blocks (',
+    '  snapshot_id TEXT NOT NULL,',
+    '  ordinal INTEGER NOT NULL,',
+    '  block_number INTEGER NOT NULL,',
+    '  record_digest TEXT NOT NULL,',
+    '  block_hash TEXT NOT NULL,',
+    '  PRIMARY KEY (snapshot_id, ordinal),',
+    '  UNIQUE (snapshot_id, block_number),',
+    '  FOREIGN KEY (snapshot_id) REFERENCES canonical_decision_snapshots(snapshot_id),',
+    '  FOREIGN KEY (record_digest) REFERENCES canonical_block_decisions(record_digest)',
+    ');',
+  ].join('\\n'),
+};
 
 const PROCESSING_RESULT_DDL = {
   results: [
@@ -299,6 +351,65 @@ function migrateV3ToV4(db) {
   }
 }
 
+function migrateV5ToV6(db) {
+  assertRequiredBaseSchema(db);
+  assertF03Schema(db);
+  assertProcessingResultSchema(db);
+  db.run('BEGIN');
+  let committed = false;
+  try {
+    db.run(CANONICAL_DECISION_DDL.records);
+    db.run(CANONICAL_DECISION_DDL.snapshots);
+    db.run(CANONICAL_DECISION_DDL.blocks);
+    db.run("UPDATE schema_meta SET value = '6' WHERE key = 'schema_version'");
+    db.run('COMMIT');
+    committed = true;
+  } finally {
+    if (!committed) {
+      try { db.run('ROLLBACK'); } catch {}
+    }
+  }
+}
+
+function assertCanonicalDecisionTable(db, tableName, expectedColumns, expectedForeignKeys = []) {
+  if (!hasTable(db, tableName)) throw new Error('CANONICAL_DECISION_TABLE_MISSING_' + tableName.toUpperCase());
+  const columns = db.exec('PRAGMA table_info(' + tableName + ')')[0]?.values ?? [];
+  if (columns.length !== expectedColumns.length || columns.some((c, i) =>
+    c[1] !== expectedColumns[i][0] || c[2] !== expectedColumns[i][1] ||
+    c[3] !== expectedColumns[i][2] || c[5] !== expectedColumns[i][3]
+  )) {
+    throw new Error('CANONICAL_DECISION_SCHEMA_INVALID_' + tableName.toUpperCase());
+  }
+  const foreignKeys = db.exec('PRAGMA foreign_key_list(' + tableName + ')')[0]?.values ?? [];
+  if (foreignKeys.length !== expectedForeignKeys.length) {
+    throw new Error('CANONICAL_DECISION_FOREIGN_KEYS_INVALID_' + tableName.toUpperCase());
+  }
+  for (const expected of expectedForeignKeys) {
+    const found = foreignKeys.some(row => row[2] === expected.table && row[3] === expected.from && row[4] === expected.to);
+    if (!found) throw new Error('CANONICAL_DECISION_FOREIGN_KEYS_INVALID_' + tableName.toUpperCase());
+  }
+}
+
+function assertCanonicalDecisionSchema(db) {
+  assertCanonicalDecisionTable(db, 'canonical_block_decisions', [
+    ['record_digest','TEXT',0,1],['chain_id','INTEGER',1,0],['block_number','INTEGER',1,0],
+    ['block_hash','TEXT',1,0],['parent_block_hash','TEXT',1,0],['decision_head_block','INTEGER',1,0],
+    ['confirmation_depth','INTEGER',1,0],['source_id','TEXT',1,0],['acquired_at','TEXT',1,0],
+  ]);
+  assertCanonicalDecisionTable(db, 'canonical_decision_snapshots', [
+    ['snapshot_id','TEXT',0,1],['chain_id','INTEGER',1,0],['from_block','INTEGER',1,0],
+    ['to_block','INTEGER',1,0],['decision_head_block','INTEGER',1,0],['confirmation_depth','INTEGER',1,0],
+    ['source_id','TEXT',1,0],['created_at','TEXT',1,0],
+  ]);
+  assertCanonicalDecisionTable(db, 'canonical_decision_snapshot_blocks', [
+    ['snapshot_id','TEXT',1,1],['ordinal','INTEGER',1,2],['block_number','INTEGER',1,0],
+    ['record_digest','TEXT',1,0],['block_hash','TEXT',1,0],
+  ], [
+    { table: 'canonical_decision_snapshots', from: 'snapshot_id', to: 'snapshot_id' },
+    { table: 'canonical_block_decisions', from: 'record_digest', to: 'record_digest' },
+  ]);
+}
+
 function migrateV4ToV5(db) {
   assertRequiredBaseSchema(db);
   assertF03Schema(db);
@@ -380,13 +491,23 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       migrateV3ToV4(db);
       migrateV4ToV5(db);
       assertProcessingResultSchema(db);
+      migrateV5ToV6(db);
+      assertCanonicalDecisionSchema(db);
     } else if (version === 4) {
       migrateV4ToV5(db);
-      assertProcessingResultSchema(db);
+      migrateV5ToV6(db);
+      assertCanonicalDecisionSchema(db);
     } else if (version === 5) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
       assertProcessingResultSchema(db);
+      migrateV5ToV6(db);
+      assertCanonicalDecisionSchema(db);
+    } else if (version === 6) {
+      assertRequiredBaseSchema(db);
+      assertF03Schema(db);
+      assertProcessingResultSchema(db);
+      assertCanonicalDecisionSchema(db);
     } else {
       throw new Error('UNSUPPORTED_SCHEMA_VERSION');
     }
@@ -469,6 +590,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
         }
         assertF03Schema(db);
         assertProcessingResultSchema(db);
+        assertCanonicalDecisionSchema(db);
       }
     },
     close() {
