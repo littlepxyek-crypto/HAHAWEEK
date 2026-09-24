@@ -147,7 +147,7 @@ test('F-03 fresh database is schema 5 with all authoritative-chain tables', asyn
   const dir = tempDir();
   const { database, writerFence } = await createFileDatabase(dir);
 
-  assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '4');
+  assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '5');
   for (const table of ['f03_segments', 'f03_manifests', 'f03_checkpoints']) {
     assert.equal(database.db.exec(
       "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
