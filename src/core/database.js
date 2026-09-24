@@ -10,51 +10,51 @@ const DB_FILE = path.join(DB_DIR, 'hahaweek.sqlite');
 const SCHEMA_VERSION = 4;
 
 const F03_DDL = {
-  segments: \`
-    CREATE TABLE f03_segments (
-      segment_id TEXT PRIMARY KEY,
-      from_block INTEGER NOT NULL,
-      to_block INTEGER NOT NULL,
-      segment_digest TEXT NOT NULL,
-      generation TEXT NOT NULL,
-      provenance_json TEXT NOT NULL,
-      committed_at TEXT NOT NULL,
-      CHECK (from_block >= 0),
-      CHECK (to_block >= 0),
-      CHECK (from_block <= to_block),
-      UNIQUE (segment_id, segment_digest)
-    );
-  \`,
-  manifests: \`
-    CREATE TABLE f03_manifests (
-      manifest_id TEXT PRIMARY KEY,
-      manifest_digest TEXT NOT NULL,
-      generation TEXT NOT NULL,
-      segment_id TEXT NOT NULL,
-      segment_digest TEXT NOT NULL,
-      provenance_json TEXT NOT NULL,
-      committed_at TEXT NOT NULL,
-      UNIQUE (manifest_id, manifest_digest),
-      FOREIGN KEY (segment_id, segment_digest)
-        REFERENCES f03_segments(segment_id, segment_digest)
-    );
-  \`,
-  checkpoints: \`
-    CREATE TABLE f03_checkpoints (
-      checkpoint_digest TEXT PRIMARY KEY,
-      generation TEXT NOT NULL,
-      manifest_id TEXT NOT NULL,
-      manifest_digest TEXT NOT NULL,
-      provenance_json TEXT NOT NULL,
-      committed_at TEXT NOT NULL,
-      FOREIGN KEY (manifest_id, manifest_digest)
-        REFERENCES f03_manifests(manifest_id, manifest_digest)
-    );
-  \`,
+  segments: [
+    'CREATE TABLE f03_segments (',
+    '  segment_id TEXT PRIMARY KEY,',
+    '  from_block INTEGER NOT NULL,',
+    '  to_block INTEGER NOT NULL,',
+    '  segment_digest TEXT NOT NULL,',
+    '  generation TEXT NOT NULL,',
+    '  provenance_json TEXT NOT NULL,',
+    '  committed_at TEXT NOT NULL,',
+    '  CHECK (from_block >= 0),',
+    '  CHECK (to_block >= 0),',
+    '  CHECK (from_block <= to_block),',
+    '  UNIQUE (segment_id, segment_digest)',
+    ');',
+  ].join('\n'),
+  manifests: [
+    'CREATE TABLE f03_manifests (',
+    '  manifest_id TEXT PRIMARY KEY,',
+    '  manifest_digest TEXT NOT NULL,',
+    '  generation TEXT NOT NULL,',
+    '  segment_id TEXT NOT NULL,',
+    '  segment_digest TEXT NOT NULL,',
+    '  provenance_json TEXT NOT NULL,',
+    '  committed_at TEXT NOT NULL,',
+    '  UNIQUE (manifest_id, manifest_digest),',
+    '  FOREIGN KEY (segment_id, segment_digest)',
+    '    REFERENCES f03_segments(segment_id, segment_digest)',
+    ');',
+  ].join('\n'),
+  checkpoints: [
+    'CREATE TABLE f03_checkpoints (',
+    '  checkpoint_digest TEXT PRIMARY KEY,',
+    '  generation TEXT NOT NULL,',
+    '  manifest_id TEXT NOT NULL,',
+    '  manifest_digest TEXT NOT NULL,',
+    '  provenance_json TEXT NOT NULL,',
+    '  committed_at TEXT NOT NULL,',
+    '  FOREIGN KEY (manifest_id, manifest_digest)',
+    '    REFERENCES f03_manifests(manifest_id, manifest_digest)',
+    ');',
+  ].join('\n'),
 };
 
 function normalizeSql(sql) {
-  return String(sql || '').replace(/\\s+/g, ' ').trim().toUpperCase();
+  return String(sql || '').replace(/\s+/g, ' ').trim().toUpperCase();
 }
 
 function hasTable(db, name) {
@@ -213,100 +213,19 @@ function assertF03Schema(db) {
 }
 
 function createBaseSchema(db) {
-  db.run(\`
-    CREATE TABLE schema_meta (
-      key TEXT PRIMARY KEY,
-      value TEXT NOT NULL
-    );
-
-    CREATE TABLE raw_events (
-      event_id TEXT PRIMARY KEY,
-      chain_id INTEGER NOT NULL,
-      block_number INTEGER NOT NULL,
-      transaction_hash TEXT NOT NULL,
-      block_hash TEXT,
-      transaction_index INTEGER,
-      log_index INTEGER NOT NULL,
-      address TEXT NOT NULL,
-      topics_json TEXT NOT NULL,
-      data TEXT NOT NULL,
-      captured_at TEXT NOT NULL
-    );
-
-    CREATE TABLE pools (
-      pool_id TEXT PRIMARY KEY,
-      chain_id INTEGER NOT NULL,
-      pool_manager TEXT NOT NULL,
-      currency0 TEXT NOT NULL,
-      currency1 TEXT NOT NULL,
-      fee INTEGER NOT NULL,
-      tick_spacing INTEGER NOT NULL,
-      hooks TEXT NOT NULL,
-      block_number INTEGER NOT NULL,
-      transaction_hash TEXT NOT NULL,
-      log_index INTEGER NOT NULL,
-      created_at TEXT NOT NULL
-    );
-
-    CREATE TABLE liquidity_events (
-      event_id TEXT PRIMARY KEY,
-      chain_id INTEGER NOT NULL,
-      pool_id TEXT NOT NULL,
-      pool_manager TEXT NOT NULL,
-      sender TEXT NOT NULL,
-      tick_lower INTEGER NOT NULL,
-      tick_upper INTEGER NOT NULL,
-      liquidity_delta TEXT NOT NULL,
-      salt TEXT NOT NULL,
-      block_number INTEGER NOT NULL,
-      transaction_hash TEXT NOT NULL,
-      log_index INTEGER NOT NULL,
-      captured_at TEXT NOT NULL
-    );
-
-    CREATE TABLE flow_windows (
-      chain_id INTEGER NOT NULL,
-      pool_id TEXT NOT NULL,
-      window_start INTEGER NOT NULL,
-      window_end INTEGER NOT NULL,
-      swap_count INTEGER NOT NULL,
-      unique_sender_count INTEGER NOT NULL,
-      total_amount0 TEXT NOT NULL,
-      total_amount1 TEXT NOT NULL,
-      first_block INTEGER NOT NULL,
-      last_block INTEGER NOT NULL,
-      first_timestamp INTEGER NOT NULL,
-      last_timestamp INTEGER NOT NULL,
-      PRIMARY KEY (chain_id, pool_id, window_start)
-    );
-
-    CREATE TABLE ingestion_state (
-      key TEXT PRIMARY KEY,
-      value TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    );
-
-    CREATE TABLE canonical_evidence (
-      evidence_id TEXT PRIMARY KEY,
-      identity_schema_version TEXT NOT NULL,
-      identity_hash TEXT NOT NULL,
-      raw_event_id TEXT NOT NULL,
-      raw_hash TEXT NOT NULL,
-      canonical_hash TEXT NOT NULL,
-      canonical_json TEXT NOT NULL,
-      interpretation_status TEXT NOT NULL,
-      provenance_json TEXT NOT NULL,
-      stored_at TEXT NOT NULL,
-      FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id)
-    );
-
-    INSERT INTO schema_meta (key, value)
-    VALUES ('schema_version', '4');
-
-    \${F03_DDL.segments}
-    \${F03_DDL.manifests}
-    \${F03_DDL.checkpoints}
-  \`);
+  db.run([
+    'CREATE TABLE schema_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);',
+    'CREATE TABLE raw_events (event_id TEXT PRIMARY KEY, chain_id INTEGER NOT NULL, block_number INTEGER NOT NULL, transaction_hash TEXT NOT NULL, block_hash TEXT, transaction_index INTEGER, log_index INTEGER NOT NULL, address TEXT NOT NULL, topics_json TEXT NOT NULL, data TEXT NOT NULL, captured_at TEXT NOT NULL);',
+    'CREATE TABLE pools (pool_id TEXT PRIMARY KEY, chain_id INTEGER NOT NULL, pool_manager TEXT NOT NULL, currency0 TEXT NOT NULL, currency1 TEXT NOT NULL, fee INTEGER NOT NULL, tick_spacing INTEGER NOT NULL, hooks TEXT NOT NULL, block_number INTEGER NOT NULL, transaction_hash TEXT NOT NULL, log_index INTEGER NOT NULL, created_at TEXT NOT NULL);',
+    'CREATE TABLE liquidity_events (event_id TEXT PRIMARY KEY, chain_id INTEGER NOT NULL, pool_id TEXT NOT NULL, pool_manager TEXT NOT NULL, sender TEXT NOT NULL, tick_lower INTEGER NOT NULL, tick_upper INTEGER NOT NULL, liquidity_delta TEXT NOT NULL, salt TEXT NOT NULL, block_number INTEGER NOT NULL, transaction_hash TEXT NOT NULL, log_index INTEGER NOT NULL, captured_at TEXT NOT NULL);',
+    'CREATE TABLE flow_windows (chain_id INTEGER NOT NULL, pool_id TEXT NOT NULL, window_start INTEGER NOT NULL, window_end INTEGER NOT NULL, swap_count INTEGER NOT NULL, unique_sender_count INTEGER NOT NULL, total_amount0 TEXT NOT NULL, total_amount1 TEXT NOT NULL, first_block INTEGER NOT NULL, last_block INTEGER NOT NULL, first_timestamp INTEGER NOT NULL, last_timestamp INTEGER NOT NULL, PRIMARY KEY (chain_id, pool_id, window_start));',
+    'CREATE TABLE ingestion_state (key TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);',
+    'CREATE TABLE canonical_evidence (evidence_id TEXT PRIMARY KEY, identity_schema_version TEXT NOT NULL, identity_hash TEXT NOT NULL, raw_event_id TEXT NOT NULL, raw_hash TEXT NOT NULL, canonical_hash TEXT NOT NULL, canonical_json TEXT NOT NULL, interpretation_status TEXT NOT NULL, provenance_json TEXT NOT NULL, stored_at TEXT NOT NULL, FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id));',
+    "INSERT INTO schema_meta (key, value) VALUES ('schema_version', '4');",
+    F03_DDL.segments,
+    F03_DDL.manifests,
+    F03_DDL.checkpoints,
+  ].join('\n'));
 }
 
 function migrateV3ToV4(db) {
@@ -336,26 +255,16 @@ async function createDatabase(filename = DB_FILE, options = {}) {
 
   const SQL = await initSqlJs({
     locateFile: file =>
-      path.join(
-        process.cwd(),
-        'node_modules',
-        'sql.js',
-        'dist',
-        file
-      ),
+      path.join(process.cwd(), 'node_modules', 'sql.js', 'dist', file),
   });
 
   let db;
   const inMemory = filename === ':memory:';
   const existing = !inMemory && fs.existsSync(filename);
 
-  if (inMemory) {
-    db = new SQL.Database();
-  } else if (existing) {
-    db = new SQL.Database(new Uint8Array(fs.readFileSync(filename)));
-  } else {
-    db = new SQL.Database();
-  }
+  if (inMemory) db = new SQL.Database();
+  else if (existing) db = new SQL.Database(new Uint8Array(fs.readFileSync(filename)));
+  else db = new SQL.Database();
 
   db.run('PRAGMA foreign_keys = ON;');
 
@@ -382,7 +291,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
   const isReadOnlyStatement = sql => {
     const normalized = String(sql).trim().toUpperCase();
     return normalized.startsWith('SELECT ')
-      || normalized.startsWith('SELECT\\n')
+      || normalized.startsWith('SELECT\n')
       || normalized.startsWith('PRAGMA ')
       || normalized.startsWith('EXPLAIN ');
   };
@@ -396,9 +305,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       return db.exec(...args);
     },
     prepare(sql, ...args) {
-      if (!isReadOnlyStatement(sql)) {
-        legacyWriteBarrier.assertWritable();
-      }
+      if (!isReadOnlyStatement(sql)) legacyWriteBarrier.assertWritable();
       const statement = db.prepare(sql, ...args);
       return {
         bind: (...bindArgs) => statement.bind(...bindArgs),
@@ -407,9 +314,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
           return statement.run(...runArgs);
         },
         step: (...stepArgs) => {
-          if (!isReadOnlyStatement(sql)) {
-            legacyWriteBarrier.assertWritable();
-          }
+          if (!isReadOnlyStatement(sql)) legacyWriteBarrier.assertWritable();
           return statement.step(...stepArgs);
         },
         getAsObject: (...objectArgs) => statement.getAsObject(...objectArgs),
@@ -428,31 +333,24 @@ async function createDatabase(filename = DB_FILE, options = {}) {
 
   const save = () => {
     if (inMemory) return;
-
     legacyWriteBarrier.assertWritable();
-
     const data = db.export();
     const tmp = filename + '.tmp';
     try {
       fs.writeFileSync(tmp, Buffer.from(data));
       fs.renameSync(tmp, filename);
     } catch (error) {
-      try {
-        if (fs.existsSync(tmp)) fs.unlinkSync(tmp);
-      } catch {}
+      try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}
       throw error;
     }
   };
 
   const database = {
     db: guardedDb,
-
     save,
-
     snapshot() {
       return Buffer.from(db.export());
     },
-
     restore(snapshot) {
       if (!Buffer.isBuffer(snapshot) && !(snapshot instanceof Uint8Array)) {
         throw new Error('DATABASE_SNAPSHOT_INVALID');
@@ -462,14 +360,12 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       db.run('PRAGMA foreign_keys = ON;');
       if (!inMemory) {
         assertRequiredBaseSchema(db);
-        const version = schemaVersion(db);
-        if (version !== SCHEMA_VERSION) {
+        if (schemaVersion(db) !== SCHEMA_VERSION) {
           throw new Error('DATABASE_RESTORE_SCHEMA_INVALID');
         }
         assertF03Schema(db);
       }
     },
-
     close() {
       if (!inMemory) save();
       db.close();
@@ -477,17 +373,13 @@ async function createDatabase(filename = DB_FILE, options = {}) {
   };
 
   if (existing) {
-    const version = schemaVersion(db);
-    if (version === 4) {
-      const originalBytes = fs.readFileSync(filename);
-      if (!Buffer.from(originalBytes).equals(Buffer.from(db.export()))) {
-        const originalDb = new SQL.Database(new Uint8Array(originalBytes));
-        const originalVersion = schemaVersion(originalDb);
-        originalDb.close();
-        if (originalVersion === 3) {
-          save();
-        }
-      }
+    const originalBytes = fs.readFileSync(filename);
+    const originalDb = new SQL.Database(new Uint8Array(originalBytes));
+    const originalVersion = hasTable(originalDb, 'schema_meta') ? schemaVersion(originalDb) : null;
+    originalDb.close();
+
+    if (originalVersion === 3) {
+      save();
     }
   }
 
