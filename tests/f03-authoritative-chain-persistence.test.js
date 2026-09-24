@@ -143,7 +143,7 @@ async function createFileDatabase(dir, filename = 'hahaweek.sqlite') {
   return { ...authority, database };
 }
 
-test('F-03 fresh database is schema 6 with all authoritative-chain tables', async () => {
+test('F-03 fresh database is schema 7 with all authoritative-chain tables', async () => {
   const dir = tempDir();
   const { database, writerFence } = await createFileDatabase(dir);
 
@@ -159,7 +159,7 @@ test('F-03 fresh database is schema 6 with all authoritative-chain tables', asyn
   writerFence.release();
 });
 
-test('F-03 schema 3 migrates in place through schema 6 and preserves existing rows', async () => {
+test('F-03 schema 3 migrates in place through schema 7 and preserves existing rows', async () => {
   const dir = tempDir();
   const file = path.join(dir, 'hahaweek.sqlite');
   const first = await createFileDatabase(dir);
@@ -176,6 +176,12 @@ test('F-03 schema 3 migrates in place through schema 6 and preserves existing ro
   first.database.db.run("DROP TABLE f03_manifests");
   first.database.db.run("DROP TABLE f03_segments");
   first.database.db.run("UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'");
+  database.db.run('DROP TRIGGER canonical_transitions_no_update');
+  database.db.run('DROP TRIGGER canonical_transitions_no_delete');
+  database.db.run('DROP TRIGGER canonical_lineage_no_update');
+  database.db.run('DROP TRIGGER canonical_lineage_no_delete');
+  database.db.run('DROP TABLE canonical_lineage');
+  database.db.run('DROP TABLE canonical_transitions');
   first.database.save();
   first.database.close();
   first.writerFence.release();
@@ -192,7 +198,7 @@ test('F-03 unsupported schema versions fail closed', async () => {
   const dir = tempDir();
   const file = path.join(dir, 'unsupported.sqlite');
   const first = await createFileDatabase(dir, 'unsupported.sqlite');
-  first.database.db.run("UPDATE schema_meta SET value = '7' WHERE key = 'schema_version'");
+  first.database.db.run("UPDATE schema_meta SET value = '8' WHERE key = 'schema_version'");
   first.database.save();
   first.database.close();
   first.writerFence.release();
