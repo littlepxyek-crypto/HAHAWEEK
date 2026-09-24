@@ -1,3 +1,20 @@
+## STEP 564 — V4 Evidence Commitment & Generation Derivation Implementation — VERIFIED / RECONCILED
+
+- STEP 564 implementation PR #311 merged to `main` as `78f7f0b1ec5a3c2776e9dd4ed21a32b3849b1dbf`.
+- PR-head commit: `b99fe5f2b5c4d82dc30fa4c23afac9e00e3a23ad`.
+- HAHAWEEK Tests on the final PR head completed SUCCESS.
+- HAHAWEEK Security and Regression on the final PR head completed SUCCESS.
+- CodeQL on the final PR head completed NEUTRAL.
+- The implementation adds deterministic, fail-closed V4 evidence commitment derivation under the frozen STEP 563 formulas, with exact range, evidence membership, identity/hash verification, deterministic ordering, duplicate-key rejection, generation supplied by processing result, and reuse of the existing F-03 checkpoint derivation.
+- Dedicated STEP 564 golden vectors and fixture coverage were added.
+- Initial CI failures were isolated to test/fixture issues and corrected without weakening production semantics.
+- Exact merge commit `78f7f0b1ec5a3c2776e9dd4ed21a32b3849b1dbf` currently has no associated PR-triggered workflow runs and no commit statuses; no post-merge CI GREEN is claimed.
+- Reconciliation: `docs/STEP_564_V4_EVIDENCE_COMMITMENT_GENERATION_DERIVATION_RECONCILIATION_V0_1.md`.
+- No frozen contract, cursor semantics, historical evidence, SQLite schema, durable expected-authority source, or V4 activation was changed.
+- V4 production activation remains INACTIVE.
+- Known boundary: runtime still needs an explicit processing-result/generation/canonicality context before production submitted-authority integration can proceed without inventing semantics.
+- Next STEP: STEP 565 — V4 Runtime Processing-Result / Generation Context Boundary Analysis.
+
 ## STEP 563 — V4 Evidence Commitment & Generation Derivation Contract — VERIFIED / FROZEN
 
 - STEP 563 contract PR #309 merged to `main` as `0090484f2f800cb6aa6723a1270c006026da198d`.
