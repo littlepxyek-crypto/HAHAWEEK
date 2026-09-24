@@ -253,7 +253,7 @@ test('STEP 578 identical replay is deterministic and idempotent', async () => {
   );
   assert.equal(
     dbRow(database, 'SELECT COUNT(*) AS count FROM canonical_block_decisions').count,
-    2
+    3
   );
 
   database.close();
@@ -263,34 +263,38 @@ test('STEP 578 competing branches are preserved and common ancestor is determini
   const database = await createDatabase(':memory:');
   const writer = fence(tempDir());
 
+  const G = '0x' + 'e'.repeat(64);
+
   await createCanonicalDecisionInput({
     provider: providerFor({
-      99: header(99, C, ZERO),
-      100: header(100, A, C),
+      0: header(0, G, ZERO),
+      1: header(1, C, G),
+      2: header(2, A, C),
     }),
     db: database.db,
     writerFence: writer,
     chainId: 4663,
     confirmations: 0,
-    latestBlock: 100,
-    fromBlock: 100,
-    toBlock: 100,
+    latestBlock: 2,
+    fromBlock: 2,
+    toBlock: 2,
     sourceId: SOURCE,
     acquiredAt: '2026-01-01T00:00:00.000Z',
   });
 
   await createCanonicalDecisionInput({
     provider: providerFor({
-      99: header(99, C, ZERO),
-      100: header(100, B, C),
+      0: header(0, G, ZERO),
+      1: header(1, C, G),
+      2: header(2, B, C),
     }),
     db: database.db,
     writerFence: writer,
     chainId: 4663,
     confirmations: 0,
-    latestBlock: 100,
-    fromBlock: 100,
-    toBlock: 100,
+    latestBlock: 2,
+    fromBlock: 2,
+    toBlock: 2,
     sourceId: SOURCE,
     acquiredAt: '2026-01-01T00:00:01.000Z',
   });
@@ -306,7 +310,7 @@ test('STEP 578 competing branches are preserved and common ancestor is determini
     secondBlockHash: B,
   });
 
-  assert.equal(ancestor.block_number, 99);
+  assert.equal(ancestor.block_number, 1);
   assert.equal(ancestor.block_hash, C);
 
   database.close();
@@ -332,6 +336,11 @@ test('STEP 578 persisted snapshot survives reconstruction and corruption fails c
   const recovered = reconstructSnapshot(database.db, result.snapshot_id);
   assert.equal(recovered.snapshot_id, result.snapshot_id);
   assert.equal(recovered.records.length, 1);
+
+  database.db.run(
+    'DELETE FROM canonical_decision_snapshot_blocks WHERE snapshot_id = ? AND record_digest = ?',
+    [result.snapshot_id, result.records[0].record_digest]
+  );
 
   database.db.run(
     'DELETE FROM canonical_block_decisions WHERE record_digest = ?',
@@ -387,7 +396,7 @@ test('STEP 578 persistence failure rolls back canonical decision state', async (
 
   await assert.rejects(
     () => createCanonicalDecisionInput({
-      provider: providerFor({ 100: header(100, A, ZERO) }),
+      provider: providerFor({ 99: header(99, P, ZERO), 100: header(100, A, P) }),
       db: failingDb,
       writerFence: writer,
       chainId: 4663,
