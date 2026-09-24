@@ -1,3 +1,18 @@
+## STEP 526 — F-03 Authority State Reconciliation — CONDITIONAL
+
+- STEP 523 authority-chain completeness contract PR #239 merged to `main`; merge commit: `86a42f2521af5e0d7cdd838f7a46ecc4d6649fae`.
+- STEP 523 PR-head HAHAWEEK Tests and Security & Regression completed successfully.
+- STEP 524 authority-chain evidence PR #240 merged to `main`; merge commit: `f5b10c52147a177d581180a85059daa405e01ef7`.
+- STEP 524 PR-head HAHAWEEK Tests and Security & Regression completed successfully.
+- STEP 525 generation/conflict/recovery evidence PR #241 merged to `main`; merge commit: `2f158b70883697c6201f4fa077ba8f7694e1529a`.
+- STEP 525 PR-head HAHAWEEK Tests and Security & Regression completed successfully.
+- Evidence now covers SEGMENTS → MANIFEST → CHECKPOINT ordering, manifest/checkpoint binding, generation mismatch rejection, missing generation fail-closed, durable checkpoint recovery, and restart generation divergence.
+- Exact post-merge workflow evidence for STEP 524/525 merge commits was unavailable at reconciliation time; no exact post-merge GREEN result is claimed.
+- F-03 remains CONDITIONAL: the implemented evidence is deterministic/offline and does not yet establish full production V4 authority cutover, cryptographic authority binding, stale/malformed authority rejection at the complete live boundary, or an enforceable production SEGMENTS → MANIFEST → CHECKPOINT → CURSOR chain.
+- Gate 2 remains NOT PASSED.
+- No V4 production activation, RPC/provider change, cursor reset, SQLite migration, historical rewrite/deletion, or production evidence mutation was introduced.
+- Historical project-state entries remain preserved.
+
 ## STEP 520 — Design Gate 2 Control Reconciliation — VERIFIED / FROZEN
 
 - STEP 519 Gate 2 re-review contract PR #235 merged to `main` as `76b44a14408f1bd80fb6625e97f3b3639a1f04df`.
