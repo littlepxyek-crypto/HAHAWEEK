@@ -12,6 +12,12 @@ function digest(value) {
   return crypto.createHash('sha256').update(Buffer.from(canonical(value), 'utf8')).digest('hex');
 }
 
+function digestWithoutField(value, field) {
+  const copy = { ...value };
+  delete copy[field];
+  return digest(copy);
+}
+
 function fail(code, message) {
   const error = new Error(message);
   error.code = code;
@@ -20,14 +26,14 @@ function fail(code, message) {
 
 function verifyAcquisition(input) {
   if (!input || input.format !== 'HAHAWEEK-F05-RPC-PROVENANCE-1') fail('MALFORMED_PROVENANCE', 'invalid format');
-  if (!input.provider || !input.chain || !input.request || !input.response || !input.normalized || !input.manifest) {
-    fail('INCOMPLETE_PROVENANCE', 'required provenance sections missing');
-  }
+  if (!input.provider || !input.chain || !input.request || !input.response || !input.normalized || !input.manifest) fail('INCOMPLETE_PROVENANCE', 'required provenance sections missing');
   if (!input.provider.id || !input.chain.id || !input.request.id || !input.request.method) fail('INCOMPLETE_PROVENANCE', 'identity incomplete');
-  const responseDigest = digest(input.response);
+
+  const responseDigest = digestWithoutField(input.response, 'digest');
   if (responseDigest !== input.response.digest) fail('RESPONSE_DIGEST_MISMATCH', 'response digest mismatch');
+
   if (input.normalized.source_response_digest !== responseDigest) fail('NORMALIZATION_SOURCE_MISMATCH', 'normalized source mismatch');
-  const normalizedDigest = digest(input.normalized.payload);
+  const normalizedDigest = digestWithoutField(input.normalized, 'digest');
   if (normalizedDigest !== input.normalized.digest) fail('NORMALIZED_DIGEST_MISMATCH', 'normalized digest mismatch');
 
   if (input.block_check) {
@@ -51,6 +57,7 @@ function verifyAcquisition(input) {
     response_digest: responseDigest,
     normalized_digest: normalizedDigest
   });
+
   if (input.manifest.acquisition_digest !== acquisitionDigest) fail('ACQUISITION_DIGEST_MISMATCH', 'manifest digest mismatch');
   if (input.manifest.response_digest !== responseDigest) fail('ACQUISITION_DIGEST_MISMATCH', 'response linkage mismatch');
   if (input.manifest.normalized_digest !== normalizedDigest) fail('ACQUISITION_DIGEST_MISMATCH', 'normalized linkage mismatch');
