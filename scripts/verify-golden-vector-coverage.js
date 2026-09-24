@@ -22,6 +22,7 @@ const KNOWN_OUT_OF_SCOPE_FIXTURES = Object.freeze([
   "docs/golden-vectors/source-independence.json",
   "docs/golden-vectors/f02-reorg-scenario.json",
   "docs/golden-vectors/f04-migration-scenario.json",
+  "docs/golden-vectors/f05-rpc-provenance-scenario.json",
 ]);
 
 function fail(message) { throw new Error(message); }

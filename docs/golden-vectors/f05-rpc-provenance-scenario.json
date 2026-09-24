@@ -1,0 +1,45 @@
+{
+  "format": "HAHAWEEK-F05-RPC-PROVENANCE-1",
+  "provider": {
+    "id": "provider-A",
+    "endpoint": "https://provider-a.example/rpc"
+  },
+  "chain": {
+    "id": "4663"
+  },
+  "request": {
+    "id": "request-A",
+    "method": "eth_getLogs",
+    "page": 1
+  },
+  "response": {
+    "items": [
+      "log-A"
+    ],
+    "digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818"
+  },
+  "normalized": {
+    "payload": [
+      "log-A"
+    ],
+    "source_response_digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818",
+    "digest": "cd96af34934e51bba5d6b38adb1b7fa16cb4a5fa81e23d74117de527b8df44b6"
+  },
+  "block_check": {
+    "chain_id": "4663",
+    "response_digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818"
+  },
+  "manifest": {
+    "acquisition_digest": "c8bf40c6145ec9b4b67f8b561368656c7611070d95347c317d1631105f0ffb71",
+    "response_digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818",
+    "normalized_digest": "cd96af34934e51bba5d6b38adb1b7fa16cb4a5fa81e23d74117de527b8df44b6"
+  },
+  "context": {
+    "acquired_at": "2026-09-24T00:00:00Z",
+    "mode": "fixture"
+  },
+  "receipt_check": {
+    "chain_id": "4663",
+    "response_digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818"
+  }
+}
