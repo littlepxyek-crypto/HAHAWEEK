@@ -27,8 +27,8 @@ function makeAuthority(cursorBlock = 101) {
 
 function makeEngine({authorityFactory, expectedAuthorityFactory, cursor}) {
   const gate = createAuthorityGate({
-    authorityFactory,
-    expectedAuthorityFactory,
+    authorityFactory: ({fromBlock,toBlock}) => ({...authorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
+    expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...expectedAuthorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
   });
@@ -102,7 +102,7 @@ test('STEP 547 rejects a range-mismatched expected commitment', async () => {
   const engine = makeEngine({
     cursor: c,
     authorityFactory: () => source.authority,
-    expectedAuthorityFactory: () => ({...source.expected, cursorBlock: 100}),
+    expectedAuthorityFactory: () => ({...source.expected, fromBlock: 100, toBlock: 100}),
   });
 
   await assert.rejects(engine.runOnce(), /AUTHORITY_RANGE_MISMATCH/);
