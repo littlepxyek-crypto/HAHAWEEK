@@ -40,7 +40,7 @@ function deepFreeze(value) {
 function queryLineages(database, fromBlock, toBlock) {
   const rows = database.db.exec(
     'SELECT lineage_id FROM canonical_lineage WHERE from_block <= ? AND to_block >= ? ORDER BY from_block, to_block, lineage_id',
-    [toBlock, fromBlock]
+    [toBlock, Math.max(0, fromBlock - 1)]
   );
   return rows.length ? rows[0].values.map(row => row[0]) : [];
 }
