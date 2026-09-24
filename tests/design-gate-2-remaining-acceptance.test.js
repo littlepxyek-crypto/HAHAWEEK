@@ -12,7 +12,7 @@ const { createAuthorityGate } = require('../src/core/f03-ingestion-authority-int
 const { createDurableExpectedAuthorityFactory } = require('../src/index');
 const { checkpointDigestFor, commitF03AuthorityChain } = require('../src/core/f03-authoritative-chain-persistence');
 const { assertProductionAuthority } = require('../src/core/f03-production-authority-record');
-const { assertAuthorityBinding } = require('../src/core/f03-authority-binding');
+const { assertAuthorityBinding, createAuthorityBindingDigest } = require('../src/core/f03-authority-binding');
 
 function fixture() {
   const generation = '1';
@@ -90,15 +90,18 @@ test('Gate 2 production boundary uses durable expected authority and rejects abs
   try {
     const expectedAuthorityFactory = createDurableExpectedAuthorityFactory(database);
     const authorityGate = createAuthorityGate({
-      authorityFactory: ({ fromBlock, toBlock }) => ({
-        segmentId: 'submitted-segment',
-        manifestDigest: 'b'.repeat(64),
-        checkpointDigest: checkpointDigestFor('1', 'b'.repeat(64)),
-        generation: '1',
-        cursorBlock: toBlock,
-        fromBlock,
-        toBlock,
-      }),
+      authorityFactory: ({ fromBlock, toBlock }) => {
+        const authority = {
+          segmentId: 'gate2-segment',
+          manifestDigest: 'b'.repeat(64),
+          checkpointDigest: checkpointDigestFor('1', 'b'.repeat(64)),
+          generation: '1',
+          cursorBlock: toBlock,
+          fromBlock,
+          toBlock,
+        };
+        return { ...authority, bindingDigest: createAuthorityBindingDigest(authority) };
+      },
       expectedAuthorityFactory,
       authorityValidator: assertProductionAuthority,
       authorityBindingValidator: assertAuthorityBinding,
@@ -128,7 +131,7 @@ test('Gate 2 production boundary uses durable expected authority and rejects abs
     });
 
     assert.equal(result.status, 'AUTHORIZED');
-    assert.equal(result.authority.segmentId, 'submitted-segment');
+    assert.equal(result.authority.segmentId, 'gate2-segment');
     assert.equal(result.expectedAuthority.segmentId, 'gate2-segment');
     assert.equal(result.expectedAuthority.cursorBlock, 409);
     assert.equal(result.expectedAuthority.manifestDigest, 'b'.repeat(64));
