@@ -41,6 +41,7 @@ const { assertProductionAuthority } = require('./core/f03-production-authority-r
 const { assertAuthorityBinding } = require('./core/f03-authority-binding');
 const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
 const { readF03AuthorityChain } = require('./core/f03-authoritative-chain-persistence');
+const { createVerifiedProcessingContext } = require('./core/runtime-processing-context');
 
 const {
   POOL_MANAGER,
@@ -142,26 +143,36 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
   };
 
   const processorRange = async (fromBlock, toBlock) => {
-    const result = await rawLogs.ingestRange(
+    const context = await createVerifiedProcessingContext({
+      database,
+      provider,
+      writerFence,
+      confirmations: CONFIRMATIONS,
+      chainId: CHAIN_ID,
       fromBlock,
       toBlock,
-      createRelevantLogFilter()
-    );
+      provenance: {
+        component: 'runtime-processing-context',
+        range: `${fromBlock}-${toBlock}`,
+      },
+      rawIngest: async (rangeFrom, rangeTo) => {
+        const result = await rawLogs.ingestRange(
+          rangeFrom,
+          rangeTo,
+          createRelevantLogFilter()
+        );
 
-    /*
-     * Persist only after the complete batch succeeds.
-     * IngestionEngine advances the cursor only after
-     * processorRange resolves successfully.
-     */
-    database.save();
+        console.log(
+          `Blocks ${rangeFrom}-${rangeTo}: fetched=${result.fetched}` +
+          ` inserted=${result.inserted}` +
+          ` duplicates=${result.duplicates}`
+        );
 
-    console.log(
-      `Blocks ${fromBlock}-${toBlock}: fetched=${result.fetched}` +
-      ` inserted=${result.inserted}` +
-      ` duplicates=${result.duplicates}`
-    );
+        return result;
+      },
+    });
 
-    return result;
+    return context;
   };
 
   const productionAuthorityFactory = authorityFactory || (() => {
