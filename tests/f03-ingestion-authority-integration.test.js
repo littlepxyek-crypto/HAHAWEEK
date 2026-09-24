@@ -35,7 +35,7 @@ function makeGate(factory) {
 }
 
 test('F-03 production boundary adapter validates complete cryptographically bound authority before cursor', () => {
-  const gate = makeGate(() => makeSource(110));
+  const gate = makeGate(() => makeSource(110).authority);
   assert.equal(
     gate({fromBlock:101,toBlock:110,checkpointCommitted:true}).status,
     'AUTHORIZED'
@@ -46,18 +46,23 @@ test('F-03 adapter fails closed when authority is incomplete', () => {
   const source = makeSource(110);
   delete source.authority.manifestDigest;
 
-  const gate = makeGate(() => source);
+  const gate = makeGate(() => source.authority);
   assert.throws(
     () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
     /AUTHORITY_MANIFESTDIGEST_MISSING/
   );
 });
 
-test('F-03 adapter fails closed when cryptographic source envelope is incomplete', () => {
-  const gate = makeGate(() => makeSource(110).authority);
+test('F-03 adapter fails closed when expected source is missing', () => {
+  const gate = createAuthorityGate({
+    authorityFactory: () => makeSource(110).authority,
+    expectedAuthorityFactory: () => undefined,
+    authorityValidator: assertProductionAuthority,
+    authorityBindingValidator: assertAuthorityBinding,
+  });
   assert.throws(
     () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
-    /AUTHORITY_BINDING_SOURCE_REQUIRED/
+    /AUTHORITY_EXPECTED_SOURCE_INVALID/
   );
 });
 
