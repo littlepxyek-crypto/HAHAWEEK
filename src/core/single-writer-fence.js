@@ -5,6 +5,8 @@ const path = require('path');
 const crypto = require('crypto');
 
 const DEFAULT_LEASE_MS = Number(process.env.HAHAWEEK_WRITER_LEASE_MS || 30_000);
+const LOCK_SUFFIX = '.lock';
+
 const DEFAULT_STATE_FILE =
   process.env.HAHAWEEK_WRITER_FENCE_FILE ||
   path.join(
@@ -44,6 +46,26 @@ function parseState(filename) {
   return state;
 }
 
+function withFileLock(filename, fn) {
+  const lockFile = filename + LOCK_SUFFIX;
+  let handle;
+  try {
+    handle = fs.openSync(lockFile, 'wx');
+  } catch (error) {
+    if (error && error.code === 'EEXIST') {
+      throw new WriterFenceError('WRITER_FENCE_BUSY');
+    }
+    throw error;
+  }
+
+  try {
+    return fn();
+  } finally {
+    fs.closeSync(handle);
+    fs.unlinkSync(lockFile);
+  }
+}
+
 function atomicWrite(filename, value) {
   fs.mkdirSync(path.dirname(filename), { recursive: true });
   const tmp = filename + '.tmp';
@@ -64,22 +86,25 @@ function createWriterFence(options = {}) {
   let acquiredFence = null;
 
   function acquire() {
-    const current = parseState(filename);
-    const timestamp = now();
+    return withFileLock(filename, () => {
+      const current = parseState(filename);
+      const timestamp = now();
 
-    if (current && current.expiresAt > timestamp && current.ownerId !== ownerId) {
-      throw new WriterFenceError('WRITER_FENCE_HELD');
-    }
+      if (current && current.expiresAt > timestamp && current.ownerId !== ownerId) {
+        throw new WriterFenceError('WRITER_FENCE_HELD');
+      }
 
-    const fence = current ? current.fence + 1 : 1;
-    atomicWrite(filename, {
-      version: 1,
-      ownerId,
-      fence,
-      expiresAt: timestamp + leaseMs,
+      const fence = current ? current.fence + 1 : 1;
+      const expiresAt = timestamp + leaseMs;
+      atomicWrite(filename, {
+        version: 1,
+        ownerId,
+        fence,
+        expiresAt,
+      });
+      acquiredFence = fence;
+      return { ownerId, fence, expiresAt };
     });
-    acquiredFence = fence;
-    return { ownerId, fence, expiresAt: timestamp + leaseMs };
   }
 
   function assertOwned() {
@@ -103,27 +128,34 @@ function createWriterFence(options = {}) {
 
   function renew() {
     assertOwned();
-    const timestamp = now();
-    const current = parseState(filename);
-    atomicWrite(filename, {
-      ...current,
-      expiresAt: timestamp + leaseMs,
+    return withFileLock(filename, () => {
+      const timestamp = now();
+      const current = parseState(filename);
+      const expiresAt = timestamp + leaseMs;
+      atomicWrite(filename, {
+        ...current,
+        expiresAt,
+      });
+      return { ...current, expiresAt };
     });
-    return { ...current, expiresAt: timestamp + leaseMs };
   }
 
   function release() {
     const current = parseState(filename);
     if (!current) return false;
     if (current.ownerId !== ownerId || current.fence !== acquiredFence) return false;
-    atomicWrite(filename, {
-      version: 1,
-      ownerId: '',
-      fence: current.fence,
-      expiresAt: 0,
+    return withFileLock(filename, () => {
+      const latest = parseState(filename);
+      if (latest.ownerId !== ownerId || latest.fence !== acquiredFence) return false;
+      atomicWrite(filename, {
+        version: 1,
+        ownerId: 'NONE',
+        fence: latest.fence,
+        expiresAt: 0,
+      });
+      acquiredFence = null;
+      return true;
     });
-    acquiredFence = null;
-    return true;
   }
 
   return {
