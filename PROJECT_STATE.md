@@ -1,3 +1,17 @@
+## STEP 577 — Runtime Canonical Decision Input Implementation Design & Analysis — VERIFIED / RECONCILED
+
+- Baseline main commit inspected: `435c2562cd0c83c096ecc1cb40133bad053b5aa3`.
+- Design: `docs/STEP_577_RUNTIME_CANONICAL_DECISION_INPUT_IMPLEMENTATION_DESIGN_ANALYSIS_V0_1.md`.
+- PR #337 merged to main as `b45fbf1bca8eb44be1bf2fa6ee2c18cb8d0a12a4`.
+- PR-head `be5f89098805c64bb434cb99ec89d7100ba19e29`: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS; CodeQL SUCCESS.
+- Review/comment evidence recorded on PR #337; no self-approval claim.
+- Design freezes the smallest repository-compatible canonical decision input implementation boundary, additive persistence model, exact CBDR/snapshot identity formulas, golden vectors, branch preservation/reorg input, writer-fence ordering, replay/recovery, and fail-closed behavior.
+- No production runtime code, STEP 563, STEP 568, cursor, F-03 authority, historical evidence, or V4 activation changed.
+- Post-merge exact commit `b45fbf1bca8eb44be1bf2fa6ee2c18cb8d0a12a4` has test and test-and-security SUCCESS; static-analysis jobs were still in progress at reconciliation time, so no all-post-merge-analysis GREEN claim is made.
+- Reconciliation: `docs/STEP_577_RUNTIME_CANONICAL_DECISION_INPUT_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- STEP 577 is VERIFIED / RECONCILED.
+- Next STEP: STEP 578 — Runtime Canonical Decision Input Persistence/API Implementation.
+
 ## STEP 576 — Runtime Canonical Decision Input Contract — VERIFIED / FROZEN / RECONCILED
 
 - Starting/main commit inspected: `5ef01879cb201351bc36fc5b1a0441179b32a936`.
