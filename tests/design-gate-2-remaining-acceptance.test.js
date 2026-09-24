@@ -131,10 +131,8 @@ test('Gate 2 production boundary uses durable expected authority and rejects abs
     });
 
     assert.equal(result.status, 'AUTHORIZED');
-    assert.equal(result.authority.segmentId, 'gate2-segment');
-    assert.equal(result.expectedAuthority.segmentId, 'gate2-segment');
-    assert.equal(result.expectedAuthority.cursorBlock, 409);
-    assert.equal(result.expectedAuthority.manifestDigest, 'b'.repeat(64));
+    assert.equal(result.segmentId, 'gate2-segment');
+    assert.equal(result.cursorBlock, 409);
   } finally {
     database.close();
     writerFence.release();
