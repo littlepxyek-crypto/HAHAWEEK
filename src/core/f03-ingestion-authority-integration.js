@@ -44,7 +44,12 @@ function createAuthorityGate({
       throw new Error('AUTHORITY_EXPECTED_SOURCE_SELF_REFERENCE');
     }
 
-    if (authority.cursorBlock !== toBlock || expected.cursorBlock !== toBlock) {
+    if (
+      authority.fromBlock !== fromBlock ||
+      authority.toBlock !== toBlock ||
+      expected.fromBlock !== fromBlock ||
+      expected.toBlock !== toBlock
+    ) {
       throw new Error('AUTHORITY_RANGE_MISMATCH');
     }
 
