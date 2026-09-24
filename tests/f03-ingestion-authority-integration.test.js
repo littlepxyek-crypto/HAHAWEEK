@@ -80,7 +80,7 @@ test('F-03 adapter rejects a valid structural authority with a tampered binding'
   const source = makeSource(110);
   source.authority.bindingDigest = 'c'.repeat(64);
 
-  const gate = makeGate(() => source);
+  const gate = makeGate(() => source.authority);
   assert.throws(
     () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
     /AUTHORITY_BINDING_CONFLICT/
