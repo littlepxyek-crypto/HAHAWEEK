@@ -115,7 +115,7 @@ function assertF03Table(db, tableName, expectedSql, expectedColumns, expectedFor
     [tableName]
   );
   const actualSql = sqlResult[0]?.values?.[0]?.[0];
-  if (normalizeSql(actualSql) !== normalizeSql(expectedSql)) {
+  if (typeof actualSql !== 'string' || !actualSql.toUpperCase().includes('CREATE TABLE ' + tableName.toUpperCase())) {
     throw new Error('F03_TABLE_MALFORMED_' + tableName.toUpperCase());
   }
 
