@@ -175,7 +175,7 @@ class IngestionEngine {
            * Batch completed successfully.
            * Now and only now advance the checkpoint.
            */
-          this.authorityGate({ checkpointCommitted: true, blockNumber: toBlock });
+          this.authorityGate({ checkpointCommitted: true, fromBlock, toBlock, blockNumber: toBlock });
           this.cursor.advance(toBlock);
 
           processed += toBlock - fromBlock + 1;
@@ -209,7 +209,7 @@ class IngestionEngine {
         /*
          * Cursor advances ONLY after successful processing.
          */
-        this.authorityGate({ checkpointCommitted: true, blockNumber: block });
+        this.authorityGate({ checkpointCommitted: true, fromBlock: block, toBlock: block, blockNumber: block });
         this.cursor.advance(block);
 
         processed += 1;
