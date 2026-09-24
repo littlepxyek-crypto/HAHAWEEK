@@ -1,3 +1,15 @@
+## STEP 568 — Durable Processing-Result / Generation Persistence Implementation — VERIFIED / RECONCILED
+
+- PR #319 merged to main as `91bb14d467910f6251faf14d00be00062ae27d0f`.
+- Final PR-head `6cc485ff9dc683404d47013f1cce2e26796a909d`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS; Analyze (javascript-typescript) SUCCESS; Analyze (actions) SUCCESS; CodeQL SUCCESS.
+- Implemented additive schema v5, immutable processing-result/evidence membership persistence, deterministic evidence-set digest, fail-closed evidence validation, writer-fence enforcement, replay/conflict handling, reorg lineage, save-failure recovery, and verified reader.
+- STEP 568 digest addendum froze the exact evidence_set_digest formula before implementation.
+- Earlier CI failures were root-caused and corrected without weakening production semantics.
+- Existing F-03 tables/historical evidence preserved; cursor unchanged; generation never manufactured; V4 production activation remains INACTIVE.
+- Exact merge commit `91bb14d467910f6251faf14d00be00062ae27d0f` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
+- Reconciliation: `docs/STEP_568_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_RECONCILIATION_V0_1.md`.
+- Next STEP: STEP 569 — Runtime Processing-Result Context Integration Boundary Contract.
+
 ## STEP 567 — Durable Processing-Result / Generation Persistence Implementation Contract — VERIFIED / RECONCILED
 
 - PR #317 merged to main as `b346887a7ba454625b0fa5fb07b93465e705fd10`.
