@@ -54,7 +54,7 @@ const PROCESSING_RESULT_DDL = {
     '  FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id),',
     '  UNIQUE (result_id, evidence_id)',
     ');',
-  ].join('\\n'),
+  ].join('\n'),
 };
 
 const F03_DDL = {
