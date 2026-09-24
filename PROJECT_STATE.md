@@ -1,3 +1,23 @@
+## STEP 590 — Runtime Canonical Lineage / Processing Context Integration — VERIFIED / RECONCILED
+
+- Baseline main commit for implementation: `dd5c11195ff8b423db000d9a0d28101ee453ba53`.
+- Contract: `docs/STEP_590_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
+- Contract PR #368 merged as `dd5c11195ff8b423db000d9a0d28101ee453ba53`.
+- Implementation PR #369 merged as `12c233f2efbce77b96dccf8f7fdc13ecaf55c1ea`.
+- Final PR-head: `478ce66c9d83dc98f83faa4fdd673402f0050222`.
+- PR-head HAHAWEEK Tests run `36018828463`: SUCCESS.
+- PR-head HAHAWEEK Security and Regression run `36018828512`: SUCCESS.
+- Exact merge-commit HAHAWEEK Tests run `36019097807`: SUCCESS.
+- Exact merge-commit HAHAWEEK Security and Regression run `36019097693`: SUCCESS.
+- Exact merge-commit CodeQL run `36019097346`: SUCCESS.
+- Exact merge-commit check-runs include successful npm test, verify:v4, verify:v4:coverage, dependency audit, tracked-secret detection, and CodeQL analysis.
+- Review/comment evidence recorded on PR #369; no self-approval claim.
+- Operator Acceptance: derived verified processing-context output is available without introducing a new source of truth or invented operator procedure.
+- Surveillance boundary preserved as derived/evidence-linked only.
+- V4 production activation remains INACTIVE; Gate 2 is not implied.
+- Reconciliation: `docs/STEP_590_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
+- Next STEP: STEP 591.
+
 ## STEP 588 — Runtime Generation Establishment Contract — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `9fe4976dbc32ba3a16fad4465b32f2816383a8a6`.
