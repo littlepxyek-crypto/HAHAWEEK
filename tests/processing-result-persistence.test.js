@@ -102,7 +102,7 @@ function writerFence(file) {
   return fence;
 }
 
-test('fresh database is schema v6 and preserves F-03 tables', async () => {
+test('fresh database is schema v7 and preserves F-03 tables', async () => {
   const f = fixture();
   const db = await createDatabase(f.databaseFile);
   assert.equal(SCHEMA_VERSION, 6);
@@ -113,7 +113,7 @@ test('fresh database is schema v6 and preserves F-03 tables', async () => {
   db.close();
 });
 
-test('v4 database migrates additively through v6', async () => {
+test('v4 database migrates additively through v7', async () => {
   const f = fixture();
   const db = await createDatabase(f.databaseFile);
   db.db.run("DROP TABLE canonical_decision_snapshot_blocks");
