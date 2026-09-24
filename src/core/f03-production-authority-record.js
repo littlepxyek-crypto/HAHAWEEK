@@ -12,7 +12,17 @@ function assertProductionAuthority(record) {
 function assertAuthorityContinuity(previous, next) {
   if (!previous || !next) throw new Error('AUTHORITY_MISSING');
   if (next.generation !== previous.generation) throw new Error('AUTHORITY_GENERATION_CONFLICT');
+  if (next.segmentId !== previous.segmentId) throw new Error('AUTHORITY_SEGMENT_CONFLICT');
+  if (next.manifestDigest !== previous.manifestDigest) throw new Error('AUTHORITY_MANIFEST_CONFLICT');
+  if (next.checkpointDigest !== previous.checkpointDigest) throw new Error('AUTHORITY_CHECKPOINT_CONFLICT');
   if (next.cursorBlock < previous.cursorBlock) throw new Error('AUTHORITY_REGRESSION');
-  return { status:'CONTINUOUS', generation:next.generation, cursorBlock:next.cursorBlock };
+  return {
+    status:'CONTINUOUS',
+    segmentId:next.segmentId,
+    manifestDigest:next.manifestDigest,
+    checkpointDigest:next.checkpointDigest,
+    generation:next.generation,
+    cursorBlock:next.cursorBlock,
+  };
 }
 module.exports={assertProductionAuthority,assertAuthorityContinuity};
