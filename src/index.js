@@ -164,7 +164,6 @@ async function createEngine() {
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
     authorityGate: ({ checkpointCommitted }) => assertCheckpointBeforeCursor({
       checkpointCommitted,
-      cursorAdvanced: true,
     }),
   });
 
