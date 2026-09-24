@@ -2,69 +2,47 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const {
-  assertRecoveryAuthority,
-} = require('../src/core/f03-generation-recovery');
+const { assertRecoveryAuthority } = require('../src/core/f03-generation-recovery');
 
-function authority(overrides = {}) {
-  return {
-    segmentId: 'seg-101-101',
-    manifestDigest: 'manifest-1',
-    checkpointDigest: 'checkpoint-1',
-    generation: 'g1',
-    cursorBlock: 101,
-    ...overrides,
-  };
-}
-
-test('F-03 recovery accepts the same persisted authority after restart', () => {
-  const persisted = authority();
-  const recovered = authority();
-
+test('F-03 recovery accepts persisted authority after restart', () => {
   assert.deepEqual(
-    assertRecoveryAuthority(persisted, recovered),
-    {
-      status: 'RECOVERED',
-      generation: 'g1',
-      cursorBlock: 101,
-    }
+    assertRecoveryAuthority({
+      persistedGeneration: 'g1',
+      persistedCheckpoint: true,
+      cursorGeneration: 'g1',
+    }),
+    { status: 'RECOVERABLE', generation: 'g1' }
   );
 });
 
-test('F-03 recovery rejects authority replacement with a conflicting generation', () => {
+test('F-03 recovery rejects conflicting generation after restart', () => {
   assert.throws(
-    () => assertRecoveryAuthority(
-      authority(),
-      authority({ generation: 'g2' })
-    ),
-    /AUTHORITY_GENERATION_CONFLICT/
+    () => assertRecoveryAuthority({
+      persistedGeneration: 'g1',
+      persistedCheckpoint: true,
+      cursorGeneration: 'g2',
+    }),
+    /GENERATION_CONFLICT/
   );
 });
 
-test('F-03 recovery rejects cursor regression after restart', () => {
+test('F-03 recovery rejects non-durable checkpoint', () => {
   assert.throws(
-    () => assertRecoveryAuthority(
-      authority(),
-      authority({ cursorBlock: 100 })
-    ),
-    /AUTHORITY_REGRESSION/
+    () => assertRecoveryAuthority({
+      persistedGeneration: 'g1',
+      persistedCheckpoint: false,
+      cursorGeneration: 'g1',
+    }),
+    /CHECKPOINT_NOT_DURABLE/
   );
 });
 
-test('F-03 recovery rejects changed manifest or checkpoint identity', () => {
+test('F-03 recovery rejects incomplete persisted authority', () => {
   assert.throws(
-    () => assertRecoveryAuthority(
-      authority(),
-      authority({ manifestDigest: 'manifest-2' })
-    ),
-    /AUTHORITY_BINDING_CONFLICT/
-  );
-
-  assert.throws(
-    () => assertRecoveryAuthority(
-      authority(),
-      authority({ checkpointDigest: 'checkpoint-2' })
-    ),
-    /AUTHORITY_BINDING_CONFLICT/
+    () => assertRecoveryAuthority({
+      persistedGeneration: 'g1',
+      persistedCheckpoint: true,
+    }),
+    /AUTHORITY_INCOMPLETE/
   );
 });
