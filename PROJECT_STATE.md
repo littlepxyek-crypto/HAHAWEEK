@@ -1,3 +1,17 @@
+## STEP 559 — V4 Production Implementation Boundary Contract — VERIFIED / FROZEN
+
+- STEP 559 contract PR #301 merged to `main` as `61e52ff56b4116f62356ea21be064a512e07cc2c`.
+- Contract commit before merge: `8360712fc04096062492545f97ad14a8bb505d83`.
+- PR-head HAHAWEEK Tests run `35972302206` completed successfully.
+- PR-head HAHAWEEK Security and Regression run `35972302185` completed successfully.
+- Review confirmed that STEP 559 is contract-only and defines the V4 production implementation boundary after STEP 558 Design Gate 2 PASS.
+- V4 production activation remains explicitly INACTIVE. STEP 559 does not activate V4 authority.
+- No cursor reset, historical rewrite/deletion, silent normalization/replacement, RPC/provider change, uncontracted SQLite/schema migration, or production semantic activation was introduced.
+- Exact workflow lookup for merge commit `61e52ff56b4116f62356ea21be064a512e07cc2c` returned no associated workflow runs at reconciliation time; no post-merge CI GREEN result is claimed.
+- Reconciliation document: `docs/STEP_559_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_RECONCILIATION_V0_1.md`.
+- STEP 559 acceptance is limited to the reviewed contract boundary and PR-head CI evidence.
+- Next explicit step: STEP 560 — V4 Production Implementation.
+
 ## STEP 548 — F-03 Durable Authority Source Contract — MERGED / VERIFIED / CONDITIONAL
 
 - STEP 548 contract PR #272 merged to `main` as `4abc61ddc4021018782012fc6373114fc8f59e46`.
