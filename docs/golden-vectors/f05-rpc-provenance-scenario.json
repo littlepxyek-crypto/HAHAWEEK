@@ -1,10 +1,45 @@
 {
-  "format":"HAHAWEEK-F05-RPC-PROVENANCE-1",
-  "provider":{"id":"provider-A"},
-  "chain":{"id":"4663"},
-  "request":{"id":"request-A","method":"eth_getLogs","page":1},
-  "response":{"items":["log-A"],"digest":"2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818"},
-  "normalized":{"payload":["log-A"],"source_response_digest":"2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818","digest":"cd96af34934e51bba5d6b38adb1b7fa16cb4a5fa81e23d74117de527b8df44b6"},
-  "block_check":{"chain_id":"4663","response_digest":"2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818"},
-  "manifest":{"acquisition_digest":"f7a85c890cf755c7ecd090b11e3837c03a71ba0404c21ce17b439234c342da0b","response_digest":"2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818","normalized_digest":"cd96af34934e51bba5d6b38adb1b7fa16cb4a5fa81e23d74117de527b8df44b6"}
+  "format": "HAHAWEEK-F05-RPC-PROVENANCE-1",
+  "provider": {
+    "id": "provider-A",
+    "endpoint": "https://provider-a.example/rpc"
+  },
+  "chain": {
+    "id": "4663"
+  },
+  "request": {
+    "id": "request-A",
+    "method": "eth_getLogs",
+    "page": 1
+  },
+  "response": {
+    "items": [
+      "log-A"
+    ],
+    "digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818"
+  },
+  "normalized": {
+    "payload": [
+      "log-A"
+    ],
+    "source_response_digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818",
+    "digest": "cd96af34934e51bba5d6b38adb1b7fa16cb4a5fa81e23d74117de527b8df44b6"
+  },
+  "block_check": {
+    "chain_id": "4663",
+    "response_digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818"
+  },
+  "manifest": {
+    "acquisition_digest": "f7a85c890cf755c7ecd090b11e3837c03a71ba0404c21ce17b439234c342da0b",
+    "response_digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818",
+    "normalized_digest": "cd96af34934e51bba5d6b38adb1b7fa16cb4a5fa81e23d74117de527b8df44b6"
+  },
+  "context": {
+    "acquired_at": "2026-09-24T00:00:00Z",
+    "mode": "fixture"
+  },
+  "receipt_check": {
+    "chain_id": "4663",
+    "response_digest": "2a711a9c2af0370990d40fe968c7f12aa2d1c0c0fde04f6e8f5471a71a025818"
+  }
 }
