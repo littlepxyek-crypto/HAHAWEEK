@@ -57,6 +57,8 @@ test('F-05 same identity with different digest fails as integrity conflict', () 
   b.normalized.payload = ['different'];
   b.normalized.source_response_digest = b.response.digest;
   b.normalized.digest = digest({ payload: b.normalized.payload, source_response_digest: b.normalized.source_response_digest });
+  b.block_check.response_digest = b.response.digest;
+  b.receipt_check.response_digest = b.response.digest;
   b.manifest.response_digest = b.response.digest;
   b.manifest.normalized_digest = b.normalized.digest;
   b.manifest.acquisition_digest = digest({
