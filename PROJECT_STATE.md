@@ -1,3 +1,23 @@
+## STEP 595 — Design Gate 2 State Reconciliation — VERIFIED / RECONCILED
+
+- Contract: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_CONTRACT_V0_1.md`.
+- Contract PR #382 merged as `c864d6755e07a81a43d0f39679a869ab81b1b00b`.
+- Analysis confirmed that `docs/DESIGN_GATE_2_STATE.md` was PASS while README documentation was stale at OPEN; current Gate 2 evidence supports PASS.
+- Design: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_DESIGN_V0_1.md`.
+- Code PR #384 merged as `99becf1a2272c7d0aaa9021b246aac35280fc87e`.
+- Reconciliation: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #385 merged as `6e9503988094c6dee1e511127dd095f1d3dbd8b4`.
+- Exact reconciliation PR-head CI: test SUCCESS; test-and-security SUCCESS; CodeQL SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Exact post-merge CI on merge commit `6e9503988094c6dee1e511127dd095f1d3dbd8b4`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS; Push on main / CodeQL SUCCESS.
+- Design Gate 2 state is reconciled as PASS.
+- Gate 2 PASS is explicitly distinct from V4 production implementation status and V4 production authority activation.
+- V4 production authority remains INACTIVE/BLOCKED unless a separate production-boundary contract explicitly authorizes activation.
+- Operator Acceptance remains repository-grounded; no invented command/procedure was introduced.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No raw/canonical evidence mutation, cursor reset, historical rewrite, evidence deletion, authority bypass, writer bypass, schema migration, new dependency, or V4 production activation occurred.
+- Historical artifacts, frozen contracts, golden vectors, tests, and valid implementations remain preserved.
+- Next STEP: STEP 596 — V4 Production Boundary Contract.
+
 ## STEP 594 — Canonical System Definition — VERIFIED / RECONCILED
 
 - Contract: `docs/STEP_594_CANONICAL_SYSTEM_DEFINITION_CONTRACT_V0_1.md`.
