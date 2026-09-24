@@ -10,6 +10,7 @@ function isolatedEnv() {
   const path = require('node:path');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-f03-recovery-'));
   process.env.HAHAWEEK_DATA_DIR = dir;
+  fs.mkdirSync(dir, { recursive: true });
   process.env.HAHAWEEK_STATE_FILE = path.join(dir, 'state.json');
   process.env.HAHAWEEK_RAW_FILE = path.join(dir, 'raw-events.jsonl');
   return dir;
