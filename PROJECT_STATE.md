@@ -1,3 +1,25 @@
+## STEP 579 — Runtime Canonical Lineage Integration Implementation — VERIFIED / RECONCILED
+
+- Baseline main commit inspected: `67261beefe8a2ca11ae23d0fa77f68cbddaff409`.
+- Implementation branch: `step-579-runtime-canonical-lineage`.
+- Design addendum: `docs/STEP_579_RUNTIME_CANONICAL_LINEAGE_IMPLEMENTATION_DESIGN_ADDENDUM_V0_1.md`.
+- Implementation PR #341 merged to main as `86ee596af71193a6bc3ab3e1cdceb2b86beac9b7`.
+- Final PR-head: `ff2506c1c354a50bdab0fafbacffbdea6467157e`.
+- Final PR-head HAHAWEEK Tests: SUCCESS (runs `35988050724` and `35988050522`).
+- Final PR-head HAHAWEEK Security and Regression: SUCCESS (run `35988050765`).
+- Earlier PR-head CI failure was root-caused to a runtime-lineage DDL trailing comma and stale schema-v6 test/migration fixtures; corrected without weakening production semantics.
+- Runtime lineage module: `src/core/runtime-canonical-lineage.js`.
+- Durable schema extended additively from v6 to v7 with `canonical_transitions`, `canonical_lineage`, append-only triggers, assertions, and transactional v6→v7 migration.
+- Deterministic transition identity/hash, canonical lineage reconstruction, INITIAL/CONTINUATION/REORG_REPLACEMENT generation semantics, deterministic processing identities, reorg orphan preservation, replay, and writer-fence fail-closed behavior implemented.
+- No STEP 563, STEP 568, cursor, expected/submitted authority semantics, historical evidence, or V4 activation changed.
+- Review/comment evidence: review ID `5303210585`; no self-approval claim.
+- Post-merge main verification confirmed `src/core/runtime-canonical-lineage.js` at blob SHA `6e2fd97c4ad7a29359faf38bbf4ee623adcb7559`.
+- Exact merge commit had no associated workflow runs at reconciliation time; no post-merge CI GREEN claim is made.
+- Reconciliation: `docs/STEP_579_RUNTIME_CANONICAL_LINEAGE_INTEGRATION_RECONCILIATION_V0_1.md`.
+- STEP 579 is VERIFIED / RECONCILED.
+- V4 production activation remains INACTIVE.
+- Next STEP: STEP 580 — Runtime Canonical Lineage / Processing Context Integration Boundary.
+
 ## STEP 578 — Runtime Canonical Decision Input Persistence/API Implementation — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `5e408f0ce097e50ee7c2f09141ce545530b2ccd0`.
