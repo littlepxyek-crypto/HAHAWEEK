@@ -1,3 +1,18 @@
+## STEP 515 — F-04 State Reconciliation — VERIFIED / FROZEN
+
+- STEP 513 F-04 Legacy Migration Verification Contract PR #229 merged to main as `811d0acc531a847e06e486ff35549e23285b8eda`.
+- STEP 514 F-04 Independent Migration Verifier PR #230 merged to main as `020809ad67550b6871bd4f30cb1f72639a1f5b28`.
+- STEP 514 initially failed repository Tests/Security because the new F-04 fixture was discovered by the existing V4 golden-vector inventory.
+- The failure was isolated to fixture classification; F-04 was explicitly classified out-of-scope for the V4 golden corpus without changing V4 semantics.
+- Corrected PR-head Tests and Security & Regression completed successfully on commit `5ed28ca7cda6428057f223a9bfef5ef817f8c961`.
+- The independent verifier validates source/result digests, deterministic accounting, explicit dispositions, provenance linkage, manifest linkage, deterministic replay, nonmutation, and fail-closed negative cases.
+- F-04 remains an offline verification boundary only. No production migration, SQLite schema migration, cursor/checkpoint mutation, RPC change, V4 production activation, or historical rewrite/deletion was introduced.
+- Exact post-merge workflow endpoint for `020809ad67550b6871bd4f30cb1f72639a1f5b28` returned no workflow runs at reconciliation time; therefore no exact post-merge GREEN result is claimed.
+- Closure is limited to the available evidence: contract merged; corrected implementation PR-head Tests and Security & Regression GREEN; exact post-merge CI unavailable.
+- Design Gate 2 remains NOT PASSED. F-05 remains conditional and Gate 2 acceptance is not inferred from F-04 alone.
+- Historical project-state entries remain preserved below this entry.
+- Any future F-04 semantic change requires a new reviewed contract/step.
+
 ## STEP 511 — H-05 State Reconciliation — VERIFIED / FROZEN
 
 - STEP 509 H-05 repository test matrix contract PR #225 merged as `bd572c561e9b7029e2f362b960ee0cfa2cd6ead8`.
