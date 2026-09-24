@@ -6,7 +6,7 @@ const { IngestionEngine } = require('../src/core/ingestion');
 const { createAuthorityGate } = require('../src/core/f03-ingestion-authority-integration');
 const { assertProductionAuthority } = require('../src/core/f03-production-authority-record');
 
-function makeEngine(authorityFactory, cursor) {
+function makeEngine(authorityFactory, expectedAuthorityFactory, cursor) {
   return new IngestionEngine({
     provider: { getBlockNumber: async () => 101 },
     cursor,
@@ -16,7 +16,8 @@ function makeEngine(authorityFactory, cursor) {
     batchSize: 1,
     maxBatchesPerRun: 1,
     authorityGate: createAuthorityGate({
-      authorityFactory,
+      authorityFactory: ({fromBlock,toBlock}) => ({...authorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
+      expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...expectedAuthorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
       authorityValidator: assertProductionAuthority,
       authorityBindingValidator: () => ({status:'BOUND'}),
     }),
@@ -36,7 +37,7 @@ test('F-03 production boundary fails closed and preserves cursor on authority re
 
   const engine = makeEngine(() => {
     throw new Error('AUTHORITY_REJECTED');
-  }, cursor);
+  }, () => ({segmentId:'seg',manifestDigest:'m',checkpointDigest:'c',generation:'g1',cursorBlock:101}), cursor);
 
   await assert.rejects(() => engine.runOnce(), /AUTHORITY_REJECTED/);
   assert.equal(cursorValue, 100);
@@ -64,8 +65,8 @@ test('F-03 production boundary can retry the same authority range after rejectio
       generation: 'g1',
       cursorBlock: toBlock,
     };
-    return {authority,expected:authority};
-  }, cursor);
+    return authority;
+  }, ({toBlock}) => ({segmentId:'seg-expected',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:toBlock}), cursor);
 
   await assert.rejects(() => engine.runOnce(), /AUTHORITY_REJECTED/);
   assert.equal(cursorValue, 100);

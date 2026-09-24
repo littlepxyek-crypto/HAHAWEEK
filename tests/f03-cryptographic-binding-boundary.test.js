@@ -40,7 +40,8 @@ function makeCursor(start = 100) {
 
 function makeEngine({ sourceFactory, cursor = makeCursor() }) {
   const gate = createAuthorityGate({
-    authorityFactory: sourceFactory,
+    authorityFactory: ({fromBlock,toBlock}) => ({...sourceFactory({fromBlock,toBlock}),fromBlock,toBlock}),
+    expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...makeAuthority(toBlock).expected,fromBlock,toBlock}),
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
   });
@@ -62,7 +63,7 @@ function makeEngine({ sourceFactory, cursor = makeCursor() }) {
 
 test('STEP 545 accepts valid cryptographically bound authority at cursor boundary', async () => {
   const { engine, cursor } = makeEngine({
-    sourceFactory: () => makeAuthority(101),
+    sourceFactory: () => makeAuthority(101).authority,
   });
 
   const result = await engine.runOnce();
@@ -76,7 +77,7 @@ test('STEP 545 rejects missing binding before cursor advancement', async () => {
   delete source.authority.bindingDigest;
 
   const { engine, cursor } = makeEngine({
-    sourceFactory: () => source,
+    sourceFactory: () => source.authority,
   });
 
   await assert.rejects(engine.runOnce(), /AUTHORITY_BINDING_DIGEST_INVALID/);
@@ -88,7 +89,7 @@ test('STEP 545 rejects tampered binding before cursor advancement', async () => 
   source.authority.bindingDigest = 'c'.repeat(64);
 
   const { engine, cursor } = makeEngine({
-    sourceFactory: () => source,
+    sourceFactory: () => source.authority,
   });
 
   await assert.rejects(engine.runOnce(), /AUTHORITY_BINDING_CONFLICT/);
@@ -107,7 +108,7 @@ for (const [field, value, error] of [
     source.authority[field] = value;
 
     const { engine, cursor } = makeEngine({
-      sourceFactory: () => source,
+      sourceFactory: () => source.authority,
     });
 
     await assert.rejects(engine.runOnce(), new RegExp(error));
@@ -118,7 +119,7 @@ for (const [field, value, error] of [
 test('STEP 545 identical authority replay is deterministic', async () => {
   const source = makeAuthority(101);
   const { engine, cursor } = makeEngine({
-    sourceFactory: () => source,
+    sourceFactory: () => source.authority,
   });
 
   const first = await engine.runOnce();
@@ -127,7 +128,7 @@ test('STEP 545 identical authority replay is deterministic', async () => {
 
   const replayCursor = makeCursor(100);
   const replay = makeEngine({
-    sourceFactory: () => source,
+    sourceFactory: () => source.authority,
     cursor: replayCursor,
   });
   const second = await replay.engine.runOnce();

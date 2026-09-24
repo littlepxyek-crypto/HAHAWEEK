@@ -3,13 +3,14 @@ const test=require('node:test'); const assert=require('node:assert/strict');
 const {IngestionEngine}=require('../src/core/ingestion');
 const {createAuthorityGate}=require('../src/core/f03-ingestion-authority-integration');
 
-function engineWithAuthority({authorityFactory,authorityValidator,cursor}) {
+function engineWithAuthority({authorityFactory,expectedAuthorityFactory,authorityValidator,cursor}) {
   return new IngestionEngine({
     provider:{getBlockNumber:async()=>101},cursor,confirmations:0,
     processor:async()=>{},processorRange:async()=>{},
     batchSize:1,maxBatchesPerRun:1,
     authorityGate:createAuthorityGate({
-      authorityFactory,
+      authorityFactory: ({fromBlock,toBlock}) => ({...authorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
+      expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...expectedAuthorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
       authorityValidator,
       authorityBindingValidator:()=>({status:'BOUND'})
     })
@@ -21,10 +22,8 @@ test('F-03 boundary rejects manifest/checkpoint binding mismatch',async()=>{
   const cursor={get:()=>cursorValue,advance:n=>{cursorValue=n;}};
   const engine=engineWithAuthority({
     cursor,
-    authorityFactory:()=>({
-      authority:{segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:101},
-      expected:{segmentId:'seg-101',manifestDigest:'m102',checkpointDigest:'c102',generation:'g1',cursorBlock:101}
-    }),
+    authorityFactory:()=>({segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:101}),
+    expectedAuthorityFactory:()=>({segmentId:'seg-101',manifestDigest:'m102',checkpointDigest:'c102',generation:'g1',cursorBlock:101}),
     authorityValidator:record=>{
       if(record.manifestDigest!=='m102') throw new Error('AUTHORITY_BINDING_MISMATCH');
       return record;
@@ -39,7 +38,8 @@ test('F-03 boundary recovery reuses deterministic authority and advances once',a
   const authority={segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:101};
   const engine=engineWithAuthority({
     cursor,
-    authorityFactory:()=>({authority,expected:authority}),
+    authorityFactory:()=>authority,
+    expectedAuthorityFactory:()=>({...authority}),
     authorityValidator:record=>{
       attempts++;
       if(attempts===1) throw new Error('AUTHORITY_TRANSIENT_FAILURE');

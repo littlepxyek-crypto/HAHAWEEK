@@ -27,14 +27,15 @@ function makeSource(cursorBlock = 110) {
 
 function makeGate(factory) {
   return createAuthorityGate({
-    authorityFactory: factory,
+    authorityFactory: ({fromBlock,toBlock}) => ({...factory({fromBlock,toBlock}),fromBlock,toBlock}),
+    expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...makeSource(toBlock).expected,fromBlock,toBlock}),
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
   });
 }
 
 test('F-03 production boundary adapter validates complete cryptographically bound authority before cursor', () => {
-  const gate = makeGate(() => makeSource(110));
+  const gate = makeGate(() => makeSource(110).authority);
   assert.equal(
     gate({fromBlock:101,toBlock:110,checkpointCommitted:true}).status,
     'AUTHORIZED'
@@ -45,18 +46,23 @@ test('F-03 adapter fails closed when authority is incomplete', () => {
   const source = makeSource(110);
   delete source.authority.manifestDigest;
 
-  const gate = makeGate(() => source);
+  const gate = makeGate(() => source.authority);
   assert.throws(
     () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
     /AUTHORITY_MANIFESTDIGEST_MISSING/
   );
 });
 
-test('F-03 adapter fails closed when cryptographic source envelope is incomplete', () => {
-  const gate = makeGate(() => ({authority: makeSource(110).authority}));
+test('F-03 adapter fails closed when expected source is missing', () => {
+  const gate = createAuthorityGate({
+    authorityFactory: () => makeSource(110).authority,
+    expectedAuthorityFactory: () => undefined,
+    authorityValidator: assertProductionAuthority,
+    authorityBindingValidator: assertAuthorityBinding,
+  });
   assert.throws(
     () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
-    /AUTHORITY_BINDING_SOURCE_REQUIRED/
+    /AUTHORITY_EXPECTED_SOURCE_INVALID/
   );
 });
 
@@ -74,7 +80,7 @@ test('F-03 adapter rejects a valid structural authority with a tampered binding'
   const source = makeSource(110);
   source.authority.bindingDigest = 'c'.repeat(64);
 
-  const gate = makeGate(() => source);
+  const gate = makeGate(() => source.authority);
   assert.throws(
     () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
     /AUTHORITY_BINDING_CONFLICT/
