@@ -251,34 +251,13 @@ Future evidence must not leak backward into formation detection.
 
 ## Current Engineering Status
 
-**Design Gate 2: OPEN**
+**Design Gate 2: PASS**
 
-The repository currently contains substantial V4 integrity and cross-spec groundwork, including:
+The current Design Gate 2 state records F-01..F-05 and H-01..H-05 as VERIFIED / FROZEN, with the acceptance evidence documented in [Design Gate 2 State](docs/DESIGN_GATE_2_STATE.md).
 
-- canonical reference model;
-- RFC 8785 conformance checkpoint;
-- normative lexical forms;
-- event identity contract and vectors;
-- transition contract and vectors;
-- checkpoint/cursor contracts and recovery vectors;
-- source-independence contract and vectors;
-- cross-spec L4 validation contract and vectors;
-- MVP scope;
-- threat model;
-- GitHub security and continuity controls.
+**Gate 2 PASS is a design/provenance acceptance state. It does not itself activate V4 production authority.**
 
-Remaining Gate 2 work includes executable and adversarial coverage for areas such as:
-
-- acquisition integrity/completeness;
-- segment and manifest verification;
-- lease/fencing;
-- migration and backup;
-- durability/crash recovery;
-- legacy write freeze;
-- collision isolation;
-- complete offline recovery verification.
-
-**Production V4 cutover is not authorized by the current design state.**
+V4 production implementation and V4 production authority activation remain distinct. **Production V4 authority remains INACTIVE/BLOCKED unless a separate authorized production-boundary contract explicitly permits activation.**
 
 ---
 
@@ -412,7 +391,7 @@ Core rules:
 - fail closed at authority boundaries;
 - keep derived projections rebuildable;
 - do not bypass repository protections;
-- do not introduce production V4 changes before the applicable design gates pass.
+- do not introduce production V4 changes before the applicable production-boundary authorization.
 
 Run the test suite with:
 
@@ -446,8 +425,8 @@ Current status is intentionally conservative:
 ```text
 Architecture                 DEFINED
 V4 Integrity                 IN DEVELOPMENT
-Design Gate 2                OPEN
-Production V4                BLOCKED
+Design Gate 2                PASS
+Production V4                BLOCKED / INACTIVE
 MVP                          DESIGN / VALIDATION
 Automated Trading            NOT PART OF THE FOUNDATION
 ```
