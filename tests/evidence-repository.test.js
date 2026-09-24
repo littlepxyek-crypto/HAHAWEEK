@@ -89,7 +89,7 @@ test('schema version is upgraded to repository version', async () => {
     "SELECT value FROM schema_meta WHERE key = 'schema_version'"
   )[0].values[0][0];
 
-  assert.equal(version, '5');
+  assert.equal(version, '6');
   const columns = database.db.exec(
     'PRAGMA table_info(canonical_evidence)'
   )[0].values.map(row => row[1]);
