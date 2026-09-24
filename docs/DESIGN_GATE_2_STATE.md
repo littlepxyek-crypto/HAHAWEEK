@@ -4,7 +4,7 @@
 DESIGN GATE 2 — Evidence Integrity & Provenance
 
 ## Current status
-NOT PASSED.
+PASS.
 
 The conceptual HAHAWEEK blueprint is preserved and unchanged. Gate 2 concerns the engineering/provenance layer required to implement it safely.
 
@@ -52,13 +52,17 @@ The repository test matrix maps F-01..F-05 and H-01..H-05 to executable tests or
 
 ## Gate 2 acceptance condition
 
-Gate 2 may become PASS only when:
+Gate 2 is PASS because all acceptance conditions below are evidenced on current `main`:
+
+
 1. All blockers F-01..F-05 are closed with executable evidence.
 2. H-01..H-05 are closed or explicitly dispositioned with verified controls.
 3. Reference implementation and golden vectors agree.
 4. Offline verifier independently validates protocol artifacts.
 5. Legacy/V4 authority cutover is enforceable.
 6. Historical evidence remains preserved.
+
+Verified evidence: STEP 558 final Tests CI `35963017866` SUCCESS; Security/Regression CI `35963017833` SUCCESS; Gate 2 production-boundary evidence is covered by `tests/design-gate-2-remaining-acceptance.test.js`; independent golden-vector/recovery verification is included in the same verified repository test matrix.
 
 ## Next implementation sequence
 
