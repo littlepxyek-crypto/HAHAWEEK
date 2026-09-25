@@ -102,18 +102,18 @@ function writerFence(file) {
   return fence;
 }
 
-test('fresh database is schema v7 and preserves F-03 tables', async () => {
+test('fresh database is schema v8 and preserves F-03 tables', async () => {
   const f = fixture();
   const db = await createDatabase(f.databaseFile);
-  assert.equal(SCHEMA_VERSION, 7);
-  assert.equal(db.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '7');
+  assert.equal(SCHEMA_VERSION, 8);
+  assert.equal(db.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '8');
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='f03_segments'")[0].values.length, 1);
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='processing_results'")[0].values.length, 1);
   assert.equal(db.db.exec("SELECT name FROM sqlite_master WHERE name='processing_result_evidence'")[0].values.length, 1);
   db.close();
 });
 
-test('v4 database migrates additively through v7', async () => {
+test('v4 database migrates additively through v8', async () => {
   const f = fixture();
   const db = await createDatabase(f.databaseFile);
   db.db.run("DROP TABLE canonical_decision_snapshot_blocks");
@@ -132,7 +132,7 @@ test('v4 database migrates additively through v7', async () => {
   db.close();
 
   const migrated = await createDatabase(f.databaseFile);
-  assert.equal(migrated.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '7');
+  assert.equal(migrated.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '8');
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_segments'")[0].values.length, 1);
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_manifests'")[0].values.length, 1);
   assert.equal(migrated.db.exec("SELECT name FROM sqlite_master WHERE name='f03_checkpoints'")[0].values.length, 1);
