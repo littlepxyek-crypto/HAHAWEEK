@@ -13,6 +13,7 @@ function createAuthorityGate({
   expectedAuthorityFactory,
   authorityValidator,
   authorityBindingValidator,
+  authorityCommitter,
   writerFence,
 }) {
   if (typeof authorityFactory !== 'function') throw new Error('AUTHORITY_FACTORY_REQUIRED');
@@ -81,6 +82,9 @@ function createAuthorityGate({
       if (!writerFence) throw new Error('AUTHORITY_WRITER_FENCE_REQUIRED');
     }
     if (writerFence) writerFence.assertOwned();
+    if (typeof authorityCommitter === 'function') {
+      authorityCommitter({ fromBlock, toBlock, processingContext, expectedAuthority: expected, authority });
+    }
 
     return validated;
   };

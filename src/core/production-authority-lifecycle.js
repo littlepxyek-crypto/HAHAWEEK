@@ -110,7 +110,7 @@ function listProductionAuthorityLifecycles(database, fromBlock, toBlock) {
   return result.length ? result[0].values.map(rowToObject) : [];
 }
 
-function establishProductionAuthorityLifecycle({ database, writerFence, processingContext, expectedAuthority, sourceId = 'runtime-production-authority' }) {
+function prepareProductionAuthorityLifecycle({ database, writerFence, processingContext, expectedAuthority, sourceId = 'runtime-production-authority' }) {
   if (!database || !database.db) throw new Error('LIFECYCLE_DATABASE_REQUIRED');
   if (!writerFence || typeof writerFence.assertOwned !== 'function') throw new Error('AUTHORITY_WRITER_FENCE_REQUIRED');
   const fromBlock = processingContext?.fromBlock;
@@ -128,8 +128,7 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
     generation: expectedAuthority.generation,
     cursorBlock: expectedAuthority.cursorBlock,
   };
-  const bindingDigest = createAuthorityBindingDigest(authority);
-  authority.bindingDigest = bindingDigest;
+  authority.bindingDigest = createAuthorityBindingDigest(authority);
   assertProductionAuthority(authority);
 
   let predecessor = null;
@@ -169,12 +168,52 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
     segmentId: authority.segmentId,
     manifestDigest: authority.manifestDigest,
     checkpointDigest: authority.checkpointDigest,
-    bindingDigest,
+    bindingDigest: authority.bindingDigest,
     predecessorLifecycleId: predecessor,
     replacementType,
   };
   const establishmentInputDigest = digest(input);
-  const authorityLifecycleId = establishmentInputDigest;
+
+  return Object.freeze({
+    authority: Object.freeze(authority),
+    authorityLifecycleId: establishmentInputDigest,
+    establishmentInputDigest,
+    sourceId,
+    predecessor,
+    replacementType,
+  });
+}
+
+function commitPreparedProductionAuthorityLifecycle({ database, writerFence, processingContext, expectedAuthority, prepared }) {
+  if (!database || !database.db) throw new Error('LIFECYCLE_DATABASE_REQUIRED');
+  if (!writerFence || typeof writerFence.assertOwned !== 'function') throw new Error('AUTHORITY_WRITER_FENCE_REQUIRED');
+  if (!prepared || !prepared.authority || typeof prepared.authorityLifecycleId !== 'string') {
+    throw new Error('LIFECYCLE_PREPARED_INPUT_REQUIRED');
+  }
+
+  writerFence.assertOwned();
+  assertContext(processingContext, processingContext?.fromBlock, processingContext?.toBlock);
+  assertExpected(expectedAuthority, processingContext.fromBlock, processingContext.toBlock, processingContext);
+
+  const rePrepared = prepareProductionAuthorityLifecycle({
+    database,
+    writerFence,
+    processingContext,
+    expectedAuthority,
+    sourceId: prepared.sourceId,
+  });
+
+  if (
+    rePrepared.authorityLifecycleId !== prepared.authorityLifecycleId ||
+    canonicalize(rePrepared.authority) !== canonicalize(prepared.authority) ||
+    rePrepared.predecessor !== prepared.predecessor ||
+    rePrepared.replacementType !== prepared.replacementType
+  ) {
+    throw new Error('LIFECYCLE_PREPARED_INPUT_CONFLICT');
+  }
+
+  const authority = rePrepared.authority;
+  const authorityLifecycleId = rePrepared.authorityLifecycleId;
 
   const existing = database.db.exec(
     'SELECT authority_lifecycle_id,state,segment_id,manifest_digest,checkpoint_digest,generation,cursor_block,binding_digest,processing_result_id,processing_execution_id,lineage_id,canonical_decision_snapshot_id,evidence_set_digest,from_block,to_block,expected_segment_id,expected_manifest_digest,expected_checkpoint_digest,source_id,predecessor_lifecycle_id,replacement_type,establishment_input_digest,committed_at FROM production_authority_lifecycle WHERE authority_lifecycle_id = ?',
@@ -183,7 +222,16 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
 
   if (existing.length && existing[0].values.length === 1) {
     const record = rowToObject(existing[0].values[0]);
-    assertLifecycleMatches(record, authority, processingContext, expectedAuthority, sourceId, predecessor, replacementType, establishmentInputDigest);
+    assertLifecycleMatches(
+      record,
+      authority,
+      processingContext,
+      expectedAuthority,
+      rePrepared.sourceId,
+      rePrepared.predecessor,
+      rePrepared.replacementType,
+      rePrepared.establishmentInputDigest
+    );
     return authority;
   }
 
@@ -196,16 +244,25 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
       'INSERT INTO production_authority_lifecycle (authority_lifecycle_id,state,segment_id,manifest_digest,checkpoint_digest,generation,cursor_block,binding_digest,processing_result_id,processing_execution_id,lineage_id,canonical_decision_snapshot_id,evidence_set_digest,from_block,to_block,expected_segment_id,expected_manifest_digest,expected_checkpoint_digest,source_id,predecessor_lifecycle_id,replacement_type,establishment_input_digest,committed_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
       [
         authorityLifecycleId,'DURABLY_ESTABLISHED',authority.segmentId,authority.manifestDigest,authority.checkpointDigest,
-        authority.generation,authority.cursorBlock,bindingDigest,processingContext.processingResultId,processingContext.processingExecutionId,
-        processingContext.lineageId,processingContext.canonicalDecisionSnapshotId,processingContext.evidenceSetDigest,fromBlock,toBlock,
-        expectedAuthority.segmentId,expectedAuthority.manifestDigest,expectedAuthority.checkpointDigest,sourceId,predecessor,replacementType,
-        establishmentInputDigest,committedAt
+        authority.generation,authority.cursorBlock,authority.bindingDigest,processingContext.processingResultId,processingContext.processingExecutionId,
+        processingContext.lineageId,processingContext.canonicalDecisionSnapshotId,processingContext.evidenceSetDigest,processingContext.fromBlock,processingContext.toBlock,
+        expectedAuthority.segmentId,expectedAuthority.manifestDigest,expectedAuthority.checkpointDigest,rePrepared.sourceId,rePrepared.predecessor,rePrepared.replacementType,
+        rePrepared.establishmentInputDigest,committedAt
       ]
     );
     writerFence.assertOwned();
     database.save();
     const durable = readProductionAuthorityLifecycle(database, authorityLifecycleId);
-    assertLifecycleMatches(durable, authority, processingContext, expectedAuthority, sourceId, predecessor, replacementType, establishmentInputDigest);
+    assertLifecycleMatches(
+      durable,
+      authority,
+      processingContext,
+      expectedAuthority,
+      rePrepared.sourceId,
+      rePrepared.predecessor,
+      rePrepared.replacementType,
+      rePrepared.establishmentInputDigest
+    );
     return authority;
   } catch (error) {
     database.restore(snapshot);
@@ -213,8 +270,18 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
   }
 }
 
+function establishProductionAuthorityLifecycle(args) {
+  const prepared = prepareProductionAuthorityLifecycle(args);
+  return commitPreparedProductionAuthorityLifecycle({
+    ...args,
+    prepared,
+  });
+}
+
 module.exports = {
   DOMAIN,
+  prepareProductionAuthorityLifecycle,
+  commitPreparedProductionAuthorityLifecycle,
   establishProductionAuthorityLifecycle,
   readProductionAuthorityLifecycle,
   listProductionAuthorityLifecycles,
