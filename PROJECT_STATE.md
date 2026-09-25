@@ -1,3 +1,19 @@
+## STEP 599 — V4 Production Authority Source Lifecycle — VERIFIED / RECONCILED
+
+- State-finalization document: `docs/STEP_599_V4_PRODUCTION_AUTHORITY_SOURCE_LIFECYCLE_STATE_FINALIZATION_V0_1.md`.
+- State-finalization commit: `72246747f1b64e3497932151d4707bbfdd21ca56`.
+- Lifecycle contract commit: `4ef6834238e9a417e8183c4949db925c0fde0f76`; Contract PR #410 merged as `7430c83fdd6588ceb9df491d679649ae0917bc0d`.
+- Reconciliation PR #411 merged as `eed4fbec82fbe9fde10ca2127272646e905551b7`.
+- Exact reconciliation merge-commit checks: test `107926648601` SUCCESS; test-and-security `107926648794` SUCCESS; Analyze (actions) `107926651856` SUCCESS; Analyze (javascript-typescript) `107926651545` SUCCESS.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- Existing F-03 authority/binding, expected-authority distinction, verified processing context, lineage/generation, writer/fencing, cursor ordering, recovery/reorg, evidence, and integrity ownership remain unchanged.
+- Operator Acceptance remains repository-grounded and reproducible; no invented command or recovery procedure was introduced.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No cursor reset/unauthorized advance, evidence mutation/deletion, historical rewrite, silent normalization, new writer/lock, fallback/default authority, authority duplication, production activation, automated action/trading, or predictive/ranking authority was introduced.
+- Historical evidence, artifacts, contracts, golden vectors, tests, and valid implementations remain preserved.
+- **STEP 599 final state: VERIFIED / RECONCILED.**
+- **Next STEP: STEP 599 Analysis — inspect the actual repository and determine whether a concrete production authority source can be established without inventing semantics.**
+
 ## STEP 598 — Analysis State Finalization — VERIFIED / RECONCILED
 
 - State-finalization document: `docs/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_ANALYSIS_STATE_FINALIZATION_V0_1.md`.
