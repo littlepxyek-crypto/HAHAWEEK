@@ -83,7 +83,7 @@ function createAuthorityGate({
     }
     if (writerFence) writerFence.assertOwned();
     if (typeof authorityCommitter === 'function') {
-      authorityCommitter({ fromBlock, toBlock, processingContext, expectedAuthority: expected, authority: validated });
+      authorityCommitter({ fromBlock, toBlock, processingContext, expectedAuthority: expected, authority });
     }
 
     return validated;
