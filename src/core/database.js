@@ -408,7 +408,7 @@ function createBaseSchema(db) {
     'CREATE TABLE flow_windows (chain_id INTEGER NOT NULL, pool_id TEXT NOT NULL, window_start INTEGER NOT NULL, window_end INTEGER NOT NULL, swap_count INTEGER NOT NULL, unique_sender_count INTEGER NOT NULL, total_amount0 TEXT NOT NULL, total_amount1 TEXT NOT NULL, first_block INTEGER NOT NULL, last_block INTEGER NOT NULL, first_timestamp INTEGER NOT NULL, last_timestamp INTEGER NOT NULL, PRIMARY KEY (chain_id, pool_id, window_start));',
     'CREATE TABLE ingestion_state (key TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL);',
     'CREATE TABLE canonical_evidence (evidence_id TEXT PRIMARY KEY, identity_schema_version TEXT NOT NULL, identity_hash TEXT NOT NULL, raw_event_id TEXT NOT NULL, raw_hash TEXT NOT NULL, canonical_hash TEXT NOT NULL, canonical_json TEXT NOT NULL, interpretation_status TEXT NOT NULL, provenance_json TEXT NOT NULL, stored_at TEXT NOT NULL, FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id));',
-    "INSERT INTO schema_meta (key, value) VALUES ('schema_version', '7');",
+    "INSERT INTO schema_meta (key, value) VALUES ('schema_version', '8');",
     F03_DDL.segments,
     F03_DDL.manifests,
     F03_DDL.checkpoints,
