@@ -1,3 +1,23 @@
+## STEP 606 — Production Authority Lifecycle Failure-Atomicity — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/STEP_606_PRODUCTION_AUTHORITY_LIFECYCLE_FAILURE_ATOMICITY_CONTRACT_V0_1.md`.
+- Analysis: `docs/STEP_606_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_606_DESIGN_V0_1.md`.
+- Design reconciliation: `docs/STEP_606_DESIGN_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Code implementation PR #452 merged as `68564c1929d694774dd3a02de250612fc34bca59`.
+- Code PR-head `283f6c4383a565d0f174bde57b5a5d228b49535a`: HAHAWEEK Tests #1454 SUCCESS; Security and Regression #3141 SUCCESS.
+- Code reconciliation PR #453 merged as `cef5ad4592899439814263567fc95b942252d302`.
+- Reconciliation PR-head `6f5303a7e0ef93e356f35854dace9d7fb8860402`: HAHAWEEK Tests #1458 SUCCESS; Security and Regression #3145 SUCCESS.
+- Exact merge-commit workflow lookup for Code merge `68564c1929d694774dd3a02de250612fc34bca59` returned no workflow runs; exact-merge CI GREEN is not claimed.
+- Exact merge-commit workflow lookup for reconciliation merge `cef5ad4592899439814263567fc95b942252d302` returned no workflow runs; exact-merge CI GREEN is not claimed.
+- Code implements deterministic reconciliation for a durable lifecycle ahead of the cursor, with exact contiguous range, expected-authority validation, production-authority binding validation, and FAIL-CLOSED handling.
+- No cursor reset, lifecycle evidence deletion/rewrite, silent normalization, second writer/lock, fallback authority, or V4 activation occurred.
+- Operator Acceptance remains repository-grounded; no undocumented operator command or recovery procedure was introduced.
+- Surveillance remains derived, evidence-linked, versioned, non-authoritative; ADDRESS != ACTOR.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- **STEP 606 final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: repository-defined next STEP beginning with Contract.**
+
 ## STEP 606 — Contract — IN PROGRESS
 
 - Contract: `docs/STEP_606_PRODUCTION_AUTHORITY_LIFECYCLE_FAILURE_ATOMICITY_CONTRACT_V0_1.md`.
