@@ -42,6 +42,7 @@ const { assertAuthorityBinding } = require('./core/f03-authority-binding');
 const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
 const { readF03AuthorityChain } = require('./core/f03-authoritative-chain-persistence');
 const { createVerifiedProcessingContext } = require('./core/runtime-processing-context');
+const { establishProductionAuthorityLifecycle } = require('./core/production-authority-lifecycle');
 
 const {
   POOL_MANAGER,
@@ -175,8 +176,16 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     return context;
   };
 
-  const productionAuthorityFactory = authorityFactory || (() => {
-    throw new Error('AUTHORITY_SOURCE_REQUIRED');
+  const productionAuthorityFactory = authorityFactory || (({ fromBlock, toBlock, processingContext }) => {
+    if (!processingContext || processingContext.fromBlock !== fromBlock || processingContext.toBlock !== toBlock) {
+      throw new Error('PROCESSING_CONTEXT_REQUIRED');
+    }
+    return establishProductionAuthorityLifecycle({
+      database,
+      writerFence,
+      processingContext,
+      expectedAuthority: productionExpectedAuthorityFactory({ fromBlock, toBlock }),
+    });
   });
   const productionExpectedAuthorityFactory = expectedAuthorityFactory || createDurableExpectedAuthorityFactory(database);
 
