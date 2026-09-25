@@ -54,6 +54,8 @@ PR #395 merged as `5b1ef73bc60657226ba72df61b95e0dd9a230896`; exact post-merge c
 - Analyze (actions): 107905275225
 - Analyze (javascript-typescript): 107905275100
 
+PR #396 is now included in the final reconciliation record. It merged as `b1c8dc5c6348521025d6331d9853286e0c1eca1c` and its exact merge-commit post-merge checks are terminal SUCCESS: test `107906154987`; test-and-security `107906155242`; Analyze (actions) `107906157694`; Analyze (javascript-typescript) `107906158077`.
+
 ## Reconciliation Findings
 
 The STEP 596 production-boundary contract remains present and preserves:
