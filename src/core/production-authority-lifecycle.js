@@ -91,6 +91,8 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
   assertExpected(expectedAuthority, fromBlock, toBlock, processingContext);
 
   const authority = {
+    fromBlock,
+    toBlock,
     segmentId: expectedAuthority.segmentId,
     manifestDigest: expectedAuthority.manifestDigest,
     checkpointDigest: expectedAuthority.checkpointDigest,
