@@ -11,8 +11,8 @@ test('F-03 production createEngine accepts complete authority factory',async()=>
  const engine=await createEngine({authorityFactory:({fromBlock,toBlock})=>({segmentId:`seg-${fromBlock}-${toBlock}`,manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:toBlock})});
  try{assert.equal(typeof engine.ingestion.authorityGate,'function');}finally{cleanup(engine);}
 });
-test('F-03 production createEngine fails closed without authority source',async()=>{
+test('F-03 production createEngine uses repository lifecycle source and fails closed without expected chain',async()=>{
  const engine=await createEngine();
- try{assert.throws(()=>engine.ingestion.authorityGate({checkpointCommitted:true,fromBlock:101,toBlock:101}),/AUTHORITY_SOURCE_REQUIRED/);}
+ try{assert.throws(()=>engine.ingestion.authorityGate({checkpointCommitted:true,fromBlock:101,toBlock:101,processingContext:{status:'VERIFIED',fromBlock:101,toBlock:101,generation:'1'}}),/F03_CHAIN_NOT_FOUND/);}
  finally{cleanup(engine);}
 });

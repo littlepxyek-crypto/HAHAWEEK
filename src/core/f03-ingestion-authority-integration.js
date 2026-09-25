@@ -44,8 +44,8 @@ function createAuthorityGate({
       }
     }
 
-    const authority = authorityFactory({ fromBlock, toBlock });
     const expected = expectedAuthorityFactory({ fromBlock, toBlock });
+    const authority = authorityFactory({ fromBlock, toBlock, processingContext, expectedAuthority: expected });
 
     if (!authority || typeof authority !== 'object') {
       throw new Error('AUTHORITY_SOURCE_INVALID');

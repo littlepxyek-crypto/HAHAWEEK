@@ -418,7 +418,7 @@ test('STEP 578 persistence failure rolls back canonical decision state', async (
   database.close();
 });
 
-test('STEP 578 schema migrates v5 databases additively through v7', async () => {
+test('STEP 578 schema migrates v5 databases additively through v8', async () => {
   const filename = path.join(tempDir(), 'migration.sqlite');
   const database = await createDatabase(filename);
   database.db.run("UPDATE schema_meta SET value = '5' WHERE key = 'schema_version'");
@@ -437,7 +437,7 @@ test('STEP 578 schema migrates v5 databases additively through v7', async () => 
   const migrated = await createDatabase(filename);
   assert.equal(
     dbRow(migrated, "SELECT value AS value FROM schema_meta WHERE key = 'schema_version'").value,
-    '7'
+    '8'
   );
   assert.equal(dbRow(migrated, 'SELECT COUNT(*) AS count FROM canonical_block_decisions').count, 0);
   assert.equal(dbRow(migrated, 'SELECT COUNT(*) AS count FROM raw_events').count, 0);

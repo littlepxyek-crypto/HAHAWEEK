@@ -146,7 +146,7 @@ test('STEP579 INITIAL persists canonical lineage and recovers deterministically'
   assert.equal(first.canonicalEvidenceIds.length, 1);
   assert.equal(first.status, 'VERIFIED');
   assert.equal(latestState(database, first.canonicalEvidenceIds[0]), 'CANONICAL');
-  assert.equal(SCHEMA_VERSION, 7);
+  assert.equal(SCHEMA_VERSION, 8);
   const replay = await acceptCanonicalLineage({
     database, writerFence: fence, canonicalDecisionSnapshotId: snapshotId,
     fromBlock: 100, toBlock: 100, transitionType: 'INITIAL', generation: '7',
@@ -256,7 +256,7 @@ test('STEP579 rejects unsupported transition, missing parent, invalid range, and
   }), /WRITER_FENCE_EXPIRED/);
 });
 
-test('STEP579 schema v6 migration is additive and preserves STEP578 data', async () => {
+test('STEP579 schema v6 migration is additive through v8 and preserves STEP578 data', async () => {
   const f = fixture();
   const database = await createDatabase(f.databaseFile);
   const hash = '0x' + '66'.repeat(32);
@@ -273,8 +273,8 @@ test('STEP579 schema v6 migration is additive and preserves STEP578 data', async
   database.close();
 
   const reopened = await createDatabase(f.databaseFile);
-  assert.equal(SCHEMA_VERSION, 7);
-  assert.equal(reopened.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '7');
+  assert.equal(SCHEMA_VERSION, 8);
+  assert.equal(reopened.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '8');
   assert.equal(reopened.db.exec('SELECT COUNT(*) FROM canonical_block_decisions')[0].values[0][0], before);
   assert.doesNotThrow(() => reopened.db.run("INSERT INTO canonical_transitions (transition_id,evidence_id,from_state,to_state,sequence,previous_transition_hash,transition_hash,provenance_json,committed_at) VALUES ('x','e','OBSERVED','CANONICAL','0',NULL,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','{}','2026-09-24T08:00:00.000Z')"));
   assert.throws(() => reopened.db.run("UPDATE canonical_transitions SET evidence_id='z' WHERE transition_id='x'"), /CANONICAL_TRANSITIONS_APPEND_ONLY/);
