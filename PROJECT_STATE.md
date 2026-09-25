@@ -2,7 +2,7 @@
 
 - State-finalization document: `docs/STEP_599_V4_PRODUCTION_AUTHORITY_SOURCE_LIFECYCLE_STATE_FINALIZATION_V0_1.md`.
 - State-finalization commit: `a4c768fcb30a97ad78a5db6d3776dfd894382ad2`.
-- Lifecycle contract commit: `4ef6834238e9a417e8183c4949db925c0fde0f76`; Contract PR #410 merged (merge commit recorded in repository history; exact SHA retained by PR evidence).
+- Lifecycle contract commit: `4ef6834238e9a417e8183c4949db925c0fde0f76`; Contract PR #410 merged as `7430c83fdd6588ceb9df491d679649ae0917bc0d`.
 - Reconciliation PR #411 merged as `eed4fbec82fbe9fde10ca2127272646e905551b7`.
 - Exact reconciliation merge-commit checks: test `107926648601` SUCCESS; test-and-security `107926648794` SUCCESS; Analyze (actions) `107926651856` SUCCESS; Analyze (javascript-typescript) `107926651545` SUCCESS.
 - Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
