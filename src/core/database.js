@@ -7,7 +7,7 @@ const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'hahaweek.sqlite');
-const SCHEMA_VERSION = 7;
+const SCHEMA_VERSION = 8;
 
 const CANONICAL_DECISION_DDL = {
   records: [
@@ -58,6 +58,47 @@ const CANONICAL_DECISION_DDL = {
     '  FOREIGN KEY (snapshot_id) REFERENCES canonical_decision_snapshots(snapshot_id),',
     '  FOREIGN KEY (record_digest) REFERENCES canonical_block_decisions(record_digest)',
     ');',
+  ].join('\n'),
+};
+
+const PRODUCTION_AUTHORITY_LIFECYCLE_DDL = {
+  table: [
+    'CREATE TABLE production_authority_lifecycle (',
+    '  authority_lifecycle_id TEXT PRIMARY KEY,',
+    "  state TEXT NOT NULL CHECK (state = 'DURABLY_ESTABLISHED'),",
+    '  segment_id TEXT NOT NULL,',
+    '  manifest_digest TEXT NOT NULL,',
+    '  checkpoint_digest TEXT NOT NULL,',
+    '  generation TEXT NOT NULL,',
+    '  cursor_block INTEGER NOT NULL,',
+    '  binding_digest TEXT NOT NULL,',
+    '  processing_result_id TEXT NOT NULL,',
+    '  processing_execution_id TEXT NOT NULL,',
+    '  lineage_id TEXT NOT NULL,',
+    '  canonical_decision_snapshot_id TEXT NOT NULL,',
+    '  evidence_set_digest TEXT NOT NULL,',
+    '  from_block INTEGER NOT NULL,',
+    '  to_block INTEGER NOT NULL,',
+    '  expected_segment_id TEXT NOT NULL,',
+    '  expected_manifest_digest TEXT NOT NULL,',
+    '  expected_checkpoint_digest TEXT NOT NULL,',
+    '  source_id TEXT NOT NULL,',
+    '  predecessor_lifecycle_id TEXT NULL,',
+    '  replacement_type TEXT NULL,',
+    '  establishment_input_digest TEXT NOT NULL,',
+    '  committed_at TEXT NOT NULL,',
+    '  CHECK (from_block >= 0),',
+    '  CHECK (to_block >= 0),',
+    '  CHECK (from_block <= to_block),',
+    '  CHECK (cursor_block = to_block),',
+    "  CHECK (replacement_type IS NULL OR replacement_type = 'REORG_REPLACEMENT'),",
+    '  UNIQUE (establishment_input_digest)',
+    ');',
+  ].join('\n')
+  ].join('\n'),
+  triggers: [
+    "CREATE TRIGGER production_authority_lifecycle_no_update BEFORE UPDATE ON production_authority_lifecycle BEGIN SELECT RAISE(ABORT, 'PRODUCTION_AUTHORITY_LIFECYCLE_APPEND_ONLY'); END;",
+    "CREATE TRIGGER production_authority_lifecycle_no_delete BEFORE DELETE ON production_authority_lifecycle BEGIN SELECT RAISE(ABORT, 'PRODUCTION_AUTHORITY_LIFECYCLE_APPEND_ONLY'); END;",
   ].join('\n'),
 };
 
@@ -380,6 +421,8 @@ function createBaseSchema(db) {
     RUNTIME_LINEAGE_DDL.transitions,
     RUNTIME_LINEAGE_DDL.lineage,
     RUNTIME_LINEAGE_DDL.triggers,
+    PRODUCTION_AUTHORITY_LIFECYCLE_DDL.table,
+    PRODUCTION_AUTHORITY_LIFECYCLE_DDL.triggers,
   ].join('\n'));
 }
 
@@ -473,6 +516,42 @@ function assertRuntimeLineageTable(db, tableName, expectedColumns, expectedForei
   }
   const foreignKeys = db.exec('PRAGMA foreign_key_list(' + tableName + ')')[0]?.values ?? [];
   if (foreignKeys.length !== expectedForeignKeys.length) throw new Error('RUNTIME_LINEAGE_FOREIGN_KEYS_INVALID_' + tableName.toUpperCase());
+}
+
+function migrateV7ToV8(db) {
+  assertRequiredBaseSchema(db);
+  assertF03Schema(db);
+  assertProcessingResultSchema(db);
+  assertCanonicalDecisionSchema(db);
+  assertRuntimeLineageSchema(db);
+  db.run('BEGIN');
+  let committed = false;
+  try {
+    db.run(PRODUCTION_AUTHORITY_LIFECYCLE_DDL.table);
+    db.run(PRODUCTION_AUTHORITY_LIFECYCLE_DDL.triggers);
+    db.run("UPDATE schema_meta SET value = '8' WHERE key = 'schema_version'");
+    db.run('COMMIT');
+    committed = true;
+  } finally {
+    if (!committed) {
+      try { db.run('ROLLBACK'); } catch {}
+    }
+  }
+}
+
+function assertProductionAuthorityLifecycleSchema(db) {
+  if (!hasTable(db, 'production_authority_lifecycle')) throw new Error('PRODUCTION_AUTHORITY_LIFECYCLE_TABLE_MISSING');
+  const columns = db.exec('PRAGMA table_info(production_authority_lifecycle)')[0]?.values ?? [];
+  const expected = [
+    ['authority_lifecycle_id','TEXT',0,1],['state','TEXT',1,0],['segment_id','TEXT',1,0],['manifest_digest','TEXT',1,0],['checkpoint_digest','TEXT',1,0],
+    ['generation','TEXT',1,0],['cursor_block','INTEGER',1,0],['binding_digest','TEXT',1,0],['processing_result_id','TEXT',1,0],['processing_execution_id','TEXT',1,0],
+    ['lineage_id','TEXT',1,0],['canonical_decision_snapshot_id','TEXT',1,0],['evidence_set_digest','TEXT',1,0],['from_block','INTEGER',1,0],['to_block','INTEGER',1,0],
+    ['expected_segment_id','TEXT',1,0],['expected_manifest_digest','TEXT',1,0],['expected_checkpoint_digest','TEXT',1,0],['source_id','TEXT',1,0],['predecessor_lifecycle_id','TEXT',0,0],
+    ['replacement_type','TEXT',0,0],['establishment_input_digest','TEXT',1,0],['committed_at','TEXT',1,0],
+  ];
+  if (columns.length !== expected.length || columns.some((c,i) => c[1] !== expected[i][0] || c[2] !== expected[i][1] || c[3] !== expected[i][2] || c[5] !== expected[i][3])) throw new Error('PRODUCTION_AUTHORITY_LIFECYCLE_SCHEMA_INVALID');
+  const triggers = db.exec("SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('production_authority_lifecycle_no_update','production_authority_lifecycle_no_delete')")[0]?.values ?? [];
+  if (triggers.length !== 2) throw new Error('PRODUCTION_AUTHORITY_LIFECYCLE_APPEND_ONLY_TRIGGERS_MISSING');
 }
 
 function assertRuntimeLineageSchema(db) {
@@ -624,6 +703,8 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       assertProcessingResultSchema(db);
       assertCanonicalDecisionSchema(db);
       assertRuntimeLineageSchema(db);
+      migrateV7ToV8(db);
+      assertProductionAuthorityLifecycleSchema(db);
     } else {
       throw new Error('UNSUPPORTED_SCHEMA_VERSION');
     }
@@ -708,6 +789,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
         assertProcessingResultSchema(db);
         assertCanonicalDecisionSchema(db);
         assertRuntimeLineageSchema(db);
+        assertProductionAuthorityLifecycleSchema(db);
       }
     },
     close() {
