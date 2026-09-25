@@ -242,8 +242,9 @@ test('STEP 603 upgrades schema 7 to 8 and survives durable restart', async () =>
     try {
       const rows = reopened.db.exec('SELECT authority_lifecycle_id,state FROM production_authority_lifecycle');
       assert.equal(rows[0].values.length, 1);
-      assert.equal(rows[0].values[0][0], authorityLifecycleIdFromRows(rows));
+      assert.match(rows[0].values[0][0], /^[0-9a-f]{64}$/);
       assert.equal(rows[0].values[0][1], 'DURABLY_ESTABLISHED');
+      assert.equal(readProductionAuthorityLifecycle(reopened, rows[0].values[0][0]).state, 'DURABLY_ESTABLISHED');
     } finally {
       reopened.close();
     }
@@ -252,7 +253,3 @@ test('STEP 603 upgrades schema 7 to 8 and survives durable restart', async () =>
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
-
-function authorityLifecycleIdFromRows(rows) {
-  return rows[0].values[0][0];
-}
