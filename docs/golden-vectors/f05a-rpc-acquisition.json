@@ -1,0 +1,38 @@
+{
+  "protocol": "HAHAWEEK-V4-RPC-ACQUISITION-V0.1",
+  "version": "0.1",
+  "vectors": [
+    {
+      "id": "complete-range",
+      "input": {
+        "protocol": "HAHAWEEK-V4-RPC-ACQUISITION-V0.1",
+        "version": "0.1",
+        "chain_id": "4663",
+        "rpc_source": "robinhood-mainnet",
+        "method": "eth_getLogs",
+        "request_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "response_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "from_block": "100",
+        "to_block": "109",
+        "observed_at": "2026-09-21T00:00:00.000Z",
+        "completeness": "COMPLETE"
+      }
+    },
+    {
+      "id": "partial-range",
+      "input": {
+        "protocol": "HAHAWEEK-V4-RPC-ACQUISITION-V0.1",
+        "version": "0.1",
+        "chain_id": "4663",
+        "rpc_source": "robinhood-mainnet",
+        "method": "eth_getLogs",
+        "request_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "response_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "from_block": "100",
+        "to_block": "109",
+        "observed_at": "2026-09-21T00:00:00.000Z",
+        "completeness": "PARTIAL"
+      }
+    }
+  ]
+}
