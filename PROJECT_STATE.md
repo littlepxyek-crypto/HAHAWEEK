@@ -1,3 +1,17 @@
+## STEP 604 — Post-Merge Verification Evidence State Reconciliation — DOCUMENTED / POST-MERGE EVIDENCE LIMITED
+
+- Contract merge: `4c87a478a96828c26b9917e3c2b21d8ff59fe69b`.
+- Analysis merge: `dd3ba6b25fbb1a37919384503a3c245a0fe180a7`.
+- Design merge: `a9b7e3dc97dec510884eba473248f0fe738740f6`.
+- Reconciliation PR #428 merged as `a5bbe65340096e71529589b53697ada8f37066ea`.
+- PR #428 head Test `36111714123` SUCCESS and Security/Regression `36111714066` SUCCESS.
+- Direct workflow/status lookup for reconciliation merge `a5bbe653...` currently exposes no terminal records; therefore direct merge-commit CI PASS is not claimed.
+- Historical evidence is preserved. The later STEP 603 reconciliation evidence remains explicitly distinguished from direct CI evidence for implementation merge `85a668e5...`.
+- No production code, schema, cursor, authority, raw/canonical evidence, writer-fence, or Surveillance semantics changed.
+- V4 production authority remains INACTIVE / BLOCKED.
+- **STEP 604 documentation state: RECORDED; direct post-merge evidence remains pending.**
+- **Next STEP: continue STEP 604 only after direct post-merge verification evidence becomes available; otherwise remain FAIL-CLOSED and do not invent completion.**
+
 ## STEP 603 — Production Authority Establishment Source — VERIFIED / RECONCILED
 
 - STEP 603 implementation merge: `85a668e516509a0555369998276745f0d164ff89`.
