@@ -42,6 +42,7 @@ const { assertAuthorityBinding } = require('./core/f03-authority-binding');
 const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
 const { readF03AuthorityChain } = require('./core/f03-authoritative-chain-persistence');
 const { createVerifiedProcessingContext } = require('./core/runtime-processing-context');
+const { reconcileProductionAuthorityLifecycleCursor } = require('./core/production-authority-lifecycle-reconciliation');
 const {
   prepareProductionAuthorityLifecycle,
   commitPreparedProductionAuthorityLifecycle,
@@ -207,6 +208,19 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
         });
       };
   const productionExpectedAuthorityFactory = expectedAuthorityFactory || createDurableExpectedAuthorityFactory(database);
+
+  try {
+    reconcileProductionAuthorityLifecycleCursor({
+      database,
+      cursor,
+      expectedAuthorityFactory: productionExpectedAuthorityFactory,
+    });
+  } catch (error) {
+    database.close();
+    writerFence.release();
+    provider.destroy();
+    throw error;
+  }
 
   const ingestion = new IngestionEngine({
     provider,
