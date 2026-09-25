@@ -13,17 +13,29 @@
 
 The STEP 596 contract merge commit was verified as the expected merge commit and signed.
 
-Required merge-commit checks are terminal SUCCESS:
+Required contract merge-commit checks were terminal SUCCESS:
 - Analyze (actions): 107860213163
 - Analyze (javascript-typescript): 107860212808
 - test: 107860207771
 - test-and-security: 107860207976
 
+The reconciliation PR #388 merged as 7557ac5b46ef96642bdc4d32f767fb991124c7db. Its PR-head required checks were terminal SUCCESS.
+
+The STEP 596 PROJECT_STATE finalization PR #389 merged as 8d5fe26e10a89b3a3df73d5b541bedf2832eafd0.
+
+Post-merge verification of the PR #389 merge commit is now terminal SUCCESS:
+- test-and-security: 107861541820
+- test: 107861540634
+- Analyze (actions): 107861544794
+- Analyze (javascript-typescript): 107861544991
+
+Therefore the previously pending post-merge CI condition on PR #389 is resolved.
+
 The repository contract remains contract-only. No V4 production authority was activated.
 
 ## Reconciliation Findings
 
-The merged contract at docs/STEP_596_V4_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md is present on the verified merge commit.
+The merged contract at docs/STEP_596_V4_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md is present on the verified merge history.
 
 The contract explicitly preserves the distinction between:
 1. Design Gate 2 acceptance = PASS.
@@ -68,15 +80,22 @@ No temporal leakage or predictive/ranking authority is introduced.
 
 ## Reconciliation Result
 
-STEP 596 Contract and post-merge state are internally consistent:
+STEP 596 Contract, reconciliation, PROJECT_STATE finalization, and post-merge CI are internally consistent:
 - Gate 2 PASS is preserved.
 - V4 production authority remains INACTIVE/BLOCKED.
 - The production activation boundary is explicitly separated from Gate 2.
 - Operator Acceptance and Surveillance constraints remain preserved.
 - No forbidden production semantic change occurred.
+- PR #389 post-merge verification is terminal SUCCESS.
 
 This reconciliation does not authorize V4 production activation.
 
+## Final STEP 596 State
+
+STEP 596 is **VERIFIED / RECONCILED** based on actual repository evidence through PR #389 post-merge verification.
+
+Any future V4 production implementation must begin under the next authorized STEP and must follow the full Standing Execution Rule.
+
 ## Next Phase
 
-After reconciliation and PROJECT_STATE documentation are completed, continue within STEP 596 to Analysis → Design → Code only if Analysis establishes an authorized, repository-grounded implementation boundary.
+STEP 597, after this reconciliation/documentation finalization is merged and verified, subject to the repository's actual next-step contract boundary.
