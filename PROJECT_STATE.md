@@ -1,16 +1,26 @@
-## STEP 604 — Post-Merge Verification Evidence State Reconciliation — DOCUMENTED / POST-MERGE EVIDENCE LIMITED
+## STEP 604 — Post-Merge Verification Evidence State Reconciliation — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract merge: `4c87a478a96828c26b9917e3c2b21d8ff59fe69b`.
 - Analysis merge: `dd3ba6b25fbb1a37919384503a3c245a0fe180a7`.
 - Design merge: `a9b7e3dc97dec510884eba473248f0fe738740f6`.
-- Reconciliation PR #428 merged as `a5bbe65340096e71529589b53697ada8f37066ea`.
-- PR #428 head Test `36111714123` SUCCESS and Security/Regression `36111714066` SUCCESS.
-- Direct workflow/status lookup for reconciliation merge `a5bbe653...` currently exposes no terminal records; therefore direct merge-commit CI PASS is not claimed.
-- Historical evidence is preserved. The later STEP 603 reconciliation evidence remains explicitly distinguished from direct CI evidence for implementation merge `85a668e5...`.
-- No production code, schema, cursor, authority, raw/canonical evidence, writer-fence, or Surveillance semantics changed.
+- Reconciliation PR #428 merge: `a5bbe65340096e71529589b53697ada8f37066ea`.
+- Direct post-merge verification/reconciliation PR #430 merge: `de2b2ebcc0a0e95842ce321f6495fd09142c9240`.
+- PR #430 exact merge-commit checks:
+  - Test `108043343619`: SUCCESS.
+  - Test & Security/Regression `108043343893`: SUCCESS.
+  - CodeQL Analyze (actions) `108043344766`: SUCCESS.
+  - CodeQL Analyze (javascript-typescript) `108043344858`: SUCCESS.
+- All four check-runs have exact `head_sha=de2b2ebcc0a0e95842ce321f6495fd09142c9240`.
+- Associated workflow runs: Test `36126380528`; Security/Regression `36126380488`; CodeQL `36126379808`.
+- PR #430 head checks were also successful; direct merge-commit evidence above is the authoritative post-merge verification evidence.
+- Historical evidence stating that earlier tooling exposed no terminal records is preserved in the existing STEP 604/603 documentation; it is not rewritten or retroactively converted.
+- No production code, schema, cursor, authority, raw/canonical evidence, writer-fence, or Surveillance semantics changed in STEP 604 reconciliation/documentation.
 - V4 production authority remains INACTIVE / BLOCKED.
-- **STEP 604 documentation state: RECORDED; direct post-merge evidence remains pending.**
-- **Next STEP: continue STEP 604 only after direct post-merge verification evidence becomes available; otherwise remain FAIL-CLOSED and do not invent completion.**
+- Operator Acceptance remains repository-grounded; no undocumented command or recovery procedure was invented.
+- Surveillance remains derived, evidence-linked, versioned, and non-authoritative; ADDRESS != ACTOR.
+- **STEP 604 final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next STEP: repository-defined STEP after STEP 604.**
+
 
 ## STEP 603 — Production Authority Establishment Source — VERIFIED / RECONCILED
 
