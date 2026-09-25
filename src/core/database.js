@@ -94,7 +94,6 @@ const PRODUCTION_AUTHORITY_LIFECYCLE_DDL = {
     "  CHECK (replacement_type IS NULL OR replacement_type = 'REORG_REPLACEMENT'),",
     '  UNIQUE (establishment_input_digest)',
     ');',
-  ].join('\n')
   ].join('\n'),
   triggers: [
     "CREATE TRIGGER production_authority_lifecycle_no_update BEFORE UPDATE ON production_authority_lifecycle BEGIN SELECT RAISE(ABORT, 'PRODUCTION_AUTHORITY_LIFECYCLE_APPEND_ONLY'); END;",
