@@ -1,3 +1,23 @@
+## STEP 608 — Operator Reproducibility — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/STEP_608_OPERATOR_REPRODUCIBILITY_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md`; Contract PR #471 merged as `26047fa23808e684e83bfc79126c51a75386cf64`.
+- Contract reconciliation PR #472 merged as `32ce2440cc9a14935b432cda8a78da04c4b2ca21`; final Contract documentation PR #473 merged as `b1524e88f635105ca7b8facdd79a254c206bb0c6`.
+- Analysis: `docs/STEP_608_ANALYSIS_V0_1.md`; PR #474 merged as `8c5cab5e1520f2faa1622a9c5f171009a6055250`; reconciliation PR #475 merged as `b79aded5e4359d01807c73b050d16369e21fd4d8`; final documentation PR #476 merged as `d51d307808929a8560fd9d53a4e4cf6bb6d06c10`.
+- Design: `docs/STEP_608_DESIGN_V0_1.md`; PR #477 merged as `d149e858329ea3329a2394c65104dcf9fa33b8fd`.
+- Code test: `tests/step-608-operator-acceptance.test.js`; corrected test commit `3075026e6a9c2b25719fce36998ba0e1996bcf7f`; Code PR #478 merged as `9235e1762abf43350ed587eeffad0c995889dbb6`.
+- Initial Code CI failure was caused by Ubuntu CI being unable to execute the repository's Termux-specific shebang directly. The test harness was corrected to invoke the existing shell script through `bash`; production code was not changed.
+- Final Code PR-head CI: HAHAWEEK Tests #1560 / run `36157307907` SUCCESS; Security and Regression #3247 / run `36157307899` SUCCESS.
+- Code reconciliation PR #479 merged as `6fae6d87cbd48c962710f52c179c6dd50ba100f8`; PR-head Tests #1564 / run `36157439741` SUCCESS; Security/Regression #3251 / run `36157439729` SUCCESS.
+- Operator guide: `docs/STEP_608_OPERATOR_GUIDE_V0_1.md`; final documentation PR #480 merged as `a184fb79bd94201a604fcb3f3b37dee82cbcda78`; PR-head Tests #1569 / run `36157582680` SUCCESS; Security/Regression #3256 / run `36157582671` SUCCESS.
+- Exact merge-commit workflow lookups for STEP 608 merge commits returned zero workflow runs; exact-merge CI GREEN is not claimed.
+- STEP 608 establishes repository-grounded operator setup/run, health/status, failure recognition, supported repair/restart, recovery verification, evidence/cursor preservation, and explicit STOP/FAIL-CLOSED behavior.
+- No undocumented recovery command was introduced. No cursor reset, historical rewrite, evidence deletion, silent normalization, second writer/lock, fallback/default authority, automated action/trading, or V4 production activation occurred.
+- Surveillance remains derived, evidence-linked, versioned, non-authoritative; ADDRESS != ACTOR.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- **STEP 608 final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: repository-defined next STEP beginning with Contract.**
+- **No STEP 609 Contract is currently defined in the repository; no STEP 609 implementation is authorized until such a Contract exists.**
+
 ## STEP 607 — Code — VERIFIED / RECONCILED / DOCUMENTED
 
 - Code test/evidence implementation PR #468 merged as `60fa635c60efbc60e5b64571b983cafaab0ae85d`.
