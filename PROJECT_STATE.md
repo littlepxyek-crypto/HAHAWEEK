@@ -1,3 +1,18 @@
+## STEP 609 — Surveillance Observation Boundary Analysis — VERIFIED / RECONCILED / DOCUMENTED
+
+- Analysis: `docs/STEP_609_ANALYSIS_V0_1.md`.
+- Analysis commit: `0486a9730c906814edb508ed69a5a9991d68ea07`.
+- Analysis PR #485 merged as `f158f83fc68eb7ad2e6669f69d1b272bfeea7d2c`.
+- PR-head HAHAWEEK Tests #1593 / run `36199820573` SUCCESS; Security and Regression #3280 / run `36199820587` SUCCESS.
+- Analysis reconciliation: `docs/STEP_609_ANALYSIS_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #486 merged as `cfbeced85dbd94e68fb06eb7a5c6768692035652`.
+- Reconciliation PR-head HAHAWEEK Tests #1597 / run `36199893672` SUCCESS; Security and Regression #3284 / run `36199893704` SUCCESS.
+- Repository inspection confirms existing canonical/raw evidence, evidence graph, derived-evidence validation, liquidity/swap event decoding, flow aggregation, validation, persistence, and regression surfaces.
+- Analysis confirms the remaining STEP 609 gaps are observation envelope/identity, evidence binding, validation/uncertainty, and measurement semantics for depth, transaction cost, contract/deployer, and promotional provenance.
+- No production code, ingestion, cursor, canonical evidence, V4 authority, or production semantics changed.
+- Review checkpoint was recorded as COMMENT; no self-approval is claimed.
+- **STEP 609 Analysis final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: STEP 609 Design — fresh repository inspection required before Design.**
+
 ## STEP 609 — Surveillance Observation Boundary Contract — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/STEP_609_SURVEILLANCE_OBSERVATION_BOUNDARY_CONTRACT_V0_1.md`.
@@ -199,7 +214,6 @@
 - **STEP 604 final state: VERIFIED / RECONCILED / DOCUMENTED.**
 - **Next STEP: repository-defined STEP after STEP 604.**
 
-
 ## STEP 603 — Production Authority Establishment Source — VERIFIED / RECONCILED
 
 - STEP 603 implementation merge: `85a668e516509a0555369998276745f0d164ff89`.
@@ -397,8 +411,7 @@
 - V4 production authority remains INACTIVE/BLOCKED unless a separate production-boundary contract explicitly authorizes activation.
 - Operator Acceptance remains repository-grounded; no invented command/procedure was introduced.
 - Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
-- No raw/canonical evidence mutation, cursor reset, historical rewrite, evidence deletion, authority bypass, writer bypass, schema migration, new dependency, or V4 production activation occurred.
-- Historical artifacts, frozen contracts, golden vectors, tests, and valid implementations remain preserved.
+- No raw/canonical evidence mutation, cursor reset, historical rewrite, evidence deletion, authority bypass, writer bypass, schema migration, new dependency, or V4 production activation occurred.- Historical artifacts, frozen contracts, golden vectors, tests, and valid implementations remain preserved.
 - Next STEP: STEP 596 — V4 Production Boundary Contract.
 
 ## STEP 594 — Canonical System Definition — VERIFIED / RECONCILED
@@ -598,7 +611,6 @@
 - Next STEP: STEP 584 — Runtime Canonical Lineage / Processing Context Integration Implementation Contract.
 
 ## STEP 582 — Runtime Canonical Lineage / Processing Context Integration Contract — VERIFIED / RECONCILED
-
 - Baseline main commit inspected: `16717bcbb115e954ad6e35ba7d333c880f2f2482`.
 - Contract: `docs/STEP_582_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
 - Contract PR #348 merged as `e98d7e33d659dd6c1e0d174acfbcfb9c79eb6ee9`.
@@ -797,7 +809,6 @@
 - Reconciliation: `docs/STEP_567_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
 - V4 production activation remains INACTIVE.
 - Next STEP: STEP 568 — Durable Processing-Result / Generation Persistence Implementation.
-
 ## STEP 566 — Durable Processing-Result / Generation Persistence Contract — VERIFIED / RECONCILED
 
 - STEP 566 contract/analysis/design PR #315 merged to main as `6bb0ede2cb557cde5d5b7ea71b3f197f75f3fd11`.
@@ -997,7 +1008,6 @@
 - Any future semantic change requires a new reviewed contract/step.
 
 ## STEP 518 — F-05 State Reconciliation — VERIFIED / FROZEN
-
 - STEP 516 F-05 RPC Acquisition Provenance Contract PR #232 merged to `main` as `f5563a9786294c5c801d98a483622f39444f3c1d`.
 - STEP 517 F-05 independent RPC provenance verifier PR #233 merged to `main` as `9f73c6dca3ce1bcd50a84d84a11a3046aa5ff9d4`.
 - Corrected PR-head commit `61cc94a72ce4fc0f64441067542a3beb06163d8e` passed HAHAWEEK Tests and HAHAWEEK Security and Regression.
@@ -1197,7 +1207,6 @@
 - State finalization branch: `step-485-state-finalization-2026-09-23`.
 
 ## STEP 484 — State Finalization — VERIFIED / FROZEN
-
 - STEP 484 Independent Golden Vector Coverage is recorded as VERIFIED / FROZEN after coverage implementation, contract resolution, freeze validation, and freeze merge.
 - Coverage contract PR #189 merged; merge commit: `8626e4999bf24c9cd48555a29e3e6affdc5667ff`.
 - Transition golden-vector contract resolution PR #192 merged; merge commit: `65c5d2ed3a814ebd01c306b783b922586e3bd0da`.
@@ -1397,8 +1406,7 @@
 
 - Implementation PR #154 merged successfully.
 - Implementation merge commit: `5ec27395ce1514298a12f6c5bfe74eaca98f576a`.
-- Security & Regression workflow #1418 passed successfully on implementation head `989192021d12a6da125e2a5b9bed82079bf21704`.
-- Freeze branch: `step-473-freeze-2026-09-23`.
+- Security & Regression workflow #1418 passed successfully on implementation head `989192021d12a6da125e2a5b9bed82079bf21704`.- Freeze branch: `step-473-freeze-2026-09-23`.
 - Freeze preserves the verified STEP 473 documentation integration boundary without semantic changes.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 
