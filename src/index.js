@@ -176,7 +176,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     return context;
   };
 
-  const productionAuthorityFactory = authorityFactory || (({ fromBlock, toBlock, processingContext }) => {
+  const productionAuthorityFactory = authorityFactory || (({ fromBlock, toBlock, processingContext, expectedAuthority }) => {
     if (!processingContext || processingContext.fromBlock !== fromBlock || processingContext.toBlock !== toBlock) {
       throw new Error('PROCESSING_CONTEXT_REQUIRED');
     }
@@ -184,7 +184,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
       database,
       writerFence,
       processingContext,
-      expectedAuthority: productionExpectedAuthorityFactory({ fromBlock, toBlock }),
+      expectedAuthority,
     });
   });
   const productionExpectedAuthorityFactory = expectedAuthorityFactory || createDurableExpectedAuthorityFactory(database);
