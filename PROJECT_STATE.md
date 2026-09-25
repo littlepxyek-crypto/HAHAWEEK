@@ -1,3 +1,21 @@
+## STEP 607 — Design Final Documentation — VERIFIED / RECONCILED / DOCUMENTED
+
+- Design artifact: `docs/STEP_607_DESIGN_V0_1.md`; Design PR #461 merged as `9d71ac010ac4ed9543f562643daffeb247e53e14`.
+- Design reconciliation: `docs/STEP_607_DESIGN_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #462 merged as `2cea4276b6f96cf6ac06f5ad8ac8411e8ea7b9c0`.
+- Final Design documentation: `docs/STEP_607_DESIGN_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`; PR #463 merged as `8cc49023006ce6b9f56db7c32d7074d7f86dbbd2`.
+- Final documentation PR-head `a61b533005113d705cf3ea02e3b07a07ac6c3564`: HAHAWEEK Tests #1498 / run `36151331819` SUCCESS; Security and Regression #3185 / run `36151331679` SUCCESS.
+- Final documentation reconciliation: `docs/STEP_607_DESIGN_FINAL_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #464 merged as `05c4d281e2bfe2ebff5a5c2b54adaf7daee36b21`.
+- Reconciliation PR-head `b7d8bda2cd5be53491059b9e14ad952bc64255b8`: HAHAWEEK Tests #1502 / run `36151547448` SUCCESS; Security and Regression #3189 / run `36151547356` SUCCESS.
+- Exact merge-commit workflow lookup for final documentation merge `8cc49023006ce6b9f56db7c32d7074d7f86dbbd2` returned zero workflow runs; exact-merge CI GREEN is not claimed.
+- Exact merge-commit workflow lookup for reconciliation merge `05c4d281e2bfe2ebff5a5c2b54adaf7daee36b21` returned zero workflow runs; exact-merge CI GREEN is not claimed.
+- Review checkpoints were recorded as COMMENT; self-approval was not claimed.
+- STEP 607 Design lifecycle preserves frozen lifecycle schema/identity/binding, cursor semantics, writer-fence ownership, raw/canonical evidence, historical lineage, fail-closed recovery, Operator Acceptance, and Surveillance boundaries.
+- No cursor reset, evidence deletion/rewrite, silent normalization, second writer/lock, fallback authority, automated action/trading, or V4 activation occurred.
+- Surveillance remains derived, evidence-linked, versioned, non-authoritative; ADDRESS != ACTOR.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- **STEP 607 Design final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: STEP 607 Code — fresh repository inspection required before implementation.**
+
 ## STEP 606 — Production Authority Lifecycle Failure-Atomicity — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/STEP_606_PRODUCTION_AUTHORITY_LIFECYCLE_FAILURE_ATOMICITY_CONTRACT_V0_1.md`.
