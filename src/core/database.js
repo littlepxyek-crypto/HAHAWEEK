@@ -722,6 +722,13 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       assertRuntimeLineageSchema(db);
       migrateV7ToV8(db);
       assertProductionAuthorityLifecycleSchema(db);
+    } else if (version === 8) {
+      assertRequiredBaseSchema(db);
+      assertF03Schema(db);
+      assertProcessingResultSchema(db);
+      assertCanonicalDecisionSchema(db);
+      assertRuntimeLineageSchema(db);
+      assertProductionAuthorityLifecycleSchema(db);
     } else {
       throw new Error('UNSUPPORTED_SCHEMA_VERSION');
     }
