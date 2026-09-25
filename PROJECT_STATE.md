@@ -1,3 +1,21 @@
+## STEP 609 — Surveillance Observation Boundary — VERIFIED / RECONCILED / DOCUMENTED
+
+- Final documentation: `docs/STEP_609_FINAL_DOCUMENTATION_V0_1.md`.
+- Contract: PR #482 merged `2fbde6f6d3a5e8bfd1727d37ac048f12138392db`; reconciliation PR #483 merged `88ef4d80975b0b494280f7280bc42780a9c733b5`; final documentation PR #484 merged `07b19dee8445160d08fd319039d92616a7aa94d4`.
+- Analysis: PR #485 merged `f158f83fc68eb7ad2e6669f69d1b272bfeea7d2c`; reconciliation PR #486 merged `cfbeced85dbd94e68fb06eb7a5c6768692035652`; final documentation PR #487 merged `a3e761113ff60970172ae9368b3148887bd5c1f6`.
+- Design: PR #488 merged `51a9823e57b9d5867efa3d6e0f703273f16650b9`; Design reconciliation PR #492 merged `b4171034f64a77be4d6965f3921b37c8ee4e6446`.
+- Code: `src/core/surveillance-observation.js`; PR #489 merged `b84a0b258eba2efad61703d135500516103800e3`.
+- Test: `tests/surveillance-observation.test.js`; PR #490 merged `f7f18dc76aaabfbaa94bf34776dff491159eb445`.
+- Code/Test reconciliation PR #491 merged `d3d963e9cf8bf775a2bd174e5f177cd4e30c1c68`.
+- CI evidence: Contract #1577/#3264 SUCCESS; Contract reconciliation #1581/#3268 SUCCESS; Analysis #1593/#3280 SUCCESS; Analysis reconciliation #1597/#3284 SUCCESS; Design #1606/#3293 SUCCESS; Design reconciliation #1622/#3309 SUCCESS; Code #1610/#3297 SUCCESS; Test #1614/#3301 SUCCESS; Code/Test reconciliation #1618/#3305 SUCCESS.
+- Exact merge-commit CI is not claimed where merge-SHA workflow lookup returned no associated runs.
+- Implemented capability is limited to a deterministic, evidence-linked, immutable surveillance observation envelope. No raw/canonical evidence, ingestion, cursor, V4 authority, or trading semantics changed.
+- Domain-specific depth, transaction-cost comparison, contract/deployer classification, promotional authenticity, profitability, actor identity, ranking, predictive/risk scoring, and automated action remain out of scope.
+- ADDRESS != ACTOR remains explicit.
+- Sequencing correction: Design reconciliation was identified as missing during post-merge audit and completed in PR #492 before final STEP 609 closure. No production semantics or historical evidence changed.
+- **STEP 609 final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next STEP: STEP 610 Contract — Domain Measurement Evidence Boundaries.**
+
 ## STEP 609 — Surveillance Observation Boundary Analysis — VERIFIED / RECONCILED / DOCUMENTED
 
 - Analysis: `docs/STEP_609_ANALYSIS_V0_1.md`.
@@ -197,8 +215,7 @@
 - Analysis merge: `dd3ba6b25fbb1a37919384503a3c245a0fe180a7`.
 - Design merge: `a9b7e3dc97dec510884eba473248f0fe738740f6`.
 - Reconciliation PR #428 merge: `a5bbe65340096e71529589b53697ada8f37066ea`.
-- Direct post-merge verification/reconciliation PR #430 merge: `de2b2ebcc0a0e95842ce321f6495fd09142c9240`.
-- PR #430 exact merge-commit checks:
+- Direct post-merge verification/reconciliation PR #430 merge: `de2b2ebcc0a0e95842ce321f6495fd09142c9240`.- PR #430 exact merge-commit checks:
   - Test `108043343619`: SUCCESS.
   - Test & Security/Regression `108043343893`: SUCCESS.
   - CodeQL Analyze (actions) `108043344766`: SUCCESS.
@@ -397,8 +414,7 @@
 
 ## STEP 595 — Design Gate 2 State Reconciliation — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_CONTRACT_V0_1.md`.
-- Contract PR #382 merged as `c864d6755e07a81a43d0f39679a869ab81b1b00b`.
+- Contract: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_CONTRACT_V0_1.md`.- Contract PR #382 merged as `c864d6755e07a81a43d0f39679a869ab81b1b00b`.
 - Analysis confirmed that `docs/DESIGN_GATE_2_STATE.md` was PASS while README documentation was stale at OPEN; current Gate 2 evidence supports PASS.
 - Design: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_DESIGN_V0_1.md`.
 - Code PR #384 merged as `99becf1a2272c7d0aaa9021b246aac35280fc87e`.
@@ -597,8 +613,7 @@
 - Design: `docs/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
 - Analysis/design PR #351 merged as `165fa719ce95643938eb607f11dd6a33d6b5e093`.
 - PR-head HAHAWEEK Tests run `35995407369`: SUCCESS.
-- PR-head HAHAWEEK Security and Regression run `35995407336`: SUCCESS.
-- PR-head CodeQL dynamic run `35995404196`: SUCCESS.
+- PR-head HAHAWEEK Security and Regression run `35995407336`: SUCCESS.- PR-head CodeQL dynamic run `35995404196`: SUCCESS.
 - Post-merge HAHAWEEK Tests run `35995561950`: SUCCESS.
 - Post-merge HAHAWEEK Security and Regression run `35995561980`: SUCCESS.
 - Post-merge Push on main / CodeQL run `35995561936`: SUCCESS.
@@ -797,7 +812,6 @@
 - Exact merge commit `91bb14d467910f6251faf14d00be00062ae27d0f` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
 - Reconciliation: `docs/STEP_568_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 569 — Runtime Processing-Result Context Integration Boundary Contract.
-
 ## STEP 567 — Durable Processing-Result / Generation Persistence Implementation Contract — VERIFIED / RECONCILED
 
 - PR #317 merged to main as `b346887a7ba454625b0fa5fb07b93465e705fd10`.
@@ -997,8 +1011,7 @@
 ## STEP 520 — Design Gate 2 Control Reconciliation — VERIFIED / FROZEN
 
 - STEP 519 Gate 2 re-review contract PR #235 merged to `main` as `76b44a14408f1bd80fb6625e97f3b3639a1f04df`.
-- PR #235 head `e9f7305394e6be233f84704b0e71f8f1fda3407d` passed HAHAWEEK Tests and HAHAWEEK Security and Regression.
-- Exact post-merge workflow runs for `76b44a14408f1bd80fb6625e97f3b3639a1f04df` were unavailable through the workflow endpoint at reconciliation time; no post-merge GREEN result is claimed.
+- PR #235 head `e9f7305394e6be233f84704b0e71f8f1fda3407d` passed HAHAWEEK Tests and HAHAWEEK Security and Regression.- Exact post-merge workflow runs for `76b44a14408f1bd80fb6625e97f3b3639a1f04df` were unavailable through the workflow endpoint at reconciliation time; no post-merge GREEN result is claimed.
 - Reconciliation records F-01, F-02, F-04 and F-05 as VERIFIED / FROZEN within their audited executable/offline evidence boundaries.
 - F-03 remains CONDITIONAL because production V4 authority cutover remains unproven.
 - H-01, H-02, H-03, H-04 and H-05 are VERIFIED / FROZEN within their previously reconciled evidence boundaries.
@@ -1197,8 +1210,7 @@
 - Contract PR #196 merged; contract merge commit: `dce0be6aeccc1135bdd3dbad3f5cebdfb5078207`.
 - Independent implementation PR #197 passed Security & Regression and CodeQL gates after the recovery-input cursor-digest fix commit `da37e3e5b3d45fd78ddc489b71ac7166088bc2fd`.
 - Freeze PR #198 merged; freeze commit: `858bc25803b0fc2ee536aac5c343d9a0356f9e91`; merge commit: `eb2388b7117f83fb8521d7b05a48653e1edcd219`.
-- State finalization PR #199 merged; merge commit: `38ffd8fe0240d6519e3cca794e5059d5f433dd91`.
-- Post-merge Security & Regression, CodeQL Actions, and CodeQL JavaScript/TypeScript all passed on merge commit `38ffd8fe0240d6519e3cca794e5059d5f433dd91`.
+- State finalization PR #199 merged; merge commit: `38ffd8fe0240d6519e3cca794e5059d5f433dd91`.- Post-merge Security & Regression, CodeQL Actions, and CodeQL JavaScript/TypeScript all passed on merge commit `38ffd8fe0240d6519e3cca794e5059d5f433dd91`.
 - Frozen boundary covers independent offline checkpoint/cursor recovery verification: exact-key and lexical validation, canonical digest verification, checkpoint/manifest linkage, cursor/checkpoint linkage, generation ordering, stored digest verification, fail-closed recovery, and acquisition-position prerequisite.
 - Independence is preserved: no `src/reference/v4/*` imports, local canonicalization/domain-separated SHA-256, no RPC/network access, and no production runtime mutation.
 - Historical PR #28 remains preserved and is not merged; it is historical evidence rather than current implementation authority.
@@ -1397,8 +1409,7 @@
 ## STEP 473 — Radar Documentation Integration Boundary — IMPLEMENTATION CANDIDATE
 
 - STEP 472 is VERIFIED / FROZEN on main after freeze PR #153.
-- Branch: `step-473-documentation-integration-boundary-2026-09-23`.
-- Establishes an integration adapter over the frozen STEP 472 documentation projection.
+- Branch: `step-473-documentation-integration-boundary-2026-09-23`.- Establishes an integration adapter over the frozen STEP 472 documentation projection.
 - Documentation semantics, VERIFIED-only eligibility, deterministic identity, and lineage remain owned by STEP 472.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
 
