@@ -1,3 +1,22 @@
+## STEP 597 — V4 Production Implementation Boundary — VERIFIED / RECONCILED
+
+- Baseline before STEP 597: `997d61b63ef7f3d893cef2eec257663e126513f0`.
+- Contract: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract commit: `30755791a541edb515dde567efb71955bea1c942`.
+- Contract PR #398 merged as `e1dcb3256afb952be8ed6661b10d6cadf7933e9f`.
+- Reconciliation: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #399 merged as `368258af8b03fad3bd28a9e760a5d4c8f171ba1e`.
+- Exact post-merge check-runs on reconciliation merge commit `368258af8b03fad3bd28a9e760a5d4c8f171ba1e` are terminal SUCCESS: test `107910627727`; test-and-security `107910629221`; Analyze (actions) `107910628516`; Analyze (javascript-typescript) `107910628569`.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- STEP 597 contract boundary remains analysis-only; no production implementation or activation was authorized by the contract alone.
+- Existing authority, cursor, writer/fencing, recovery, reorg, evidence, and integrity ownership remain unchanged.
+- Operator Acceptance remains repository-grounded and reproducible; no command or recovery procedure was invented.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No raw/canonical evidence mutation, cursor reset/advance, historical rewrite, evidence deletion, frozen-contract alteration, new authority/writer semantics, automated trading/action, or predictive/ranking authority was introduced.
+- Historical evidence, artifacts, contracts, golden vectors, tests, and valid implementations remain preserved.
+- **STEP 597 final state: VERIFIED / RECONCILED.**
+- **Next authorized phase: STEP 597 Analysis. Design may follow only if Analysis establishes a sufficiently explicit repository-grounded boundary; Code may follow only after Design authorizes a concrete implementation boundary.**
+
 ## STEP 596 — V4 Production Boundary Contract — VERIFIED / RECONCILED
 
 - PR #396 merged as `b1c8dc5c6348521025d6331d9853286e0c1eca1c`.
