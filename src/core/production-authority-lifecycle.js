@@ -58,6 +58,35 @@ function rowToObject(row) {
   return Object.fromEntries(keys.map((key, i) => [key, row[i]]));
 }
 
+function assertLifecycleMatches(record, authority, context, expected, sourceId, predecessor, replacementType, establishmentInputDigest) {
+  const expectedFields = {
+    state: 'DURABLY_ESTABLISHED',
+    segmentId: authority.segmentId,
+    manifestDigest: authority.manifestDigest,
+    checkpointDigest: authority.checkpointDigest,
+    generation: authority.generation,
+    cursorBlock: authority.cursorBlock,
+    bindingDigest: authority.bindingDigest,
+    processingResultId: context.processingResultId,
+    processingExecutionId: context.processingExecutionId,
+    lineageId: context.lineageId,
+    canonicalDecisionSnapshotId: context.canonicalDecisionSnapshotId,
+    evidenceSetDigest: context.evidenceSetDigest,
+    fromBlock: context.fromBlock,
+    toBlock: context.toBlock,
+    expectedSegmentId: expected.segmentId,
+    expectedManifestDigest: expected.manifestDigest,
+    expectedCheckpointDigest: expected.checkpointDigest,
+    sourceId,
+    predecessorLifecycleId: predecessor,
+    replacementType,
+    establishmentInputDigest,
+  };
+  for (const [key, value] of Object.entries(expectedFields)) {
+    if (record[key] !== value) throw new Error('LIFECYCLE_RECORD_CONFLICT_' + key.toUpperCase());
+  }
+}
+
 function readProductionAuthorityLifecycle(database, authorityLifecycleId) {
   if (!database || !database.db) throw new Error('LIFECYCLE_DATABASE_REQUIRED');
   if (typeof authorityLifecycleId !== 'string' || authorityLifecycleId === '') throw new Error('LIFECYCLE_ID_INVALID');
@@ -154,9 +183,7 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
 
   if (existing.length && existing[0].values.length === 1) {
     const record = rowToObject(existing[0].values[0]);
-    if (record.establishmentInputDigest !== establishmentInputDigest || record.bindingDigest !== bindingDigest) {
-      throw new Error('LIFECYCLE_IDENTITY_CONFLICT');
-    }
+    assertLifecycleMatches(record, authority, processingContext, expectedAuthority, sourceId, predecessor, replacementType, establishmentInputDigest);
     return authority;
   }
 
@@ -178,7 +205,7 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
     writerFence.assertOwned();
     database.save();
     const durable = readProductionAuthorityLifecycle(database, authorityLifecycleId);
-    if (durable.establishmentInputDigest !== establishmentInputDigest) throw new Error('LIFECYCLE_DURABILITY_CONFLICT');
+    assertLifecycleMatches(durable, authority, processingContext, expectedAuthority, sourceId, predecessor, replacementType, establishmentInputDigest);
     return authority;
   } catch (error) {
     database.restore(snapshot);
