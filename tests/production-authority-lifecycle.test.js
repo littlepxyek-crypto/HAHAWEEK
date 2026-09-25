@@ -253,3 +253,37 @@ test('STEP 603 upgrades schema 7 to 8 and survives durable restart', async () =>
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+
+test('STEP 605 prepare does not persist until durable commit phase', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-lifecycle-'));
+  const database = await createDatabase(':memory:');
+  const fence = makeFence(dir);
+  fence.acquire();
+  try {
+    const { prepareProductionAuthorityLifecycle, commitPreparedProductionAuthorityLifecycle } = require('../src/core/production-authority-lifecycle');
+    const prepared = prepareProductionAuthorityLifecycle({
+      database,
+      writerFence: fence,
+      processingContext: context(),
+      expectedAuthority: expected(),
+    });
+    assert.equal(database.db.exec('SELECT COUNT(*) FROM production_authority_lifecycle')[0].values[0][0], 0);
+    assert.equal(prepared.authorityLifecycleId, prepared.establishmentInputDigest);
+
+    const authority = commitPreparedProductionAuthorityLifecycle({
+      database,
+      writerFence: fence,
+      processingContext: context(),
+      expectedAuthority: expected(),
+      prepared,
+    });
+
+    assert.deepEqual(authority, prepared.authority);
+    assert.equal(database.db.exec('SELECT COUNT(*) FROM production_authority_lifecycle')[0].values[0][0], 1);
+  } finally {
+    fence.release();
+    database.close();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
