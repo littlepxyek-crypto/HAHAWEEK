@@ -526,8 +526,17 @@ function migrateV7ToV8(db) {
   db.run('BEGIN');
   let committed = false;
   try {
-    db.run(PRODUCTION_AUTHORITY_LIFECYCLE_DDL.table);
-    db.run(PRODUCTION_AUTHORITY_LIFECYCLE_DDL.triggers);
+    if (!hasTable(db, 'production_authority_lifecycle')) {
+      db.run(PRODUCTION_AUTHORITY_LIFECYCLE_DDL.table);
+    }
+    const triggerRows = db.exec("SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('production_authority_lifecycle_no_update','production_authority_lifecycle_no_delete')")[0]?.values ?? [];
+    if (!triggerRows.some(row => row[0] === 'production_authority_lifecycle_no_update')) {
+      db.run("CREATE TRIGGER production_authority_lifecycle_no_update BEFORE UPDATE ON production_authority_lifecycle BEGIN SELECT RAISE(ABORT, 'PRODUCTION_AUTHORITY_LIFECYCLE_APPEND_ONLY'); END;");
+    }
+    if (!triggerRows.some(row => row[0] === 'production_authority_lifecycle_no_delete')) {
+      db.run("CREATE TRIGGER production_authority_lifecycle_no_delete BEFORE DELETE ON production_authority_lifecycle BEGIN SELECT RAISE(ABORT, 'PRODUCTION_AUTHORITY_LIFECYCLE_APPEND_ONLY'); END;");
+    }
+    assertProductionAuthorityLifecycleSchema(db);
     db.run("UPDATE schema_meta SET value = '8' WHERE key = 'schema_version'");
     db.run('COMMIT');
     committed = true;
