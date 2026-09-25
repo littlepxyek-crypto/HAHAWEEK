@@ -30,11 +30,17 @@ PR #391 merged as 9e8fd977dd08b109e929e4f23bfc32d4fdd54311; exact merge-commit c
 - Analyze (actions): 107889560417
 - Analyze (javascript-typescript): 107889560710
 
-PR #392 merged as 7834ef6ecf11f0c02566d44801816169c5496fb9; exact merge-commit checks are terminal SUCCESS:
+PR #392 merged as 7834ef6ecf11f0c02566d44801816169c5496fb9; exact merge-commit checks were terminal SUCCESS:
 - test: 107890450612
 - test-and-security: 107890450916
 - Analyze (actions): 107890453483
 - Analyze (javascript-typescript): 107890453329
+
+PR #393 merged as de8484a508bedb12de2e5095d1e22360cf274d52; exact merge-commit checks were terminal SUCCESS:
+- test: 107891190594
+- test-and-security: 107891190702
+- Analyze (actions): 107891194652
+- Analyze (javascript-typescript): 107891194261
 
 ## Reconciliation Findings
 
