@@ -1,5 +1,9 @@
 ## STEP 596 — V4 Production Boundary Contract — VERIFIED / RECONCILED
 
+- PR #396 merged as `b1c8dc5c6348521025d6331d9853286e0c1eca1c`.
+- Exact PR #396 merge-commit post-merge checks are terminal SUCCESS: test `107906154987`; test-and-security `107906155242`; Analyze (actions) `107906157694`; Analyze (javascript-typescript) `107906158077`.
+- PR #396 completed post-merge verification for the documentation/reconciliation update and introduced no production semantic or V4 authority change.
+
 - Contract: `docs/STEP_596_V4_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract commit: `0152788f945b758b1da681290096dd75d28cd724`.
 - Contract PR #387 merged as `6681b89dcffb36335c598a87fb947e3060ede797`.
