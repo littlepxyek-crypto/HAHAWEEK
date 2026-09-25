@@ -103,14 +103,24 @@ function establishProductionAuthorityLifecycle({ database, writerFence, processi
   authority.bindingDigest = bindingDigest;
   assertProductionAuthority(authority);
 
-  const predecessor = processingContext.parentResultId || null;
+  let predecessor = null;
+  if (processingContext.parentResultId) {
+    const predecessorRows = database.db.exec(
+      'SELECT authority_lifecycle_id FROM production_authority_lifecycle WHERE processing_result_id = ? ORDER BY authority_lifecycle_id',
+      [processingContext.parentResultId]
+    );
+    const rows = predecessorRows.length ? predecessorRows[0].values : [];
+    if (processingContext.transitionType === 'REORG_REPLACEMENT' && rows.length !== 1) {
+      throw new Error(rows.length === 0
+        ? 'LIFECYCLE_REORG_PREDECESSOR_MISSING'
+        : 'LIFECYCLE_REORG_PREDECESSOR_AMBIGUOUS');
+    }
+    if (rows.length === 1) predecessor = rows[0][0];
+  }
+
   const replacementType = processingContext.transitionType === 'REORG_REPLACEMENT'
     ? 'REORG_REPLACEMENT'
     : null;
-
-  if (processingContext.transitionType === 'REORG_REPLACEMENT' && !predecessor) {
-    throw new Error('LIFECYCLE_REORG_PREDECESSOR_MISSING');
-  }
 
   const input = {
     version: VERSION,
