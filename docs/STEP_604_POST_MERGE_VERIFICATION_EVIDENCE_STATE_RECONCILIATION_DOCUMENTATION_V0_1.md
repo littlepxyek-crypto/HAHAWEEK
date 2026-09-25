@@ -50,3 +50,21 @@ The historical statement that evidence was previously unavailable is preserved; 
 STEP 604 is now **VERIFIED / RECONCILED / DOCUMENTED**.
 
 V4 production authority remains **INACTIVE / BLOCKED**. No production semantic, cursor, authority, raw/canonical evidence, writer-fence, or Surveillance change was introduced.
+
+
+## Final Post-Merge Verification — Merge Commit 2978293
+
+Direct GitHub Actions check-run evidence for merge commit 2978293fd6562d3ba76c7bed2103ea37e3a83a39 is terminal SUCCESS:
+
+- Test 108048926256: SUCCESS.
+- Test & Security/Regression 108048925387: SUCCESS.
+- CodeQL Analyze (actions) 108048928313: SUCCESS.
+- CodeQL Analyze (javascript-typescript) 108048928532: SUCCESS.
+- Each check-run has the exact merge-commit head SHA 2978293fd6562d3ba76c7bed2103ea37e3a83a39.
+
+This is direct post-merge merge-commit evidence and is not inferred from PR-head results. The earlier historical completion-boundary wording remains preserved. This additive record closes the final post-merge evidence gate for STEP 604.
+
+V4 production authority remains INACTIVE / BLOCKED. No production semantics, cursor, authority, raw/canonical evidence, writer-fence, or Surveillance semantics were changed.
+
+STEP 604 post-merge verification: PASS.
+STEP 604 final state: VERIFIED / RECONCILED / DOCUMENTED.

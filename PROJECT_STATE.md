@@ -1316,3 +1316,21 @@
 - Generation remains owned by canonical processing lineage and is never manufactured by persistence, expected authority, cursor, timestamp, writer fence, checkpoint, manifest, randomness, or default values.
 - V4 production activation remains INACTIVE.
 - STEP 572 is next: Runtime Canonical Processing / Generation Lineage Implementation Analysis.
+
+
+## STEP 604 — Final Post-Merge Verification Evidence
+
+The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 has direct terminal post-merge evidence:
+
+- Test 108048926256: SUCCESS.
+- Test & Security/Regression 108048925387: SUCCESS.
+- CodeQL Analyze (actions) 108048928313: SUCCESS.
+- CodeQL Analyze (javascript-typescript) 108048928532: SUCCESS.
+- All four check-runs have exact head_sha=2978293fd6562d3ba76c7bed2103ea37e3a83a39.
+- All required checks are terminal SUCCESS; this is direct merge-commit evidence, not PR-head inference.
+- The existing historical evidence and prior completion-boundary wording remain preserved additively.
+- V4 production authority remains INACTIVE / BLOCKED.
+- No production code, schema, cursor, authority, raw/canonical evidence, writer-fence, or Surveillance semantics changed.
+- STEP 604 post-merge verification: PASS.
+- STEP 604 final state remains VERIFIED / RECONCILED / DOCUMENTED.
+- Next STEP: repository-defined STEP after STEP 604.
