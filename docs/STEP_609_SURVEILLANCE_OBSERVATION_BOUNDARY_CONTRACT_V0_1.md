@@ -1,6 +1,6 @@
 # HAHAWEEK — STEP 609 Surveillance Observation Boundary Contract v0.1
 
-Status: CONTRACT — PENDING VERIFICATION
+Status: VERIFIED / FROZEN
 Step: 609
 Scope: evidence-linked surveillance observation boundary for market-structure and token-risk observations
 
@@ -266,10 +266,26 @@ This Contract does not:
 - declare the supplied social-media claims true;
 - establish profitability or predictive performance.
 
-## 15. NEXT STEP
+## 15. VERIFICATION STATE
 
-After Contract review/merge, continue strictly with:
+Contract PR #482 merged as `2fbde6f6d3a5e8bfd1727d37ac048f12138392db`.
 
-Analysis → Design → Code → Test → Security/Regression → CI → Review → Merge → Post-Merge Verification → Reconciliation → Documentation.
+PR-head CI:
+- HAHAWEEK Tests #1577 / run `36199435105` — SUCCESS.
+- HAHAWEEK Security and Regression #3264 / run `36199435099` — SUCCESS.
 
-No implementation is authorized before this Contract passes its required review and merge gates.
+Post-merge reconciliation PR #483 merged as `88ef4d80975b0b494280f7280bc42780a9c733b5`.
+
+Reconciliation PR-head CI:
+- HAHAWEEK Tests #1581 / run `36199535035` — SUCCESS.
+- HAHAWEEK Security and Regression #3268 / run `36199535039` — SUCCESS.
+
+Exact merge-commit workflow lookups returned zero workflow runs for the STEP 609 Contract and reconciliation merge commits. Exact-merge CI GREEN is therefore not claimed.
+
+Review checkpoints were recorded as COMMENT; no self-approval is claimed.
+
+## 16. NEXT STEP
+
+STEP 609 Contract is VERIFIED / FROZEN / RECONCILED / DOCUMENTED.
+
+The next valid phase is STEP 609 Analysis. No Code implementation is authorized until Analysis and Design establish the implementation boundary.
