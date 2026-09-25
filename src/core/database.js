@@ -664,6 +664,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
     assertF03Schema(db);
     assertProcessingResultSchema(db);
     assertCanonicalDecisionSchema(db);
+    assertProductionAuthorityLifecycleSchema(db);
   } else {
     const version = schemaVersion(db);
 
