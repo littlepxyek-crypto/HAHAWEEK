@@ -209,11 +209,18 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
       };
   const productionExpectedAuthorityFactory = expectedAuthorityFactory || createDurableExpectedAuthorityFactory(database);
 
-  reconcileProductionAuthorityLifecycleCursor({
-    database,
-    cursor,
-    expectedAuthorityFactory: productionExpectedAuthorityFactory,
-  });
+  try {
+    reconcileProductionAuthorityLifecycleCursor({
+      database,
+      cursor,
+      expectedAuthorityFactory: productionExpectedAuthorityFactory,
+    });
+  } catch (error) {
+    database.close();
+    writerFence.release();
+    provider.destroy();
+    throw error;
+  }
 
   const ingestion = new IngestionEngine({
     provider,
