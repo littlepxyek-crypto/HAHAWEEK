@@ -32,16 +32,15 @@ No undocumented CLI command is claimed.
 
 ## Post-Merge Verification
 
-The available repository workflow/status tooling currently exposes no terminal CI/status records associated with merge commit `85a668e516509a0555369998276745f0d164ff89`. Therefore post-merge CI/CodeQL PASS is not claimed.
+The historical statement that no terminal CI/status records were exposed for implementation merge `85a668e516509a0555369998276745f0d164ff89` remains preserved exactly as historical evidence.
 
-PR-head Test and Security/Regression PASS remains evidenced above.
+PR-head Test and Security/Regression PASS for PR #423 remains evidenced above.
 
 ## Decision
 
-STEP 603 is **MERGED / PR-HEAD VERIFIED**, but **POST-MERGE VERIFICATION PENDING EVIDENCE**.
+STEP 603 remains **MERGED / PR-HEAD VERIFIED** with its historical direct-post-merge evidence limitation preserved.
 
 V4 production authority remains INACTIVE / BLOCKED.
-
 
 ## STEP 604 — Later Post-Merge Verification Clarification
 
@@ -60,3 +59,18 @@ This clarification is additive and preserves the historical record above.
 - STEP 604 Design merge: `a9b7e3dc97dec510884eba473248f0fe738740f6`.
 - Direct workflow/status lookup for Design merge `a9b7e3dc...` currently exposes no terminal records; therefore no direct post-merge CI PASS is claimed for that merge.
 - V4 production authority remains INACTIVE / BLOCKED.
+
+## STEP 604 — Direct Post-Merge Evidence Reconciliation
+
+Direct GitHub Actions check-run evidence is now available for the STEP 604 reconciliation merge `a5bbe65340096e71529589b53697ada8f37066ea`.
+
+- HAHAWEEK `test` check-run `107996948495`: SUCCESS.
+- HAHAWEEK `test-and-security` check-run `107996948652`: SUCCESS.
+- CodeQL `Analyze (actions)` check-run `107996679536`: SUCCESS.
+- CodeQL `Analyze (javascript-typescript)` check-run `107996679874`: SUCCESS.
+- All four check-runs have `head_sha=a5bbe65340096e71529589b53697ada8f37066ea`.
+- Test workflow run: `36111872298`; Security/Regression workflow run: `36111872213`; CodeQL workflow run: `36111787260`.
+- These are direct merge-commit check-runs and are not inferred from PR-head results.
+- The historical statement that evidence was previously unavailable is preserved; this section records the later evidence discovery without rewriting history.
+
+V4 production authority remains INACTIVE / BLOCKED.
