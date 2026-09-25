@@ -1,3 +1,21 @@
+## STEP 607 — Code — VERIFIED / RECONCILED / DOCUMENTED
+
+- Code test/evidence implementation PR #468 merged as `60fa635c60efbc60e5b64571b983cafaab0ae85d`.
+- PR #468 head `2793b8acb6e3869504f9548decc5676d26b465ba`: HAHAWEEK Tests #1516 / run `36152298974` SUCCESS; Security and Regression #3203 / run `36152299017` SUCCESS.
+- Implementation is additive test/evidence infrastructure only: 209 additions, 0 deletions; production semantics were not changed.
+- Reconciliation artifact: `docs/STEP_607_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #469 merged as `794824f06744f3f4200089920c8efe8e06ffdcbb`.
+- Reconciliation PR-head `e8602b11ee82a97c1dda79450b805e18993bdfbd`: HAHAWEEK Tests #1520 / run `36152448138` SUCCESS; Security and Regression #3207 / run `36152448153` SUCCESS.
+- Exact merge-commit workflow lookup for Code merge `60fa635c60efbc60e5b64571b983cafaab0ae85d` returned zero workflow runs; exact-merge CI GREEN is not claimed.
+- Exact merge-commit workflow lookup for reconciliation merge `794824f06744f3f4200089920c8efe8e06ffdcbb` returned zero workflow runs; exact-merge CI GREEN is not claimed.
+- Verified evidence covers durable lifecycle ahead of cursor across restart, exact forward reconciliation, lifecycle preservation, cursor persistence failure FAIL-CLOSED, and preservation of durable lifecycle evidence.
+- No cursor reset, historical rewrite, evidence deletion, silent normalization, second writer/lock, fallback authority, automated action/trading, or V4 production activation occurred.
+- Operator Acceptance remains repository-grounded; no undocumented operator command or recovery procedure was introduced.
+- Surveillance remains derived, evidence-linked, versioned, non-authoritative; ADDRESS != ACTOR.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- **STEP 607 Code final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: repository-defined next STEP beginning with Contract.**
+
 ## STEP 607 — Design Final Documentation — VERIFIED / RECONCILED / DOCUMENTED
 
 - Design artifact: `docs/STEP_607_DESIGN_V0_1.md`; Design PR #461 merged as `9d71ac010ac4ed9543f562643daffeb247e53e14`.
