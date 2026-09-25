@@ -41,3 +41,22 @@ PR-head Test and Security/Regression PASS remains evidenced above.
 STEP 603 is **MERGED / PR-HEAD VERIFIED**, but **POST-MERGE VERIFICATION PENDING EVIDENCE**.
 
 V4 production authority remains INACTIVE / BLOCKED.
+
+
+## STEP 604 — Later Post-Merge Verification Clarification
+
+This clarification is additive and preserves the historical record above.
+
+- STEP 603 implementation merge commit: `85a668e516509a0555369998276745f0d164ff89`.
+- The historical statement that no direct terminal workflow/status records were available for that implementation merge remains valid as recorded at the time.
+- Subsequent reconciliation merge commit: `9ea03a727c22a7d5fd673f24eb3c276321db77a7`.
+- Later terminal-success evidence associated with that reconciliation merge:
+  - HAHAWEEK Tests `36095182322`: SUCCESS.
+  - HAHAWEEK Security and Regression `36095182314`: SUCCESS.
+  - CodeQL / Push on main `36095182172`: SUCCESS, including Analyze (actions) and Analyze (javascript-typescript).
+- This later evidence verifies the reconciled repository state through the reconciliation merge; it is **not retroactive direct CI evidence for implementation merge `85a668e5...`**.
+- STEP 604 Contract merge: `4c87a478a96828c26b9917e3c2b21d8ff59fe69b`.
+- STEP 604 Analysis merge: `dd3ba6b25fbb1a37919384503a3c245a0fe180a7`.
+- STEP 604 Design merge: `a9b7e3dc97dec510884eba473248f0fe738740f6`.
+- Direct workflow/status lookup for Design merge `a9b7e3dc...` currently exposes no terminal records; therefore no direct post-merge CI PASS is claimed for that merge.
+- V4 production authority remains INACTIVE / BLOCKED.

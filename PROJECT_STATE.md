@@ -1,3 +1,14 @@
+## STEP 603 — Production Authority Establishment Source — VERIFIED / RECONCILED
+
+- STEP 603 implementation merge: `85a668e516509a0555369998276745f0d164ff89`.
+- STEP 603 reconciliation merge: `9ea03a727c22a7d5fd673f24eb3c276321db77a7`.
+- Later terminal-success evidence on the reconciliation merge: Tests `36095182322`; Security/Regression `36095182314`; CodeQL / Push on main `36095182172`, with both Analyze jobs successful.
+- The later evidence verifies the reconciled repository state and is not retroactive direct CI evidence for implementation merge `85a668e5...`.
+- STEP 603 remains production-authority inactive/blocked; no V4 activation occurred.
+- Historical evidence and prior STEP 603 reconciliation wording are preserved.
+- **STEP 603 final state: VERIFIED / RECONCILED.**
+- **Current STEP: STEP 604 — Post-Merge Verification Evidence State Reconciliation.**
+
 ## STEP 602 — Production Authority Establishment Input/Source Boundary Contract — VERIFIED / RECONCILED
 
 - Contract: `docs/STEP_602_PRODUCTION_AUTHORITY_ESTABLISHMENT_INPUT_SOURCE_BOUNDARY_CONTRACT_V0_1.md`.
