@@ -90,9 +90,19 @@ STEP 596 Contract, reconciliation, PROJECT_STATE finalization, and post-merge CI
 
 This reconciliation does not authorize V4 production activation.
 
+## PR #390 Final Post-Merge Verification
+
+PR #390 (`8d717e0562bcdf50fbaa5341436aaf90824e4807`) was merged successfully. Exact merge-commit post-merge checks are now terminal SUCCESS:
+- test: 107888492446
+- test-and-security: 107888492351
+- Analyze (actions): 107888495740
+- Analyze (javascript-typescript): 107888495770
+
+Therefore the previously pending PR #390 post-merge verification condition is resolved.
+
 ## Final STEP 596 State
 
-STEP 596 is **VERIFIED / RECONCILED** based on actual repository evidence through PR #389 post-merge verification.
+STEP 596 is **VERIFIED / RECONCILED** based on actual repository evidence through PR #390 post-merge verification.
 
 Any future V4 production implementation must begin under the next authorized STEP and must follow the full Standing Execution Rule.
 
