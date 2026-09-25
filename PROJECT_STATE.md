@@ -1,3 +1,13 @@
+## STEP 606 — Contract — IN PROGRESS
+
+- Contract: `docs/STEP_606_PRODUCTION_AUTHORITY_LIFECYCLE_FAILURE_ATOMICITY_CONTRACT_V0_1.md`.
+- Baseline: `18baa3849cf2c7c487fb76de45b37ed08fc6459c`.
+- Scope: contract-only failure-atomicity boundary for lifecycle persistence, final authority validation, cursor advancement, crash/restart, reorg/replacement, concurrency, and Operator Acceptance.
+- No production semantic change.
+- V4 production authority remains INACTIVE / BLOCKED.
+- Surveillance remains derived, evidence-linked, versioned, and non-authoritative; ADDRESS != ACTOR.
+- Next authorized phase after Contract acceptance: STEP 606 Analysis.
+
 ## STEP 605 — Code — VERIFIED / RECONCILED / DOCUMENTED
 
 - Code PR #443 merged as `cba94de214fd866faf173ae6825953b94627effb`.
