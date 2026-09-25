@@ -210,3 +210,49 @@ test('STEP 603 reorg creates a distinct immutable lifecycle record', async () =>
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('STEP 603 upgrades schema 7 to 8 and survives durable restart', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-lifecycle-migration-'));
+  const filename = path.join(dir, 'hahaweek.sqlite');
+  const seed = await createDatabase(':memory:');
+  try {
+    seed.db.run('DROP TRIGGER production_authority_lifecycle_no_update');
+    seed.db.run('DROP TRIGGER production_authority_lifecycle_no_delete');
+    seed.db.run('DROP TABLE production_authority_lifecycle');
+    seed.db.run("UPDATE schema_meta SET value = '7' WHERE key = 'schema_version'");
+    fs.writeFileSync(filename, Buffer.from(seed.snapshot()));
+  } finally {
+    seed.close();
+  }
+
+  const database = await createDatabase(filename);
+  const fence = makeFence(dir);
+  fence.acquire();
+  try {
+    assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '8');
+    const authority = establishProductionAuthorityLifecycle({
+      database,
+      writerFence: fence,
+      processingContext: context(),
+      expectedAuthority: expected(),
+    });
+    database.close();
+
+    const reopened = await createDatabase(filename);
+    try {
+      const rows = reopened.db.exec('SELECT authority_lifecycle_id,state FROM production_authority_lifecycle');
+      assert.equal(rows[0].values.length, 1);
+      assert.equal(rows[0].values[0][0], authorityLifecycleIdFromRows(rows));
+      assert.equal(rows[0].values[0][1], 'DURABLY_ESTABLISHED');
+    } finally {
+      reopened.close();
+    }
+  } finally {
+    try { fence.release(); } catch {}
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+function authorityLifecycleIdFromRows(rows) {
+  return rows[0].values[0][0];
+}
