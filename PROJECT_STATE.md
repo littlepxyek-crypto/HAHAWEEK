@@ -1,3 +1,23 @@
+## STEP 605 — V4 Production Authority Activation Readiness Boundary — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract PR #433 merged as `37ef63aa9dc5f5eb675884ef6fad2904ec0e955e`.
+- Contract head: `1255db39ac92690a18645024a7f9e29198d5e2d4`.
+- Post-merge reconciliation PR #434 merged as `51737bfd0c41b17288ef3ad30c7e490c85bccde8`.
+- Direct post-merge evidence on exact merge commit `51737bfd0c41b17288ef3ad30c7e490c85bccde8`:
+  - Test `108065651776`: SUCCESS.
+  - Test & Security/Regression `108065651814`: SUCCESS.
+  - Analyze (actions) `108065657667`: SUCCESS.
+  - Analyze (javascript-typescript) `108065657893`: SUCCESS.
+- All four checks are terminal SUCCESS and target the exact merge commit.
+- STEP 605 reconciliation records the post-merge evidence for the STEP 605 Contract boundary.
+- No production semantic change, V4 activation, cursor change, raw/canonical evidence mutation, writer-fence change, lifecycle schema/identity/binding change, or Surveillance authority change occurred.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- Operator Acceptance remains repository-grounded; no undocumented command or recovery procedure was introduced.
+- Surveillance remains derived, evidence-linked, versioned, and non-authoritative; ADDRESS != ACTOR.
+- Historical evidence is preserved additively.
+- **STEP 605 Contract/Reconciliation final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: STEP 605 Analysis.**
+
 ## STEP 604 — Post-Merge Verification Evidence State Reconciliation — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract merge: `4c87a478a96828c26b9917e3c2b21d8ff59fe69b`.
