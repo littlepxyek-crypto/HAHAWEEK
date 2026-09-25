@@ -11,7 +11,7 @@ const ROOT = path.resolve(__dirname, '..');
 const CLI = path.join(ROOT, 'bin', 'hahaweek');
 
 function runCli(args) {
-  return spawnSync(CLI, args, {
+  return spawnSync('bash', [CLI, ...args], {
     cwd: ROOT,
     encoding: 'utf8',
   });
