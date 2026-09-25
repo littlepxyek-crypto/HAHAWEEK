@@ -1,3 +1,24 @@
+## STEP 598 — V4 Production Authority Source Contract — VERIFIED / RECONCILED
+
+- Baseline: `565465d44bb41afd21418c9c49f1fd658dfbb6f9`.
+- Contract: `docs/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_CONTRACT_V0_1.md`.
+- Contract commit: `fafdecbb68d17776c7eee57d148572fb44b211d5`.
+- Contract PR #403 merged as `07249ac56518fba64d95176958a7b52a72c968a0`.
+- Reconciliation: `docs/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation commit: `59ad7b49a64fca39e9a0c28822df82c575014036`.
+- Reconciliation PR #404 merged as `cd936c79ced1594fa0f77872f62ee941a1521e4b`.
+- Exact PR #404 head checks: test `107916177307` SUCCESS; test-and-security `107916177515` SUCCESS; Analyze (actions) `107916191318` SUCCESS; Analyze (javascript-typescript) `107916191178` SUCCESS.
+- Exact reconciliation merge-commit checks on `cd936c79ced1594fa0f77872f62ee941a1521e4b`: test `107916396023` SUCCESS; test-and-security `107916396133` SUCCESS; Analyze (actions) `107916399756` SUCCESS; Analyze (javascript-typescript) `107916399651` SUCCESS.
+- Contract establishes the missing production-authority-source boundary identified by STEP 597 Analysis. It does not select or implement a production authority source.
+- Existing F-03 authority gate, verified processing context, generation/lineage, cursor barrier, single-writer fence, recovery/reorg, and evidence/integrity ownership remain unchanged.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- Operator Acceptance remains repository-grounded and reproducible; no command or recovery procedure was invented.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No cursor reset/advance, evidence mutation/deletion, historical rewrite, silent normalization, new writer/lock, authority duplication, production activation, automated action/trading, or predictive/ranking authority was introduced.
+- Historical evidence, artifacts, contracts, golden vectors, tests, and valid implementations remain preserved.
+- **STEP 598 final state: VERIFIED / RECONCILED.**
+- **Next STEP: STEP 598 Analysis — inspect the actual repository and determine whether a sufficiently explicit production authority source can be designed without inventing semantics.**
+
 ## STEP 597 — V4 Production Implementation Boundary Analysis — VERIFIED / RECONCILED
 
 - Baseline: `d9f65b342545c33a65164f124d791227f41aa0ba`.
