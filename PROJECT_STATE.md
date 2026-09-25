@@ -1,3 +1,20 @@
+## STEP 609 — Surveillance Observation Boundary Contract — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/STEP_609_SURVEILLANCE_OBSERVATION_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract commit: `dad316bd3a0c5c2b5087824342555b3b5afbb89a`.
+- Contract PR #482 merged as `2fbde6f6d3a5e8bfd1727d37ac048f12138392db`.
+- PR-head HAHAWEEK Tests #1577 / run `36199435105` SUCCESS; Security and Regression #3264 / run `36199435099` SUCCESS.
+- Contract reconciliation: `docs/STEP_609_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #483 merged as `88ef4d80975b0b494280f7280bc42780a9c733b5`.
+- Reconciliation PR-head HAHAWEEK Tests #1581 / run `36199535035` SUCCESS; Security and Regression #3268 / run `36199535039` SUCCESS.
+- Exact merge-commit workflow lookups for the Contract merge and reconciliation merge returned zero workflow runs; exact-merge CI GREEN is not claimed.
+- Contract defines derived surveillance observations for liquidity/depth, wallet activity, transaction cost, contract/deployer transparency, utility/provenance, and promotional provenance.
+- Supplied social-media examples remain discovery material; their claims are not admitted as canonical evidence without independent provenance and validation.
+- Raw/canonical evidence, cursor, V4 authority, temporal boundaries, ADDRESS != ACTOR, deterministic reproduction, UNKNOWN/INCONCLUSIVE/UNVERIFIED handling, reorg/recovery, and fail-closed boundaries are preserved.
+- No production code, ingestion, cursor, canonical evidence, authority, or production semantics changed.
+- Review checkpoints were recorded as COMMENT; no self-approval is claimed.
+- **STEP 609 Contract final state: VERIFIED / FROZEN / RECONCILED / DOCUMENTED.**
+- **Next phase: STEP 609 Analysis — fresh repository inspection required before Analysis.**
+
 ## STEP 608 — Operator Reproducibility — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/STEP_608_OPERATOR_REPRODUCIBILITY_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md`; Contract PR #471 merged as `26047fa23808e684e83bfc79126c51a75386cf64`.
@@ -197,8 +214,7 @@
 ## STEP 602 — Production Authority Establishment Input/Source Boundary Contract — VERIFIED / RECONCILED
 
 - Contract: `docs/STEP_602_PRODUCTION_AUTHORITY_ESTABLISHMENT_INPUT_SOURCE_BOUNDARY_CONTRACT_V0_1.md`.
-- Contract commit: `6942540ebc0787e60bb273d1ba0009da808c4640`.
-- PR #421 merged to `main` as `1112aa5fb958d8d2617937acdfb39da46f82d1b7`.
+- Contract commit: `6942540ebc0787e60bb273d1ba0009da808c4640`.- PR #421 merged to `main` as `1112aa5fb958d8d2617937acdfb39da46f82d1b7`.
 - PR-head HAHAWEEK Tests `36093908787` and Security and Regression `36093908722` passed.
 - Exact post-merge checks passed: HAHAWEEK Tests `36093967850`; Security and Regression `36093967780`; CodeQL / Push on main `36093967910`, including Analyze (actions) and Analyze (javascript-typescript).
 - Reconciliation: `docs/STEP_602_PRODUCTION_AUTHORITY_ESTABLISHMENT_INPUT_SOURCE_BOUNDARY_CONTRACT_RECONCILIATION_V0_1.md`.
@@ -397,8 +413,7 @@
 - Authoritative foundation remains preserved evidence and verified processing state; existing semantic owners for canonical decision, lineage/transition/generation, durable processing-result verification, processing context, authority, and cursor remain unchanged.
 - Operator Acceptance remains repository-grounded; no invented command/procedure was introduced.
 - Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
-- No raw/canonical evidence mutation, cursor advancement, authority grant, automated action/trading, schema migration, new dependency, new writer/authority/cursor semantics, historical rewrite, evidence deletion, or V4 activation occurred.
-- V4 production activation remains INACTIVE; Gate 2 is not implied.
+- No raw/canonical evidence mutation, cursor advancement, authority grant, automated action/trading, schema migration, new dependency, new writer/authority/cursor semantics, historical rewrite, evidence deletion, or V4 activation occurred.- V4 production activation remains INACTIVE; Gate 2 is not implied.
 - Next STEP: STEP 595.
 
 ## STEP 593 — Operator Operability Execution Verification — VERIFIED / RECONCILED
@@ -598,7 +613,6 @@
 - V4 production activation remains INACTIVE.
 - Reconciliation: `docs/STEP_582_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_CONTRACT_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 583 — Runtime Canonical Lineage / Processing Context Integration Implementation Analysis & Design.
-
 ## STEP 581 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design — VERIFIED / RECONCILED
 
 - Contract PR #345 merged as `ea99db0886d03df884f96360d8b5e58fa7cf7495`.
@@ -798,7 +812,6 @@
 - Next STEP: STEP 567 — Durable Processing-Result / Generation Persistence Implementation Contract.
 
 ## STEP 565 — V4 Runtime Processing-Result / Generation Context Boundary — VERIFIED / RECONCILED
-
 - STEP 565 contract/analysis/design PR #313 merged to main as `095c15cbac05c23f64e61adfde751f75cfe10a1e`.
 - PR-head `6f5919d78855aa26261155f3e4dac0246ab96dad`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS; CodeQL NEUTRAL.
 - Repository inspection confirmed canonical_evidence and F-03 segment/manifest/checkpoint persistence exist, but no first-class durable processing-result context currently carries processing-result identity, generation, explicit canonical acceptance, evidence membership, and reorg/canonicality lineage as required.
@@ -997,7 +1010,6 @@
 - Any future F-05 semantic change requires a new reviewed contract/step.
 
 ## STEP 515 — F-04 State Reconciliation — VERIFIED / FROZEN
-
 - STEP 513 F-04 Legacy Migration Verification Contract PR #229 merged to main as `811d0acc531a847e06e486ff35549e23285b8eda`.
 - STEP 514 F-04 Independent Migration Verifier PR #230 merged to main as `020809ad67550b6871bd4f30cb1f72639a1f5b28`.
 - STEP 514 initially failed repository Tests/Security because the new F-04 fixture was discovered by the existing V4 golden-vector inventory.
@@ -1197,8 +1209,7 @@
 - Post-merge check-runs queried on freeze merge commit `3340df79949d706b1e0de7c82fa2d85d51ff87eb` returned no check-runs at verification time; no post-merge run is claimed or fabricated.
 - The frozen in-scope corpus is exactly 3 V4 fixtures / 5 vectors: `event-identity.json`, `payload-event-identity.json`, and `transition.json` under `docs/golden-vectors/`.
 - STEP 483 remains the independent cryptographic verifier boundary; STEP 484 establishes complete deterministic corpus coverage only.
-- PR #190 remains preserved as the historical failed coverage attempt; PR #192 remains preserved as the explicit transition `expected_hash` representation resolution.
-- No production V4 authority, raw evidence, cursor, checkpoint, manifest, migration, runtime, RPC/network, prediction, ranking, trading, signing, or publication semantics were changed by STEP 484.
+- PR #190 remains preserved as the historical failed coverage attempt; PR #192 remains preserved as the explicit transition `expected_hash` representation resolution.- No production V4 authority, raw evidence, cursor, checkpoint, manifest, migration, runtime, RPC/network, prediction, ranking, trading, signing, or publication semantics were changed by STEP 484.
 - State finalization records the completed STEP 484 lifecycle and does not alter production authority.
 - State finalization branch: `step-484-state-finalization-2026-09-23`.
 
@@ -1398,7 +1409,6 @@
 - Establishes a stable record boundary from the frozen Radar Documentation Projection.
 - Preserves verified state, lineage, evidence, deterministic identity, and mutation isolation.
 - No prediction, ranking, trading/signing, raw-store, cursor/runtime, or V4 authority changes.
-
 ## STEP 474 — Freeze Checkpoint — VERIFIED / FROZEN
 
 - Implementation PR #156 merged successfully.
