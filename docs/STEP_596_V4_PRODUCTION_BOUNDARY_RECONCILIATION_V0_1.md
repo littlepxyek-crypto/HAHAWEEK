@@ -42,6 +42,12 @@ PR #393 merged as de8484a508bedb12de2e5095d1e22360cf274d52; exact merge-commit c
 - Analyze (actions): 107891194652
 - Analyze (javascript-typescript): 107891194261
 
+PR #394 merged as 50d759e37db226e9ad58ab6a0cff65936c985d7a; exact post-merge check-runs are terminal SUCCESS:
+- test: 107892152622
+- test-and-security: 107892151735
+- Analyze (actions): 107892156843
+- Analyze (javascript-typescript): 107892156515
+
 ## Reconciliation Findings
 
 The STEP 596 production-boundary contract remains present and preserves:
