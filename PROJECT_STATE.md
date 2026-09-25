@@ -1,3 +1,19 @@
+## STEP 605 — Code — VERIFIED / RECONCILED / DOCUMENTED
+
+- Code PR #443 merged as `cba94de214fd866faf173ae6825953b94627effb`.
+- Code reconciliation PR #444 merged as `173aaf3d8b349d06e140aab8758bf2ba20f03aab`.
+- PR #443 head `05f77678dbfe10b5a79e89b7c40bc12b80bc7da2`: HAHAWEEK Tests #1411 SUCCESS; Security and Regression #3098 SUCCESS.
+- Reconciliation PR #444 head `d27e7def1f10211be069bbfb100e112bfd009d4a`: HAHAWEEK Tests #1415 SUCCESS; Security and Regression #3102 SUCCESS.
+- Direct post-merge workflow/status lookup for exact reconciliation merge `173aaf3d8b349d06e140aab8758bf2ba20f03aab` returned no PR-triggered workflow runs/status records; no exact-merge CI GREEN is claimed.
+- Final documentation: `docs/STEP_605_CODE_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`.
+- Reconciliation: `docs/STEP_605_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- STEP 605 Code preserves historical evidence, frozen lifecycle schema/identity/binding, cursor semantics, writer-fence ownership, raw/canonical evidence, and Surveillance authority boundaries.
+- No V4 production activation occurred; Gate 2 remains PASS and V4 production authority remains INACTIVE / BLOCKED.
+- Operator Acceptance remains repository-grounded; no undocumented command or recovery procedure was introduced.
+- Surveillance remains derived, evidence-linked, versioned, non-authoritative; ADDRESS != ACTOR.
+- **STEP 605 Code final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: repository-defined next STEP beginning with Contract.**
+
 ## STEP 605 — Design — VERIFIED / RECONCILED / DOCUMENTED
 
 - Design PR #439 merged as `73dfaeca7915a6a280528e319bd2065bfeaf1a66`.
