@@ -1,3 +1,22 @@
+## STEP 605 — Design — VERIFIED / RECONCILED / DOCUMENTED
+
+- Design PR #439 merged as `73dfaeca7915a6a280528e319bd2065bfeaf1a66`.
+- Design reconciliation PR #440 merged as `c172039d545297b961c76a6c4062bc80d6a2fb29`.
+- Direct post-merge evidence on exact reconciliation merge `c172039d545297b961c76a6c4062bc80d6a2fb29`:
+  - Test `108086990837`: SUCCESS.
+  - Test & Security/Regression `108086991200`: SUCCESS.
+  - Analyze (actions) `108086996505`: SUCCESS.
+  - Analyze (javascript-typescript) `108086996103`: SUCCESS.
+- All four required checks are terminal SUCCESS and target the exact reconciliation merge.
+- Final documentation: `docs/STEP_605_DESIGN_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`.
+- Design remains limited to activation-readiness hardening; no V4 production activation occurred.
+- Frozen lifecycle schema/identity/binding, cursor semantics, writer-fence ownership, raw/canonical evidence, historical evidence, and Surveillance authority remain unchanged.
+- Operator Acceptance remains repository-grounded; no undocumented command or recovery procedure was introduced.
+- Surveillance remains derived, evidence-linked, versioned, and non-authoritative; ADDRESS != ACTOR.
+- Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
+- **STEP 605 Design final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: STEP 605 Code.**
+
 ## STEP 605 — Analysis — VERIFIED / RECONCILED / DOCUMENTED
 
 - Analysis merge: `aef384c997bd236f38598fdcd7218cb48c527827`.
