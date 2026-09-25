@@ -675,12 +675,16 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       assertCanonicalDecisionSchema(db);
       migrateV6ToV7(db);
       assertRuntimeLineageSchema(db);
+      migrateV7ToV8(db);
+      assertProductionAuthorityLifecycleSchema(db);
     } else if (version === 4) {
       migrateV4ToV5(db);
       migrateV5ToV6(db);
       assertCanonicalDecisionSchema(db);
       migrateV6ToV7(db);
       assertRuntimeLineageSchema(db);
+      migrateV7ToV8(db);
+      assertProductionAuthorityLifecycleSchema(db);
     } else if (version === 5) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
@@ -689,6 +693,8 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       assertCanonicalDecisionSchema(db);
       migrateV6ToV7(db);
       assertRuntimeLineageSchema(db);
+      migrateV7ToV8(db);
+      assertProductionAuthorityLifecycleSchema(db);
     } else if (version === 6) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
@@ -696,6 +702,8 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       assertCanonicalDecisionSchema(db);
       migrateV6ToV7(db);
       assertRuntimeLineageSchema(db);
+      migrateV7ToV8(db);
+      assertProductionAuthorityLifecycleSchema(db);
     } else if (version === 7) {
       assertRequiredBaseSchema(db);
       assertF03Schema(db);
