@@ -6,8 +6,9 @@
 - Gate 2 remains PASS and is distinct from V4 production implementation and V4 production authority activation.
 - V4 production authority remains INACTIVE / BLOCKED.
 - Reconciliation: `docs/STEP_596_V4_PRODUCTION_BOUNDARY_RECONCILIATION_V0_1.md`.
-- PR #392 merged as `7834ef6ecf11f0c02566d44801816169c5496fb9`.
-- Exact PR #392 merge-commit checks are terminal SUCCESS: test `107890450612`; test-and-security `107890450916`; Analyze (actions) `107890453483`; Analyze (javascript-typescript) `107890453329`.
+- PR #393 merged as `de8484a508bedb12de2e5095d1e22360cf274d52`.
+- Exact PR #393 merge-commit checks are terminal SUCCESS: test `107891190594`; test-and-security `107891190702`; Analyze (actions) `107891194652`; Analyze (javascript-typescript) `107891194261`.
+- PR #393 completed the final documentation/reconciliation evidence for STEP 596.
 - STEP 596 remains contract/documentation-only; no V4 production authority activation occurred.
 - Operator Acceptance remains repository-grounded and reproducible; no invented command/procedure was introduced.
 - Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
