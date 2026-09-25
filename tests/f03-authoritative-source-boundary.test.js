@@ -74,7 +74,7 @@ test('STEP 547 accepts independently sourced authority commitments for the exact
   const result = await engine.runOnce();
 
   assert.equal(result.cursor, 101);
-  assert.deepEqual(seen, [['authority',101,101],['expected',101,101]]);
+  assert.deepEqual(seen, [['expected',101,101],['authority',101,101]]);
 });
 
 test('STEP 547 rejects a missing expected source before cursor advancement', async () => {
