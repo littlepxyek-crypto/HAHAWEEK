@@ -1,3 +1,20 @@
+## STEP 600 — Production Authority Lifecycle Persistence Contract — VERIFIED / RECONCILED
+
+- Contract: `docs/STEP_600_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_CONTRACT_V0_1.md`.
+- Contract commit: `9740f6fc69be2210a6b283083841de8145a0ddf0`.
+- PR #417 merged to `main` as `b6a6554fd3890addac4b208b2593e2a83a0ccf43`.
+- PR-head HAHAWEEK Tests and HAHAWEEK Security and Regression both passed.
+- Exact post-merge checks passed: HAHAWEEK Tests `36093146645`; HAHAWEEK Security and Regression `36093146637`; CodeQL / Push on main `36093146173`, including Analyze (actions) and Analyze (javascript-typescript).
+- Reconciliation: `docs/STEP_600_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_CONTRACT_RECONCILIATION_V0_1.md`.
+- STEP 600 defines an explicit lifecycle-persistence boundary without implementing or activating V4 production authority.
+- Existing F-03 expected-authority, authority binding, VERIFIED processing context, lineage/generation, writer-fence, cursor ordering, evidence, and Surveillance ownership remain unchanged.
+- Operator Acceptance remains repository-grounded; no command or recovery procedure was invented.
+- Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
+- No cursor reset/unauthorized advance, evidence mutation/deletion, historical rewrite, silent normalization, new writer/lock, fallback/default authority, automated action/trading, predictive/ranking authority, or V4 activation occurred.
+- Historical evidence, artifacts, contracts, golden vectors, tests, and valid implementations remain preserved.
+- **STEP 600 final state: VERIFIED / RECONCILED.**
+- **Next STEP: STEP 601 Analysis.**
+
 ## STEP 599 — V4 Production Authority Source Lifecycle — VERIFIED / RECONCILED
 
 - State-finalization document: `docs/STEP_599_V4_PRODUCTION_AUTHORITY_SOURCE_LIFECYCLE_STATE_FINALIZATION_V0_1.md`.
