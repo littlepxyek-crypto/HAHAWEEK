@@ -42,7 +42,10 @@ const { assertAuthorityBinding } = require('./core/f03-authority-binding');
 const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
 const { readF03AuthorityChain } = require('./core/f03-authoritative-chain-persistence');
 const { createVerifiedProcessingContext } = require('./core/runtime-processing-context');
-const { establishProductionAuthorityLifecycle } = require('./core/production-authority-lifecycle');
+const {
+  prepareProductionAuthorityLifecycle,
+  commitPreparedProductionAuthorityLifecycle,
+} = require('./core/production-authority-lifecycle');
 
 const {
   POOL_MANAGER,
@@ -176,17 +179,33 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     return context;
   };
 
+  const preparedLifecycles = new WeakMap();
   const productionAuthorityFactory = authorityFactory || (({ fromBlock, toBlock, processingContext, expectedAuthority }) => {
     if (!processingContext || processingContext.fromBlock !== fromBlock || processingContext.toBlock !== toBlock) {
       throw new Error('PROCESSING_CONTEXT_REQUIRED');
     }
-    return establishProductionAuthorityLifecycle({
+    const prepared = prepareProductionAuthorityLifecycle({
       database,
       writerFence,
       processingContext,
       expectedAuthority,
     });
+    preparedLifecycles.set(prepared.authority, prepared);
+    return prepared.authority;
   });
+  const productionAuthorityCommitter = authorityFactory
+    ? undefined
+    : ({ processingContext, expectedAuthority, authority }) => {
+        const prepared = preparedLifecycles.get(authority);
+        if (!prepared) throw new Error('LIFECYCLE_PREPARED_INPUT_MISSING');
+        commitPreparedProductionAuthorityLifecycle({
+          database,
+          writerFence,
+          processingContext,
+          expectedAuthority,
+          prepared,
+        });
+      };
   const productionExpectedAuthorityFactory = expectedAuthorityFactory || createDurableExpectedAuthorityFactory(database);
 
   const ingestion = new IngestionEngine({
@@ -202,6 +221,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
       expectedAuthorityFactory: productionExpectedAuthorityFactory,
       authorityValidator: assertProductionAuthority,
       authorityBindingValidator: assertAuthorityBinding,
+      authorityCommitter: productionAuthorityCommitter,
       writerFence,
     }),
   });
