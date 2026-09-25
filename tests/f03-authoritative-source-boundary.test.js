@@ -102,9 +102,6 @@ test('STEP 547 rejects self-derived expected authority', async () => {
     Promise.resolve().then(() => selfGate({fromBlock:101,toBlock:101,checkpointCommitted:true})),
     /AUTHORITY_EXPECTED_SOURCE_SELF_REFERENCE/
   );
-
-
-
 });
 
 test('STEP 547 rejects a range-mismatched expected commitment', async () => {
@@ -133,14 +130,13 @@ test('STEP 547 rejects an incomplete expected commitment', async () => {
   assert.equal(c.get(), 100);
 });
 
-
 test('STEP 605 downstream authority rejection commits no lifecycle and does not advance cursor', async () => {
   const source = makeAuthority(101);
   const c = cursor();
   let commits = 0;
   const gate = createAuthorityGate({
-    authorityFactory: ({fromBlock,toBlock}) => source.authority,
-    expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...source.expected}),
+    authorityFactory: ({fromBlock,toBlock}) => ({...source.authority, fromBlock, toBlock}),
+    expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...source.expected, fromBlock, toBlock}),
     authorityValidator: () => {
       throw new Error('SIMULATED_DOWNSTREAM_AUTHORITY_REJECTION');
     },
