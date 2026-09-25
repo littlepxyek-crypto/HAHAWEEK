@@ -9,6 +9,9 @@
 - PR #393 merged as `de8484a508bedb12de2e5095d1e22360cf274d52`.
 - Exact PR #393 merge-commit checks are terminal SUCCESS: test `107891190594`; test-and-security `107891190702`; Analyze (actions) `107891194652`; Analyze (javascript-typescript) `107891194261`.
 - PR #393 completed the final documentation/reconciliation evidence for STEP 596.
+- PR #394 merged as `50d759e37db226e9ad58ab6a0cff65936c985d7a`.
+- Exact PR #394 post-merge check-runs are terminal SUCCESS: test `107892152622`; test-and-security `107892151735`; Analyze (actions) `107892156843`; Analyze (javascript-typescript) `107892156515`.
+- PR #394 completed the final post-merge verification evidence for STEP 596.
 - STEP 596 remains contract/documentation-only; no V4 production authority activation occurred.
 - Operator Acceptance remains repository-grounded and reproducible; no invented command/procedure was introduced.
 - Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
