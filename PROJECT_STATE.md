@@ -1,15 +1,21 @@
-## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — DESIGN — VERIFIED / RECONCILED
+## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — CODE — MERGED / POST-MERGE VERIFIED
 
-- Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530.
-- Analysis: `docs/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge commit `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
-- Design: `docs/STEP_612_DESIGN_V0_1.md` — merged PR #534, merge commit `5d88797827b5000b66f5d5f06ace4c8eedec17da`.
-- Design freezes exact rational representation, schema, direction, reference and execution price calculations, quote comparability, validation mapping, evidence binding, deterministic identity inputs, reorg/version behavior, and deterministic test-vector requirements.
-- No production implementation is included in Design.
-- Historical STEP 610 and STEP 611 artifacts remain preserved.
-- Raw/canonical evidence, acquisition cursor, V4 authority, production/trading authority, and Surveillance authority remain unchanged.
+- Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — PR #530 merged.
+- Analysis: `docs/STEP_612_ANALYSIS_V0_1.md` — PR #532 merged.
+- Design: `docs/STEP_612_DESIGN_V0_1.md` — PR #534 merged.
+- Code/Test: PR #536, head `de402b8d6247a78b4710b9121adb006c4b98a261`.
+- Merge: PR #536 merged as `8bc52f927e1125b965b316ebf5f36a5149b7a070`.
+- Post-merge CI on `8bc52f9`: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
+- Post-merge verification confirmed the STEP 612 implementation and preserved authority/evidence/cursor boundaries.
+- Reconciliation/documentation attempt PR #540 exposed a repository lifecycle CI failure on documentation-only commits: both `npm test` and `test-and-security` failed before merge; the failing workflow jobs stopped at the test step.
+- The failure is classified as CI/test verification failure for the reconciliation commit, not a production-semantic change. PR #540 is therefore not merged.
+- No production code, frozen contract, historical evidence, cursor, V4 authority, or Surveillance authority was changed to make PR #540 green.
+- `PROJECT_STATE.md` on `main` remains the repository authority and has not been rewritten by the failed reconciliation branch.
 - **Current STEP: 612**
-- **Current phase: CODE — NEXT AUTHORIZED PHASE**
-- **Next STEP: Code for STEP 612 is authorized by the verified Design.**
+- **Current phase: POST-MERGE VERIFICATION / RECONCILIATION BLOCKED**
+- **Next STEP: No new numbered STEP is authorized.** Global live-readiness work remains subject to a new Contract/explicit authorization.
+- **Status: BLOCKED — reconciliation CI failure must be diagnosed before STEP 612 closure.**
+
 ## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — ANALYSIS — VERIFIED / RECONCILED
 
 - Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge commit `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
