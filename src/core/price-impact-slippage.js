@@ -88,6 +88,14 @@ function calculateImpact(reference, execution, field) {
   return divide(subtract(r, e), r, field + '_RESULT');
 }
 function ensureDirection(direction) { if (!DIRECTIONS.has(direction)) fail('direction_INVALID'); }
+function admittedEvidence(input) {
+  if (!input.admission || typeof input.admission !== 'object') fail('admission_REQUIRED');
+  const allowed = new Set(input.admission.evidence_refs || []);
+  for (const ref of input.evidence_refs || []) if (!allowed.has(ref)) fail('evidence_ref_UNRESOLVED');
+  const provenance = new Set(input.admission.provenance_refs || []);
+  if (!provenance.has(input.provenance_ref)) fail('provenance_ref_UNRESOLVED');
+  for (const ref of input.input_evidence_refs || []) if (!allowed.has(ref)) fail('input_evidence_ref_UNRESOLVED');
+}
 function ensurePool(pool) {
   if (!pool || typeof pool !== 'object') fail('pool_REQUIRED');
   nonEmpty(String(pool.currency0), 'pool_currency0');
@@ -97,12 +105,15 @@ function createMeasurement(input) {
   if (!input || typeof input !== 'object') fail('input_REQUIRED');
   ensurePool(input.pool);
   ensureDirection(input.direction);
+  admittedEvidence(input);
   if (!MEASUREMENT_KINDS.has(input.measurement_kind)) fail('measurement_kind_INVALID');
   const reference = referencePrice(input);
   const execution = executionPrice(input);
   const result = calculateImpact(reference, execution, input.measurement_kind === 'PRICE_IMPACT' ? 'price_impact' : 'slippage');
   if (input.measurement_kind === 'SLIPPAGE') {
     if (!input.quote_reference || typeof input.quote_reference !== 'object') fail('quote_reference_REQUIRED');
+    nonEmpty(input.quote_reference.evidence_ref, 'quote_evidence_ref');
+    if (!(input.input_evidence_refs || []).includes(input.quote_reference.evidence_ref)) fail('quote_evidence_NOT_BOUND');
     if (input.quote_reference.execution_identity === input.execution_identity) fail('quote_execution_NOT_INDEPENDENT');
     const quote = parseRational(input.quote_reference.price, 'quote_price');
     if (quote.numerator === '0') fail('quote_price_ZERO');
