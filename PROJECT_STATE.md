@@ -1,11 +1,12 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — ANALYSIS — IN PROGRESS
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — ANALYSIS — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`; Contract state VERIFIED / RECONCILED / DOCUMENTED.
-- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md`.
-- Root cause: sequencing/documentation-state ambiguity between current PROJECT_STATE.md and stale historical lifecycle metadata.
-- Analysis scope: deterministic read-only lifecycle-state validation; no production domain semantics.
-- Historical STEP 610 artifacts remain immutable.
-- No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changes.
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`; VERIFIED / RECONCILED / DOCUMENTED.
+- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md`; PR #518 merged as `741966e4a3b51c9b9166a034c3cc813060476223`.
+- Analysis-head CI: HAHAWEEK Tests #1745 SUCCESS; Security and Regression #3432 SUCCESS.
+- Exact merge-commit workflow lookup for PR #518 returned no runs; exact-merge CI GREEN is not claimed.
+- Reconciliation: `docs/STEP_611_ANALYSIS_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Root cause: sequencing/documentation-state ambiguity between current and historical lifecycle metadata.
+- Analysis scope remains read-only lifecycle validation; no production domain semantics.
 - **Current authorized phase: STEP 611 Analysis.**
 - **Next authorized phase after Analysis acceptance: STEP 611 Design.**
 
