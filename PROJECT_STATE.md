@@ -9,7 +9,7 @@
 - Actual operator runtime remains UNVERIFIED.
 - **Current STEP: 614**
 - **Current phase: TEST — VERIFIED / RECONCILED / DOCUMENTED**
-- **Next STEP: Security/Regression for STEP 614 is authorized by this verified Test phase.**
+- **Next authorized phase: STEP 614 Security/Regression.**
 - **Global LIVE-READINESS: NOT READY / BLOCKED.**
 
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — TEST — VERIFIED / RECONCILED / DOCUMENTED
