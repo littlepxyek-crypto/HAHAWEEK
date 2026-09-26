@@ -11,10 +11,11 @@ function ensureDir() {
   fs.mkdirSync(STATE_DIR, { recursive: true });
 }
 
-function loadState() {
+function loadState(options = {}) {
+  const stateFile = options.stateFile || STATE_FILE;
   ensureDir();
 
-  if (!fs.existsSync(STATE_FILE)) {
+  if (!fs.existsSync(stateFile)) {
     return {
       version: 1,
       lastProcessedBlock: null,
@@ -24,7 +25,7 @@ function loadState() {
     };
   }
 
-  return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+  return JSON.parse(fs.readFileSync(stateFile, 'utf8'));
 }
 
 function saveState(state, options = {}) {
