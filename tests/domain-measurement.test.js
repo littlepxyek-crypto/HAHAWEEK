@@ -56,6 +56,7 @@ test('transaction cost is deterministic and computes native fee', () => {
 test('transaction conversion requires admitted conversion evidence', () => {
   assert.throws(
     () => createDomainMeasurement(base({
+      admission: { evidence_refs: ['e1', 'e2'], provenance_refs: ['prov:1'] },
       payload: {
         ...base().payload,
         conversion_ref: 'conversion-1',
