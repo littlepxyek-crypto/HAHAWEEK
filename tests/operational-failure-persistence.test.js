@@ -21,6 +21,7 @@ test('operational failure persistence records failure behind writer fence', () =
       Object.assign(new Error('TIMEOUT'), { code: 'TIMEOUT' }),
       {
         writerFenceFile: fenceFile,
+        stateFile,
         ownerId: 'test-operational-state',
       }
     );
