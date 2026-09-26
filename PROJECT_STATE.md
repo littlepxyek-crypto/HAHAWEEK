@@ -1,15 +1,12 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — TEST — IN PROGRESS
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — SECURITY/REGRESSION — IN PROGRESS
 
-- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
-- Test: `tests/lifecycle-state-authority.test.js`.
-- Test scope covers current-state parsing, historical stale metadata isolation, missing/conflicting authorization, deterministic errors, and input immutability.
+- Contract, Analysis, Design, Code, and Test are VERIFIED / RECONCILED / DOCUMENTED.
+- Security/Regression: `docs/STEP_611_SECURITY_REGRESSION_V0_1.md`.
+- Scope: stale-history isolation, current-state conflict detection, malformed-state fail-closed behavior, and authority/mutation boundary regression.
 - No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changes.
 - Historical STEP 610 artifacts remain immutable.
-- **Current authorized phase: STEP 611 Test.**
-- **Next authorized phase after Test acceptance: STEP 611 Security/Regression.**
+- **Current authorized phase: STEP 611 Security/Regression.**
+- **Next authorized phase after Security/Regression acceptance: STEP 611 CI.**
 
 ## STEP 610 — Security/Regression — VERIFIED / RECONCILED / DOCUMENTED
 
