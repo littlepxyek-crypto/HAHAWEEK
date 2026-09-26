@@ -1,3 +1,20 @@
+## STEP 614 — Live-Readiness / Actual Operator Runtime — SECURITY/REGRESSION — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
+- Security/Regression evidence: `docs/STEP_614_SECURITY_REGRESSION_V0_1.md`.
+- Test PR #564 merged `3c9872d77cbc3fcca6aca91f931c573cc77484fc`.
+- HAHAWEEK Tests SUCCESS.
+- HAHAWEEK Security and Regression SUCCESS.
+- CodeQL Actions SUCCESS.
+- CodeQL JavaScript/TypeScript SUCCESS.
+- F-614-01 adversarial malformed-state and BLOCKED-state boundaries are covered.
+- No evidence/cursor/authority/Surveillance/V4 semantic change.
+- Actual operator runtime remains UNVERIFIED.
+- **Current STEP: 614**
+- **Current phase: SECURITY/REGRESSION — VERIFIED / RECONCILED / DOCUMENTED**
+- **Next authorized phase: STEP 614 CI.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED.**
+
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — TEST — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
