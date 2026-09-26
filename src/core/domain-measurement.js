@@ -30,6 +30,10 @@ function integerString(value, field) {
   string(value, field);
   if (!/^(0|[1-9][0-9]*)$/.test(value)) fail(field + '_INVALID');
 }
+function signedIntegerString(value, field) {
+  string(value, field);
+  if (!/^-?(0|[1-9][0-9]*)$/.test(value)) fail(field + '_INVALID');
+}
 function timestamp(value, field, nullable = false) {
   if (nullable && value === null) return;
   string(value, field);
@@ -49,16 +53,12 @@ function admitted(refs, field, allowed) {
     if (!allowed.has(ref)) fail(field + '_UNRESOLVED');
   }
 }
-function sha256Canonical(value) {
-  return crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
-}
-
 function validateLiquidity(payload) {
   object(payload, 'payload');
   exactSet(payload.measurement_kind, new Set(['LIQUIDITY_ACTIVITY', 'EXECUTABLE_DEPTH']), 'measurement_kind');
   string(payload.pool_ref, 'pool_ref');
   if (payload.measurement_kind === 'LIQUIDITY_ACTIVITY') {
-    integerString(payload.liquidity_delta, 'liquidity_delta');
+    signedIntegerString(payload.liquidity_delta, 'liquidity_delta');
     return;
   }
   for (const field of [
@@ -109,7 +109,7 @@ function validateContractTransparency(payload) {
     'bytecode_ref', 'proxy_state', 'upgradeability_state',
     'ownership_control_state', 'deployment_transaction_ref', 'measurement_version'
   ]) {
-    nullableString(payload[field], field);
+    string(payload[field], field);
   }
   object(payload.property_evidence, 'property_evidence');
   for (const key of Object.keys(payload.property_evidence)) {
@@ -170,5 +170,4 @@ module.exports = {
   RULE_VERSIONS,
   COMPARABILITY,
   createDomainMeasurement,
-  sha256Canonical,
 };
