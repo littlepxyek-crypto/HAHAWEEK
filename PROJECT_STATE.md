@@ -1,3 +1,15 @@
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — CONTRACT — IN PROGRESS
+
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`.
+- Scope: repository-grounded lifecycle state authority, state-consistency gate, explicit Next STEP authorization, and sequencing-deadlock prevention.
+- This is a lifecycle/governance boundary only; no new domain/product capability is selected or implemented.
+- Historical STEP 610 documents remain immutable; stale lifecycle text does not override current `PROJECT_STATE.md`.
+- No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changes are authorized.
+- Operator Acceptance remains repository-grounded; no undocumented operator command is introduced.
+- Contract verification, reconciliation, and the remaining lifecycle phases are pending.
+- **Current authorized phase: STEP 611 Contract.**
+- **Next authorized phase after Contract acceptance: STEP 611 Analysis.**
+
 ## STEP 610 — Security/Regression — VERIFIED / RECONCILED / DOCUMENTED
 
 - Security/Regression: PR #510 merged as `3a9f4ba4bbf267bfa5710881d0052192fa8da5e6`.
