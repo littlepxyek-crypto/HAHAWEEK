@@ -1,5 +1,6 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — TEST — VERIFIED / RECONCILED / DOCUMENTED
 
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
 - Test evidence: `docs/STEP_614_TEST_EVIDENCE_V0_1.md`.
 - Code PR #562 merged `735d00d4eb26d2bf9af5eae13d4b84ab3d812a18`.
 - Main Test run #36280449582: SUCCESS.
