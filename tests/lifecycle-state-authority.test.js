@@ -22,7 +22,7 @@ test('current PROJECT_STATE is valid and exposes STEP 614 Test authority', () =>
   assert.equal(result.phase, 'TEST');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME/);
-  assert.equal(result.next_step, 'Test evidence lifecycle for STEP 614 is authorized');
+  assert.equal(result.next_step, 'STEP 614 Security/Regression');
 });
 
 test('stale historical next-step text cannot override current state', () => {

@@ -1,6 +1,21 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — TEST — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
+- Test evidence: `docs/STEP_614_TEST_EVIDENCE_V0_1.md`.
+- Code PR #562 merged `735d00d4eb26d2bf9af5eae13d4b84ab3d812a18`.
+- Main Test run #36280449582: SUCCESS.
+- Test result: 703 total, 702 passed, 0 failed, 1 skipped.
+- Targeted status CLI regressions all passed: valid status zero, malformed state non-zero, BLOCKED STOP output preserved.
+- Security/Regression remains the next lifecycle phase.
+- Actual operator runtime remains UNVERIFIED.
+- **Current STEP: 614**
+- **Current phase: TEST — VERIFIED / RECONCILED / DOCUMENTED**
+- **Next authorized phase: STEP 614 Security/Regression.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED.**
+
+## STEP 614 — Live-Readiness / Actual Operator Runtime — TEST — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
 - Analysis: `docs/STEP_614_ANALYSIS_V0_1.md` — PR #557 merged `390f5c308fecc5c9adffa9579dfcf61b049da977`.
 - Design: `docs/STEP_614_DESIGN_V0_1.md` — PR #560 merged `c61ec588cd97e0a4405a171411cc631570531fce`.
 - Code: PR #562 merged `735d00d4eb26d2bf9af5eae13d4b84ab3d812a18`.
