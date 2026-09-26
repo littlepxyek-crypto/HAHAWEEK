@@ -13,16 +13,16 @@ const {
 
 const ROOT = path.resolve(__dirname, '..');
 
-test('current PROJECT_STATE is valid and exposes STEP 612 Design authority', () => {
+test('current PROJECT_STATE is valid and exposes STEP 612 Documentation authority', () => {
   const source = fs.readFileSync(path.join(ROOT, 'PROJECT_STATE.md'), 'utf8');
   const result = validateLifecycleState(source);
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 612);
-  assert.equal(result.phase, 'DESIGN');
+  assert.equal(result.phase, 'DOCUMENTATION');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE/);
-  assert.equal(result.next_step, 'Code for STEP 612 is authorized by the verified Design');
+  assert.equal(result.next_step, 'No new numbered STEP is authorized by this reconciliation');
 });
 
 test('stale historical next-step text cannot override current state', () => {

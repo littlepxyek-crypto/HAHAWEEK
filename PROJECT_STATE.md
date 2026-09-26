@@ -1,15 +1,23 @@
-## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — DESIGN — VERIFIED / RECONCILED
+## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
-- Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530.
-- Analysis: `docs/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge commit `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
-- Design: `docs/STEP_612_DESIGN_V0_1.md` — merged PR #534, merge commit `5d88797827b5000b66f5d5f06ace4c8eedec17da`.
-- Design freezes exact rational representation, schema, direction, reference and execution price calculations, quote comparability, validation mapping, evidence binding, deterministic identity inputs, reorg/version behavior, and deterministic test-vector requirements.
-- No production implementation is included in Design.
-- Historical STEP 610 and STEP 611 artifacts remain preserved.
-- Raw/canonical evidence, acquisition cursor, V4 authority, production/trading authority, and Surveillance authority remain unchanged.
+- Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
+- Analysis: `docs/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
+- Design: `docs/STEP_612_DESIGN_V0_1.md` — merged PR #534, merge `5d88797827b5000b66f5d5f06ace4c8eedec17da`.
+- Code/Test: PR #536, head `de402b8d6247a78b4710b9121adb006c4b98a261`.
+- Merge: PR #536 merged at `2026-09-26T15:37:05Z` as `8bc52f927e1125b965b316ebf5f36a5149b7a070`.
+- Post-merge CI on the merge commit: Analyze (javascript-typescript) SUCCESS; Analyze (actions) SUCCESS; test SUCCESS; test-and-security SUCCESS.
+- Review: engineering review recorded as COMMENT, not approval; the identified evidence-boundary gap was fixed in `de402b8d` and covered by regression tests.
+- Post-merge verification confirms the merged capability remains a derived, evidence-linked Surveillance measurement boundary. Raw/canonical evidence, cursor authority, V4 authority, trading/execution authority, actor inference, and automated action remain unchanged.
+- Operator commands are repository-defined in STEP 608: `status`, `test`, `health`, `scan`, `start`, `repair`. Source availability is verified; interactive Termux execution is not claimed from the GitHub connector environment.
+- Recovery/cursor and historical evidence boundaries remain preserved. No cursor reset or historical rewrite was introduced.
+- Final reconciliation: `docs/STEP_612_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Final documentation: `docs/STEP_612_FINAL_DOCUMENTATION_V0_1.md`.
+- STEP 612 is complete as a domain-measurement lifecycle.
+- This STEP does **not** establish global VERIFIED LIVE status. Global LIVE-READINESS requires broader resilience, recovery, operator-runtime, architecture, and security evidence.
+- No new numbered STEP is inferred. Remaining global live-readiness work requires an authorized Contract or explicit user authorization.
 - **Current STEP: 612**
-- **Current phase: CODE — NEXT AUTHORIZED PHASE**
-- **Next STEP: Code for STEP 612 is authorized by the verified Design.**
+- **Current phase: DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED**
+- **Next STEP: No new numbered STEP is authorized by this reconciliation.**
 ## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — ANALYSIS — VERIFIED / RECONCILED
 
 - Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge commit `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
