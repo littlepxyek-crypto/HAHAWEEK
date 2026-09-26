@@ -1,6 +1,11 @@
 ## STEP 611 — Lifecycle State Authority & Next-Step Boundary — CI — IN PROGRESS
 
-- Contract, Analysis, Design, Code, Test, and Security/Regression are VERIFIED / RECONCILED / DOCUMENTED.
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
+- Test: `tests/lifecycle-state-authority.test.js` — VERIFIED / RECONCILED / DOCUMENTED.
+- Security/Regression: `docs/STEP_611_SECURITY_REGRESSION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
 - CI evidence: `docs/STEP_611_CI_EVIDENCE_V0_1.md`.
 - Latest terminal PR-head checks: Tests #1792 SUCCESS; Security and Regression #3479 SUCCESS.
 - Exact merge-commit CI remains unclaimed where no workflow run exists.
