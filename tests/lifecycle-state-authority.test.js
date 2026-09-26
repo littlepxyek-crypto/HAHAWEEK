@@ -22,7 +22,7 @@ test('current PROJECT_STATE is valid and exposes STEP 613 Review authority', () 
   assert.equal(result.phase, 'REVIEW');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE/);
-  assert.equal(result.next_step, 'Post-Merge Verification for STEP 613 is authorized');
+  assert.equal(result.next_step, 'Merge is already verified for STEP 613; Post-Merge Verification is authorized');
 });
 
 test('stale historical next-step text cannot override current state', () => {
