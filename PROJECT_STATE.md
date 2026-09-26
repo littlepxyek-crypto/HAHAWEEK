@@ -1564,3 +1564,17 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - PR #501 CI: Tests #1662 SUCCESS; Security/Regression #3349 SUCCESS.
 - PR #502 CI: Tests #1666 SUCCESS; Security/Regression #3353 SUCCESS.
 - STEP 610 Code is the next authorized lifecycle stage.
+
+
+## STEP 610 — Code — VERIFIED / RECONCILED / DOCUMENTED
+
+- Code: `src/core/domain-measurement.js`.
+- Test: `tests/domain-measurement.test.js`.
+- Code PR #504 merged as `d95613e355f2671ec5fc3056d6bb0af54c851c48`.
+- PR #504 Tests #1682 / run `36210072443` SUCCESS; Security and Regression #3369 / run `36210072387` SUCCESS.
+- Post-merge reconciliation: `docs/STEP_610_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #505 merged as `526f2820f9b61337d177aab532e369ce975b2b09`.
+- PR #505 Tests #1686 / run `36210241036` SUCCESS; Security and Regression #3373 / run `36210240962` SUCCESS.
+- Domain measurements remain derived, evidence-linked, versioned, fail-closed, and non-authoritative. No raw/canonical mutation, cursor advancement, V4 authority expansion, actor inference, scoring/ranking, or automated action was introduced.
+- **STEP 610 Code final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next STEP: STEP 610 Test — contract/design-grounded test lifecycle.**
