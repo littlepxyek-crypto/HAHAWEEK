@@ -22,7 +22,7 @@ test('current PROJECT_STATE is valid and exposes STEP 612 Documentation authorit
   assert.equal(result.phase, 'DOCUMENTATION');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE/);
-  assert.equal(result.next_step, null);
+  assert.equal(result.next_step, 'No new numbered STEP is authorized by this reconciliation');
 });
 
 test('stale historical next-step text cannot override current state', () => {
