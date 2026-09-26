@@ -1,20 +1,34 @@
 'use strict';
 
 const { getRpcStatus } = require('./core/rpc');
+const { loadState } = require('./core/state');
+const { readOperationalState } = require('./core/operational-state');
 
 async function runHealth(
   getStatus = getRpcStatus,
-  output = console.log
+  output = console.log,
+  getState = loadState
 ) {
   const status = await getStatus();
+  const state = readOperationalState(getState());
+  const operationalState = state.operationalState || 'UNKNOWN';
 
   output(`RPC: ${status.rpcUrl}`);
   output(`Expected Chain ID: ${status.expectedChainId}`);
   output(`Actual Chain ID: ${status.actualChainId}`);
   output(`Current Block: ${status.blockNumber}`);
-  output('HEALTH: OK');
+  output(`Operational state: ${operationalState}`);
 
-  return status;
+  if (operationalState === 'HEALTHY') {
+    output('HEALTH: OK');
+  } else {
+    output(`HEALTH: NOT READY (${operationalState})`);
+  }
+
+  return {
+    ...status,
+    operationalState,
+  };
 }
 
 async function main() {
