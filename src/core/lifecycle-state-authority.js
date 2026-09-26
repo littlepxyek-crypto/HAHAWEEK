@@ -14,7 +14,7 @@ function validateLifecycleState(text){
  const step=Number(hm[1]); const phase=hm[3]; const status=hm[4].trim();
  const stepHeaders=[...current.matchAll(/(?:^|\n)## STEP (\d+) —/g)]; if(stepHeaders.length!==1)return fail([ERRORS.STEP_CONFLICT]);
  const contracts=[...current.matchAll(/(?:^|\n)- Contract: `([^`]+)`/g)].map(m=>m[1].trim()); if(contracts.length===0)return fail([ERRORS.CONTRACT_MISSING]);
- const next=[...current.matchAll(/(?:^|\n)- \*\*Next authorized phase(?: after .* acceptance)?: (STEP \d+ [^*.]+)\.*\*\*/g)].map(m=>m[1].trim());
+ const next=[...current.matchAll(/(?:^|\n)- \*\*Next authorized phase(?: after [^:]+)?: (STEP \d+ [^*.]+)\.*\*\*/g)].map(m=>m[1].trim());
  if(next.length===0&&!/\b(STOP|FAIL-CLOSED|BLOCKED|terminal|No new numbered STEP)\b/i.test(current))return fail([ERRORS.NEXT_STEP_MISSING]);
  if(new Set(next).size>1)return fail([ERRORS.NEXT_STEP_CONFLICT]);
  return {valid:true,current_step:step,phase,status,contract:contracts[0],next_step:next[0]||null,errors:[]};
