@@ -1,6 +1,10 @@
 ## STEP 611 — Lifecycle State Authority & Next-Step Boundary — SECURITY/REGRESSION — IN PROGRESS
 
-- Contract, Analysis, Design, Code, and Test are VERIFIED / RECONCILED / DOCUMENTED.
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
+- Test: `tests/lifecycle-state-authority.test.js` — VERIFIED / RECONCILED / DOCUMENTED.
 - Security/Regression: `docs/STEP_611_SECURITY_REGRESSION_V0_1.md`.
 - Scope: stale-history isolation, current-state conflict detection, malformed-state fail-closed behavior, and authority/mutation boundary regression.
 - No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changes.
