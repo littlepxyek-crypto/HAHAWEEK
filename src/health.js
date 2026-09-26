@@ -3,6 +3,7 @@
 const { getRpcStatus } = require('./core/rpc');
 const { loadState } = require('./core/state');
 const { readOperationalState } = require('./core/operational-state');
+const { persistOperationalFailure } = require('./core/operational-failure-persistence');
 
 async function runHealth(
   getStatus = getRpcStatus,
@@ -37,6 +38,18 @@ async function main() {
   } catch (error) {
     console.error('HEALTH: FAILED');
     console.error(error.message);
+
+    try {
+      persistOperationalFailure(error);
+    } catch (stateError) {
+      console.error('HEALTH STATE: FAILED');
+      console.error(
+        stateError instanceof Error
+          ? stateError.message
+          : String(stateError)
+      );
+    }
+
     process.exitCode = 1;
   }
 }
