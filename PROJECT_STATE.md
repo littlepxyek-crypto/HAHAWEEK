@@ -1,3 +1,20 @@
+## STEP 614 — Live-Readiness / Actual Operator Runtime — DESIGN — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
+- Analysis: `docs/STEP_614_ANALYSIS_V0_1.md` — PR #557 merged `390f5c308fecc5c9adffa9579dfcf61b049da977`.
+- Design: `docs/STEP_614_DESIGN_V0_1.md` — PR #560 merged `c61ec588cd97e0a4405a171411cc631570531fce`.
+- Design Post-Merge Verification: `docs/STEP_614_DESIGN_POST_MERGE_VERIFICATION_V0_1.md`.
+- Design Reconciliation: `docs/STEP_614_DESIGN_RECONCILIATION_V0_1.md`.
+- Design Final Documentation: `docs/STEP_614_DESIGN_FINAL_DOCUMENTATION_V0_1.md`.
+- Design CI: Tests SUCCESS; Security/Regression SUCCESS; CodeQL Actions SUCCESS; CodeQL JavaScript/TypeScript SUCCESS.
+- F-614-01 remains the bounded implementation target: status wrapper must propagate `src/status.js` failure.
+- F-614-02 remains actual operator runtime UNVERIFIED.
+- No production semantics changed.
+- **Current STEP: 614**
+- **Current phase: DESIGN — VERIFIED / RECONCILED / DOCUMENTED**
+- **Next STEP: Code for STEP 614 is authorized by this verified Design.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED.**
+
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — ANALYSIS — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
