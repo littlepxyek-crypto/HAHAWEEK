@@ -18,7 +18,7 @@ test('current PROJECT_STATE is valid and exposes STEP 611 Test authority', () =>
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 611);
-  assert.equal(result.phase, 'CODE');
+  assert.equal(result.phase, 'TEST');
   assert.match(result.contract, /STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT/);
   assert.match(result.next_step, /^STEP 611 Test/);
 });
