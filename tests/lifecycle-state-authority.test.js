@@ -21,7 +21,7 @@ test('current PROJECT_STATE is valid and exposes STEP 613 Verification authority
   assert.equal(result.current_step, 613);
   assert.equal(result.phase, 'VERIFICATION');
   assert.ok(PHASES.includes(result.phase));
-  assert.match(result.contract, /CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE/);
+  assert.match(result.contract, /PR #541 merged/);
   assert.equal(result.next_step, 'Reconciliation is authorized by verified Post-Merge Verification');
 });
 
