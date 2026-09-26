@@ -1,4 +1,15 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — CONTRACT — IN PROGRESS
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — VERIFIED / RECONCILED
+
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract PR #515 merged as `bf48cff435bbc0456f327eaeb374174efe40a877`.
+- Contract-head CI: HAHAWEEK Tests #1730 SUCCESS; Security and Regression #3417 SUCCESS.
+- Post-merge exact-commit workflow lookup returned no runs; exact-merge CI GREEN is not claimed.
+- Reconciliation: `docs/STEP_611_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Scope is limited to lifecycle state authority, state-consistency gating, explicit Next STEP authorization, and sequencing-deadlock prevention.
+- Historical STEP 610 artifacts remain immutable.
+- No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changed.
+- **STEP 611 Contract state: VERIFIED / RECONCILED.**
+- **Next authorized phase: STEP 611 Documentation.**
 
 - Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`.
 - Scope: repository-grounded lifecycle state authority, state-consistency gate, explicit Next STEP authorization, and sequencing-deadlock prevention.
