@@ -19,10 +19,10 @@ test('current PROJECT_STATE is valid and exposes STEP 612 Design authority', () 
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 612);
-  assert.equal(result.phase, 'ANALYSIS');
+  assert.equal(result.phase, 'DESIGN');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE/);
-  assert.equal(result.next_step, 'Design for STEP 612 is authorized by the verified Analysis');
+  assert.equal(result.next_step, 'Code for STEP 612 is authorized by the verified Design');
 });
 
 test('stale historical next-step text cannot override current state', () => {
