@@ -13,13 +13,13 @@ const {
 
 const ROOT = path.resolve(__dirname, '..');
 
-test('current PROJECT_STATE is valid and exposes STEP 614 Reconciliation authority', () => {
+test('current PROJECT_STATE is valid and exposes STEP 614 Documentation authority', () => {
   const source = fs.readFileSync(path.join(ROOT, 'PROJECT_STATE.md'), 'utf8');
   const result = validateLifecycleState(source);
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 614);
-  assert.equal(result.phase, 'RECONCILIATION');
+  assert.equal(result.phase, 'DOCUMENTATION');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME/);
   assert.equal(result.next_step, 'Analysis for STEP 614 is authorized by this verified reconciliation');
