@@ -119,6 +119,16 @@ function validateContractTransparency(payload) {
   }
 }
 
+function assertPayloadEvidenceRefs(payload, allowedEvidence) {
+  const refs = payload.input_evidence_refs || Object.values(payload.property_evidence || {}).flat();
+  for (const ref of refs) if (!allowedEvidence.has(ref)) fail('payload_evidence_ref_UNRESOLVED');
+}
+
+function assertPayloadProvenanceRefs(payload, allowedProvenance) {
+  const refs = payload.provenance_chain || [];
+  for (const ref of refs) if (!allowedProvenance.has(ref)) fail('payload_provenance_ref_UNRESOLVED');
+}
+
 function validatePromotionalProvenance(payload) {
   object(payload, 'payload');
   for (const field of ['source_ref', 'channel', 'claim_ref', 'claim_content_digest', 'measurement_version']) {
@@ -151,6 +161,8 @@ function createDomainMeasurement(input) {
 
   const payload = structuredClone(input.payload);
   validatePayload(input.observation_type, payload);
+  assertPayloadEvidenceRefs(payload, allowedEvidence);
+  assertPayloadProvenanceRefs(payload, allowedProvenance);
 
   const ruleVersion = input.rule_version || RULE_VERSIONS[input.observation_type];
   string(ruleVersion, 'rule_version');
