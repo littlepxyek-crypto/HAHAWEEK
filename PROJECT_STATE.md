@@ -1,6 +1,12 @@
 ## STEP 611 — Lifecycle State Authority & Next-Step Boundary — REVIEW — IN PROGRESS
 
-- Contract, Analysis, Design, Code, Test, Security/Regression, and CI are VERIFIED / RECONCILED / DOCUMENTED.
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
+- Test: `tests/lifecycle-state-authority.test.js` — VERIFIED / RECONCILED / DOCUMENTED.
+- Security/Regression: `docs/STEP_611_SECURITY_REGRESSION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- CI: `docs/STEP_611_CI_EVIDENCE_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
 - Review: `docs/STEP_611_REVIEW_CHECKPOINT_V0_1.md`.
 - Review checkpoints were recorded as COMMENT; no self-approval is claimed.
 - Scope, traceability, fail-closed boundaries, Operator Acceptance, and Surveillance constraints reviewed.
