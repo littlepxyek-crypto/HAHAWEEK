@@ -17,7 +17,7 @@ function persistOperationalFailure(error, options = {}) {
   try {
     writerFence.acquire();
 
-    const previous = loadState();
+    const previous = loadState({ stateFile: options.stateFile });
     const failure = classifyFailure(error);
     const next = createFailureState({
       ...previous,
@@ -28,7 +28,10 @@ function persistOperationalFailure(error, options = {}) {
           : String(error),
     }, failure);
 
-    saveState(next, { legacyWriteBarrier: { assertWritable: () => writerFence.assertOwned() } });
+    saveState(next, {
+      stateFile: options.stateFile,
+      legacyWriteBarrier: { assertWritable: () => writerFence.assertOwned() },
+    });
     return failure;
   } finally {
     writerFence.release();
