@@ -14,7 +14,7 @@ const {
 const ROOT = path.resolve(__dirname, '..');
 
 test('current PROJECT_STATE is valid and exposes STEP 612 Analysis authority', () => {
-  const source = fs.readFileSync(path.join(ROOT, '..', 'PROJECT_STATE.md'), 'utf8');
+  const source = fs.readFileSync(path.join(ROOT, 'PROJECT_STATE.md'), 'utf8');
   const result = validateLifecycleState(source);
 
   assert.equal(result.valid, true);
