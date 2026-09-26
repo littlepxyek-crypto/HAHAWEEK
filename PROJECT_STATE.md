@@ -1,6 +1,6 @@
 ## STEP 613 — Failure-Isolated Resilience & Operator Architecture — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
-- Contract: PR #541 merged `4b58ad889991ee803d572b663cbeacd2143a003a`.
+- Contract: `docs/CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE_V0_1.md` — PR #541 merged `4b58ad889991ee803d572b663cbeacd2143a003a`.
 - Analysis: PR #542 merged `5e1801138da7c73ecd1aa24716873af54ffd933f`.
 - Design: PR #543 merged `12921a0af21280bd2d1d7323bfe2b859b44f1c6b`.
 - Code: PR #544 merged `a0fec03db84ded31b0e2214a3510c39fd638b6ef`.
