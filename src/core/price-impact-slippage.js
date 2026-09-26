@@ -91,10 +91,18 @@ function ensureDirection(direction) { if (!DIRECTIONS.has(direction)) fail('dire
 function admittedEvidence(input) {
   if (!input.admission || typeof input.admission !== 'object') fail('admission_REQUIRED');
   const allowed = new Set(input.admission.evidence_refs || []);
-  for (const ref of input.evidence_refs || []) if (!allowed.has(ref)) fail('evidence_ref_UNRESOLVED');
+  if (!Array.isArray(input.evidence_refs) || input.evidence_refs.length === 0) fail('evidence_refs_REQUIRED');
+  if (!Array.isArray(input.input_evidence_refs) || input.input_evidence_refs.length === 0) fail('input_evidence_refs_REQUIRED');
+  for (const ref of input.evidence_refs) if (!allowed.has(ref)) fail('evidence_ref_UNRESOLVED');
   const provenance = new Set(input.admission.provenance_refs || []);
   if (!provenance.has(input.provenance_ref)) fail('provenance_ref_UNRESOLVED');
-  for (const ref of input.input_evidence_refs || []) if (!allowed.has(ref)) fail('input_evidence_ref_UNRESOLVED');
+  for (const ref of input.input_evidence_refs) if (!allowed.has(ref)) fail('input_evidence_ref_UNRESOLVED');
+  const required = ['pool_evidence_ref', 'swap_evidence_ref', 'decimals0_evidence_ref', 'decimals1_evidence_ref'];
+  for (const field of required) {
+    nonEmpty(input[field], field);
+    if (!allowed.has(input[field])) fail(field + '_UNRESOLVED');
+    if (!input.input_evidence_refs.includes(input[field])) fail(field + '_NOT_BOUND');
+  }
 }
 function ensurePool(pool) {
   if (!pool || typeof pool !== 'object') fail('pool_REQUIRED');
@@ -116,8 +124,19 @@ function createMeasurement(input) {
   const result = calculateImpact(reference, execution, input.measurement_kind === 'PRICE_IMPACT' ? 'price_impact' : 'slippage');
   if (input.measurement_kind === 'SLIPPAGE') {
     if (!input.quote_reference || typeof input.quote_reference !== 'object') fail('quote_reference_REQUIRED');
+    nonEmpty(input.quote_reference.pool_ref, 'quote_pool_ref');
+    nonEmpty(input.quote_reference.direction, 'quote_direction');
+    nonEmpty(input.quote_reference.base_amount, 'quote_base_amount');
+    nonEmpty(input.quote_reference.quote_amount, 'quote_amount');
+    if (input.quote_reference.pool_ref !== input.pool_ref) fail('quote_pool_NOT_COMPARABLE');
+    if (input.quote_reference.direction !== input.direction) fail('quote_direction_NOT_COMPARABLE');
+    const executionBaseIndex = assetIndex(input.pool, input.baseAssetRef, 'base_asset_ref');
+    const executionBaseAmount = executionBaseIndex === 0 ? input.amount0 : input.amount1;
+    if (input.quote_reference.base_amount !== executionBaseAmount) fail('quote_base_amount_NOT_COMPARABLE');
+    if (!input.quote_reference.quote_timestamp && !input.quote_reference.quote_block) fail('quote_time_boundary_REQUIRED');
     nonEmpty(input.quote_reference.evidence_ref, 'quote_evidence_ref');
     if (!(input.input_evidence_refs || []).includes(input.quote_reference.evidence_ref)) fail('quote_evidence_NOT_BOUND');
+    if (!new Set(input.admission.evidence_refs || []).has(input.quote_reference.evidence_ref)) fail('quote_evidence_UNRESOLVED');
     if (input.quote_reference.execution_identity === input.execution_identity) fail('quote_execution_NOT_INDEPENDENT');
     const quote = parseRational(input.quote_reference.price, 'quote_price');
     if (quote.numerator === '0') fail('quote_price_ZERO');
