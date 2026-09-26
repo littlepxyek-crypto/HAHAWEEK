@@ -1,6 +1,14 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — VERIFIED / RECONCILED / DOCUMENTED
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
-- Contract, Analysis, Design, Code, Test, Security/Regression, CI, Review, and Verification are VERIFIED / RECONCILED / DOCUMENTED.
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
+- Test: `tests/lifecycle-state-authority.test.js` — VERIFIED / RECONCILED / DOCUMENTED.
+- Security/Regression: `docs/STEP_611_SECURITY_REGRESSION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- CI: `docs/STEP_611_CI_EVIDENCE_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Review: `docs/STEP_611_REVIEW_CHECKPOINT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Verification: `docs/STEP_611_POST_MERGE_VERIFICATION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
 - Reconciliation: `docs/STEP_611_RECONCILIATION_V0_1.md`.
 - Final documentation: `docs/STEP_611_FINAL_DOCUMENTATION_V0_1.md`.
 - Full traceability chain is recorded from Contract through Verification.
