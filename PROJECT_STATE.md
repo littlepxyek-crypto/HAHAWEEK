@@ -12,7 +12,7 @@
 - No raw/canonical mutation, cursor advancement, V4 authority change, new database authority, actor inference, trading/execution authority, or automated action introduced.
 - Exact merge-commit workflow lookups returned zero runs; exact-merge CI GREEN is not claimed.
 - **STEP 610 Security/Regression final state: VERIFIED / RECONCILED / DOCUMENTED.**
-- **Next STEP: STEP 610 CI / Review / Merge / Post-Merge Verification / Reconciliation / Documentation closure, if required by repository sequencing.**
+- **Next STEP: No new numbered STEP is established in the repository yet. Establish the next STEP through a new Contract before implementation; do not infer or renumber it.**
 
 ## STEP 610 — Domain Measurement Evidence Boundaries — VERIFIED / RECONCILED / DOCUMENTED
 
