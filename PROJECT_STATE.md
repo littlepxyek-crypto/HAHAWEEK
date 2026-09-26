@@ -1,6 +1,9 @@
 ## STEP 611 — Lifecycle State Authority & Next-Step Boundary — TEST — IN PROGRESS
 
-- Contract, Analysis, Design, and Code are VERIFIED / RECONCILED / DOCUMENTED.
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
 - Test: `tests/lifecycle-state-authority.test.js`.
 - Test scope covers current-state parsing, historical stale metadata isolation, missing/conflicting authorization, deterministic errors, and input immutability.
 - No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changes.
