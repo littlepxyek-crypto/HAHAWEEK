@@ -30,19 +30,19 @@ test('price impact observation is deterministic across processing time', () => {
 });
 
 test('slippage requires independent quote and computes exact result', () => {
-  const input = { ...base, quote_reference: { price: { numerator: '1', denominator: '1' }, execution_identity: 'quote:1' } };
+  const input = { ...base, quote_reference: { price: { numerator: '1', denominator: '1' }, evidence_ref: 'quote-1', execution_identity: 'quote:1' } };
   const a = createSlippageObservation(input);
   assert.deepEqual(a.payload.result, { numerator: '1', denominator: '2' });
 });
 
 test('slippage rejects quote derived from same execution identity', () => {
-  assert.throws(() => createSlippageObservation({ ...base, execution_identity: 'exec:1', quote_reference: { price: { numerator: '1', denominator: '1' }, execution_identity: 'exec:1' } }), /quote_execution_NOT_INDEPENDENT/);
+  assert.throws(() => createSlippageObservation({ ...base, execution_identity: 'exec:1', quote_reference: { price: { numerator: '1', denominator: '1' }, evidence_ref: 'quote-1', execution_identity: 'exec:1' } }), /quote_execution_NOT_INDEPENDENT/);
 });
 
 test('zero reference, zero execution, invalid direction and unsupported pool fail closed', () => {
   assert.throws(() => calculateImpact({ numerator: '0', denominator: '1' }, { numerator: '1', denominator: '1' }, 'price_impact'), /REFERENCE_ZERO/);
   assert.throws(() => executionPrice({ ...base, amount0: '0' }), /EXECUTION_AMOUNT_ZERO/);
-  assert.throws(() => referencePrice({ ...base, direction: 'BAD' }), /reference_price/);
+  assert.throws(() => referencePrice({ ...base, direction: 'BAD' }), /direction/);
   assert.throws(() => referencePrice({ ...base, baseAssetRef: '0x' + '33'.repeat(20) }), /base_asset_ref_NOT_IN_POOL/);
 });
 
