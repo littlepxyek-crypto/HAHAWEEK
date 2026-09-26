@@ -1,20 +1,13 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — VERIFICATION — IN PROGRESS
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — RECONCILIATION — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
-- Test: `tests/lifecycle-state-authority.test.js` — VERIFIED / RECONCILED / DOCUMENTED.
-- Security/Regression: `docs/STEP_611_SECURITY_REGRESSION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- CI: `docs/STEP_611_CI_EVIDENCE_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Review: `docs/STEP_611_REVIEW_CHECKPOINT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Verification: `docs/STEP_611_POST_MERGE_VERIFICATION_V0_1.md`.
-- Review PR #527 merged as `d8ac98b3644a5aaf080b5dc9853966581004fe58`; Review-head Tests #1808 and Security/Regression #3495 SUCCESS.
-- Exact merge-commit CI is not claimed unless a workflow run exists.
-- No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changes.
+- Contract, Analysis, Design, Code, Test, Security/Regression, CI, Review, and Verification are VERIFIED / RECONCILED / DOCUMENTED.
+- Reconciliation: `docs/STEP_611_RECONCILIATION_V0_1.md`.
+- Full traceability chain is recorded from Contract through Verification.
+- Final CI closure uses terminal SUCCESS evidence from the corrected branches.
 - Historical STEP 610 artifacts remain immutable.
-- **Current authorized phase: STEP 611 Verification.**
-- **Next authorized phase after Verification: STEP 611 Reconciliation.**
+- No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changed.
+- **Current authorized phase: STEP 611 Reconciliation.**
+- **Next authorized phase after Reconciliation: STEP 611 Documentation.**
 
 ## STEP 610 — Security/Regression — VERIFIED / RECONCILED / DOCUMENTED
 
