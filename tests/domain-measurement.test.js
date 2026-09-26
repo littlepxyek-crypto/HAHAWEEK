@@ -153,7 +153,16 @@ test('contract transparency requires evidence for every declared property', () =
       ownership_control_state: 'DIRECTLY_EVIDENCED',
       deployment_transaction_ref: 'tx:deploy',
       measurement_version: '1',
-      property_evidence: { contract_ref: ['missing'] },
+      property_evidence: {
+        contract_ref: ['missing'],
+        deployer_ref: ['e1'],
+        source_verification_state: ['e1'],
+        bytecode_ref: ['e1'],
+        proxy_state: ['e1'],
+        upgradeability_state: ['e1'],
+        ownership_control_state: ['e1'],
+        deployment_transaction_ref: ['e1'],
+      },
     },
   })), /payload_evidence_ref_UNRESOLVED/);
 });
