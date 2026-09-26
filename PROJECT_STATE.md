@@ -1,25 +1,18 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — VERIFIED / RECONCILED
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract PR #515 merged as `bf48cff435bbc0456f327eaeb374174efe40a877`.
 - Contract-head CI: HAHAWEEK Tests #1730 SUCCESS; Security and Regression #3417 SUCCESS.
-- Post-merge exact-commit workflow lookup returned no runs; exact-merge CI GREEN is not claimed.
-- Reconciliation: `docs/STEP_611_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/STEP_611_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #516 merged as `61b9914fc315ec57c7bd2a7a8a76b36e75d1d60f`.
+- Reconciliation CI: HAHAWEEK Tests #1735 SUCCESS; Security and Regression #3422 SUCCESS.
+- Exact merge-commit workflow lookups for PR #515 and PR #516 returned no runs; exact-merge CI GREEN is not claimed.
+- Final documentation: `docs/STEP_611_CONTRACT_FINAL_DOCUMENTATION_V0_1.md`.
 - Scope is limited to lifecycle state authority, state-consistency gating, explicit Next STEP authorization, and sequencing-deadlock prevention.
 - Historical STEP 610 artifacts remain immutable.
 - No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changed.
-- **STEP 611 Contract state: VERIFIED / RECONCILED.**
-- **Next authorized phase: STEP 611 Documentation.**
-
-- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`.
-- Scope: repository-grounded lifecycle state authority, state-consistency gate, explicit Next STEP authorization, and sequencing-deadlock prevention.
-- This is a lifecycle/governance boundary only; no new domain/product capability is selected or implemented.
-- Historical STEP 610 documents remain immutable; stale lifecycle text does not override current `PROJECT_STATE.md`.
-- No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changes are authorized.
-- Operator Acceptance remains repository-grounded; no undocumented operator command is introduced.
-- Contract verification, reconciliation, and the remaining lifecycle phases are pending.
-- **Current authorized phase: STEP 611 Contract.**
-- **Next authorized phase after Contract acceptance: STEP 611 Analysis.**
+- Operator Acceptance remains repository-grounded.
+- **STEP 611 Contract state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next authorized phase: STEP 611 Analysis.**
 
 ## STEP 610 — Security/Regression — VERIFIED / RECONCILED / DOCUMENTED
 
