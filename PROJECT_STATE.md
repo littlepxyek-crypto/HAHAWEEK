@@ -1554,3 +1554,13 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - PR #498 CI: Tests #1648 SUCCESS; Security/Regression #3335 SUCCESS.
 - PR #499 CI: Tests #1652 SUCCESS; Security/Regression #3339 SUCCESS.
 - Design remains the next authorized lifecycle stage; no implementation was introduced by Analysis.
+
+
+## STEP 610 Design — Final Documentation
+
+- Final state: VERIFIED / RECONCILED / DOCUMENTED.
+- Design merge: `7ed7a3507073c5a28a91c6b3e325c64fe2726f09`.
+- Reconciliation merge: `069f0cc8643c53078c649ce3d75f8cf0b90daac9`.
+- PR #501 CI: Tests #1662 SUCCESS; Security/Regression #3349 SUCCESS.
+- PR #502 CI: Tests #1666 SUCCESS; Security/Regression #3353 SUCCESS.
+- STEP 610 Code is the next authorized lifecycle stage.
