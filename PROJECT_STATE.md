@@ -1,15 +1,12 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — DESIGN — VERIFIED / RECONCILED / DOCUMENTED
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — CODE — IN PROGRESS
 
-- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`; VERIFIED / RECONCILED / DOCUMENTED.
-- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md`; VERIFIED / RECONCILED / DOCUMENTED.
-- Design: `docs/STEP_611_DESIGN_V0_1.md`; PR #521 merged as `f4cc9d7be9cd70236e2ed4b4b0ecfaf80475729c`.
-- Design-head CI: HAHAWEEK Tests #1760 SUCCESS; Security and Regression #3447 SUCCESS.
-- Reconciliation: `docs/STEP_611_DESIGN_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
-- Final documentation: `docs/STEP_611_DESIGN_FINAL_DOCUMENTATION_V0_1.md`.
-- Exact merge-commit workflow lookup for PR #521 returned no runs; exact-merge CI GREEN is not claimed.
-- Scope: deterministic read-only lifecycle-state validator with explicit historical boundary and fail-closed conflict detection.
-- **STEP 611 Design state: VERIFIED / RECONCILED / DOCUMENTED.**
-- **Next authorized phase: STEP 611 Code.**
+- Contract, Analysis, and Design are VERIFIED / RECONCILED / DOCUMENTED.
+- Code: `src/core/lifecycle-state-authority.js`.
+- Implementation is a pure deterministic lifecycle-state validator; it does not mutate repository/runtime state.
+- No raw/canonical evidence, cursor, V4 authority, production domain semantics, or Surveillance authority changes.
+- Historical STEP 610 artifacts remain immutable.
+- **Current authorized phase: STEP 611 Code.**
+- **Next authorized phase after Code acceptance: STEP 611 Test.**
 
 ## STEP 610 — Security/Regression — VERIFIED / RECONCILED / DOCUMENTED
 
