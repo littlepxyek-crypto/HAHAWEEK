@@ -258,6 +258,7 @@ async function main() {
      * H-01 may reject this write when legacy persistence is frozen.
      */
     const currentState = loadState();
+    readOperationalState(currentState);
 
     saveState({
       ...currentState,
