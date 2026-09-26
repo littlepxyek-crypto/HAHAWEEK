@@ -5,6 +5,7 @@ const { loadState, saveState } = require('./state');
 const {
   classifyFailure,
   createFailureState,
+  readOperationalState,
 } = require('./operational-state');
 
 function persistOperationalFailure(error, options = {}) {
@@ -18,9 +19,21 @@ function persistOperationalFailure(error, options = {}) {
     writerFence.acquire();
 
     const previous = loadState({ stateFile: options.stateFile });
+    let baseState = previous;
+
+    try {
+      readOperationalState(previous);
+    } catch {
+      baseState = {
+        version: previous.version,
+        lastProcessedBlock: previous.lastProcessedBlock,
+        status: 'FAILED',
+      };
+    }
+
     const failure = classifyFailure(error);
     const next = createFailureState({
-      ...previous,
+      ...baseState,
       status: 'FAILED',
       lastError:
         error instanceof Error
