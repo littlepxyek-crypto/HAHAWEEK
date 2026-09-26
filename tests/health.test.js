@@ -17,25 +17,40 @@ test('runHealth returns RPC status and reports HEALTH OK', async () => {
 
   const result = await runHealth(
     async () => fakeStatus,
-    (message) => calls.push(message)
+    (message) => calls.push(message),
+    () => ({
+      operationalState: 'HEALTHY',
+      lastProcessedBlock: 123456,
+      lastVerifiedCursor: 123456,
+      failure: null,
+      recovery: { state: 'VERIFIED', required: false },
+    })
   );
 
-  assert.deepEqual(result, fakeStatus);
+  assert.deepEqual(result, {
+    ...fakeStatus,
+    operationalState: 'HEALTHY',
+  });
 
   assert.deepEqual(calls, [
     'RPC: https://example.invalid/rpc',
     'Expected Chain ID: 4663',
     'Actual Chain ID: 4663',
     'Current Block: 123456',
+    'Operational state: HEALTHY',
     'HEALTH: OK',
   ]);
 });
 
 test('runHealth propagates health-check failure', async () => {
   await assert.rejects(
-    () => runHealth(async () => {
-      throw new Error('RPC_UNAVAILABLE');
-    }),
+    () => runHealth(
+      async () => {
+        throw new Error('RPC_UNAVAILABLE');
+      },
+      () => {},
+      () => ({ operationalState: 'HEALTHY' })
+    ),
     {
       message: 'RPC_UNAVAILABLE',
     }

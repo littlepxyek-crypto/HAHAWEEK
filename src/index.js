@@ -258,17 +258,29 @@ async function main() {
      * H-01 may reject this write when legacy persistence is frozen.
      */
     const currentState = loadState();
+    readOperationalState(currentState);
 
     saveState({
       ...currentState,
       status: 'RUNNING',
+      operationalState: 'INITIALIZING',
+      failure: null,
+      recovery: {
+        state: 'NOT_REQUIRED',
+        required: false,
+      },
       lastError: null,
+      lastVerifiedCursor:
+        Number.isInteger(currentState.lastVerifiedCursor)
+          ? currentState.lastVerifiedCursor
+          : currentState.lastProcessedBlock,
     }, { legacyWriteBarrier: engine.legacyWriteBarrier });
 
     const result = await engine.ingestion.runOnce();
 
+    const healthyState = createHealthyState(loadState());
     saveState({
-      ...loadState(),
+      ...healthyState,
       status: 'IDLE',
       lastError: null,
     }, { legacyWriteBarrier: engine.legacyWriteBarrier });
@@ -301,11 +313,27 @@ async function main() {
         ? error.message
         : String(error);
 
-    saveState({
-      ...loadState(),
-      status: 'FAILED',
-      lastError: message,
-    }, { legacyWriteBarrier: engine.legacyWriteBarrier });
+    const failure = classifyFailure(error);
+
+    try {
+      const failureState = createFailureState({
+        ...loadState(),
+        status: 'FAILED',
+        lastError: message,
+      }, failure);
+
+      saveState(
+        failureState,
+        { legacyWriteBarrier: engine.legacyWriteBarrier }
+      );
+    } catch (stateError) {
+      console.error('HAHAWEEK OPERATIONAL STATE: FAILED');
+      console.error(
+        stateError instanceof Error
+          ? stateError.message
+          : String(stateError)
+      );
+    }
 
     throw error;
   } finally {

@@ -1,6 +1,8 @@
 'use strict';
 
 const { spawn } = require('node:child_process');
+const { loadState } = require('./core/state');
+const { readOperationalState, isRetryableFailure } = require('./core/operational-state');
 
 const POLL_INTERVAL_MS =
   Number(process.env.RUNNER_INTERVAL_MS || 5000);
@@ -97,6 +99,23 @@ async function runRunner({
         break;
       }
 
+      let state;
+      try {
+        state = readOperationalState(loadState());
+      } catch (stateError) {
+        output(`RUNNER: operational state unreadable: ${stateError.message}`);
+        output('RUNNER: STOP / FAIL-CLOSED');
+        break;
+      }
+
+      const failure = state.failure;
+      if (!shouldRetryOperationalState(state)) {
+        output(`RUNNER: state=${state.operationalState || 'UNKNOWN'}`);
+        output('RUNNER: failure is non-retryable; STOP / FAIL-CLOSED');
+        break;
+      }
+
+      output(`RUNNER: retryable failure=${failure.failure_class}`);
       output(`RUNNER: retry in ${backoff}ms`);
 
       await sleep(backoff);
@@ -109,6 +128,15 @@ async function runRunner({
   }
 
   output('RUNNER: stopped');
+}
+
+function shouldRetryOperationalState(state) {
+  try {
+    const operational = readOperationalState(state);
+    return isRetryableFailure(operational.failure);
+  } catch {
+    return false;
+  }
 }
 
 function shutdown(signal) {
@@ -139,4 +167,5 @@ if (require.main === module) {
 module.exports = {
   runRunner,
   runCommand,
+  shouldRetryOperationalState,
 };

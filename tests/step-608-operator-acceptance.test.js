@@ -59,14 +59,22 @@ test('health reports successful injected status deterministically', async () => 
     blockNumber: 123,
   };
 
-  const result = await runHealth(async () => status, line => lines.push(line));
+  const result = await runHealth(
+    async () => status,
+    line => lines.push(line),
+    () => ({ operationalState: 'HEALTHY' })
+  );
 
-  assert.deepEqual(result, status);
+  assert.deepEqual(result, {
+    ...status,
+    operationalState: 'HEALTHY',
+  });
   assert.deepEqual(lines, [
     'RPC: test://rpc',
     'Expected Chain ID: 4663',
     'Actual Chain ID: 4663',
     'Current Block: 123',
+    'Operational state: HEALTHY',
     'HEALTH: OK',
   ]);
 });
