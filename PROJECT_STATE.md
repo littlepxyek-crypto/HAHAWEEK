@@ -1,3 +1,16 @@
+## STEP 613 — Failure-Isolated Resilience & Operator Architecture — TEST — VERIFIED / IN PROGRESS
+
+- Contract: `docs/CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE_V0_1.md` — PR #541, merged `4b58ad889991ee803d572b663cbeacd2143a003a`.
+- Analysis: `docs/STEP_613_ANALYSIS_V0_1.md` — PR #542, merged `5e1801138da7c73ecd1aa24716873af54ffd933f`.
+- Design: `docs/STEP_613_DESIGN_V0_1.md` — PR #543, merged `12921a0af21280bd4d1d7323bfe2b859b44f1c6b`.
+- Code: PR #544, merged as `a0fec03db84ded31b0e2214a3510c39fd638b6ef`.
+- Test evidence: `docs/STEP_613_TEST_EVIDENCE_V0_1.md`.
+- Final code head test evidence: HAHAWEEK Tests #1943 SUCCESS; Security and Regression #3640 SUCCESS.
+- Initial test failure was a stale STEP 608 health assertion; fixed in test-only code before final CI success.
+- **Current STEP: 613**
+- **Current phase: TEST — VERIFIED**
+- **Next STEP: Security/Regression for STEP 613 is authorized by the verified Test phase.**
+
 ## STEP 613 — Failure-Isolated Resilience & Operator Architecture — DESIGN — IN PROGRESS / VERIFIED
 
 - Authorization: explicit user authorization received 2026-09-26.
