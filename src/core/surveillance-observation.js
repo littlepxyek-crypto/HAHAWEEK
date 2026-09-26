@@ -19,6 +19,8 @@ const VALIDATION_STATUSES = new Set([
   'UNKNOWN',
   'INCONCLUSIVE',
   'UNVERIFIED',
+  'CLAIMED',
+  'CONFLICTING',
 ]);
 
 function fail(message) {
