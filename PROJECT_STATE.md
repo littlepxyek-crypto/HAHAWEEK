@@ -1,11 +1,12 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — DESIGN — IN PROGRESS
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — DESIGN — VERIFIED / RECONCILED
 
 - Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md`; VERIFIED / RECONCILED / DOCUMENTED.
 - Analysis: `docs/STEP_611_ANALYSIS_V0_1.md`; VERIFIED / RECONCILED / DOCUMENTED.
-- Design: `docs/STEP_611_DESIGN_V0_1.md`.
-- Design scope: deterministic read-only lifecycle-state validator with explicit historical boundary and fail-closed conflict detection.
-- No production domain semantics, raw/canonical evidence, cursor, V4 authority, or Surveillance authority changes.
-- Historical STEP 610 artifacts remain immutable.
+- Design: `docs/STEP_611_DESIGN_V0_1.md`; PR #521 merged as `f4cc9d7be9cd70236e2ed4b4b0ecfaf80475729c`.
+- Design-head CI: HAHAWEEK Tests #1760 SUCCESS; Security and Regression #3447 SUCCESS.
+- Reconciliation: `docs/STEP_611_DESIGN_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Exact merge-commit workflow lookup for PR #521 returned no runs; exact-merge CI GREEN is not claimed.
+- Scope: deterministic read-only lifecycle-state validator with explicit historical boundary and fail-closed conflict detection.
 - **Current authorized phase: STEP 611 Design.**
 - **Next authorized phase after Design acceptance: STEP 611 Code.**
 
