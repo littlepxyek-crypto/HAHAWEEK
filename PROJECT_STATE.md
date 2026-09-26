@@ -1,3 +1,16 @@
+## STEP 613 — Failure-Isolated Resilience & Operator Architecture — DESIGN — IN PROGRESS / VERIFIED
+
+- Authorization: explicit user authorization received 2026-09-26.
+- Contract: `docs/CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE_V0_1.md` — PR #541, merged `4b58ad889991ee803d572b663cbeacd2143a003a`.
+- Analysis: `docs/STEP_613_ANALYSIS_V0_1.md` — PR #542, merged `5e1801138da7c73ecd1aa24716873af54ffd933f`.
+- Design: `docs/STEP_613_DESIGN_V0_1.md` — branch `step-613-resilience-design-2026-09-26`, commit `503520bc68adf71af1efad717ea5e05488da6c16`.
+- Design freezes operational states, failure classes, retry/STOP policy, durable failure/recovery state, operator status projection, recovery state machine, observer isolation, concurrency, reorg/temporal boundaries, and test vectors.
+- No production implementation introduced by Design.
+- Historical STEP 612 and earlier artifacts remain preserved.
+- **Current STEP: 613**
+- **Current phase: DESIGN — VERIFIED**
+- **Next STEP: Code for STEP 613 is authorized by the verified Design.**
+
 ## STEP 613 — Failure-Isolated Resilience & Operator Architecture — ANALYSIS — IN PROGRESS / VERIFIED
 
 - Authorization: explicit user authorization received 2026-09-26 to continue HAHAWEEK through VERIFIED LIVE, subject to the Standing Execution Instruction and mandatory Contract lifecycle.
