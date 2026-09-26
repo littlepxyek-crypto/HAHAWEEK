@@ -13,15 +13,16 @@ const {
 
 const ROOT = path.resolve(__dirname, '..');
 
-test('current PROJECT_STATE is valid and exposes STEP 611 Test authority', () => {
+test('current PROJECT_STATE is valid and exposes STEP 612 Analysis authority', () => {
   const source = fs.readFileSync(path.join(ROOT, 'PROJECT_STATE.md'), 'utf8');
   const result = validateLifecycleState(source);
 
   assert.equal(result.valid, true);
-  assert.equal(result.current_step, 611);
+  assert.equal(result.current_step, 612);
+  assert.equal(result.phase, 'CONTRACT');
   assert.ok(PHASES.includes(result.phase));
-  assert.match(result.contract, /STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT/);
-  assert.ok(result.next_step === null || /^STEP 611 /.test(result.next_step));
+  assert.match(result.contract, /CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE/);
+  assert.equal(result.next_step, 'Analysis for STEP 612 is authorized by the merged Contract');
 });
 
 test('stale historical next-step text cannot override current state', () => {
@@ -59,7 +60,7 @@ test('conflicting current next-step declarations fail closed', () => {
     '',
     '- Contract: docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md.',
     '- **Next authorized phase: STEP 611 Test.**',
-    '- **Next authorized phase: STEP 612 Contract.**',
+    '- **Next STEP: Analysis for STEP 612 is authorized by the merged Contract.**',
   ].join('\n'));
 
   assert.equal(result.valid, false);

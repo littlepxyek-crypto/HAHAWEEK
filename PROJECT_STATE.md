@@ -1,3 +1,15 @@
+## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — CONTRACT — VERIFIED / RECONCILED
+
+- Authorization: explicit user authorization received 2026-09-26.
+- Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge commit `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
+- Contract reconciliation: `docs/STEP_612_CONTRACT_RECONCILIATION_V0_1.md` — current state transition evidence.
+- Contract scope: deterministic, evidence-linked, versioned derived price-impact/slippage measurement.
+- Protected boundaries: raw/canonical evidence, historical artifacts, cursor, V4 authority, production/trading authority, and Surveillance authority.
+- Contract phase is verified and reconciled; no Analysis/Design/Code/Test completion is claimed.
+- **Current STEP: 612**
+- **Current phase: ANALYSIS — NEXT AUTHORIZED PHASE**
+- **Next STEP: Analysis for STEP 612 is authorized by the merged Contract.**
+
 ## STEP 611 — Lifecycle State Authority & Next-Step Boundary — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
