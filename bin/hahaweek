@@ -48,6 +48,8 @@ status() {
   else
     echo "Git: NOT AVAILABLE"
   fi
+
+  node "$ROOT/src/status.js" || true
 }
 
 test_all() {
