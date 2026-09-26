@@ -111,7 +111,17 @@ function validateContractTransparency(payload) {
     string(payload[field], field);
   }
   object(payload.property_evidence, 'property_evidence');
-  for (const key of Object.keys(payload.property_evidence)) {
+  const requiredProperties = [
+    'contract_ref',
+    'deployer_ref',
+    'source_verification_state',
+    'bytecode_ref',
+    'proxy_state',
+    'upgradeability_state',
+    'ownership_control_state',
+    'deployment_transaction_ref',
+  ];
+  for (const key of requiredProperties) {
     if (!Array.isArray(payload.property_evidence[key]) || payload.property_evidence[key].length === 0) {
       fail('property_evidence_' + key + '_REQUIRED');
     }
