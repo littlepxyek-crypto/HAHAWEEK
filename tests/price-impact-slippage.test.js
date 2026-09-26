@@ -42,7 +42,7 @@ test('slippage rejects quote derived from same execution identity', () => {
 test('zero reference, zero execution, invalid direction and unsupported pool fail closed', () => {
   assert.throws(() => calculateImpact({ numerator: '0', denominator: '1' }, { numerator: '1', denominator: '1' }, 'price_impact'), /REFERENCE_ZERO/);
   assert.throws(() => executionPrice({ ...base, amount0: '0' }), /EXECUTION_AMOUNT_ZERO/);
-  assert.throws(() => referencePrice({ ...base, direction: 'BAD' }), /direction/);
+  assert.throws(() => createPriceImpactObservation({ ...base, direction: 'BAD' }), /direction/);
   assert.throws(() => referencePrice({ ...base, baseAssetRef: '0x' + '33'.repeat(20) }), /base_asset_ref_NOT_IN_POOL/);
 });
 
