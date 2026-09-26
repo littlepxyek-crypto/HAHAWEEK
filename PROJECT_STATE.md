@@ -1,12 +1,15 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — CODE — IN PROGRESS
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — TEST — IN PROGRESS
 
-- Contract, Analysis, and Design are VERIFIED / RECONCILED / DOCUMENTED.
-- Code: `src/core/lifecycle-state-authority.js`.
-- Implementation is a pure deterministic lifecycle-state validator; it does not mutate repository/runtime state.
-- No raw/canonical evidence, cursor, V4 authority, production domain semantics, or Surveillance authority changes.
+- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
+- Test: `tests/lifecycle-state-authority.test.js`.
+- Test scope covers current-state parsing, historical stale metadata isolation, missing/conflicting authorization, deterministic errors, and input immutability.
+- No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changes.
 - Historical STEP 610 artifacts remain immutable.
-- **Current authorized phase: STEP 611 Code.**
-- **Next authorized phase after Code acceptance: STEP 611 Test.**
+- **Current authorized phase: STEP 611 Test.**
+- **Next authorized phase after Test acceptance: STEP 611 Security/Regression.**
 
 ## STEP 610 — Security/Regression — VERIFIED / RECONCILED / DOCUMENTED
 
