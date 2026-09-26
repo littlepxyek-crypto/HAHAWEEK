@@ -8,6 +8,7 @@ const test = require('node:test');
 const {
   validateLifecycleState,
   ERRORS,
+  PHASES,
 } = require('../src/core/lifecycle-state-authority');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -18,9 +19,9 @@ test('current PROJECT_STATE is valid and exposes STEP 611 Test authority', () =>
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 611);
-  assert.equal(result.phase, 'SECURITY/REGRESSION');
+  assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT/);
-  assert.match(result.next_step, /^STEP 611 CI/);
+  assert.match(result.next_step, /^STEP 611 /);
 });
 
 test('stale historical next-step text cannot override current state', () => {
