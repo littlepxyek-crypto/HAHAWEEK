@@ -107,6 +107,10 @@ function createMeasurement(input) {
   ensureDirection(input.direction);
   admittedEvidence(input);
   if (!MEASUREMENT_KINDS.has(input.measurement_kind)) fail('measurement_kind_INVALID');
+  if (input.measurement_kind === 'PRICE_IMPACT') {
+    nonEmpty(input.pre_trade_reference_evidence_ref, 'pre_trade_reference_evidence_ref');
+    if (!(input.input_evidence_refs || []).includes(input.pre_trade_reference_evidence_ref)) fail('pre_trade_reference_evidence_NOT_BOUND');
+  }
   const reference = referencePrice(input);
   const execution = executionPrice(input);
   const result = calculateImpact(reference, execution, input.measurement_kind === 'PRICE_IMPACT' ? 'price_impact' : 'slippage');
