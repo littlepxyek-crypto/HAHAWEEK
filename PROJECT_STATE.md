@@ -1,13 +1,14 @@
-## STEP 611 — Lifecycle State Authority & Next-Step Boundary — RECONCILIATION — VERIFIED / RECONCILED
+## STEP 611 — Lifecycle State Authority & Next-Step Boundary — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract, Analysis, Design, Code, Test, Security/Regression, CI, Review, and Verification are VERIFIED / RECONCILED / DOCUMENTED.
 - Reconciliation: `docs/STEP_611_RECONCILIATION_V0_1.md`.
+- Final documentation: `docs/STEP_611_FINAL_DOCUMENTATION_V0_1.md`.
 - Full traceability chain is recorded from Contract through Verification.
 - Final CI closure uses terminal SUCCESS evidence from the corrected branches.
 - Historical STEP 610 artifacts remain immutable.
 - No raw/canonical evidence, cursor, V4 authority, production semantics, or Surveillance authority changed.
-- **Current authorized phase: STEP 611 Reconciliation.**
-- **Next authorized phase after Reconciliation: STEP 611 Documentation.**
+- **STEP 611 state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next STEP: No new numbered STEP is established; establish the next STEP through a new Contract.**
 
 ## STEP 610 — Security/Regression — VERIFIED / RECONCILED / DOCUMENTED
 
