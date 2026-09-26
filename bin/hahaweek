@@ -49,7 +49,7 @@ status() {
     echo "Git: NOT AVAILABLE"
   fi
 
-  node "$ROOT/src/status.js" || true
+  node "$ROOT/src/status.js"
 }
 
 test_all() {
