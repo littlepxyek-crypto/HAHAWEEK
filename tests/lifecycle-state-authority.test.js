@@ -46,7 +46,6 @@ test('missing contract fails closed', () => {
   const result = validateLifecycleState([
     '## STEP 611 — Lifecycle State Authority & Next-Step Boundary — CODE — IN PROGRESS',
     '',
-    '- Contract: docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md.',
     '- **Next authorized phase: STEP 611 Test.**',
   ].join('\n'));
 
