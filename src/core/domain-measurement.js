@@ -121,6 +121,7 @@ function validateContractTransparency(payload) {
 
 function assertPayloadEvidenceRefs(payload, allowedEvidence) {
   const refs = payload.input_evidence_refs || Object.values(payload.property_evidence || {}).flat();
+  if (payload.conversion_ref) refs.push(payload.conversion_ref);
   for (const ref of refs) if (!allowedEvidence.has(ref)) fail('payload_evidence_ref_UNRESOLVED');
 }
 
