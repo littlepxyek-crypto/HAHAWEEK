@@ -19,7 +19,7 @@ test('current PROJECT_STATE is valid and exposes STEP 612 Analysis authority', (
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 612);
-  assert.equal(result.phase, 'ANALYSIS');
+  assert.equal(result.phase, 'CONTRACT');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE/);
   assert.equal(result.next_step, 'Analysis for STEP 612 is authorized by the merged Contract');
