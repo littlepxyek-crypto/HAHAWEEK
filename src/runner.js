@@ -109,7 +109,7 @@ async function runRunner({
       }
 
       const failure = state.failure;
-      if (!isRetryableFailure(failure)) {
+      if (!shouldRetryOperationalState(state)) {
         output(`RUNNER: state=${state.operationalState || 'UNKNOWN'}`);
         output('RUNNER: failure is non-retryable; STOP / FAIL-CLOSED');
         break;
@@ -128,6 +128,15 @@ async function runRunner({
   }
 
   output('RUNNER: stopped');
+}
+
+function shouldRetryOperationalState(state) {
+  try {
+    const operational = readOperationalState(state);
+    return isRetryableFailure(operational.failure);
+  } catch {
+    return false;
+  }
 }
 
 function shutdown(signal) {
@@ -158,4 +167,5 @@ if (require.main === module) {
 module.exports = {
   runRunner,
   runCommand,
+  shouldRetryOperationalState,
 };
