@@ -1,5 +1,6 @@
 ## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — ANALYSIS — VERIFIED / RECONCILED
 
+- Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge commit `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
 - Analysis: `docs/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge commit `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
 - Analysis freezes the supported PoolManager concentrated-liquidity event model, quote-per-base convention, explicit base/quote direction, required pre-trade reference evidence, independent quote evidence for slippage, deterministic formulas, precision requirements, evidence binding, identity inputs, temporal/reorg behavior, and conflict handling.
 - No production implementation was introduced by Analysis.
