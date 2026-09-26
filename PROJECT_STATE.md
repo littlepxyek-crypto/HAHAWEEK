@@ -1,3 +1,17 @@
+## STEP 614 — Live-Readiness / Actual Operator Runtime — CI — VERIFIED / RECONCILED / DOCUMENTED
+
+- CI evidence: `docs/STEP_614_CI_EVIDENCE_V0_1.md`.
+- Security/Regression PR #565 merged `283e6d4683a542400966a01c3b5b66751685f246`.
+- Exact merge-commit Tests: SUCCESS.
+- Exact merge-commit Security/Regression: SUCCESS.
+- Exact merge-commit CodeQL Actions: SUCCESS.
+- Exact merge-commit CodeQL JavaScript/TypeScript: SUCCESS.
+- Actual operator runtime remains UNVERIFIED.
+- **Current STEP: 614**
+- **Current phase: CI — VERIFIED / RECONCILED / DOCUMENTED**
+- **Next authorized phase: STEP 614 REVIEW.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED.**
+
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — SECURITY/REGRESSION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
