@@ -1,3 +1,24 @@
+## STEP 610 — Domain Measurement Evidence Boundaries — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/STEP_610_DOMAIN_MEASUREMENT_EVIDENCE_BOUNDARIES_CONTRACT_V0_1.md`.
+- Contract commit: `745bef8d553a304ad6decc646f65299afc0850a4`.
+- Contract PR #494 merged as `f4dd33f159788bb4c1bfbfddb0e18457d7945a4a`.
+- PR-head Tests #1631 / run `36205096517` SUCCESS; Security and Regression #3318 / run `36205096483` SUCCESS.
+- Contract reconciliation: `docs/STEP_610_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #495 merged as `304fc2d9486b1d1aff8eca7e00d5bfa794805984`.
+- Reconciliation PR-head Tests #1635 / run `36205188909` SUCCESS; Security and Regression #3322 / run `36205188729` SUCCESS.
+- Exact merge-commit workflow lookups for the Contract merge and reconciliation merge returned zero workflow runs; exact-merge CI GREEN is not claimed.
+- Final documentation: `docs/STEP_610_FINAL_DOCUMENTATION_V0_1.md`.
+- Scope covers liquidity/depth, transaction cost, contract/deployer transparency, and promotional provenance.
+- All measurements remain derived, evidence-linked, versioned observations; raw/canonical evidence, cursor authority, V4 authority, and trading/execution authority remain unchanged.
+- ADDRESS != ACTOR, fail-closed temporal ordering, explicit uncertainty, provenance binding, deterministic versioning, and non-latest-wins conflict handling remain mandatory.
+- Reorg/recovery creates new versioned evaluation rather than historical rewriting; UNKNOWN/INCONCLUSIVE/UNVERIFIED remain explicit.
+- No production implementation is authorized by the Contract alone; Analysis and Design remain mandatory.
+- Operator Acceptance remains repository-grounded; no undocumented command or recovery procedure was introduced.
+- All prior STEP 609 historical artifacts remain preserved.
+- **STEP 610 Contract final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next STEP: STEP 610 Analysis — fresh repository inspection required before Analysis.**
+
 ## STEP 609 — Surveillance Observation Boundary — VERIFIED / RECONCILED / DOCUMENTED
 
 - Final documentation: `docs/STEP_609_FINAL_DOCUMENTATION_V0_1.md`.
