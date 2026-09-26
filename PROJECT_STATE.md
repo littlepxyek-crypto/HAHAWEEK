@@ -1,3 +1,15 @@
+## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — DESIGN — VERIFIED / RECONCILED
+
+- Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530.
+- Analysis: `docs/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge commit `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
+- Design: `docs/STEP_612_DESIGN_V0_1.md` — merged PR #534, merge commit `5d88797827b5000b66f5d5f06ace4c8eedec17da`.
+- Design freezes exact rational representation, schema, direction, reference and execution price calculations, quote comparability, validation mapping, evidence binding, deterministic identity inputs, reorg/version behavior, and deterministic test-vector requirements.
+- No production implementation is included in Design.
+- Historical STEP 610 and STEP 611 artifacts remain preserved.
+- Raw/canonical evidence, acquisition cursor, V4 authority, production/trading authority, and Surveillance authority remain unchanged.
+- **Current STEP: 612**
+- **Current phase: CODE — NEXT AUTHORIZED PHASE**
+- **Next STEP: Code for STEP 612 is authorized by the verified Design.**
 ## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — ANALYSIS — VERIFIED / RECONCILED
 
 - Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge commit `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
