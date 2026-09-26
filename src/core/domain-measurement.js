@@ -1,6 +1,5 @@
 'use strict';
 
-const crypto = require('node:crypto');
 const {
   createSurveillanceObservation,
 } = require('./surveillance-observation');
