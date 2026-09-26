@@ -1,3 +1,19 @@
+## STEP 610 — Security/Regression — VERIFIED / RECONCILED / DOCUMENTED
+
+- Security/Regression: PR #510 merged as `3a9f4ba4bbf267bfa5710881d0052192fa8da5e6`.
+- Final Security/Regression CI: HAHAWEEK Tests #1711 / run `36210907280` SUCCESS; Security and Regression #3398 / run `36210907233` SUCCESS.
+- Security finding: contract/deployer transparency validation could omit required property-evidence entries.
+- Root cause: implementation validated only supplied property-evidence keys.
+- Fix: all eight frozen transparency properties now require non-empty evidence arrays.
+- Existing regression fixture was updated to preserve the intended unresolved-reference assertion.
+- Reconciliation: `docs/STEP_610_SECURITY_REGRESSION_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #511 merged as `403eb5cbee3cb3ba4fa873e18430deee40b6eb28`.
+- Reconciliation CI: HAHAWEEK Tests #1715 / run `36210962987` SUCCESS; Security and Regression #3402 / run `36210963012` SUCCESS.
+- Final documentation: `docs/STEP_610_SECURITY_REGRESSION_FINAL_DOCUMENTATION_V0_1.md`.
+- No raw/canonical mutation, cursor advancement, V4 authority change, new database authority, actor inference, trading/execution authority, or automated action introduced.
+- Exact merge-commit workflow lookups returned zero runs; exact-merge CI GREEN is not claimed.
+- **STEP 610 Security/Regression final state: VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next STEP: STEP 610 CI / Review / Merge / Post-Merge Verification / Reconciliation / Documentation closure, if required by repository sequencing.**
+
 ## STEP 610 — Domain Measurement Evidence Boundaries — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/STEP_610_DOMAIN_MEASUREMENT_EVIDENCE_BOUNDARIES_CONTRACT_V0_1.md`.
