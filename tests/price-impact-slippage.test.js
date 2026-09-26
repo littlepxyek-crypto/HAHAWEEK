@@ -30,13 +30,13 @@ test('price impact observation is deterministic across processing time', () => {
 });
 
 test('slippage requires independent quote and computes exact result', () => {
-  const input = { ...base, quote_reference: { price: { numerator: '1', denominator: '1' }, evidence_ref: 'quote-1', execution_identity: 'quote:1' } };
+  const input = { ...base, input_evidence_refs: [...base.input_evidence_refs, 'quote-1'], quote_reference: { price: { numerator: '1', denominator: '1' }, evidence_ref: 'quote-1', execution_identity: 'quote:1' } };
   const a = createSlippageObservation(input);
   assert.deepEqual(a.payload.result, { numerator: '1', denominator: '2' });
 });
 
 test('slippage rejects quote derived from same execution identity', () => {
-  assert.throws(() => createSlippageObservation({ ...base, execution_identity: 'exec:1', quote_reference: { price: { numerator: '1', denominator: '1' }, evidence_ref: 'quote-1', execution_identity: 'exec:1' } }), /quote_execution_NOT_INDEPENDENT/);
+  assert.throws(() => createSlippageObservation({ ...base, input_evidence_refs: [...base.input_evidence_refs, 'quote-1'], execution_identity: 'exec:1', quote_reference: { price: { numerator: '1', denominator: '1' }, evidence_ref: 'quote-1', execution_identity: 'exec:1' } }), /quote_execution_NOT_INDEPENDENT/);
 });
 
 test('zero reference, zero execution, invalid direction and unsupported pool fail closed', () => {
