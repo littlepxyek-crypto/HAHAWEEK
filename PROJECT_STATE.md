@@ -1,5 +1,6 @@
 ## STEP 614 — Writer-Fence Watchdog Contention — CODE — IN PROGRESS
 
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Fresh operator runtime on main `4273964106d57e8276b3273f1f48959a5330dc49` reproduced `WRITER_FENCE_BUSY` while processing `64988757-64988766`.
 - Immediate read-only post-failure evidence showed no HAHAWEEK/Node process, no remaining `data/writer-fence-state.json.lock`, and durable fence state `ownerId=NONE`, `fence=56`, `expiresAt=0`.
 - Repository analysis identified self-contention: the watchdog worker and the main-thread timer/batch renewal paths can concurrently acquire the same exclusive fence lock.
