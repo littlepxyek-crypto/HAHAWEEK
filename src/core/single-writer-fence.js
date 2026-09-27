@@ -271,7 +271,18 @@ function createWriterFence(options = {}) {
     if (!watchdog) return;
     const current = watchdog;
     watchdog = null;
+
+    const exited = new Promise(resolve => {
+      current.worker.once('exit', resolve);
+    });
+
     current.worker.postMessage({ type: 'stop' });
+
+    await Promise.race([
+      exited,
+      new Promise(resolve => setTimeout(resolve, 1000)),
+    ]);
+
     await current.worker.terminate();
   }
 

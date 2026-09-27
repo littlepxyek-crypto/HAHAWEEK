@@ -88,6 +88,7 @@ class IngestionEngine {
     this.running = true;
 
     let heartbeat = null;
+    let watchdogStarted = false;
     let renewalError = null;
     const startWriterFenceHeartbeat = () => {
       if (!this.writerFence || typeof this.writerFence.renew !== 'function') return;
@@ -105,8 +106,11 @@ class IngestionEngine {
       assertWriterFenceHeartbeat();
       if (this.writerFence && typeof this.writerFence.startWatchdog === 'function') {
         await this.writerFence.startWatchdog();
+        watchdogStarted = true;
       }
-      startWriterFenceHeartbeat();
+      if (!watchdogStarted) {
+        startWriterFenceHeartbeat();
+      }
       const latestBlock = await rpcCall(
         () => this.provider.getBlockNumber()
       );
@@ -193,13 +197,12 @@ class IngestionEngine {
           );
 
           /*
-           * Renew at the batch boundary as an explicit lease guard.
-           * The timer heartbeat remains active during asynchronous work;
-           * this renewal also protects the transition between asynchronous
-           * phases and synchronous database/cryptographic work.
+           * Without a watchdog, renew at the batch boundary as an explicit
+           * lease guard. When the watchdog is active it is the sole renewal
+           * mechanism, so the main thread must not contend for the lock.
            */
           assertWriterFenceHeartbeat();
-          if (this.writerFence && typeof this.writerFence.renew === 'function') {
+          if (!watchdogStarted && this.writerFence && typeof this.writerFence.renew === 'function') {
             this.writerFence.renew();
           }
           assertWriterFenceHeartbeat();
@@ -214,11 +217,10 @@ class IngestionEngine {
           assertWriterFenceHeartbeat();
 
           /*
-           * Batch completed successfully.
-           * Renew again before authority validation so authority work
-           * starts with a fresh writer-fence lease.
+           * Without a watchdog, renew again before authority validation so
+           * authority work starts with a fresh writer-fence lease.
            */
-          if (this.writerFence && typeof this.writerFence.renew === 'function') {
+          if (!watchdogStarted && this.writerFence && typeof this.writerFence.renew === 'function') {
             this.writerFence.renew();
           }
           assertWriterFenceHeartbeat();
