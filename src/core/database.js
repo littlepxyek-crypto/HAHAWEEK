@@ -425,6 +425,89 @@ function createBaseSchema(db) {
   ].join('\n'));
 }
 
+function migrateV1ToV3(db) {
+  db.run('BEGIN');
+  let committed = false;
+  try {
+    assertRequiredBaseSchemaV1(db);
+
+    const rawColumns = db.exec('PRAGMA table_info(raw_events)')[0]?.values ?? [];
+    const rawColumnNames = new Set(rawColumns.map(row => row[1]));
+
+    if (!rawColumnNames.has('block_hash')) {
+      db.run('ALTER TABLE raw_events ADD COLUMN block_hash TEXT');
+    }
+
+    if (!rawColumnNames.has('transaction_index')) {
+      db.run('ALTER TABLE raw_events ADD COLUMN transaction_index INTEGER');
+    }
+
+    if (!hasTable(db, 'canonical_evidence')) {
+      db.run([
+        'CREATE TABLE canonical_evidence (',
+        '  evidence_id TEXT PRIMARY KEY,',
+        '  identity_schema_version TEXT NOT NULL,',
+        '  identity_hash TEXT NOT NULL,',
+        '  raw_event_id TEXT NOT NULL,',
+        '  raw_hash TEXT NOT NULL,',
+        '  canonical_hash TEXT NOT NULL,',
+        '  canonical_json TEXT NOT NULL,',
+        '  interpretation_status TEXT NOT NULL,',
+        '  provenance_json TEXT NOT NULL,',
+        '  stored_at TEXT NOT NULL,',
+        '  FOREIGN KEY (raw_event_id) REFERENCES raw_events(event_id)',
+        ');',
+      ].join('\n'));
+    }
+
+    assertRequiredBaseSchema(db);
+    db.run("UPDATE schema_meta SET value = '3' WHERE key = 'schema_version'");
+    db.run('COMMIT');
+    committed = true;
+  } finally {
+    if (!committed) {
+      try { db.run('ROLLBACK'); } catch {}
+    }
+  }
+}
+
+function assertRequiredBaseSchemaV1(db) {
+  const requiredTables = [
+    'schema_meta',
+    'raw_events',
+    'pools',
+    'liquidity_events',
+    'flow_windows',
+    'ingestion_state',
+  ];
+
+  for (const table of requiredTables) {
+    if (!hasTable(db, table)) {
+      throw new Error('BASE_TABLE_MISSING_' + table.toUpperCase());
+    }
+  }
+
+  const rawColumns = db.exec('PRAGMA table_info(raw_events)')[0]?.values ?? [];
+  const requiredRawColumns = [
+    'event_id',
+    'chain_id',
+    'block_number',
+    'transaction_hash',
+    'log_index',
+    'address',
+    'topics_json',
+    'data',
+    'captured_at',
+  ];
+  const rawColumnNames = new Set(rawColumns.map(row => row[1]));
+
+  for (const column of requiredRawColumns) {
+    if (!rawColumnNames.has(column)) {
+      throw new Error('SCHEMA_VERSION_1_BASE_SCHEMA_INVALID');
+    }
+  }
+}
+
 function migrateV3ToV4(db) {
   assertRequiredBaseSchema(db);
 
@@ -677,7 +760,18 @@ async function createDatabase(filename = DB_FILE, options = {}) {
   } else {
     const version = schemaVersion(db);
 
-    if (version === 3) {
+    if (version === 1) {
+      migrateV1ToV3(db);
+      migrateV3ToV4(db);
+      migrateV4ToV5(db);
+      assertProcessingResultSchema(db);
+      migrateV5ToV6(db);
+      assertCanonicalDecisionSchema(db);
+      migrateV6ToV7(db);
+      assertRuntimeLineageSchema(db);
+      migrateV7ToV8(db);
+      assertProductionAuthorityLifecycleSchema(db);
+    } else if (version === 3) {
       migrateV3ToV4(db);
       migrateV4ToV5(db);
       assertProcessingResultSchema(db);
