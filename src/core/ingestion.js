@@ -190,6 +190,18 @@ class IngestionEngine {
           );
 
           /*
+           * Renew at the batch boundary as an explicit lease guard.
+           * The timer heartbeat remains active during asynchronous work;
+           * this renewal also protects the transition between asynchronous
+           * phases and synchronous database/cryptographic work.
+           */
+          assertWriterFenceHeartbeat();
+          if (this.writerFence && typeof this.writerFence.renew === 'function') {
+            this.writerFence.renew();
+          }
+          assertWriterFenceHeartbeat();
+
+          /*
            * DO NOT advance cursor before this resolves.
            */
           const processingContext = await this.processorRange(
@@ -200,6 +212,15 @@ class IngestionEngine {
 
           /*
            * Batch completed successfully.
+           * Renew again before authority validation so authority work
+           * starts with a fresh writer-fence lease.
+           */
+          if (this.writerFence && typeof this.writerFence.renew === 'function') {
+            this.writerFence.renew();
+          }
+          assertWriterFenceHeartbeat();
+
+          /*
            * Authority must accept the exact verified context
            * before the unchanged cursor barrier may advance.
            */
