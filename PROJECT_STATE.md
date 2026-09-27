@@ -518,6 +518,7 @@
 - **Next STEP: Security/Regression for STEP 613 is authorized by the verified Test phase.**
 
 ## STEP 613 — Failure-Isolated Resilience & Operator Architecture — DESIGN — IN PROGRESS / VERIFIED
+
 - Authorization: explicit user authorization received 2026-09-26.
 - Contract: `docs/CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE_V0_1.md` — PR #541, merged `4b58ad889991ee803d572b663cbeacd2143a003a`.
 - Analysis: `docs/STEP_613_ANALYSIS_V0_1.md` — PR #542, merged `5e1801138da7c73ecd1aa24716873af54ffd933f`.
@@ -1016,7 +1017,8 @@
 - Contract: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract commit: `30755791a541edb515dde567efb71955bea1c942`.
 - Contract PR #398 merged as `e1dcb3256afb952be8ed6661b10d6cadf7933e9f`.
-- Reconciliation: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_RECONCILIATION_V0_1.md`.- Reconciliation PR #399 merged as `368258af8b03fad3bd28a9e760a5d4c8f171ba1e`.
+- Reconciliation: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_RECONCILIATION_V0_1.md`.
+- Reconciliation PR #399 merged as `368258af8b03fad3bd28a9e760a5d4c8f171ba1e`.
 - Exact post-merge check-runs on reconciliation merge commit `368258af8b03fad3bd28a9e760a5d4c8f171ba1e` are terminal SUCCESS: test `107910627727`; test-and-security `107910629221`; Analyze (actions) `107910628516`; Analyze (javascript-typescript) `107910628569`.
 - Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
 - STEP 597 contract boundary remains analysis-only; no production implementation or activation was authorized by the contract alone.
@@ -1515,7 +1517,8 @@
 - STEP 563 contract PR #309 merged to `main` as `0090484f2f800cb6aa6723a1270c006026da198d`.
 - Contract commit: `7061215535334d6ed2065c562ee21eb953ac87e0`.
 - PR-head HAHAWEEK Tests run `35974061794` completed successfully.
-- PR-head HAHAWEEK Security and Regression run `35974061824` completed successfully.- The contract freezes exact-range canonical evidence selection/order, domain-separated segment leaf/segment commitments, deterministic manifest commitments, reuse of existing F-03 checkpoint derivation, explicit generation supplied by canonical processing result/context, provenance, replay, reorg, concurrency, and fail-closed boundaries.
+- PR-head HAHAWEEK Security and Regression run `35974061824` completed successfully.
+- The contract freezes exact-range canonical evidence selection/order, domain-separated segment leaf/segment commitments, deterministic manifest commitments, reuse of existing F-03 checkpoint derivation, explicit generation supplied by canonical processing result/context, provenance, replay, reorg, concurrency, and fail-closed boundaries.
 - Generation is not manufactured by the submitted authority producer and cannot be copied from durable expected authority, cursor, wall-clock time, writer-fence number, or arbitrary hash truncation.
 - No production code, cursor state, RPC/provider behavior, SQLite schema, historical evidence, or V4 activation was changed.
 - Exact workflow lookup for merge commit `0090484f2f800cb6aa6723a1270c006026da198d` returned no associated workflow runs; no post-merge CI GREEN result is claimed.
@@ -2015,6 +2018,7 @@
 - No external X publication/API, prediction, ranking, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
 
 ## STEP 478 — X Content Validation / Publication-Readiness — IMPLEMENTATION CANDIDATE
+
 - Implementation branch: `step-478-x-content-validation-readiness-2026-09-23`.
 - Adds structural/provenance validation over the frozen STEP 477 X Content projection.
 - Research Report remains the source of truth.
