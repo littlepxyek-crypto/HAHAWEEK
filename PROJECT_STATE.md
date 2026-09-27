@@ -1,3 +1,30 @@
+## STEP 614 — ECONNABORTED Runtime Failure Remediation — RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Fresh Termux evidence after PR #594 merge reproduced an external RPC transport failure: `ECONNABORTED`, after four successful ingestion ranges.
+- Runtime state correctly preserved evidence and blocked authority advance, but classified the known transport failure as `UNKNOWN_FAILURE`, causing STOP rather than the existing retryable provider-unavailable path.
+- Analysis: `docs/STEP_614_ECONNABORTED_RUNTIME_FAILURE_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_614_ECONNABORTED_RUNTIME_FAILURE_DESIGN_V0_1.md`.
+- Code: `src/core/operational-state.js` now maps `ECONNABORTED` to existing `PROVIDER_UNAVAILABLE`.
+- Test: `tests/operational-state.test.js` adds deterministic classification/retry regression coverage.
+- PR #595 merged as `e68c2f582c038925ad0365122685b18d163d89cc`.
+- PR #595 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
+- Exact merge-head workflow lookup returned no runs; no exact merge-head CI GREEN is claimed.
+- Post-merge repository verification confirms the classification/test/docs changes are present on main.
+- Unknown failures remain fail-closed; provider-unavailable remains evidence-preserving, authority-neutral, and retryable under the existing operational-state contract.
+- No cursor reset, evidence rewrite/deletion, fallback authority, V4 activation, Surveillance authority, trading/signing/execution, or writer-fence semantic change was introduced.
+- Fresh operator runtime after this merge is still required.
+- Restart/recovery verification is still required.
+- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
+
+**Current STEP: 614**
+
+**Current phase: RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING**
+
+- **Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
+
+---
+
 ## STEP 614 — Runtime Writer-Fence Boundary Remediation (PR #594) — RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
