@@ -1,3 +1,28 @@
+## STEP 614 — Writer Fence Watchdog Remediation — RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Fresh operator restart on `a93bee5c39b73fa08f7675937343ea19bdd8b4e7` reproduced `WRITER_FENCE_EXPIRED` after durable cursor recovery and successful VERIFIED/AUTHORIZED processing.
+- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_DESIGN_V0_1.md`.
+- PR #597 merged as `1db2ef4feddc0af926c4200b8d25f1483038f02f`.
+- PR #597 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
+- Exact merge-head workflow lookup returned no runs; no exact merge-head CI GREEN is claimed.
+- Post-merge repository comparison confirms the watchdog, ingestion integration, and regression test are present on main.
+- The watchdog renews the same acquired writer owner/fence from a worker thread and refuses stale/expired resurrection.
+- Existing timer heartbeat and batch-boundary renewals remain.
+- No cursor reset, evidence rewrite/deletion, fallback authority, V4 activation, Surveillance authority, trading/signing/execution, or writer-fence authority model change was introduced.
+- Fresh operator runtime on the new merge is required.
+- Restart/recovery verification after the new merge is required.
+- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
+
+**Current STEP: 614**
+
+**Current phase: RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING**
+
+- **Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
+
+---
+
 ## STEP 614 — ECONNABORTED Runtime Failure Remediation — RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
