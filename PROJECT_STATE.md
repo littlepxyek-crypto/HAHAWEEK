@@ -1,23 +1,22 @@
-## STEP 614 — Writer-Fence Watchdog Failure Propagation — REVIEW — IN PROGRESS
+## STEP 614 — Writer-Fence Watchdog Failure Propagation — POST-MERGE VERIFICATION — IN PROGRESS
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_DESIGN_V0_1.md`.
-- Code: watchdog renewal failures propagate to the parent writer-fence safety boundary as `WRITER_FENCE_WATCHDOG_RENEWAL_FAILED`, preserving the concrete underlying cause.
-- Test: focused watchdog and operational-state regressions are included.
-- CI: HAHAWEEK Tests run `2390` SUCCESS; HAHAWEEK Security and Regression run `4087` SUCCESS on head `f1e24985aa189a86ccc07724ad19513c81dbed00`.
-- Review: repository review COMMENT recorded; self-approval is not claimed.
-- Actual Termux runtime verification remains required after merge.
-- No authority, evidence, cursor, checkpoint, CBDR, V4, Surveillance, trading, signing, or execution semantics change.
+- PR #603 merged as `d1fcf7fbf6e6efd9b4df66ebb430915b68bcf686`.
+- Implementation/review head `3d5ae2712b3c35fa3f9e0dfefa8381957bcab9dd`: HAHAWEEK Tests run `2394` SUCCESS; HAHAWEEK Security and Regression run `4091` SUCCESS.
+- Exact merge-commit combined-status query returned no statuses; exact merge-head CI GREEN is not claimed.
+- Post-Merge Verification: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_POST_MERGE_VERIFICATION_V0_1.md`.
+- Merged source inspection confirms watchdog failure propagation, sticky fail-closed ownership assertion, underlying cause preservation, existing writer-fence classification, and unchanged cursor/evidence/authority boundaries.
+- Actual Termux live evidence remains pending on the merged commit.
 - Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
 
 **Current STEP: 614**
 
-**Current phase: REVIEW**
+**Current phase: POST-MERGE VERIFICATION**
 
-- **Next STEP: Merge PR #603 only after review/CI evidence remains valid.**
+- **Next STEP: Reconcile the verified merge boundary and update documentation/state; then collect fresh operator runtime evidence.**
 
 ---
+
 
 
 ## STEP 614 — Writer-Fence Watchdog Contention — RECONCILIATION — OPERATOR RUNTIME PENDING
