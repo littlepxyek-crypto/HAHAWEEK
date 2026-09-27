@@ -173,3 +173,70 @@ test('STEP590 fails closed when continuation has no persisted accepted parent', 
     /PROCESSING_CONTEXT_PARENT_MISSING|PROCESSING_RESULT_PARENT_NOT_FOUND/
   );
 });
+
+
+test('STEP614 recovers durable exact context before replay when provider head advances', async () => {
+  const state = await fixture();
+  const chain = {
+    99: { hash: HASH(99), parentHash: HASH(98) },
+    100: { hash: HASH(100), parentHash: HASH(99) },
+  };
+  const records = { 100: raw('e100', 100, HASH(100)) };
+
+  const initial = await createVerifiedProcessingContext({
+    database: state.database,
+    provider: providerFor(chain),
+    writerFence: state.fence,
+    confirmations: 3,
+    chainId: 4663,
+    fromBlock: 100,
+    toBlock: 100,
+    latestBlock: 103,
+    rawIngest: rawIngestor(state.database, records),
+    committedAt: '2026-09-27T05:00:00.000Z',
+  });
+
+  state.database.close();
+
+  const reopened = await createDatabase(path.join(state.dir, 'hahaweek.sqlite'));
+  const reopenedFence = createWriterFence({
+    filename: path.join(state.dir, 'writer-fence-state.json'),
+    ownerId: 'step614-recovery-owner',
+    now: () => 2000,
+    leaseMs: 10000,
+  });
+  reopenedFence.acquire();
+
+  try {
+    const recovered = await createVerifiedProcessingContext({
+      database: reopened,
+      provider: providerFor(chain),
+      writerFence: reopenedFence,
+      confirmations: 3,
+      chainId: 4663,
+      fromBlock: 100,
+      toBlock: 100,
+      latestBlock: 104,
+      rawIngest: async () => {
+        throw new Error('RECOVERY_RAW_INGEST_SHOULD_NOT_RUN');
+      },
+      committedAt: '2026-09-27T05:01:00.000Z',
+    });
+
+    assert.equal(recovered.processingResultId, initial.processingResultId);
+    assert.equal(recovered.lineageId, initial.lineageId);
+    assert.equal(recovered.canonicalDecisionSnapshotId, initial.canonicalDecisionSnapshotId);
+    assert.equal(
+      reopened.db.exec('SELECT COUNT(*) FROM canonical_block_decisions')[0].values[0][0],
+      2
+    );
+    assert.equal(
+      reopened.db.exec('SELECT COUNT(*) FROM canonical_lineage')[0].values[0][0],
+      1
+    );
+  } finally {
+    reopenedFence.release();
+    reopened.close();
+    fs.rmSync(state.dir, { recursive: true, force: true });
+  }
+});
