@@ -41,6 +41,17 @@ test('authority mismatch is blocked and non-retryable', () => {
   assert.equal(failure.authority_impact, 'NO_ADVANCE');
 });
 
+
+test('watchdog renewal failure is blocked and non-retryable', () => {
+  const failure = classifyFailure(new Error('WRITER_FENCE_WATCHDOG_RENEWAL_FAILED'));
+
+  assert.equal(failure.failure_class, 'WRITER_FENCE_FAILURE');
+  assert.equal(failure.operational_state, 'BLOCKED');
+  assert.equal(failure.recoverability, 'STOP');
+  assert.equal(isRetryableFailure(failure), false);
+  assert.equal(failure.authority_impact, 'NO_ADVANCE');
+});
+
 test('unknown failure fails closed', () => {
   const failure = classifyFailure(new Error('UNSEEN_FAILURE'));
 
