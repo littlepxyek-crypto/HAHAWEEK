@@ -8,7 +8,9 @@ const test = require('node:test');
 
 const { createDatabase } = require('../src/core/database');
 const { createWriterFence } = require('../src/core/single-writer-fence');
-const { createVerifiedProcessingContext } = require('../src/core/runtime-processing-context');
+const { createVerifiedProcessingContext, recoverDurableExactContext } = require('../src/core/runtime-processing-context');
+const { createCanonicalDecisionInput } = require('../src/core/canonical-decision-input');
+const { persistProcessingResult } = require('../src/core/processing-result-persistence');
 
 const HASH = n => '0x' + Number(n).toString(16).padStart(2, '0').repeat(32);
 
@@ -345,6 +347,219 @@ test('STEP614 multiple durable exact lineages fail closed before replay', async 
       committedAt: '2026-09-27T05:06:00.000Z',
     }),
     error => error.code === 'PROCESSING_CONTEXT_DURABLE_LINEAGE_CONFLICT'
+  );
+
+  state.database.close();
+  fs.rmSync(state.dir, { recursive: true, force: true });
+});
+
+
+test('STEP614 recovers an exact processing result when its lineage anchor is missing', async () => {
+  const state = await fixture();
+  const chain = {
+    99: { hash: HASH(99), parentHash: HASH(98) },
+    100: { hash: HASH(100), parentHash: HASH(99) },
+  };
+
+  const snapshot = await createCanonicalDecisionInput({
+    provider: providerFor(chain),
+    db: state.database.db,
+    writerFence: state.fence,
+    confirmations: 3,
+    chainId: 4663,
+    fromBlock: 100,
+    toBlock: 100,
+    latestBlock: 103,
+    acquiredAt: '2026-09-27T06:00:00.000Z',
+  });
+
+  const processingResult = persistProcessingResult({
+    database: state.database,
+    writerFence: state.fence,
+    processingResult: {
+      resultId: 'pr:test:partial-recovery',
+      processingExecutionId: 'px:test:partial-recovery',
+      parentResultId: null,
+      transitionType: 'INITIAL',
+      fromBlock: 100,
+      toBlock: 100,
+      generation: '1',
+      status: 'ACCEPTED',
+      canonicalityStatus: 'CANONICAL',
+      canonicalEvidenceIds: [],
+      emptyResult: true,
+      provenance: { canonical_decision_snapshot_id: snapshot.snapshot_id },
+      committedAt: '2026-09-27T06:00:00.000Z',
+    },
+  });
+
+  const recovered = await createVerifiedProcessingContext({
+    database: state.database,
+    provider: providerFor(chain),
+    writerFence: state.fence,
+    confirmations: 3,
+    chainId: 4663,
+    fromBlock: 100,
+    toBlock: 100,
+    latestBlock: 104,
+    rawIngest: async () => {
+      throw new Error('RECOVERY_RAW_INGEST_SHOULD_NOT_RUN');
+    },
+    committedAt: '2026-09-27T06:01:00.000Z',
+  });
+
+  assert.equal(recovered.processingResultId, processingResult.processingResultId);
+  assert.equal(recovered.canonicalDecisionSnapshotId, snapshot.snapshot_id);
+  assert.equal(recovered.transitionType, 'INITIAL');
+  assert.equal(
+    state.database.db.exec('SELECT COUNT(*) FROM canonical_lineage')[0].values[0][0],
+    1
+  );
+  assert.equal(
+    state.database.db.exec('SELECT COUNT(*) FROM canonical_block_decisions')[0].values[0][0],
+    2
+  );
+
+  state.database.close();
+  fs.rmSync(state.dir, { recursive: true, force: true });
+});
+
+test('STEP614 duplicate exact durable processing results fail closed before replay', async () => {
+  const state = await fixture();
+  const chain = {
+    99: { hash: HASH(99), parentHash: HASH(98) },
+    100: { hash: HASH(100), parentHash: HASH(99) },
+  };
+
+  const snapshot = await createCanonicalDecisionInput({
+    provider: providerFor(chain),
+    db: state.database.db,
+    writerFence: state.fence,
+    confirmations: 3,
+    chainId: 4663,
+    fromBlock: 100,
+    toBlock: 100,
+    latestBlock: 103,
+    acquiredAt: '2026-09-27T06:02:00.000Z',
+  });
+
+  const base = {
+    parentResultId: null,
+    transitionType: 'INITIAL',
+    fromBlock: 100,
+    toBlock: 100,
+    generation: '1',
+    status: 'ACCEPTED',
+    canonicalityStatus: 'CANONICAL',
+    canonicalEvidenceIds: [],
+    emptyResult: true,
+    provenance: { canonical_decision_snapshot_id: snapshot.snapshot_id },
+  };
+
+  persistProcessingResult({
+    database: state.database,
+    writerFence: state.fence,
+    processingResult: {
+      ...base,
+      resultId: 'pr:test:duplicate-a',
+      processingExecutionId: 'px:test:duplicate-a',
+      committedAt: '2026-09-27T06:02:00.000Z',
+    },
+  });
+  persistProcessingResult({
+    database: state.database,
+    writerFence: state.fence,
+    processingResult: {
+      ...base,
+      resultId: 'pr:test:duplicate-b',
+      processingExecutionId: 'px:test:duplicate-b',
+      committedAt: '2026-09-27T06:02:01.000Z',
+    },
+  });
+
+  await assert.rejects(
+    () => createVerifiedProcessingContext({
+      database: state.database,
+      provider: providerFor(chain),
+      writerFence: state.fence,
+      confirmations: 3,
+      chainId: 4663,
+      fromBlock: 100,
+      toBlock: 100,
+      latestBlock: 104,
+      rawIngest: async () => {
+        throw new Error('RECOVERY_RAW_INGEST_SHOULD_NOT_RUN');
+      },
+      committedAt: '2026-09-27T06:03:00.000Z',
+    }),
+    error => error.code === 'PROCESSING_CONTEXT_DURABLE_RESULT_CONFLICT'
+  );
+
+  assert.equal(
+    state.database.db.exec('SELECT COUNT(*) FROM canonical_lineage')[0].values[0][0],
+    0
+  );
+
+  state.database.close();
+  fs.rmSync(state.dir, { recursive: true, force: true });
+});
+
+test('STEP614 changed provider identity prevents partial-context reuse', async () => {
+  const state = await fixture();
+  const original = {
+    99: { hash: HASH(99), parentHash: HASH(98) },
+    100: { hash: HASH(100), parentHash: HASH(99) },
+  };
+  const changed = {
+    99: { hash: HASH(99), parentHash: HASH(98) },
+    100: { hash: HASH(200), parentHash: HASH(99) },
+  };
+
+  const snapshot = await createCanonicalDecisionInput({
+    provider: providerFor(original),
+    db: state.database.db,
+    writerFence: state.fence,
+    confirmations: 3,
+    chainId: 4663,
+    fromBlock: 100,
+    toBlock: 100,
+    latestBlock: 103,
+    acquiredAt: '2026-09-27T06:04:00.000Z',
+  });
+
+  persistProcessingResult({
+    database: state.database,
+    writerFence: state.fence,
+    processingResult: {
+      resultId: 'pr:test:identity-change',
+      processingExecutionId: 'px:test:identity-change',
+      parentResultId: null,
+      transitionType: 'INITIAL',
+      fromBlock: 100,
+      toBlock: 100,
+      generation: '1',
+      status: 'ACCEPTED',
+      canonicalityStatus: 'CANONICAL',
+      canonicalEvidenceIds: [],
+      emptyResult: true,
+      provenance: { canonical_decision_snapshot_id: snapshot.snapshot_id },
+      committedAt: '2026-09-27T06:04:00.000Z',
+    },
+  });
+
+  const recovered = await recoverDurableExactContext({
+    database: state.database,
+    provider: providerFor(changed),
+    writerFence: state.fence,
+    fromBlock: 100,
+    toBlock: 100,
+    chainId: 4663,
+  });
+
+  assert.equal(recovered, null);
+  assert.equal(
+    state.database.db.exec('SELECT COUNT(*) FROM canonical_lineage')[0].values[0][0],
+    0
   );
 
   state.database.close();
