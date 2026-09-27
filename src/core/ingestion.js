@@ -197,10 +197,9 @@ class IngestionEngine {
           );
 
           /*
-           * Renew at the batch boundary as an explicit lease guard.
-           * The timer heartbeat remains active during asynchronous work;
-           * this renewal also protects the transition between asynchronous
-           * phases and synchronous database/cryptographic work.
+           * Without a watchdog, renew at the batch boundary as an explicit
+           * lease guard. When the watchdog is active it is the sole renewal
+           * mechanism, so the main thread must not contend for the lock.
            */
           assertWriterFenceHeartbeat();
           if (!watchdogStarted && this.writerFence && typeof this.writerFence.renew === 'function') {
@@ -218,9 +217,8 @@ class IngestionEngine {
           assertWriterFenceHeartbeat();
 
           /*
-           * Batch completed successfully.
-           * Renew again before authority validation so authority work
-           * starts with a fresh writer-fence lease.
+           * Without a watchdog, renew again before authority validation so
+           * authority work starts with a fresh writer-fence lease.
            */
           if (!watchdogStarted && this.writerFence && typeof this.writerFence.renew === 'function') {
             this.writerFence.renew();
