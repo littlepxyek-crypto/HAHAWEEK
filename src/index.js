@@ -376,6 +376,7 @@ if (require.main === module) {
 module.exports = {
   createEngine,
   createRelevantLogFilter,
+  createRawEventRecord,
   createDurableExpectedAuthorityFactory,
   main,
 };
