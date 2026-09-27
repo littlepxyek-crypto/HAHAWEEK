@@ -19,10 +19,10 @@ test('current PROJECT_STATE is valid and exposes STEP 614 current authority', ()
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 614);
-  assert.equal(result.phase, 'CODE');
+  assert.equal(result.phase, 'REVIEW');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME/);
-  assert.equal(result.next_step, 'Run focused repository tests, then Security/Regression and CI');
+  assert.equal(result.next_step, 'Merge PR #603 only after review/CI evidence remains valid');
 });
 
 test('stale historical next-step text cannot override current state', () => {
