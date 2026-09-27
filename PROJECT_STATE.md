@@ -1,3 +1,22 @@
+## STEP 614 — Writer-Fence Watchdog Failure Propagation — DESIGN — IN PROGRESS
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Analysis established that watchdog renewal errors are emitted by the worker but are not propagated into the owning ingestion path before lease expiry.
+- The durable failure-state mismatch is explained by state persistence requiring an owned writer fence after the fence has expired.
+- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_DESIGN_V0_1.md`.
+- Design keeps the watchdog as the sole periodic renewal mechanism and adds sticky parent-side propagation of the first renewal failure through `assertOwned()`.
+- A dedicated `WRITER_FENCE_WATCHDOG_RENEWAL_FAILED` error preserves the underlying concrete writer-fence code for diagnosis and maps to the existing writer-fence failure class.
+- No lease, authority, evidence, cursor, checkpoint, CBDR, V4, Surveillance, trading, signing, or execution semantics change.
+- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
+
+**Current STEP: 614**
+
+**Current phase: DESIGN**
+
+- **Next STEP: Implement the verified design, then run focused tests before broader Security/Regression.**
+
+---
+
 ## STEP 614 — Writer-Fence Watchdog Failure Propagation — ANALYSIS — IN PROGRESS
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
@@ -58,7 +77,3 @@
 - Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
 
 **Current STEP: 614**
-
-**Current phase: CODE / TEST / SECURITY-REGRESSION PENDING**
-
-- **Next STEP: Run repository tests and security/regression checks, then CI/review/merge under the existing STEP 614 Contract.**
