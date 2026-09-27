@@ -1,3 +1,28 @@
+## STEP 614 — Runtime Writer-Fence Boundary Remediation (PR #594) — RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Actual Termux runtime reproduced `WRITER_FENCE_EXPIRED` after PR #593's timer-heartbeat remediation; this failure required a bounded runtime remediation within the existing writer-fence concurrency contract.
+- PR #594, **STEP 614 — Renew writer fence at runtime batch boundaries**, was reviewed by repository review comment and merged successfully.
+- PR #594 head: `11216f8683a4f7cb7e280a183cb722690e25557a`.
+- PR #594 merge commit: `ac4daac4853285bce174a7c5be7f99a3f9f4b9fa`.
+- PR #594 changed only `src/core/ingestion.js` and `tests/ingestion.test.js`: 77 additions, 0 deletions.
+- PR-head HAHAWEEK Tests: SUCCESS; `npm test`, `npm run verify:v4`, and `npm run verify:v4:coverage` completed successfully.
+- PR-head Security/Regression: SUCCESS; tests, dependency audit, and tracked-secret detection completed successfully.
+- Post-merge repository comparison confirms the PR changes are present on the merge commit.
+- No workflow runs were returned for the exact merge commit by the repository workflow lookup; therefore exact merge-head CI GREEN is **not** claimed.
+- Post-merge repository verification does not substitute for actual operator runtime evidence.
+- Fresh Termux verification is still required to prove that the `WRITER_FENCE_EXPIRED` runtime failure is resolved under real operator execution, with cursor continuity, recovery, and fail-closed behavior preserved.
+- No cursor reset, authority expansion, evidence rewrite/deletion, schema change, V4 activation, Surveillance authority, trading/signing/execution, or other frozen semantic change was introduced.
+- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED** until actual operator runtime evidence satisfies the existing Contract.
+
+**Current STEP: 614**
+
+**Current phase: RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING**
+
+- **Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
+
+---
+
 ## STEP 614 — F-03 Runtime Authority Establishment — RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.

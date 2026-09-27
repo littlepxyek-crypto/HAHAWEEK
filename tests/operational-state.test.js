@@ -21,6 +21,16 @@ test('provider timeout is retryable and degraded', () => {
   assert.equal(failure.authority_impact, 'UNCHANGED');
 });
 
+test('aborted RPC connection is retryable provider unavailability', () => {
+  const failure = classifyFailure(Object.assign(new Error('ECONNABORTED'), { code: 'ECONNABORTED' }));
+
+  assert.equal(failure.failure_class, 'PROVIDER_UNAVAILABLE');
+  assert.equal(failure.operational_state, 'DEGRADED');
+  assert.equal(failure.recoverability, 'RETRYABLE');
+  assert.equal(isRetryableFailure(failure), true);
+  assert.equal(failure.authority_impact, 'UNCHANGED');
+});
+
 test('authority mismatch is blocked and non-retryable', () => {
   const failure = classifyFailure(new Error('AUTHORITY_GENERATION_CONTEXT_MISMATCH'));
 
