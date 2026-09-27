@@ -1,5 +1,6 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — VERIFICATION — VERIFIED / RECONCILED / DOCUMENTED
 
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
 - Final Post-Merge Verification: `docs/STEP_614_FINAL_POST_MERGE_VERIFICATION_V0_1.md`.
 - Exact main merge head: `924bc32973718346fc549b4e03ee39325114673e`.
 - Exact merge-head Tests: SUCCESS.
