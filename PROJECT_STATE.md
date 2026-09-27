@@ -18,7 +18,7 @@
 - Existing expected-authority reader remains authoritative; no cursor advancement, fallback authority, historical rewrite, Surveillance authority, or V4 activation was added.
 - Actual operator runtime remains UNVERIFIED.
 - Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.
-- Next STEP: actual operator runtime evidence collection under existing STEP 614 Contract.
+- **Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — RECONCILIATION — VERIFIED / RECONCILED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged.
