@@ -194,7 +194,7 @@ function createF03ExpectedAuthorityEstablisher({ database, writerFence }) {
     try {
       verified = readF03AuthorityChain({ database, fromBlock, toBlock });
     } catch (error) {
-      if (error && error.code !== 'F03_CHAIN_NOT_FOUND') throw error;
+      if (error && error.message !== 'F03_CHAIN_NOT_FOUND') throw error;
     }
 
     if (!verified) {
