@@ -84,6 +84,23 @@ function createRelevantLogFilter() {
   };
 }
 
+function createRawEventRecord(log, chainId, eventId) {
+  if (!log || typeof log !== 'object') throw new Error('RAW_EVENT_LOG_REQUIRED');
+  return {
+    event_id: eventId,
+    chain_id: chainId,
+    block_number: log.blockNumber,
+    transaction_hash: log.transactionHash,
+    block_hash: log.blockHash ?? null,
+    transaction_index: log.transactionIndex ?? null,
+    log_index: log.index ?? log.logIndex ?? 0,
+    address: log.address,
+    topics: log.topics,
+    data: log.data,
+    captured_at: new Date().toISOString(),
+  };
+}
+
 function createDurableExpectedAuthorityFactory(database) {
   if (!database || !database.db) throw new Error('AUTHORITY_EXPECTED_DATABASE_REQUIRED');
 
@@ -111,19 +128,9 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     appendUnique: (log, chainId) => {
       const raw = appendUnique(log, chainId, { legacyWriteBarrier });
 
-      if (raw.inserted) {
-        rawEventStore.insert({
-          event_id: raw.eventId,
-          chain_id: chainId,
-          block_number: log.blockNumber,
-          transaction_hash: log.transactionHash.toLowerCase(),
-          log_index: log.index ?? log.logIndex ?? 0,
-          address: log.address,
-          topics: log.topics,
-          data: log.data,
-          captured_at: new Date().toISOString(),
-        });
-      }
+      rawEventStore.insert(
+        createRawEventRecord(log, chainId, raw.eventId)
+      );
 
       return raw;
     },
@@ -369,6 +376,7 @@ if (require.main === module) {
 module.exports = {
   createEngine,
   createRelevantLogFilter,
+  createRawEventRecord,
   createDurableExpectedAuthorityFactory,
   main,
 };
