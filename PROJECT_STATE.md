@@ -1,3 +1,28 @@
+## STEP 614 — Writer-Fence Watchdog Contention — RECONCILIATION — OPERATOR RUNTIME PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Runtime finding: fresh Termux on main `4273964106d57e8276b3273f1f48959a5330dc49` reproduced `WRITER_FENCE_BUSY` during range `64988757-64988766`.
+- Read-only evidence immediately after failure showed no active HAHAWEEK/Node process, no lock file, and durable fence state `ownerId=NONE`, `fence=56`, `expiresAt=0`.
+- Root cause: watchdog worker and main-thread periodic/batch renewal paths could self-contend on the same exclusive fence lock.
+- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_DESIGN_V0_1.md`.
+- PR #601 merged as `cc11357c177bfbeeb30866e56fa38e6ed8663f44`.
+- PR-head CI: HAHAHAWEEK Tests SUCCESS; HAHAHAWEEK Security and Regression SUCCESS.
+- Exact merge-head workflow lookup returned no runs; exact merge-head CI GREEN is not claimed.
+- Post-merge verification confirms watchdog-exclusive renewal, preserved ownership assertions, non-watchdog fallback, and synchronized watchdog shutdown.
+- Post-merge verification document: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_POST_MERGE_VERIFICATION_V0_1.md`.
+- No Contract Amendment; no authority, evidence, cursor, CBDR, V4, Surveillance, or execution semantics change.
+- Fresh operator runtime on merge commit is required before this capability can be reconciled as live.
+- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
+
+**Current STEP: 614**
+
+**Current phase: RECONCILIATION — OPERATOR RUNTIME PENDING**
+
+- **Next STEP: Actual operator runtime evidence collection on merge commit cc11357c177bfbeeb30866e56fa38e6ed8663f44 under the existing STEP 614 Contract.**
+
+---
+
 ## STEP 614 — Writer-Fence Watchdog Contention — CODE — IN PROGRESS
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
