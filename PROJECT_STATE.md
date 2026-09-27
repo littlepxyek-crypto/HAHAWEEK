@@ -1,4 +1,4 @@
-## STEP 614 — Writer-Fence Watchdog Failure Propagation — POST-MERGE VERIFICATION — IN PROGRESS
+## STEP 614 — Writer-Fence Watchdog Failure Propagation — VERIFICATION — IN PROGRESS
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - PR #603 merged as `d1fcf7fbf6e6efd9b4df66ebb430915b68bcf686`.
