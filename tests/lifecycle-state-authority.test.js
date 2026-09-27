@@ -19,7 +19,7 @@ test('current PROJECT_STATE is valid and exposes STEP 614 current authority', ()
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 614);
-  assert.equal(result.phase, 'POST-MERGE VERIFICATION');
+  assert.equal(result.phase, 'VERIFICATION');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME/);
   assert.equal(result.next_step, 'Reconcile the verified merge boundary and update documentation/state; then collect fresh operator runtime evidence');
