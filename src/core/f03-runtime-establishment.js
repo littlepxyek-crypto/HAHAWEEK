@@ -189,20 +189,25 @@ function createF03ExpectedAuthorityEstablisher({ database, writerFence }) {
     };
 
     writerFence.assertOwned();
-    commitF03AuthorityChain({
-      database,
-      writerFence,
-      segment,
-      manifest,
-      checkpoint,
-    });
 
-    writerFence.assertOwned();
-    const verified = readF03AuthorityChain({
-      database,
-      fromBlock,
-      toBlock,
-    });
+    let verified;
+    try {
+      verified = readF03AuthorityChain({ database, fromBlock, toBlock });
+    } catch (error) {
+      if (error && error.code !== 'F03_CHAIN_NOT_FOUND') throw error;
+    }
+
+    if (!verified) {
+      commitF03AuthorityChain({
+        database,
+        writerFence,
+        segment,
+        manifest,
+        checkpoint,
+      });
+      writerFence.assertOwned();
+      verified = readF03AuthorityChain({ database, fromBlock, toBlock });
+    }
 
     if (
       verified.generation !== processingContext.generation ||
