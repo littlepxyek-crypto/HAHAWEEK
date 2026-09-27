@@ -11,7 +11,7 @@
 
 **Current STEP: 614**
 
-**Current phase: POST-MERGE VERIFICATION**
+**Current phase: VERIFICATION**
 
 - **Next STEP: Reconcile the verified merge boundary and update documentation/state; then collect fresh operator runtime evidence.**
 
