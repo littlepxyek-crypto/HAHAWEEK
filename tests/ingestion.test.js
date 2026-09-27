@@ -258,6 +258,44 @@ test('writer fence is renewed at batch boundaries', async () => {
   assert.equal(renewals.length, 4);
 });
 
+test('watchdog owns renewal when available and avoids main-thread fence contention', async () => {
+  const cursor = makeCursor(100);
+  let renewals = 0;
+  let watchdogStarts = 0;
+  let watchdogStops = 0;
+  const writerFence = {
+    renew() {
+      renewals += 1;
+      throw new Error('MAIN_THREAD_RENEW_SHOULD_NOT_RUN');
+    },
+    assertOwned() {},
+    getLeaseMs() { return 30_000; },
+    async startWatchdog() {
+      watchdogStarts += 1;
+    },
+    async stopWatchdog() {
+      watchdogStops += 1;
+    },
+  };
+
+  const engine = new IngestionEngine({
+    provider: makeProvider(101),
+    cursor,
+    confirmations: 0,
+    processor: async () => {},
+    processorRange: async () => {},
+    batchSize: 1,
+    writerFence,
+  });
+
+  const result = await engine.runOnce();
+
+  assert.equal(result.cursor, 101);
+  assert.equal(renewals, 0);
+  assert.equal(watchdogStarts, 1);
+  assert.equal(watchdogStops, 1);
+});
+
 test('writer fence boundary renewal failure fails closed before cursor advance', async () => {
   const cursor = makeCursor(100);
   let renewals = 0;
