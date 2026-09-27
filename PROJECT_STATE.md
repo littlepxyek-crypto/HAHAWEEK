@@ -1,20 +1,23 @@
-## STEP 614 — Live-Readiness / Actual Operator Runtime — RECONCILIATION — AUTHORIZED / PENDING MERGE
+## STEP 614 — Live-Readiness / Actual Operator Runtime — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTATION AUTHORIZED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged.
 - F-614-06 Analysis: PR #578 merged `e7e5f42122cc298d0b08ca8bc4233b38046c3641`.
 - F-614-06 Design: PR #581 merged `d999b30a9af1cd9995baddd0dfd47f87d69f4f13`.
 - F-614-06 Code: PR #582 merged `695df52cdebfe962aec23c5f0dd8983b2b4a73c4`.
 - F-614-06 Post-Merge Verification: PR #583 merged `3b064b122751e03686022c2a1a6c9318000d0bbd`.
-- Implementation PR-head Tests: SUCCESS.
-- Implementation PR-head Security/Regression: SUCCESS.
-- Implementation PR-head CodeQL: SUCCESS.
-- Actual operator runtime remains pending re-verification after the recovery implementation.
+- F-614-06 Reconciliation: PR #584 merged `07adabbe81e555bc58129fc3647bc362f61124bf`.
+- Implementation Tests: SUCCESS.
+- Implementation Security/Regression: SUCCESS.
+- Implementation CodeQL: SUCCESS.
+- Reconciliation Tests: SUCCESS.
+- Reconciliation Security/Regression: SUCCESS.
+- Reconciliation CodeQL: SUCCESS.
+- Actual operator recovery after F-614-06 remains UNVERIFIED.
 - Known runtime evidence remains preserved: cursor `64986696`, failure `CBDR_INTEGRITY_CONFLICT`, evidence impact `PRESERVE`, authority impact `NO_ADVANCE`, STOP `FAIL-CLOSED`.
-- No cursor reset, evidence deletion, or authority bypass has been performed.
 - **Current STEP: 614**
-- **Current phase: RECONCILIATION — AUTHORIZED / PENDING MERGE**
-- **Next authorized phase: STEP 614 DOCUMENTATION**
-- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED pending actual operator recovery evidence.**
+- **Current phase: DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTATION AUTHORIZED**
+- **Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
