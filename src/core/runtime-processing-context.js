@@ -157,6 +157,30 @@ async function verifyProviderAgainstSnapshot({ provider, chainId, snapshot }) {
   return true;
 }
 
+function contextFromRecoveredLineage(database, lineage, snapshot) {
+  const processingResult = readProcessingResult(database, lineage.processingResultId);
+  return Object.freeze({
+    status: 'VERIFIED',
+    fromBlock: lineage.fromBlock,
+    toBlock: lineage.toBlock,
+    processingResultId: lineage.processingResultId,
+    processingExecutionId: processingResult.processingExecutionId,
+    parentResultId: lineage.parentResultId,
+    transitionType: lineage.transitionType,
+    generation: lineage.generation,
+    canonicalEvidenceIds: Object.freeze([...lineage.canonicalEvidenceIds]),
+    emptyResult: lineage.canonicalEvidenceIds.length === 0,
+    evidenceSetDigest: lineage.canonicalEvidenceSetDigest,
+    lineageId: lineage.lineageId,
+    provenance: deepFreeze({
+      ...lineage.provenance,
+      canonical_decision_snapshot_id: snapshot.snapshot_id,
+    }),
+    committedAt: lineage.committedAt,
+    canonicalDecisionSnapshotId: snapshot.snapshot_id,
+  });
+}
+
 async function recoverDurableContextFromProcessingResult({
   database,
   provider,
@@ -209,7 +233,7 @@ async function recoverDurableContextFromProcessingResult({
         existingForResult[0].values[0][0] !== lineageId) {
       fail('PROCESSING_CONTEXT_RECOVERY_LINEAGE_CONFLICT');
     }
-    return reconstructLineage(database, lineageId);
+    return contextFromRecoveredLineage(database, reconstructLineage(database, lineageId), snapshot);
   }
 
   const exactLineage = database.db.exec(
@@ -247,7 +271,7 @@ async function recoverDurableContextFromProcessingResult({
     throw error;
   }
 
-  return reconstructLineage(database, lineageId);
+  return contextFromRecoveredLineage(database, reconstructLineage(database, lineageId), snapshot);
 }
 
 async function recoverDurableExactContext({
