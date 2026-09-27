@@ -145,10 +145,8 @@ test('Gate 2 production wiring binds the durable reader as the default expected 
     'utf8',
   );
 
-  assert.match(
-    source,
-    /expectedAuthorityFactory \|\| createDurableExpectedAuthorityFactory\(database\)/,
-  );
+  assert.match(source, /durableExpectedAuthorityFactory = createDurableExpectedAuthorityFactory\\(database\\)/);
+  assert.match(source, /createF03ExpectedAuthorityEstablisher/);
   assert.match(source, /readF03AuthorityChain/);
 });
 
