@@ -165,6 +165,7 @@ function createWriterFence(options = {}) {
     renew,
     release,
     getState: () => parseState(filename),
+    getLeaseMs: () => leaseMs,
   };
 }
 
