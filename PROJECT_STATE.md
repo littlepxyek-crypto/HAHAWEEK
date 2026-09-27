@@ -1,3 +1,27 @@
+## STEP 614 — Partial Durable Processing Context Recovery — RECONCILIATION — VERIFIED / OPERATOR RUNTIME PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Runtime diagnostic for range `64988747-64988756` established partial durable state: ACCEPTED/CANONICAL processing result and canonical decision snapshot existed, while canonical lineage and production authority lifecycle were absent.
+- Analysis: `docs/STEP_614_PARTIAL_CONTEXT_RECOVERY_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_614_PARTIAL_CONTEXT_RECOVERY_DESIGN_V0_1.md`.
+- Implementation PR #599 merged as `d03735f9ccd95325e5e332a7123da0ecdba1dab9`.
+- PR #599 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
+- Exact merge-head workflow lookup returned no runs; exact merge-head CI GREEN is not claimed.
+- Recovery now accepts an exact durable processing result plus verified canonical snapshot as a bounded source for reconstructing only the missing lineage anchor.
+- Successful recovery verifies provider chain and every stored block identity, preserves existing processing-result/CBDR identities, and does not replay CBDR construction or raw ingestion.
+- Duplicate durable results, invalid durable state, and provider identity mismatch remain fail-closed/non-reuse paths.
+- No Contract Amendment; no change to CBDR identity, canonical evidence identity, cursor advancement, authority semantics, Surveillance authority, V4 production authority, or trading/signing/execution.
+- Fresh operator runtime is still required to verify recovery on the actual Termux database and to verify restart/cursor continuity after recovery.
+- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
+
+**Current STEP: 614**
+
+**Current phase: RECONCILIATION — VERIFIED / OPERATOR RUNTIME PENDING**
+
+**Next authorized phase: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
+
+---
+
 ## STEP 614 — Writer Fence Watchdog Remediation — RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
