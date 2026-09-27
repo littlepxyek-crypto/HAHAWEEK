@@ -1,5 +1,12 @@
 'use strict';
 
+const {
+  classifyFailure,
+  createFailureState,
+  createHealthyState,
+  readOperationalState,
+} = require('./core/operational-state');
+
 let shutdownRequested = false;
 
 function requestShutdown(signal) {
