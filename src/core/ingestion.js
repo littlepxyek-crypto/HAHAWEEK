@@ -13,6 +13,8 @@ class IngestionEngine {
     batchSize,
       maxBatchesPerRun,
     authorityGate,
+    writerFence,
+    writerFenceRenewalIntervalMs,
   }) {
     if (!provider) {
       throw new Error('PROVIDER_REQUIRED');
@@ -69,6 +71,12 @@ class IngestionEngine {
     this.batchSize = batchSize;
     this.maxBatchesPerRun = maxBatchesPerRun ?? Infinity;
     this.authorityGate = authorityGate || (() => ({ status: 'UNGUARDED' }));
+    this.writerFence = writerFence;
+    this.writerFenceRenewalIntervalMs = writerFenceRenewalIntervalMs ?? (
+      writerFence && typeof writerFence.getLeaseMs === 'function'
+        ? Math.max(1, Math.floor(writerFence.getLeaseMs() / 3))
+        : null
+    );
     this.running = false;
   }
 
@@ -79,7 +87,23 @@ class IngestionEngine {
 
     this.running = true;
 
+    let heartbeat = null;
+    let renewalError = null;
+    const startWriterFenceHeartbeat = () => {
+      if (!this.writerFence || typeof this.writerFence.renew !== 'function') return;
+      if (!Number.isFinite(this.writerFenceRenewalIntervalMs) || this.writerFenceRenewalIntervalMs <= 0) return;
+      heartbeat = setInterval(() => {
+        try { this.writerFence.renew(); } catch (error) { renewalError = error; }
+      }, this.writerFenceRenewalIntervalMs);
+    };
+    const assertWriterFenceHeartbeat = () => {
+      if (renewalError) throw renewalError;
+      if (this.writerFence && typeof this.writerFence.assertOwned === 'function') this.writerFence.assertOwned();
+    };
+
     try {
+      assertWriterFenceHeartbeat();
+      startWriterFenceHeartbeat();
       const latestBlock = await rpcCall(
         () => this.provider.getBlockNumber()
       );
@@ -172,6 +196,7 @@ class IngestionEngine {
             fromBlock,
             toBlock
           );
+          assertWriterFenceHeartbeat();
 
           /*
            * Batch completed successfully.
@@ -220,6 +245,7 @@ class IngestionEngine {
         block += 1
       ) {
         await this.processor(block);
+        assertWriterFenceHeartbeat();
 
         /*
          * Cursor advances ONLY after successful processing.
@@ -237,6 +263,7 @@ class IngestionEngine {
         cursor: this.cursor.get(),
       };
     } finally {
+      if (heartbeat) clearInterval(heartbeat);
       this.running = false;
     }
   }

@@ -250,6 +250,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     processorRange,
     batchSize: CHUNK_SIZE,
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
+    writerFence,
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,
       expectedAuthorityFactory: productionExpectedAuthorityFactory,
