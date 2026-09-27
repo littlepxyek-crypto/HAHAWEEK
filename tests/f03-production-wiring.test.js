@@ -13,6 +13,6 @@ test('F-03 production createEngine accepts complete authority factory',async()=>
 });
 test('F-03 production createEngine uses repository lifecycle source and fails closed without expected chain',async()=>{
  const engine=await createEngine();
- try{assert.throws(()=>engine.ingestion.authorityGate({checkpointCommitted:true,fromBlock:101,toBlock:101,processingContext:{status:'VERIFIED',fromBlock:101,toBlock:101,generation:'1'}}),/F03_CHAIN_NOT_FOUND/);}
+ try{assert.throws(()=>engine.ingestion.authorityGate({checkpointCommitted:true,fromBlock:101,toBlock:101}),/F03_CHAIN_NOT_FOUND/);}
  finally{cleanup(engine);}
 });
