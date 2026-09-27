@@ -13,7 +13,7 @@
 - Exact merge-head HAHAWEEK Tests: SUCCESS.
 - Exact merge-head Security/Regression: SUCCESS.
 - Exact merge-head CodeQL Actions: SUCCESS.
-- Exact merge-head CodeQL JavaScript/TypeScript: terminal result pending at documentation update time.
+- Exact merge-head CodeQL JavaScript/TypeScript: SUCCESS.
 - F-03 establishment derives only from VERIFIED durable processing context/result and cryptographically verified evidence, uses frozen V4 commitment derivation, and persists only through existing atomic F-03 persistence.
 - Existing expected-authority reader remains authoritative; no cursor advancement, fallback authority, historical rewrite, Surveillance authority, or V4 activation was added.
 - Actual operator runtime remains UNVERIFIED.
