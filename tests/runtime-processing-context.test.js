@@ -197,6 +197,7 @@ test('STEP614 recovers durable exact context before replay when provider head ad
   });
 
   state.database.close();
+  state.fence.release();
 
   const reopened = await createDatabase(path.join(state.dir, 'hahaweek.sqlite'));
   const reopenedFence = createWriterFence({
