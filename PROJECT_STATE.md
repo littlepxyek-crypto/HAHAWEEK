@@ -18,7 +18,7 @@
 
 **Current phase: RECONCILIATION — VERIFIED / OPERATOR RUNTIME PENDING**
 
-**Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
+- **Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
 
 ---
 
