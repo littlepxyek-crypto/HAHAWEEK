@@ -1,3 +1,19 @@
+## STEP 614 — Live-Readiness / Actual Operator Runtime — MERGE — VERIFIED / RECONCILED / DOCUMENTED
+
+- Merge checkpoint: `docs/STEP_614_MERGE_CHECKPOINT_V0_1.md`.
+- Review PR #567 merged `14cfc58ff241b5be07da4039d3ce34aee5d2f0b6`.
+- Current main Tests: SUCCESS.
+- Current main Security/Regression: SUCCESS.
+- Current main CodeQL Actions: SUCCESS.
+- Current main CodeQL JavaScript/TypeScript: SUCCESS.
+- Implementation PR #562 merged `735d00d4eb26d2bf9af5eae13d4b84ab3d812a18`.
+- No further implementation merge is required for F-614-01.
+- Actual operator runtime remains UNVERIFIED.
+- **Current STEP: 614**
+- **Current phase: MERGE — VERIFIED / RECONCILED / DOCUMENTED**
+- **Next authorized phase: STEP 614 POST-MERGE VERIFICATION.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED.**
+
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — REVIEW — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
