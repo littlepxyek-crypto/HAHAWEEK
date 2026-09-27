@@ -88,6 +88,7 @@ class IngestionEngine {
     this.running = true;
 
     let heartbeat = null;
+    let watchdogStarted = false;
     let renewalError = null;
     const startWriterFenceHeartbeat = () => {
       if (!this.writerFence || typeof this.writerFence.renew !== 'function') return;
@@ -105,8 +106,11 @@ class IngestionEngine {
       assertWriterFenceHeartbeat();
       if (this.writerFence && typeof this.writerFence.startWatchdog === 'function') {
         await this.writerFence.startWatchdog();
+        watchdogStarted = true;
       }
-      startWriterFenceHeartbeat();
+      if (!watchdogStarted) {
+        startWriterFenceHeartbeat();
+      }
       const latestBlock = await rpcCall(
         () => this.provider.getBlockNumber()
       );
@@ -199,7 +203,7 @@ class IngestionEngine {
            * phases and synchronous database/cryptographic work.
            */
           assertWriterFenceHeartbeat();
-          if (this.writerFence && typeof this.writerFence.renew === 'function') {
+          if (!watchdogStarted && this.writerFence && typeof this.writerFence.renew === 'function') {
             this.writerFence.renew();
           }
           assertWriterFenceHeartbeat();
@@ -218,7 +222,7 @@ class IngestionEngine {
            * Renew again before authority validation so authority work
            * starts with a fresh writer-fence lease.
            */
-          if (this.writerFence && typeof this.writerFence.renew === 'function') {
+          if (!watchdogStarted && this.writerFence && typeof this.writerFence.renew === 'function') {
             this.writerFence.renew();
           }
           assertWriterFenceHeartbeat();
