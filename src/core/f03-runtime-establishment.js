@@ -118,6 +118,7 @@ function createF03ExpectedAuthorityEstablisher({ database, writerFence }) {
         emptyResult: processingResult.emptyResult,
       },
       evidenceRecords,
+      allowEmptyResult: processingResult.emptyResult === true,
     });
 
     const provenance = buildProvenance({ processingContext, processingResult });

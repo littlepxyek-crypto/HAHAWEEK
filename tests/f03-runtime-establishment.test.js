@@ -69,6 +69,25 @@ function rawIngestor(database, records) {
   };
 }
 
+async function emptyContextFor(fixtureState) {
+  const chain = {
+    99: { hash: HASH(99), parentHash: HASH(98) },
+    100: { hash: HASH(100), parentHash: HASH(99) },
+  };
+  return createVerifiedProcessingContext({
+    database: fixtureState.database,
+    provider: providerFor(chain),
+    writerFence: fixtureState.fence,
+    confirmations: 3,
+    chainId: 4663,
+    fromBlock: 100,
+    toBlock: 100,
+    latestBlock: 103,
+    rawIngest: rawIngestor(fixtureState.database, {}),
+    committedAt: '2026-09-27T08:01:00.000Z',
+  });
+}
+
 async function contextFor(fixtureState) {
   const chain = {
     99: { hash: HASH(99), parentHash: HASH(98) },
@@ -101,6 +120,29 @@ test('F03 establishment creates the exact durable chain from verified context', 
     assert.equal(authority.generation, context.generation);
     assert.equal(authority.cursorBlock, 100);
     assert.equal(readF03AuthorityChain({ database: f.database, fromBlock: 100, toBlock: 100 }).segmentId, authority.segmentId);
+  } finally {
+    f.database.close(); f.fence.release(); fs.rmSync(f.dir, { recursive: true, force: true });
+  }
+});
+
+test('F03 establishment explicitly supports a VERIFIED empty result without advancing the cursor', async () => {
+  const f = await fixture();
+  try {
+    const context = await emptyContextFor(f);
+    assert.equal(context.status, 'VERIFIED');
+    assert.deepEqual(context.canonicalEvidenceIds, []);
+    assert.equal(context.emptyResult, true);
+
+    const establish = createF03ExpectedAuthorityEstablisher({ database: f.database, writerFence: f.fence });
+    const authority = establish({ fromBlock: 100, toBlock: 100, processingContext: context });
+
+    assert.equal(authority.status, 'VERIFIED');
+    assert.equal(authority.fromBlock, 100);
+    assert.equal(authority.toBlock, 100);
+    assert.equal(authority.cursorBlock, 100);
+    assert.equal(f.database.db.exec('SELECT COUNT(*) FROM f03_segments')[0].values[0][0], 1);
+    assert.equal(f.database.db.exec('SELECT COUNT(*) FROM f03_manifests')[0].values[0][0], 1);
+    assert.equal(f.database.db.exec('SELECT COUNT(*) FROM f03_checkpoints')[0].values[0][0], 1);
   } finally {
     f.database.close(); f.fence.release(); fs.rmSync(f.dir, { recursive: true, force: true });
   }
