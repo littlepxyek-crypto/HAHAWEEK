@@ -60,6 +60,38 @@ test('H-03: watchdog renews fence while main event loop is blocked', async () =>
   assert.equal(writer.release(), true);
 });
 
+
+test('H-03: watchdog renewal failure propagates fail-closed with concrete cause', async () => {
+  const filename = tempFile();
+  const writer = createWriterFence({
+    filename,
+    ownerId: 'writer-watchdog-failure',
+    leaseMs: 500,
+  });
+
+  writer.acquire();
+  await writer.startWatchdog({ intervalMs: 25 });
+
+  const lockFile = filename + '.lock';
+  fs.writeFileSync(lockFile, 'test contention', 'utf8');
+
+  await new Promise(resolve => setTimeout(resolve, 100));
+
+  assert.throws(() => writer.assertOwned(), error =>
+    error instanceof WriterFenceError &&
+    error.code === 'WRITER_FENCE_WATCHDOG_RENEWAL_FAILED' &&
+    error.causeCode === 'WRITER_FENCE_BUSY'
+  );
+
+  const watchdogFailure = writer.getWatchdogFailure();
+  assert.equal(watchdogFailure.code, 'WRITER_FENCE_WATCHDOG_RENEWAL_FAILED');
+  assert.equal(watchdogFailure.causeCode, 'WRITER_FENCE_BUSY');
+
+  fs.unlinkSync(lockFile);
+  await writer.stopWatchdog();
+  assert.equal(writer.release(), true);
+});
+
 test('H-03: active writer blocks another writer', () => {
   const filename = tempFile();
   const a = createWriterFence({ filename, ownerId: 'writer-a', leaseMs: 1000 });
