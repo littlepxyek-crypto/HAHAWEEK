@@ -1,22 +1,24 @@
-## STEP 614 — Writer-Fence Watchdog Failure Propagation — CODE — TEST / SECURITY-REGRESSION PENDING
+## STEP 614 — Writer-Fence Watchdog Failure Propagation — REVIEW — IN PROGRESS
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_ANALYSIS_V0_1.md`.
 - Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_DESIGN_V0_1.md`.
-- Code propagates the first worker watchdog renewal failure to the parent writer-fence instance as `WRITER_FENCE_WATCHDOG_RENEWAL_FAILED`, preserving the underlying cause code.
-- `assertOwned()` now fails closed after watchdog renewal failure; existing ownership/expiry checks remain unchanged.
-- Operational classification maps the new concrete code to the existing `WRITER_FENCE_FAILURE` / BLOCKED / STOP / NO_ADVANCE boundary.
-- Regression covers forced watchdog lock contention and concrete cause propagation; existing watchdog liveness/shutdown tests remain in scope.
+- Code: watchdog renewal failures propagate to the parent writer-fence safety boundary as `WRITER_FENCE_WATCHDOG_RENEWAL_FAILED`, preserving the concrete underlying cause.
+- Test: focused watchdog and operational-state regressions are included.
+- CI: HAHAWEEK Tests run `2390` SUCCESS; HAHAWEEK Security and Regression run `4087` SUCCESS on head `f1e24985aa189a86ccc07724ad19513c81dbed00`.
+- Review: repository review COMMENT recorded; self-approval is not claimed.
+- Actual Termux runtime verification remains required after merge.
 - No authority, evidence, cursor, checkpoint, CBDR, V4, Surveillance, trading, signing, or execution semantics change.
 - Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
 
 **Current STEP: 614**
 
-**Current phase: CODE**
+**Current phase: REVIEW**
 
-- **Next STEP: Run focused repository tests, then Security/Regression and CI.**
+- **Next STEP: Merge PR #603 only after review/CI evidence remains valid.**
 
 ---
+
 
 ## STEP 614 — Writer-Fence Watchdog Contention — RECONCILIATION — OPERATOR RUNTIME PENDING
 
