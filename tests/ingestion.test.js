@@ -233,6 +233,62 @@ test('writer fence is renewed during a long-running batch', async () => {
   assert.ok(renewals >= 2);
 });
 
+test('writer fence is renewed at batch boundaries', async () => {
+  const cursor = makeCursor(100);
+  const renewals = [];
+  const writerFence = {
+    renew() { renewals.push(Date.now()); },
+    assertOwned() {},
+    getLeaseMs() { return 30_000; },
+  };
+
+  const engine = new IngestionEngine({
+    provider: makeProvider(102),
+    cursor,
+    confirmations: 0,
+    processor: async () => {},
+    processorRange: async () => {},
+    batchSize: 1,
+    writerFence,
+  });
+
+  const result = await engine.runOnce();
+
+  assert.equal(result.cursor, 102);
+  assert.equal(renewals.length, 4);
+});
+
+test('writer fence boundary renewal failure fails closed before cursor advance', async () => {
+  const cursor = makeCursor(100);
+  let renewals = 0;
+  const writerFence = {
+    renew() {
+      renewals += 1;
+      throw new Error('WRITER_FENCE_BOUNDARY_RENEW_FAILED');
+    },
+    assertOwned() {},
+    getLeaseMs() { return 30_000; },
+  };
+
+  const engine = new IngestionEngine({
+    provider: makeProvider(101),
+    cursor,
+    confirmations: 0,
+    processor: async () => {},
+    processorRange: async () => {},
+    batchSize: 1,
+    writerFence,
+  });
+
+  await assert.rejects(
+    () => engine.runOnce(),
+    /WRITER_FENCE_BOUNDARY_RENEW_FAILED/
+  );
+
+  assert.equal(renewals, 1);
+  assert.equal(cursor.get(), 100);
+});
+
 test('writer fence renewal failure fails closed without advancing cursor', async () => {
   const cursor = makeCursor(100);
   let renewals = 0;
