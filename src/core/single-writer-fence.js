@@ -156,6 +156,7 @@ function createWriterFence(options = {}) {
 
   let acquiredFence = null;
   let watchdog = null;
+  let watchdogFailure = null;
 
   function acquire() {
     return withFileLock(filename, () => {
@@ -180,6 +181,10 @@ function createWriterFence(options = {}) {
   }
 
   function assertOwned() {
+    if (watchdogFailure) {
+      throw watchdogFailure;
+    }
+
     const current = parseState(filename);
     const timestamp = now();
 
@@ -242,9 +247,25 @@ function createWriterFence(options = {}) {
 
     watchdog = { worker, ready };
 
-    worker.once('message', message => {
-      if (message && message.type === 'ready') {
+    worker.on('message', message => {
+      if (!message) return;
+
+      if (message.type === 'ready') {
         readyResolve();
+        return;
+      }
+
+      if (message.type === 'error' && !watchdogFailure) {
+        const causeCode =
+          typeof message.code === 'string' && message.code
+            ? message.code
+            : 'WRITER_FENCE_WATCHDOG_FAILED';
+        const error = new WriterFenceError(
+          'WRITER_FENCE_WATCHDOG_RENEWAL_FAILED',
+          `Writer-fence watchdog renewal failed: ${causeCode}`
+        );
+        error.causeCode = causeCode;
+        watchdogFailure = error;
       }
     });
 
@@ -311,6 +332,7 @@ function createWriterFence(options = {}) {
     renew,
     startWatchdog,
     stopWatchdog,
+    getWatchdogFailure: () => watchdogFailure,
     release,
     getState: () => parseState(filename),
     getLeaseMs: () => leaseMs,
