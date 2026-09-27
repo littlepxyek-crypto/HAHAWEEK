@@ -1,4 +1,4 @@
-## STEP 614 — Live-Readiness / Actual Operator Runtime — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTATION AUTHORIZED
+## STEP 614 — Live-Readiness / Actual Operator Runtime — RECONCILIATION — VERIFIED / RECONCILED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged.
 - F-614-06 Analysis: PR #578 merged `e7e5f42122cc298d0b08ca8bc4233b38046c3641`.
@@ -6,16 +6,13 @@
 - F-614-06 Code: PR #582 merged `695df52cdebfe962aec23c5f0dd8983b2b4a73c4`.
 - F-614-06 Post-Merge Verification: PR #583 merged `3b064b122751e03686022c2a1a6c9318000d0bbd`.
 - F-614-06 Reconciliation: PR #584 merged `07adabbe81e555bc58129fc3647bc362f61124bf`.
-- Implementation Tests: SUCCESS.
-- Implementation Security/Regression: SUCCESS.
-- Implementation CodeQL: SUCCESS.
-- Reconciliation Tests: SUCCESS.
-- Reconciliation Security/Regression: SUCCESS.
-- Reconciliation CodeQL: SUCCESS.
+- F-614-06 Documentation: PR #585 merged `536e62b2374d7e24c14b3a2e7877f9f9d6efe2fb`.
+- Documentation Post-Merge Verification: PR #586 merged `c90a1996e9f133d4e2f62f2580e21d0bb3edb4fe`.
+- Implementation, reconciliation, and documentation CI evidence is terminal SUCCESS.
 - Actual operator recovery after F-614-06 remains UNVERIFIED.
-- Known runtime evidence remains preserved: cursor `64986696`, failure `CBDR_INTEGRITY_CONFLICT`, evidence impact `PRESERVE`, authority impact `NO_ADVANCE`, STOP `FAIL-CLOSED`.
+- Last directly observed runtime failure remains `CBDR_INTEGRITY_CONFLICT` with cursor `64986696`, evidence `PRESERVE`, authority `NO_ADVANCE`, and `STOP: FAIL-CLOSED`.
 - **Current STEP: 614**
-- **Current phase: DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTATION AUTHORIZED**
+- **Current phase: RECONCILIATION — VERIFIED / RECONCILED**
 - **Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
 - **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
