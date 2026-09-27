@@ -250,6 +250,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     processorRange,
     batchSize: CHUNK_SIZE,
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
+    writerFence,
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,
       expectedAuthorityFactory: productionExpectedAuthorityFactory,
@@ -358,31 +359,3 @@ async function main() {
     throw error;
   } finally {
     engine.database.close();
-    engine.writerFence.release();
-    engine.provider.destroy();
-
-    process.removeListener('SIGINT', handleSIGINT);
-    process.removeListener('SIGTERM', handleSIGTERM);
-  }
-}
-
-if (require.main === module) {
-  main().catch((error) => {
-    console.error('HAHAWEEK SCAN: FAILED');
-    console.error(
-      error instanceof Error
-        ? error.message
-        : String(error)
-    );
-
-    process.exitCode = 1;
-  });
-}
-
-module.exports = {
-  createEngine,
-  createRelevantLogFilter,
-  createRawEventRecord,
-  createDurableExpectedAuthorityFactory,
-  main,
-};
