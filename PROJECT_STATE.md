@@ -1,3 +1,24 @@
+## STEP 614 — F-03 Runtime Authority Establishment — RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME EVIDENCE PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Contract Amendment: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_CONTRACT_AMENDMENT_V0_1.md`, explicitly authorized by user on 2026-09-27.
+- Analysis: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_DESIGN_V0_1.md`.
+- Implementation PR #589 merged as `4446c5e7dab4d0751b9b55b82835ce533a314784`.
+- Post-Merge Verification: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_POST_MERGE_VERIFICATION_V0_1.md`.
+- Reconciliation: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_RECONCILIATION_V0_1.md`.
+- Final Documentation: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_FINAL_DOCUMENTATION_V0_1.md`.
+- PR-head HAHAWEEK Tests: SUCCESS.
+- PR-head Security/Regression: SUCCESS.
+- Exact merge-head HAHAWEEK Tests: SUCCESS.
+- Exact merge-head Security/Regression: SUCCESS.
+- Exact merge-head CodeQL Actions: SUCCESS.
+- Exact merge-head CodeQL JavaScript/TypeScript: terminal result pending at documentation update time.
+- F-03 establishment derives only from VERIFIED durable processing context/result and cryptographically verified evidence, uses frozen V4 commitment derivation, and persists only through existing atomic F-03 persistence.
+- Existing expected-authority reader remains authoritative; no cursor advancement, fallback authority, historical rewrite, Surveillance authority, or V4 activation was added.
+- Actual operator runtime remains UNVERIFIED.
+- Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.
+- **Next STEP: Actual operator runtime evidence collection under the existing STEP 614 Contract.**
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — RECONCILIATION — VERIFIED / RECONCILED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged.
