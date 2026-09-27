@@ -48,6 +48,7 @@ const { assertProductionAuthority } = require('./core/f03-production-authority-r
 const { assertAuthorityBinding } = require('./core/f03-authority-binding');
 const { createAuthorityGate } = require('./core/f03-ingestion-authority-integration');
 const { readF03AuthorityChain } = require('./core/f03-authoritative-chain-persistence');
+const { createF03ExpectedAuthorityEstablisher } = require('./core/f03-runtime-establishment');
 const { createVerifiedProcessingContext } = require('./core/runtime-processing-context');
 const { reconcileProductionAuthorityLifecycleCursor } = require('./core/production-authority-lifecycle-reconciliation');
 const {
@@ -221,7 +222,12 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
           prepared,
         });
       };
-  const productionExpectedAuthorityFactory = expectedAuthorityFactory || createDurableExpectedAuthorityFactory(database);
+  const durableExpectedAuthorityFactory = createDurableExpectedAuthorityFactory(database);
+  const establishF03ExpectedAuthority = createF03ExpectedAuthorityEstablisher({ database, writerFence });
+  const productionExpectedAuthorityFactory = expectedAuthorityFactory || ((args) => {
+    if (args && args.processingContext) return establishF03ExpectedAuthority(args);
+    return durableExpectedAuthorityFactory(args);
+  });
 
   try {
     reconcileProductionAuthorityLifecycleCursor({
