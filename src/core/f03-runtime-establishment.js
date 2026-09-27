@@ -52,6 +52,25 @@ function createF03ExpectedAuthorityEstablisher({ database, writerFence }) {
 
   const evidenceRepository = createEvidenceRepository(database.db);
 
+  function completeEvidenceRecord(evidenceId) {
+    const record = evidenceRepository.get(evidenceId);
+    if (!record) fail('F03_ESTABLISHMENT_CANONICAL_EVIDENCE_NOT_FOUND');
+    const rawRows = database.db.exec(
+      'SELECT event_id, chain_id, block_number, transaction_hash, block_hash, transaction_index, log_index, address, topics_json, data, captured_at FROM raw_events WHERE event_id = ?',
+      [record.raw_event_id]
+    );
+    if (!rawRows.length || rawRows[0].values.length !== 1) fail('F03_ESTABLISHMENT_RAW_EVIDENCE_NOT_FOUND');
+    const row = rawRows[0].values[0];
+    return {
+      ...record,
+      raw: {
+        event_id: row[0], chain_id: row[1], block_number: row[2], transaction_hash: row[3],
+        block_hash: row[4], transaction_index: row[5], log_index: row[6], address: row[7],
+        topics: JSON.parse(row[8]), data: row[9], captured_at: row[10],
+      },
+    };
+  }
+
   return ({ fromBlock, toBlock, processingContext }) => {
     assertExactContext(processingContext, fromBlock, toBlock);
     writerFence.assertOwned();
@@ -83,9 +102,7 @@ function createF03ExpectedAuthorityEstablisher({ database, writerFence }) {
       if (!verification.verified) {
         fail('F03_ESTABLISHMENT_CANONICAL_EVIDENCE_' + verification.reason);
       }
-      const record = evidenceRepository.get(evidenceId);
-      if (!record) fail('F03_ESTABLISHMENT_CANONICAL_EVIDENCE_NOT_FOUND');
-      return record;
+      return completeEvidenceRecord(evidenceId);
     });
 
     writerFence.assertOwned();
