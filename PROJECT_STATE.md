@@ -1,6 +1,6 @@
 ## STEP 614 — Runtime Writer-Fence Boundary Remediation (PR #594) — RECONCILIATION — VERIFIED / RUNTIME EVIDENCE PENDING
 
-- Existing STEP 614 Contract remains authoritative: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Actual Termux runtime reproduced `WRITER_FENCE_EXPIRED` after PR #593's timer-heartbeat remediation; this failure required a bounded runtime remediation within the existing writer-fence concurrency contract.
 - PR #594, **STEP 614 — Renew writer fence at runtime batch boundaries**, was reviewed by repository review comment and merged successfully.
 - PR #594 head: `11216f8683a4f7cb7e280a183cb722690e25557a`.
