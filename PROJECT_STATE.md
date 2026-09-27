@@ -1,3 +1,23 @@
+## STEP 614 — Writer-Fence Watchdog Failure Propagation — CODE — TEST / SECURITY-REGRESSION PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_DESIGN_V0_1.md`.
+- Code propagates the first worker watchdog renewal failure to the parent writer-fence instance as `WRITER_FENCE_WATCHDOG_RENEWAL_FAILED`, preserving the underlying cause code.
+- `assertOwned()` now fails closed after watchdog renewal failure; existing ownership/expiry checks remain unchanged.
+- Operational classification maps the new concrete code to the existing `WRITER_FENCE_FAILURE` / BLOCKED / STOP / NO_ADVANCE boundary.
+- Regression covers forced watchdog lock contention and concrete cause propagation; existing watchdog liveness/shutdown tests remain in scope.
+- No authority, evidence, cursor, checkpoint, CBDR, V4, Surveillance, trading, signing, or execution semantics change.
+- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
+
+**Current STEP: 614**
+
+**Current phase: CODE**
+
+- **Next STEP: Run focused repository tests, then Security/Regression and CI.**
+
+---
+
 ## STEP 614 — Writer-Fence Watchdog Failure Propagation — DESIGN — IN PROGRESS
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
@@ -43,37 +63,3 @@
 - Runtime finding: fresh Termux on main `4273964106d57e8276b3273f1f48959a5330dc49` reproduced `WRITER_FENCE_BUSY` during range `64988757-64988766`.
 - Read-only evidence immediately after failure showed no active HAHAWEEK/Node process, no lock file, and durable fence state `ownerId=NONE`, `fence=56`, `expiresAt=0`.
 - Root cause: watchdog worker and main-thread periodic/batch renewal paths could self-contend on the same exclusive fence lock.
-- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_DESIGN_V0_1.md`.
-- PR #601 merged as `cc11357c177bfbeeb30866e56fa38e6ed8663f44`.
-- PR-head CI: HAHAWEEK Tests SUCCESS; HAHAHAWEEK Security and Regression SUCCESS.
-- Exact merge-head workflow lookup returned no runs; exact merge-head CI GREEN is not claimed.
-- Post-merge verification confirms watchdog-exclusive renewal, preserved ownership assertions, non-watchdog fallback, and synchronized watchdog shutdown.
-- Post-merge verification document: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_POST_MERGE_VERIFICATION_V0_1.md`.
-- No Contract Amendment; no authority, evidence, cursor, CBDR, V4, Surveillance, or execution semantics change.
-- Fresh operator runtime on merge commit is required before this capability can be reconciled as live.
-- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
-
-**Current STEP: 614**
-
-**Current phase: RECONCILIATION — OPERATOR RUNTIME PENDING**
-
-- **Next STEP: Actual operator runtime evidence collection on merge commit cc11357c177bfbeeb30866e56fa38e6ed8663f44 under the existing STEP 614 Contract.**
-
----
-
-## STEP 614 — Writer-Fence Watchdog Contention — CODE — IN PROGRESS
-
-- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Fresh operator runtime on main `4273964106d57e8276b3273f1f48959a5330dc49` reproduced `WRITER_FENCE_BUSY` while processing `64988757-64988766`.
-- Immediate read-only post-failure evidence showed no HAHAWEEK/Node process, no remaining `data/writer-fence-state.json.lock`, and durable fence state `ownerId=NONE`, `fence=56`, `expiresAt=0`.
-- Repository analysis identified self-contention: the watchdog worker and the main-thread timer/batch renewal paths can concurrently acquire the same exclusive fence lock.
-- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_DESIGN_V0_1.md`.
-- Remediation is bounded to the existing writer-fence implementation: when the watchdog is active, it becomes the sole renewal mechanism; main-thread heartbeat and explicit renewals are disabled for that run; ownership assertions remain.
-- No Contract Amendment is required because authority, cursor, evidence, CBDR, V4, Surveillance, and execution semantics are unchanged.
-- Regression added to ensure a watchdog-capable ingestion path performs no main-thread renewals.
-- Implementation is on branch `step-614-writer-fence-watchdog-contention-2026-09-27`; CI/review/merge and fresh operator runtime remain pending.
-- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
-
-**Current STEP: 614**
