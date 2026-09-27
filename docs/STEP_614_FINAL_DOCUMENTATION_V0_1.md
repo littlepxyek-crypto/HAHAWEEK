@@ -1,113 +1,101 @@
 # STEP 614 — Final Documentation v0.1
 
-## Final lifecycle record
+## Final repository lifecycle
 
-STEP 614 establishes the bounded Contract and lifecycle for actual HAHAWEEK operator/live-readiness verification.
+STEP 614 completed:
 
-### Contract
+CONTRACT
+→ ANALYSIS
+→ DESIGN
+→ CODE
+→ TEST
+→ SECURITY/REGRESSION
+→ CI
+→ REVIEW
+→ MERGE
+→ POST-MERGE VERIFICATION
+→ RECONCILIATION
+→ DOCUMENTATION
 
-`docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`
+## Delivered implementation
 
-PR #553 merged as `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
+F-614-01 was identified and fixed.
 
-### Post-Merge Verification
+Before:
+`node "$ROOT/src/status.js" || true`
 
-`docs/STEP_614_POST_MERGE_VERIFICATION_V0_1.md`
+After:
+`node "$ROOT/src/status.js"`
 
-PR #554 merged as `fe40472075a996acffacb2e3cb1dd1b70664d11c`.
+This restores fail-closed error propagation from the repository-supported `status` command.
 
-### Reconciliation
+Regression coverage proves:
+- valid status returns zero;
+- malformed operational state returns non-zero;
+- BLOCKED state retains explicit STOP / FAIL-CLOSED output.
 
-`docs/STEP_614_RECONCILIATION_V0_1.md`
+## Repository evidence
 
-PR #555 merged as `7bdd6e1b4e23ed961ae4a3d7d56f927c99f07c62`.
+Current repository-side checks are verified:
+- Tests: SUCCESS.
+- Security/Regression: SUCCESS.
+- CodeQL Actions: SUCCESS.
+- CodeQL JavaScript/TypeScript: SUCCESS.
+- Exact main merge heads were verified throughout the lifecycle.
+- Historical artifacts remain preserved.
+- No cursor reset or unauthorized cursor advancement occurred.
+- No raw/canonical evidence rewrite occurred.
+- Surveillance remains derived/non-authoritative.
+- No trading/signing/execution or actor inference was introduced.
 
-## CI evidence
+## Operator procedure
 
-For Contract merge `77bea8...`:
-- Tests SUCCESS.
-- Security/Regression SUCCESS.
-- CodeQL Actions SUCCESS.
-- CodeQL JavaScript/TypeScript SUCCESS.
+Only repository-supported commands are documented:
+`./bin/hahaweek status`
+`./bin/hahaweek test`
+`./bin/hahaweek health`
+`./bin/hahaweek scan`
+`./bin/hahaweek start`
+`./bin/hahaweek repair`
 
-For Post-Merge Verification PR #554:
-- Tests SUCCESS.
-- Security/Regression SUCCESS.
+Required actual operator evidence:
+SETUP → START → STATUS → HEALTH → UNDERSTAND OUTPUT → IDENTIFY FAILURE → RECOVER → VERIFY RECOVERY → KNOW WHEN TO STOP.
 
-For Reconciliation PR #555:
-- Initial Tests/Security batch failed because a lifecycle-state test still asserted STEP 613.
-- Failure was reproduced from GitHub Actions logs.
-- Root cause: stale test expectation in `tests/lifecycle-state-authority.test.js`.
-- The authoritative `PROJECT_STATE.md` had correctly advanced to STEP 614 Reconciliation.
-- Fix was test-only: assertion updated to STEP 614 / RECONCILIATION / STEP 614 Contract / authorized Analysis.
-- Corrected Tests SUCCESS.
-- Corrected Security/Regression SUCCESS.
-- Post-merge Tests SUCCESS.
-- Post-merge Security/Regression SUCCESS.
-- Post-merge CodeQL Actions SUCCESS.
-- Post-merge CodeQL JavaScript/TypeScript SUCCESS.
+## Recovery boundary
 
-## Code impact
-
-No production implementation was introduced by STEP 614.
-
-The only code change during reconciliation was a test assertion alignment. No runtime semantics, authority, evidence chain, cursor, checkpoint, manifest, or Surveillance behavior changed.
-
-## Preserved boundaries
-
-Preserved:
-- raw evidence;
-- canonical evidence;
-- deterministic identity;
-- integrity;
-- segment;
-- manifest;
-- checkpoint;
-- cursor;
-- recovery semantics;
-- historical artifacts;
-- Surveillance as derived/non-authoritative;
-- V4 production authority boundary.
-
-No trading, signing, execution, actor inference, deanonymization, historical rewrite, evidence deletion, silent normalization, or cursor reset was introduced.
-
-## Operator acceptance
-
-The Contract requires actual evidence for:
-
-SETUP
-→ START
-→ STATUS
-→ HEALTH
-→ UNDERSTAND OUTPUT
-→ IDENTIFY FAILURE
+LAST VERIFIED STATE
+→ VERIFY DURABLE STATE
 → RECOVER
-→ VERIFY RECOVERY
-→ KNOW WHEN TO STOP
+→ TEST
+→ VERIFY
+→ CONTINUE
 
-Repository CI verifies repository artifacts and tests only.
+No reset/delete/pretend-healthy recovery is permitted.
 
-**Actual interactive operator runtime remains UNVERIFIED.**
+## Critical limitation
 
-Therefore:
-- setup in an actual operator environment: UNVERIFIED;
-- start in an actual operator environment: UNVERIFIED;
-- status in an actual operator environment: UNVERIFIED;
-- health in an actual operator environment: UNVERIFIED;
-- actual failure diagnosis/recovery/recovery verification/STOP behavior: UNVERIFIED.
+The repository connector can verify repository state and GitHub CI, but it has not observed an actual interactive Termux/operator environment.
 
-This distinction is intentional and fail-closed.
+Therefore these remain UNVERIFIED:
+- actual setup;
+- actual start;
+- actual status;
+- actual health;
+- actual failure diagnosis;
+- actual recovery;
+- actual recovery verification;
+- actual STOP behavior.
 
-## Final state
+This is an evidence boundary, not a claim that the runtime is broken.
 
-STEP 614 Contract → Verification → Reconciliation → Documentation is complete at the repository lifecycle level.
+## LIVE-READINESS RESULT
 
-Global LIVE-READINESS is **NOT READY / BLOCKED** because the critical actual operator-runtime evidence has not been observed.
+Repository lifecycle: VERIFIED / RECONCILED / DOCUMENTED.
 
-The next authorized phase is:
+Global LIVE-READINESS:
 
-**STEP 614 — ANALYSIS**
+**NOT READY / BLOCKED**
 
-Analysis must inspect the existing runtime/operator implementation against the Contract and determine whether actual operator verification can proceed without semantic change.
+**VERIFIED LIVE is forbidden until actual operator-environment evidence satisfies the remaining critical gate.**
 
-No VERIFIED LIVE claim is made.
+No new numbered STEP is inferred by this documentation. The next legitimate action is collection and verification of actual operator-runtime evidence under the existing STEP 614 Contract.
