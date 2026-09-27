@@ -19,7 +19,7 @@ test('current PROJECT_STATE is valid and exposes STEP 614 current authority', ()
 
   assert.equal(result.valid, true);
   assert.equal(result.current_step, 614);
-  assert.equal(result.phase, 'RECONCILIATION');
+  assert.equal(result.phase, 'DOCUMENTATION');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME/);
   assert.equal(result.next_step, 'Actual operator runtime evidence collection on current main under the existing STEP 614 Contract');
