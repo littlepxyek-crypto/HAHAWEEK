@@ -67,6 +67,107 @@ function assertContinuationParent(database, snapshot, parent) {
   }
 }
 
+function queryExactLineages(database, fromBlock, toBlock) {
+  const rows = database.db.exec(
+    'SELECT lineage_id FROM canonical_lineage WHERE from_block = ? AND to_block = ? ORDER BY lineage_id',
+    [fromBlock, toBlock]
+  );
+  return rows.length ? rows[0].values.map(row => row[0]) : [];
+}
+
+async function recoverDurableExactContext({
+  database,
+  provider,
+  writerFence,
+  fromBlock,
+  toBlock,
+  chainId,
+  transitionType,
+}) {
+  assertWriter(writerFence);
+
+  const lineageIds = queryExactLineages(database, fromBlock, toBlock);
+  if (lineageIds.length === 0) return null;
+  if (lineageIds.length > 1) fail('PROCESSING_CONTEXT_DURABLE_LINEAGE_CONFLICT');
+
+  const lineage = reconstructLineage(database, lineageIds[0]);
+  if (!lineage || lineage.status !== 'VERIFIED') {
+    fail('PROCESSING_CONTEXT_DURABLE_LINEAGE_INVALID');
+  }
+
+  if (transitionType && transitionType !== lineage.transitionType) {
+    fail('PROCESSING_CONTEXT_RECOVERY_TRANSITION_MISMATCH');
+  }
+
+  const snapshot = snapshotForLineage(database, lineage);
+
+  if (!provider || typeof provider.getNetwork !== 'function' || typeof provider.getBlock !== 'function') {
+    fail('PROCESSING_CONTEXT_RECOVERY_PROVIDER_REQUIRED');
+  }
+
+  let network;
+  try {
+    network = await provider.getNetwork();
+  } catch (error) {
+    const wrapped = new Error('PROCESSING_CONTEXT_RECOVERY_PROVIDER_UNAVAILABLE');
+    wrapped.code = wrapped.message;
+    wrapped.cause = error;
+    throw wrapped;
+  }
+
+  const actualChainId = Number(network && network.chainId);
+  if (!Number.isSafeInteger(actualChainId) || actualChainId !== chainId) {
+    fail('PROCESSING_CONTEXT_RECOVERY_CHAIN_MISMATCH');
+  }
+
+  for (let blockNumber = fromBlock; blockNumber <= toBlock; blockNumber += 1) {
+    const stored = snapshot.records.find(record => record.block_number === blockNumber);
+    if (!stored) fail('PROCESSING_CONTEXT_RECOVERY_SNAPSHOT_RANGE_INVALID');
+
+    let header;
+    try {
+      header = await provider.getBlock(blockNumber);
+    } catch (error) {
+      const wrapped = new Error('PROCESSING_CONTEXT_RECOVERY_PROVIDER_UNAVAILABLE');
+      wrapped.code = wrapped.message;
+      wrapped.cause = error;
+      throw wrapped;
+    }
+
+    if (!header || header.number !== blockNumber ||
+        header.hash !== stored.block_hash ||
+        header.parentHash !== stored.parent_block_hash) {
+      return null;
+    }
+  }
+
+  const processingResult = require('./processing-result-persistence')
+    .readProcessingResult(database, lineage.processingResultId);
+
+  assertWriter(writerFence);
+
+  return Object.freeze({
+    status: 'VERIFIED',
+    fromBlock,
+    toBlock,
+    processingResultId: lineage.processingResultId,
+    processingExecutionId: processingResult.processingExecutionId,
+    parentResultId: lineage.parentResultId,
+    transitionType: lineage.transitionType,
+    generation: lineage.generation,
+    canonicalEvidenceIds: Object.freeze([...lineage.canonicalEvidenceIds]),
+    emptyResult: lineage.canonicalEvidenceIds.length === 0,
+    evidenceSetDigest: lineage.canonicalEvidenceSetDigest,
+    lineageId: lineage.lineageId,
+    provenance: deepFreeze({
+      ...lineage.provenance,
+      canonical_decision_snapshot_id: snapshot.snapshot_id,
+    }),
+    committedAt: lineage.committedAt,
+    canonicalDecisionSnapshotId: snapshot.snapshot_id,
+  });
+}
+
 function resolveTransition({ database, snapshot, fromBlock, toBlock, requestedTransitionType }) {
   if (requestedTransitionType && !['INITIAL', 'CONTINUATION', 'REORG_REPLACEMENT'].includes(requestedTransitionType)) {
     fail('PROCESSING_CONTEXT_TRANSITION_INVALID');
@@ -186,6 +287,20 @@ async function createVerifiedProcessingContext({
   let durable = false;
 
   try {
+    const recovered = await recoverDurableExactContext({
+      database,
+      provider,
+      writerFence,
+      fromBlock,
+      toBlock,
+      chainId,
+      transitionType,
+    });
+
+    if (recovered) {
+      return recovered;
+    }
+
     const decisionSnapshot = await createCanonicalDecisionInput({
       provider,
       db: database.db,
@@ -260,4 +375,5 @@ async function createVerifiedProcessingContext({
 module.exports = {
   createVerifiedProcessingContext,
   resolveTransition,
+  recoverDurableExactContext,
 };
