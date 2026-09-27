@@ -1,3 +1,18 @@
+## STEP 614 — Live-Readiness / Actual Operator Runtime — VERIFICATION — VERIFIED / RECONCILED / DOCUMENTED
+
+- Final Post-Merge Verification: `docs/STEP_614_FINAL_POST_MERGE_VERIFICATION_V0_1.md`.
+- Exact main merge head: `924bc32973718346fc549b4e03ee39325114673e`.
+- Exact merge-head Tests: SUCCESS.
+- Exact merge-head Security/Regression: SUCCESS.
+- Exact merge-head CodeQL Actions: SUCCESS.
+- Exact merge-head CodeQL JavaScript/TypeScript: SUCCESS.
+- F-614-01 implementation and targeted regression are verified.
+- Actual operator environment remains UNVERIFIED.
+- **Current STEP: 614**
+- **Current phase: VERIFICATION — VERIFIED / RECONCILED / DOCUMENTED**
+- **Next authorized phase: STEP 614 RECONCILIATION.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED.**
+
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — MERGE — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
