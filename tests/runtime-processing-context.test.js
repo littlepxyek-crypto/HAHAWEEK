@@ -289,3 +289,63 @@ test('STEP614 changed provider identity uses the existing reorg path', async () 
   state.database.close();
   fs.rmSync(state.dir, { recursive: true, force: true });
 });
+
+
+test('STEP614 multiple durable exact lineages fail closed before replay', async () => {
+  const state = await fixture();
+  const original = {
+    99: { hash: HASH(99), parentHash: HASH(98) },
+    100: { hash: HASH(100), parentHash: HASH(99) },
+  };
+  const changed = {
+    99: { hash: HASH(99), parentHash: HASH(98) },
+    100: { hash: HASH(200), parentHash: HASH(99) },
+  };
+
+  await createVerifiedProcessingContext({
+    database: state.database,
+    provider: providerFor(original),
+    writerFence: state.fence,
+    confirmations: 3,
+    chainId: 4663,
+    fromBlock: 100,
+    toBlock: 100,
+    latestBlock: 103,
+    rawIngest: rawIngestor(state.database, { 100: raw('e100', 100, HASH(100)) }),
+    committedAt: '2026-09-27T05:04:00.000Z',
+  });
+
+  await createVerifiedProcessingContext({
+    database: state.database,
+    provider: providerFor(changed),
+    writerFence: state.fence,
+    confirmations: 3,
+    chainId: 4663,
+    fromBlock: 100,
+    toBlock: 100,
+    latestBlock: 103,
+    rawIngest: rawIngestor(state.database, { 100: raw('e100-changed', 100, HASH(200)) }),
+    committedAt: '2026-09-27T05:05:00.000Z',
+  });
+
+  await assert.rejects(
+    () => createVerifiedProcessingContext({
+      database: state.database,
+      provider: providerFor(changed),
+      writerFence: state.fence,
+      confirmations: 3,
+      chainId: 4663,
+      fromBlock: 100,
+      toBlock: 100,
+      latestBlock: 104,
+      rawIngest: async () => {
+        throw new Error('RECOVERY_RAW_INGEST_SHOULD_NOT_RUN');
+      },
+      committedAt: '2026-09-27T05:06:00.000Z',
+    }),
+    error => error.code === 'PROCESSING_CONTEXT_DURABLE_LINEAGE_CONFLICT'
+  );
+
+  state.database.close();
+  fs.rmSync(state.dir, { recursive: true, force: true });
+});
