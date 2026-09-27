@@ -3,6 +3,12 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const {
+  Worker,
+  isMainThread,
+  parentPort,
+  workerData,
+} = require('node:worker_threads');
 
 const DEFAULT_LEASE_MS = Number(process.env.HAHAWEEK_WRITER_LEASE_MS || 30_000);
 const LOCK_SUFFIX = '.lock';
@@ -73,6 +79,71 @@ function atomicWrite(filename, value) {
   fs.renameSync(tmp, filename);
 }
 
+function renewOwnedState(filename, ownerId, fence, leaseMs) {
+  return withFileLock(filename, () => {
+    const current = parseState(filename);
+    const timestamp = Date.now();
+
+    if (!current) {
+      throw new WriterFenceError('WRITER_FENCE_MISSING');
+    }
+
+    if (current.ownerId !== ownerId || current.fence !== fence) {
+      throw new WriterFenceError('STALE_WRITER_FENCE');
+    }
+
+    if (current.expiresAt <= timestamp) {
+      throw new WriterFenceError('WRITER_FENCE_EXPIRED');
+    }
+
+    const expiresAt = timestamp + leaseMs;
+    atomicWrite(filename, {
+      ...current,
+      expiresAt,
+    });
+    return { ...current, expiresAt };
+  });
+}
+
+function runWatchdogWorker() {
+  const {
+    filename,
+    ownerId,
+    fence,
+    leaseMs,
+    intervalMs,
+  } = workerData;
+
+  let stopped = false;
+
+  const renew = () => {
+    if (stopped) return;
+    try {
+      const state = renewOwnedState(filename, ownerId, fence, leaseMs);
+      parentPort.postMessage({ type: 'renewed', expiresAt: state.expiresAt });
+    } catch (error) {
+      parentPort.postMessage({
+        type: 'error',
+        code: error && error.code ? error.code : 'WRITER_FENCE_WATCHDOG_FAILED',
+      });
+    }
+  };
+
+  const timer = setInterval(renew, intervalMs);
+  parentPort.once('message', message => {
+    if (!message || message.type !== 'stop') return;
+    stopped = true;
+    clearInterval(timer);
+    parentPort.close();
+  });
+
+  parentPort.postMessage({ type: 'ready' });
+}
+
+if (!isMainThread) {
+  runWatchdogWorker();
+}
+
 function createWriterFence(options = {}) {
   const filename = options.filename || DEFAULT_STATE_FILE;
   const leaseMs = Number(options.leaseMs || DEFAULT_LEASE_MS);
@@ -84,6 +155,7 @@ function createWriterFence(options = {}) {
   }
 
   let acquiredFence = null;
+  let watchdog = null;
 
   function acquire() {
     return withFileLock(filename, () => {
@@ -140,6 +212,69 @@ function createWriterFence(options = {}) {
     });
   }
 
+  function startWatchdog({ intervalMs = Math.max(1, Math.floor(leaseMs / 3)) } = {}) {
+    if (watchdog) {
+      return watchdog.ready;
+    }
+
+    if (!Number.isFinite(intervalMs) || intervalMs <= 0) {
+      throw new WriterFenceError('INVALID_WRITER_WATCHDOG_INTERVAL');
+    }
+
+    assertOwned();
+
+    const worker = new Worker(__filename, {
+      workerData: {
+        filename,
+        ownerId,
+        fence: acquiredFence,
+        leaseMs,
+        intervalMs,
+      },
+    });
+
+    let readyResolve;
+    let readyReject;
+    const ready = new Promise((resolve, reject) => {
+      readyResolve = resolve;
+      readyReject = reject;
+    });
+
+    watchdog = { worker, ready };
+
+    worker.once('message', message => {
+      if (message && message.type === 'ready') {
+        readyResolve();
+      }
+    });
+
+    worker.on('error', error => {
+      if (watchdog && watchdog.worker === worker) {
+        watchdog = null;
+      }
+      readyReject(error);
+    });
+
+    worker.on('exit', code => {
+      if (watchdog && watchdog.worker === worker) {
+        watchdog = null;
+      }
+      if (code !== 0) {
+        readyReject(new WriterFenceError('WRITER_FENCE_WATCHDOG_EXIT'));
+      }
+    });
+
+    return ready;
+  }
+
+  async function stopWatchdog() {
+    if (!watchdog) return;
+    const current = watchdog;
+    watchdog = null;
+    current.worker.postMessage({ type: 'stop' });
+    await current.worker.terminate();
+  }
+
   function release() {
     const current = parseState(filename);
     if (!current) return false;
@@ -163,6 +298,8 @@ function createWriterFence(options = {}) {
     acquire,
     assertOwned,
     renew,
+    startWatchdog,
+    stopWatchdog,
     release,
     getState: () => parseState(filename),
     getLeaseMs: () => leaseMs,

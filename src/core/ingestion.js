@@ -103,6 +103,9 @@ class IngestionEngine {
 
     try {
       assertWriterFenceHeartbeat();
+      if (this.writerFence && typeof this.writerFence.startWatchdog === 'function') {
+        await this.writerFence.startWatchdog();
+      }
       startWriterFenceHeartbeat();
       const latestBlock = await rpcCall(
         () => this.provider.getBlockNumber()
@@ -285,6 +288,9 @@ class IngestionEngine {
       };
     } finally {
       if (heartbeat) clearInterval(heartbeat);
+      if (this.writerFence && typeof this.writerFence.stopWatchdog === 'function') {
+        await this.writerFence.stopWatchdog();
+      }
       this.running = false;
     }
   }

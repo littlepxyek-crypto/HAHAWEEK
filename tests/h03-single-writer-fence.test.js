@@ -38,6 +38,28 @@ test('H-03: one writer acquires, renews, and releases authority', () => {
   );
 });
 
+
+test('H-03: watchdog renews fence while main event loop is blocked', async () => {
+  const filename = tempFile();
+  const writer = createWriterFence({
+    filename,
+    ownerId: 'writer-watchdog',
+    leaseMs: 200,
+  });
+
+  writer.acquire();
+  await writer.startWatchdog({ intervalMs: 50 });
+
+  const waitBuffer = new SharedArrayBuffer(4);
+  const waitView = new Int32Array(waitBuffer);
+  Atomics.wait(waitView, 0, 0, 600);
+
+  assert.equal(writer.assertOwned(), true);
+
+  await writer.stopWatchdog();
+  assert.equal(writer.release(), true);
+});
+
 test('H-03: active writer blocks another writer', () => {
   const filename = tempFile();
   const a = createWriterFence({ filename, ownerId: 'writer-a', leaseMs: 1000 });
