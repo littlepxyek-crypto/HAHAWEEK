@@ -59,6 +59,7 @@ test('H-03: watchdog performs an immediate renewal before readiness', async () =
   assert.ok(diagnostics);
   assert.equal(diagnostics.leaseMs, 500);
   assert.equal(diagnostics.intervalMs, 100);
+  assert.ok(diagnostics.startedAt <= diagnostics.readyAt);
   assert.equal(diagnostics.renewalCount, 1);
   assert.ok(diagnostics.lastRenewedAt >= diagnostics.lastRenewStartedAt);
   assert.ok(diagnostics.lastRenewDurationMs >= 0);
