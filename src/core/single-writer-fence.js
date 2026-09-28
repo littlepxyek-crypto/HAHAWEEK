@@ -115,22 +115,69 @@ function runWatchdogWorker() {
   } = workerData;
 
   let stopped = false;
+  let renewalCount = 0;
+  let lastRenewScheduledAt = null;
+  let lastRenewStartedAt = null;
+  let lastRenewCompletedAt = null;
+  let lastRenewDurationMs = null;
+  let lastRenewedAt = null;
+  let lastRenewFailureAt = null;
+  let lastRenewFailureCode = null;
+  let lastRenewFailureDelayMs = null;
 
-  const renew = () => {
+  const diagnosticSnapshot = () => ({
+    leaseMs,
+    intervalMs,
+    renewalCount,
+    lastRenewScheduledAt,
+    lastRenewStartedAt,
+    lastRenewCompletedAt,
+    lastRenewDurationMs,
+    lastRenewedAt,
+    lastRenewFailureAt,
+    lastRenewFailureCode,
+    lastRenewFailureDelayMs,
+  });
+
+  const renew = (scheduledAt = null) => {
     if (stopped) return true;
+
+    const startedAt = Date.now();
+    lastRenewScheduledAt = scheduledAt;
+    lastRenewStartedAt = startedAt;
+
     try {
       const state = renewOwnedState(filename, ownerId, fence, leaseMs);
+      const completedAt = Date.now();
+      lastRenewCompletedAt = completedAt;
+      lastRenewDurationMs = Math.max(0, completedAt - startedAt);
+      lastRenewedAt = completedAt;
+      renewalCount += 1;
+
       parentPort.postMessage({
         type: 'renewed',
         expiresAt: state.expiresAt,
-        renewedAt: Date.now(),
+        renewedAt: completedAt,
+        diagnostics: diagnosticSnapshot(),
       });
       return true;
     } catch (error) {
+      const failedAt = Date.now();
+      lastRenewCompletedAt = failedAt;
+      lastRenewDurationMs = Math.max(0, failedAt - startedAt);
+      lastRenewFailureAt = failedAt;
+      lastRenewFailureCode =
+        error && error.code ? error.code : 'WRITER_FENCE_WATCHDOG_FAILED';
+      lastRenewFailureDelayMs =
+        scheduledAt === null
+          ? null
+          : Math.max(0, startedAt - scheduledAt);
+
       parentPort.postMessage({
         type: 'error',
-        code: error && error.code ? error.code : 'WRITER_FENCE_WATCHDOG_FAILED',
-        failedAt: Date.now(),
+        code: lastRenewFailureCode,
+        failedAt,
+        diagnostics: diagnosticSnapshot(),
       });
       return false;
     }
@@ -146,7 +193,12 @@ function runWatchdogWorker() {
     return;
   }
 
-  const timer = setInterval(renew, intervalMs);
+  let nextScheduledAt = Date.now() + intervalMs;
+  const timer = setInterval(() => {
+    const scheduledAt = nextScheduledAt;
+    nextScheduledAt += intervalMs;
+    renew(scheduledAt);
+  }, intervalMs);
   parentPort.once('message', message => {
     if (!message || message.type !== 'stop') return;
     stopped = true;
@@ -175,6 +227,7 @@ function createWriterFence(options = {}) {
   let watchdog = null;
   let watchdogFailure = null;
   let watchdogLastRenewedAt = null;
+  let watchdogDiagnostics = null;
 
   function acquire() {
     return withFileLock(filename, () => {
@@ -275,6 +328,7 @@ function createWriterFence(options = {}) {
 
       if (message.type === 'renewed') {
         watchdogLastRenewedAt = message.renewedAt;
+        watchdogDiagnostics = message.diagnostics || watchdogDiagnostics;
         return;
       }
 
@@ -288,6 +342,8 @@ function createWriterFence(options = {}) {
           `Writer-fence watchdog renewal failed: ${causeCode}`
         );
         error.causeCode = causeCode;
+        error.diagnostics = message.diagnostics || null;
+        watchdogDiagnostics = message.diagnostics || watchdogDiagnostics;
         watchdogFailure = error;
         readyReject(error);
       }
@@ -358,6 +414,8 @@ function createWriterFence(options = {}) {
     stopWatchdog,
     getWatchdogFailure: () => watchdogFailure,
     getWatchdogLastRenewedAt: () => watchdogLastRenewedAt,
+    getWatchdogDiagnostics: () =>
+      watchdogDiagnostics ? { ...watchdogDiagnostics } : null,
     release,
     getState: () => parseState(filename),
     getLeaseMs: () => leaseMs,
