@@ -1,17 +1,18 @@
-## STEP 614 — Writer-Fence Watchdog Liveness & Failure-State Recovery — RECONCILIATION — VERIFIED / RECONCILED / OPERATOR RUNTIME PENDING
+## STEP 614 — Writer-Fence Watchdog Liveness & Failure-State Recovery — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / OPERATOR RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Implementation PR #607 merged as `508925824296b311c6e2a7946c68e56b63495c4c`.
 - Post-merge verification PR #608 merged as `8fdeab90c337135722e8c9e028808f91086c4dbf`.
-- Reconciliation: `docs/STEP_614_WRITER_FENCE_WATCHDOG_LIVENESS_RECONCILIATION_V0_1.md`.
-- PR #607 head Tests #2430 and Security/Regression #4127: SUCCESS.
-- PR #608 head Tests #2436 and Security/Regression #4133: SUCCESS.
+- Reconciliation PR #609 merged as `289ae17fda05826381452cf9959b7b6af97dde16`.
+- Final documentation: `docs/STEP_614_WRITER_FENCE_WATCHDOG_LIVENESS_FINAL_DOCUMENTATION_V0_1.md`.
+- PR-head Tests: #2430, #2436, #2442 — SUCCESS.
+- PR-head Security/Regression: #4127, #4133, #4139 — SUCCESS.
 - Exact merge-head workflow lookups returned no runs; exact merge-head CI GREEN is not claimed.
-- Repository lifecycle is VERIFIED / RECONCILED through the bounded remediation.
+- Repository lifecycle is VERIFIED / RECONCILED / DOCUMENTED through the bounded remediation.
 - Fresh actual operator runtime on current main remains required.
 - **Current STEP: 614**
-- **Current phase: RECONCILIATION**
-- **Next STEP: STEP 614 Documentation**
+- **Current phase: DOCUMENTATION**
+- **Next STEP: Actual operator runtime evidence collection on current main under the existing STEP 614 Contract**
 - **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
 ---
