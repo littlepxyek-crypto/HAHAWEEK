@@ -1,34 +1,17 @@
-## STEP 614 — PR #638 Post-Merge Verification — VERIFICATION — VERIFIED / RECONCILIATION PENDING
+## STEP 614 — Final Documentation — DOCUMENTATION — VERIFIED / RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- PR #638 merged as `f1fd34845ca0d1854400eb83503ea4dde0046f4f`.
-- Post-merge verification: `docs/STEP_614_PR638_POST_MERGE_VERIFICATION_V0_1.md`.
-- PR #638 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
+- Final documentation: `docs/STEP_614_FINAL_DOCUMENTATION_V0_6.md`.
+- PR #639 merged as `602f3d221a1c7827dcd62eefa8ea1522928c7bec`.
+- PR #639 post-merge verification and reconciliation are preserved.
+- Exact current-main HAHAWEEK Tests: SUCCESS.
+- Exact current-main HAHAWEEK Security and Regression: SUCCESS.
 - No production runtime semantics changed.
 - **Current STEP: 614**
-- **Current phase: VERIFICATION**
-- **Next STEP: Final documentation, then actual operator runtime evidence collection on the resulting current main under the existing STEP 614 Contract.**
+- **Current phase: DOCUMENTATION**
+- **Next STEP: Actual operator runtime evidence collection on the resulting current main under the existing STEP 614 Contract.**
 - **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
-
-## STEP 614 — PR #615 Post-Merge Verification / Reconciliation — RECONCILIATION — VERIFIED / DOCUMENTED / RUNTIME PENDING
-
-- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Actual operator runtime evidence record: `docs/STEP_614_ACTUAL_OPERATOR_RUNTIME_EVIDENCE_WATCHDOG_LIVENESS_RECURRENCE_V0_2.md`.
-- PR #615 merged as `152d30d7205b8e72d0be219565c584bef87ae9fd`.
-- Post-merge verification: `docs/STEP_614_PR615_POST_MERGE_VERIFICATION_V0_1.md`.
-- PR #615 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
-- No workflow runs were returned for the exact merge commit; exact merge-head CI GREEN is not claimed.
-- PR #615 changed documentation/evidence only; no production source semantics changed.
-- The actual runtime evidence preserves VERIFIED/AUTHORIZED processing followed by WRITER_FENCE_EXPIRED and fail-closed STOP.
-- Watchdog liveness cause remains UNKNOWN / UNPROVEN.
-- Actual operator restart/recovery continuity and sustained watchdog liveness remain unverified.
-- **Current STEP: 614**
-- **Current phase: RECONCILIATION — POST-MERGE VERIFICATION VERIFIED**
-- **Next STEP: Actual operator runtime evidence collection on current main under the existing STEP 614 Contract.**
-- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
-
----
 
 ## STEP 614 — Writer-Fence Watchdog Runtime Liveness Diagnostics — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / OPERATOR RUNTIME PENDING
 
