@@ -23,7 +23,7 @@ PR #616 final head CI:
 - HAHAWEEK Tests: SUCCESS
 - HAHAWEEK Security and Regression: SUCCESS
 
-The earlier CI failure was reproduced and classified as a stale lifecycle-state test assertion. The test expected the old `DOCUMENTATION` phase while the reconciled PROJECT_STATE correctly exposes the normalized `RECONCILIATION` phase. The assertion was corrected and the final head passed both workflows.
+The earlier CI failure was reproduced and classified as a stale lifecycle-state test assertion. The test assertion was stale relative to the reconciled PROJECT_STATE phase and was corrected to assert the final `DOCUMENTATION` phase. The final head then passed both workflows.
 
 No production runtime semantics were changed.
 
