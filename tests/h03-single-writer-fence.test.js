@@ -39,6 +39,27 @@ test('H-03: one writer acquires, renews, and releases authority', () => {
 });
 
 
+test('H-03: watchdog performs an immediate renewal before readiness', async () => {
+  const filename = tempFile();
+  const writer = createWriterFence({
+    filename,
+    ownerId: 'writer-watchdog-immediate',
+    leaseMs: 500,
+  });
+
+  const acquired = writer.acquire();
+  await writer.startWatchdog({ intervalMs: 100 });
+
+  const current = writer.getState();
+  assert.equal(current.ownerId, acquired.ownerId);
+  assert.equal(current.fence, acquired.fence);
+  assert.ok(current.expiresAt > acquired.expiresAt);
+
+  await writer.stopWatchdog();
+  assert.equal(writer.release(), true);
+});
+
+
 test('H-03: watchdog renews fence while main event loop is blocked', async () => {
   const filename = tempFile();
   const writer = createWriterFence({
