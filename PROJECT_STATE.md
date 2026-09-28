@@ -1,38 +1,15 @@
-## STEP 614 — PR #635 Reconciliation — RECONCILIATION — VERIFIED / FINAL DOCUMENTATION PENDING
+## STEP 614 — PR #636 Post-Merge Verification — VERIFICATION — VERIFIED / RECONCILIATION PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- PR #635 merged as `283bf0d0c583bbba206cc4e8362949917cd9ca59`.
-- Post-merge verification and reconciliation are preserved in `docs/STEP_614_PR634_POST_MERGE_VERIFICATION_V0_1.md` and `docs/STEP_614_PR635_RECONCILIATION_V0_1.md`.
-- Exact current-main HAHAHAWEEK Tests: SUCCESS.
-- Exact current-main HAHAHAWEEK Security and Regression: SUCCESS.
+- PR #636 merged as `a956ffc37f381c5e61d7f7431dfcdb7870aea515`.
+- Post-merge verification: `docs/STEP_614_PR636_POST_MERGE_VERIFICATION_V0_1.md`.
+- PR #636 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
 - No production runtime semantics changed.
 - **Current STEP: 614**
-- **Current phase: RECONCILIATION**
-- **Next STEP: Final documentation, then actual operator runtime evidence collection on the resulting current main under the existing STEP 614 Contract.**
+- **Current phase: VERIFICATION**
+- **Next STEP: Final reconciliation of PR #636 post-merge state, then final documentation and actual operator runtime evidence collection under the existing STEP 614 Contract.**
 - **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
-
-## STEP 614 — PR #623 Final Documentation — DOCUMENTATION — VERIFIED / RECONCILED / RUNTIME PENDING
-
-- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Fresh actual operator-runtime evidence: `docs/STEP_614_ACTUAL_OPERATOR_RUNTIME_EVIDENCE_WATCHDOG_SCHEDULING_DELAY_V0_3.md`.
-- PR #620 actual runtime evidence merged as `443a81c21167ef92c857d59566b6c625d8db460f`.
-- PR #621 post-merge verification merged as `1ed5c8e0fb5ab46f5fa50c69176155864d064d6b`.
-- PR #622 reconciliation merged as `ede124ae9490915a75edde9f6d8361297b063baa`.
-- PR #623 post-merge verification merged as `f5092d36ffb2a8bc588a37f8f4f6501afaf0548d`.
-- Fresh runtime evidence establishes VERIFIED/AUTHORIZED processing, cursor outcome `64989716`, duplicate handling, subsequent HEALTHY / HEALTH: OK, and later WRITER_FENCE_EXPIRED fail-closed STOP.
-- Watchdog scheduling/start delay was measured at `36550 ms` against a `30000 ms` lease.
-- The screenshot does not display the operator checkout commit; current-main identity remains unverified from that runtime artifact.
-- PR #622 initial CI failure was a stale lifecycle-state assertion; the corrected head passed Tests and Security/Regression.
-- PR #623 head passed Tests and Security/Regression.
-- No production runtime semantics, authority, evidence, cursor, V4, Surveillance, signing, trading, or execution semantics changed.
-- Exact merge-head CI GREEN is not claimed for PR #620, #621, #622, or #623 where exact merge-head workflow evidence was unavailable.
-- **Current STEP: 614**
-- **Current phase: DOCUMENTATION**
-- **Next STEP: Actual operator runtime evidence collection on current main under the existing STEP 614 Contract.**
-- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
-
----
 
 ## STEP 614 — PR #620 / PR #621 Reconciliation — RECONCILIATION — VERIFIED / RUNTIME PENDING
 
