@@ -1,21 +1,29 @@
-## STEP 614 — Writer-Fence Watchdog Liveness & Failure-State Recovery — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / OPERATOR RUNTIME PENDING
+## STEP 614 — Writer-Fence Watchdog Runtime Liveness Diagnostics — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / OPERATOR RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Implementation PR #607 merged as `508925824296b311c6e2a7946c68e56b63495c4c`.
-- Post-merge verification PR #608 merged as `8fdeab90c337135722e8c9e028808f91086c4dbf`.
-- Reconciliation PR #609 merged as `289ae17fda05826381452cf9959b7b6af97dde16`.
-- Final documentation: `docs/STEP_614_WRITER_FENCE_WATCHDOG_LIVENESS_FINAL_DOCUMENTATION_V0_1.md`.
-- PR-head Tests: #2430, #2436, #2442 — SUCCESS.
-- PR-head Security/Regression: #4127, #4133, #4139 — SUCCESS.
-- Exact merge-head workflow lookups returned no runs; exact merge-head CI GREEN is not claimed.
-- Repository lifecycle is VERIFIED / RECONCILED / DOCUMENTED through the bounded remediation.
-- Fresh actual operator runtime on current main remains required.
+- Diagnostics Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_ANALYSIS_V0_1.md`.
+- Diagnostics Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_DESIGN_V0_1.md`.
+- Implementation PR #611 merged as `676ab419a6efc0a0ea7c10bcfdc4a6f03c16cd45`.
+- Post-merge verification PR #612 merged as `2d6b4ae10108ae6e6f393d59c49a5007a8141374`.
+- Reconciliation PR #613 merged as `fd4e1a8bc4375addbcfddfdf63799484ebf387a5`.
+- Final documentation: `docs/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_FINAL_DOCUMENTATION_V0_1.md`.
+- PR #611 exact merge-head Tests: SUCCESS.
+- PR #611 exact merge-head Security/Regression: SUCCESS.
+- PR #611 exact merge-head CodeQL JavaScript/TypeScript: SUCCESS.
+- PR #611 exact merge-head CodeQL Actions: SUCCESS.
+- PR #612 verification CI: SUCCESS.
+- PR #613 reconciliation CI: SUCCESS.
+- Test synchronization defect discovered during PR #611 CI was corrected with a main-event-loop yield before reading queued watchdog diagnostics; fresh CI completed SUCCESS.
+- No lease-duration, expiry, authority, evidence, checkpoint, cursor, Surveillance, V4, signing, trading, or execution semantics changed.
+- Repository-side bounded lifecycle is VERIFIED / RECONCILED / DOCUMENTED.
+- Actual operator runtime remains required to classify the unresolved `WRITER_FENCE_EXPIRED` liveness cause and verify recovery/restart continuity.
 - **Current STEP: 614**
 - **Current phase: DOCUMENTATION**
 - **Next STEP: Actual operator runtime evidence collection on current main under the existing STEP 614 Contract**
 - **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
 ---
+
 
 
 
