@@ -1,3 +1,20 @@
+## STEP 614 — Continued Actual Operator Runtime Evidence — DOCUMENTATION — VERIFIED / RUNTIME PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- New actual operator-runtime evidence: `docs/STEP_614_ACTUAL_OPERATOR_RUNTIME_EVIDENCE_CONTINUED_V0_4.md`.
+- Raw screenshot SHA-256: `5bac0df6f2191bbae36c01f89a3a5bd14191493606c64173cc9e2fb21b735d85`.
+- The runtime reached `VERIFIED` / `AUTHORIZED` processing with cursor outcome `64989816`, then reported `HEALTHY / HEALTH: OK` and continued processing additional displayed ranges.
+- The first displayed range contained one duplicate; subsequent displayed ranges in the captured session showed `duplicates=0`.
+- The screenshot does not show operator Git HEAD, durable-state inspection, recovery, restart continuity, or watchdog diagnostic completion for this session.
+- Therefore this evidence strengthens runtime processing continuity but does not close the critical recovery, operator-identity, or sustained-watchdog gates.
+- No cursor reset, historical evidence deletion, authority expansion, V4 activation, Surveillance authority change, signing, trading, or execution semantics were introduced.
+- **Current STEP: 614**
+- **Current phase: DOCUMENTATION**
+- **Next STEP: Actual operator runtime evidence collection on current main under the existing STEP 614 Contract.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
+
+---
+
 ## STEP 614 — PR #623 Final Documentation — DOCUMENTATION — VERIFIED / RECONCILED / RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
