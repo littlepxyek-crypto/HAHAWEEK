@@ -115,6 +115,8 @@ function runWatchdogWorker() {
   } = workerData;
 
   let stopped = false;
+  const watchdogStartedAt = Date.now();
+  let watchdogReadyAt = null;
   let renewalCount = 0;
   let lastRenewScheduledAt = null;
   let lastRenewStartedAt = null;
@@ -128,6 +130,8 @@ function runWatchdogWorker() {
   const diagnosticSnapshot = () => ({
     leaseMs,
     intervalMs,
+    startedAt: watchdogStartedAt,
+    readyAt: watchdogReadyAt,
     renewalCount,
     lastRenewScheduledAt,
     lastRenewStartedAt,
@@ -206,7 +210,11 @@ function runWatchdogWorker() {
     parentPort.close();
   });
 
-  parentPort.postMessage({ type: 'ready' });
+  watchdogReadyAt = Date.now();
+  parentPort.postMessage({
+    type: 'ready',
+    diagnostics: diagnosticSnapshot(),
+  });
 }
 
 if (!isMainThread) {
@@ -322,6 +330,7 @@ function createWriterFence(options = {}) {
       if (!message) return;
 
       if (message.type === 'ready') {
+        watchdogDiagnostics = message.diagnostics || watchdogDiagnostics;
         readyResolve();
         return;
       }
