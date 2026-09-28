@@ -55,6 +55,14 @@ test('H-03: watchdog performs an immediate renewal before readiness', async () =
   assert.equal(current.fence, acquired.fence);
   assert.ok(current.expiresAt > acquired.expiresAt);
 
+  const diagnostics = writer.getWatchdogDiagnostics();
+  assert.ok(diagnostics);
+  assert.equal(diagnostics.leaseMs, 500);
+  assert.equal(diagnostics.intervalMs, 100);
+  assert.equal(diagnostics.renewalCount, 1);
+  assert.ok(diagnostics.lastRenewedAt >= diagnostics.lastRenewStartedAt);
+  assert.ok(diagnostics.lastRenewDurationMs >= 0);
+
   await writer.stopWatchdog();
   assert.equal(writer.release(), true);
 });
@@ -76,6 +84,12 @@ test('H-03: watchdog renews fence while main event loop is blocked', async () =>
   Atomics.wait(waitView, 0, 0, 600);
 
   assert.equal(writer.assertOwned(), true);
+
+  const diagnostics = writer.getWatchdogDiagnostics();
+  assert.ok(diagnostics);
+  assert.ok(diagnostics.renewalCount >= 2);
+  assert.ok(diagnostics.lastRenewedAt >= diagnostics.lastRenewStartedAt);
+  assert.ok(diagnostics.lastRenewDurationMs >= 0);
 
   await writer.stopWatchdog();
   assert.equal(writer.release(), true);
@@ -107,6 +121,11 @@ test('H-03: watchdog renewal failure propagates fail-closed with concrete cause'
   const watchdogFailure = writer.getWatchdogFailure();
   assert.equal(watchdogFailure.code, 'WRITER_FENCE_WATCHDOG_RENEWAL_FAILED');
   assert.equal(watchdogFailure.causeCode, 'WRITER_FENCE_BUSY');
+  assert.ok(watchdogFailure.diagnostics);
+  assert.equal(watchdogFailure.diagnostics.lastRenewFailureCode, 'WRITER_FENCE_BUSY');
+  assert.ok(watchdogFailure.diagnostics.lastRenewFailureAt >= watchdogFailure.diagnostics.lastRenewStartedAt);
+  assert.ok(watchdogFailure.diagnostics.lastRenewDurationMs >= 0);
+  assert.ok(watchdogFailure.diagnostics.lastRenewFailureDelayMs >= 0);
 
   fs.unlinkSync(lockFile);
   await writer.stopWatchdog();
