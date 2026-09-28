@@ -1,19 +1,18 @@
-## STEP 614 — Writer-Fence Watchdog Failure Propagation — DOCUMENTATION — VERIFIED / RECONCILED / OPERATOR RUNTIME PENDING
+## STEP 614 — Writer-Fence Watchdog Liveness & Failure-State Recovery — VERIFICATION — VERIFIED / MERGED / OPERATOR RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Implementation PR #603 merged as `d1fcf7fbf6e6efd9b4df66ebb430915b68bcf686`.
-- Post-merge verification/documentation PR #604 merged as `e3afd5b8f54dc498b72ef61b3abc24a0919e8b7e`.
-- Reconciliation PR #605 merged as `5e56ef54534548e10e738886e0386fe0b8e52ebc`.
-- Final documentation: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_FINAL_DOCUMENTATION_V0_1.md`.
-- Repository lifecycle is VERIFIED / RECONCILED / DOCUMENTED through the current bounded remediation.
+- Implementation PR #607 merged as `508925824296b311c6e2a7946c68e56b63495c4c`.
+- Post-merge verification: `docs/STEP_614_WRITER_FENCE_WATCHDOG_LIVENESS_POST_MERGE_VERIFICATION_V0_1.md`.
+- PR-head HAHAWEEK Tests #2430: SUCCESS.
+- PR-head HAHAWEEK Security and Regression #4127: SUCCESS.
+- Exact merge-head workflow lookup returned no runs; exact merge-head CI GREEN is not claimed.
+- Merged source verification confirms immediate watchdog renewal, lease/4 scheduling margin, sticky fail-closed renewal failure, and derived operational-failure persistence fallback.
+- No authority, evidence, checkpoint, cursor, CBDR, V4, Surveillance, trading, signing, or execution semantics changed.
 - Fresh actual operator runtime on current main remains required.
-- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
-
-**Current STEP: 614**
-
-**Current phase: DOCUMENTATION**
-
-- **Next STEP: Actual operator runtime evidence collection on current main under the existing STEP 614 Contract.**
+- **Current STEP: 614**
+- **Current phase: VERIFICATION**
+- **Next STEP: STEP 614 Reconciliation**
+- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
 ---
 
