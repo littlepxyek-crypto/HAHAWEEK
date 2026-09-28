@@ -1,39 +1,16 @@
-## STEP 614 — PR #636 Post-Merge Verification — VERIFICATION — VERIFIED / RECONCILIATION PENDING
+## STEP 614 — PR #637 Reconciliation — RECONCILIATION — VERIFIED / FINAL DOCUMENTATION PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- PR #636 merged as `a956ffc37f381c5e61d7f7431dfcdb7870aea515`.
-- Post-merge verification: `docs/STEP_614_PR636_POST_MERGE_VERIFICATION_V0_1.md`.
-- PR #636 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
+- PR #637 merged as `f636f2986310ba21260ff02fc71e6c52586d4148`.
+- Post-merge verification and reconciliation are preserved in `docs/STEP_614_PR636_POST_MERGE_VERIFICATION_V0_1.md` and `docs/STEP_614_PR637_RECONCILIATION_V0_1.md`.
+- Exact current-main HAHAWEEK Tests: SUCCESS.
+- Exact current-main HAHAWEEK Security and Regression: SUCCESS.
 - No production runtime semantics changed.
 - **Current STEP: 614**
-- **Current phase: VERIFICATION**
-- **Next STEP: Final reconciliation of PR #636 post-merge state, then final documentation and actual operator runtime evidence collection under the existing STEP 614 Contract.**
-- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
-
-
-## STEP 614 — PR #620 / PR #621 Reconciliation — RECONCILIATION — VERIFIED / RUNTIME PENDING
-
-- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Fresh actual operator-runtime evidence was supplied on 2026-09-28 and recorded in `docs/STEP_614_ACTUAL_OPERATOR_RUNTIME_EVIDENCE_WATCHDOG_SCHEDULING_DELAY_V0_3.md`.
-- Raw screenshot SHA-256: `d200292eeb405305d3cfdaf484a4cfd7de9a43ab75953c4268ce95306bb387cb`.
-- Evidence establishes VERIFIED/AUTHORIZED processing through cursor outcome `64989716`, duplicate replay handling, subsequent HEALTHY / HEALTH: OK, and later WRITER_FENCE_EXPIRED fail-closed behavior.
-- Measured watchdog scheduling/start delay: `36550 ms` against a `30000 ms` lease.
-- The evidence narrows the liveness failure but does not prove the underlying scheduler/host/runtime root cause.
-- The screenshot does not display the operator checkout commit; current-main identity therefore remains unverified from this runtime artifact.
-- PR #620 merged as `443a81c21167ef92c857d59566b6c625d8db460f`.
-- PR #620 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
-- Exact PR #620 merge-head workflow lookup returned no runs; exact merge-head CI GREEN is not claimed.
-- PR #621 post-merge verification merged as `1ed5c8e0fb5ab46f5fa50c69176155864d064d6b`.
-- PR #621 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
-- Exact PR #621 merge-head workflow lookup is not yet claimed in this reconciliation record.
-- Post-merge verification confirms the evidence artifact is present on main and no production runtime semantics changed.
-- No cursor reset, historical evidence deletion, authority expansion, V4 activation, Surveillance authority change, signing, trading, or execution was introduced.
-- **Current STEP: 614**
 - **Current phase: RECONCILIATION**
-- **Next STEP: Final documentation of PR #620 / PR #621 reconciliation, then actual operator runtime evidence collection under the existing STEP 614 Contract.**
+- **Next STEP: Final documentation, then actual operator runtime evidence collection on the resulting current main under the existing STEP 614 Contract.**
 - **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
----
 
 ## STEP 614 — PR #616 Post-Merge Reconciliation / Final Documentation — DOCUMENTATION — VERIFIED / RECONCILED / RUNTIME PENDING
 
