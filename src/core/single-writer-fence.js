@@ -117,17 +117,34 @@ function runWatchdogWorker() {
   let stopped = false;
 
   const renew = () => {
-    if (stopped) return;
+    if (stopped) return true;
     try {
       const state = renewOwnedState(filename, ownerId, fence, leaseMs);
-      parentPort.postMessage({ type: 'renewed', expiresAt: state.expiresAt });
+      parentPort.postMessage({
+        type: 'renewed',
+        expiresAt: state.expiresAt,
+        renewedAt: Date.now(),
+      });
+      return true;
     } catch (error) {
       parentPort.postMessage({
         type: 'error',
         code: error && error.code ? error.code : 'WRITER_FENCE_WATCHDOG_FAILED',
+        failedAt: Date.now(),
       });
+      return false;
     }
   };
+
+  /*
+   * Renew immediately so watchdog readiness never consumes the initial
+   * lease without first refreshing it. The periodic path starts only
+   * after this first renewal succeeds.
+   */
+  if (!renew()) {
+    parentPort.close();
+    return;
+  }
 
   const timer = setInterval(renew, intervalMs);
   parentPort.once('message', message => {
@@ -157,6 +174,7 @@ function createWriterFence(options = {}) {
   let acquiredFence = null;
   let watchdog = null;
   let watchdogFailure = null;
+  let watchdogLastRenewedAt = null;
 
   function acquire() {
     return withFileLock(filename, () => {
@@ -217,7 +235,7 @@ function createWriterFence(options = {}) {
     });
   }
 
-  function startWatchdog({ intervalMs = Math.max(1, Math.floor(leaseMs / 3)) } = {}) {
+  function startWatchdog({ intervalMs = Math.max(1, Math.floor(leaseMs / 4)) } = {}) {
     if (watchdog) {
       return watchdog.ready;
     }
@@ -255,6 +273,11 @@ function createWriterFence(options = {}) {
         return;
       }
 
+      if (message.type === 'renewed') {
+        watchdogLastRenewedAt = message.renewedAt;
+        return;
+      }
+
       if (message.type === 'error' && !watchdogFailure) {
         const causeCode =
           typeof message.code === 'string' && message.code
@@ -266,6 +289,7 @@ function createWriterFence(options = {}) {
         );
         error.causeCode = causeCode;
         watchdogFailure = error;
+        readyReject(error);
       }
     });
 
@@ -333,6 +357,7 @@ function createWriterFence(options = {}) {
     startWatchdog,
     stopWatchdog,
     getWatchdogFailure: () => watchdogFailure,
+    getWatchdogLastRenewedAt: () => watchdogLastRenewedAt,
     release,
     getState: () => parseState(filename),
     getLeaseMs: () => leaseMs,
