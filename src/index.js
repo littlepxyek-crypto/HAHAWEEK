@@ -337,6 +337,16 @@ async function main() {
 
     const failure = classifyFailure(error);
 
+    if (engine.writerFence && typeof engine.writerFence.getWatchdogDiagnostics === 'function') {
+      const watchdogDiagnostics = engine.writerFence.getWatchdogDiagnostics();
+      if (watchdogDiagnostics) {
+        console.error(
+          'HAHAWEEK WRITER-FENCE WATCHDOG DIAGNOSTICS: ' +
+          JSON.stringify(watchdogDiagnostics)
+        );
+      }
+    }
+
     try {
       const failureState = createFailureState({
         ...loadState(),
