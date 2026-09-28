@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { performance } = require('node:perf_hooks');
 const {
   Worker,
   isMainThread,
@@ -11,6 +12,7 @@ const {
 } = require('node:worker_threads');
 
 const DEFAULT_LEASE_MS = Number(process.env.HAHAWEEK_WRITER_LEASE_MS || 30_000);
+const DEFAULT_WATCHDOG_INTERVAL_DIVISOR = 8;
 const LOCK_SUFFIX = '.lock';
 
 const DEFAULT_STATE_FILE =
@@ -126,6 +128,10 @@ function runWatchdogWorker() {
   let lastRenewFailureAt = null;
   let lastRenewFailureCode = null;
   let lastRenewFailureDelayMs = null;
+  let lastRenewMonotonicStartedAtMs = null;
+  let lastRenewMonotonicCompletedAtMs = null;
+  let lastRenewMonotonicDurationMs = null;
+  let workerEventLoopUtilization = null;
 
   const diagnosticSnapshot = () => ({
     leaseMs,
@@ -141,20 +147,31 @@ function runWatchdogWorker() {
     lastRenewFailureAt,
     lastRenewFailureCode,
     lastRenewFailureDelayMs,
+    lastRenewMonotonicStartedAtMs,
+    lastRenewMonotonicCompletedAtMs,
+    lastRenewMonotonicDurationMs,
+    workerEventLoopUtilization,
   });
 
   const renew = (scheduledAt = null) => {
     if (stopped) return true;
 
     const startedAt = Date.now();
+    const monotonicStartedAtMs = performance.now();
     lastRenewScheduledAt = scheduledAt;
     lastRenewStartedAt = startedAt;
+    lastRenewMonotonicStartedAtMs = monotonicStartedAtMs;
 
     try {
       const state = renewOwnedState(filename, ownerId, fence, leaseMs);
       const completedAt = Date.now();
       lastRenewCompletedAt = completedAt;
       lastRenewDurationMs = Math.max(0, completedAt - startedAt);
+      const monotonicCompletedAtMs = performance.now();
+      lastRenewMonotonicCompletedAtMs = monotonicCompletedAtMs;
+      lastRenewMonotonicDurationMs = Math.max(0, monotonicCompletedAtMs - monotonicStartedAtMs);
+      const elu = performance.eventLoopUtilization();
+      workerEventLoopUtilization = elu && Number.isFinite(elu.utilization) ? elu.utilization : null;
       lastRenewedAt = completedAt;
       renewalCount += 1;
 
@@ -169,6 +186,11 @@ function runWatchdogWorker() {
       const failedAt = Date.now();
       lastRenewCompletedAt = failedAt;
       lastRenewDurationMs = Math.max(0, failedAt - startedAt);
+      const monotonicCompletedAtMs = performance.now();
+      lastRenewMonotonicCompletedAtMs = monotonicCompletedAtMs;
+      lastRenewMonotonicDurationMs = Math.max(0, monotonicCompletedAtMs - monotonicStartedAtMs);
+      const elu = performance.eventLoopUtilization();
+      workerEventLoopUtilization = elu && Number.isFinite(elu.utilization) ? elu.utilization : null;
       lastRenewFailureAt = failedAt;
       lastRenewFailureCode =
         error && error.code ? error.code : 'WRITER_FENCE_WATCHDOG_FAILED';
@@ -296,7 +318,7 @@ function createWriterFence(options = {}) {
     });
   }
 
-  function startWatchdog({ intervalMs = Math.max(1, Math.floor(leaseMs / 4)) } = {}) {
+  function startWatchdog({ intervalMs = Math.max(1, Math.floor(leaseMs / DEFAULT_WATCHDOG_INTERVAL_DIVISOR)) } = {}) {
     if (watchdog) {
       return watchdog.ready;
     }
@@ -434,6 +456,7 @@ function createWriterFence(options = {}) {
 module.exports = {
   DEFAULT_LEASE_MS,
   DEFAULT_STATE_FILE,
+  DEFAULT_WATCHDOG_INTERVAL_DIVISOR,
   WriterFenceError,
   createWriterFence,
 };

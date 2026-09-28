@@ -8,6 +8,7 @@ const path = require('path');
 
 const {
   createWriterFence,
+  DEFAULT_WATCHDOG_INTERVAL_DIVISOR,
   WriterFenceError,
 } = require('../src/core/single-writer-fence');
 
@@ -39,6 +40,31 @@ test('H-03: one writer acquires, renews, and releases authority', () => {
 });
 
 
+test('H-03: watchdog default cadence uses lease/8 without changing lease duration', async () => {
+  const filename = tempFile();
+  const writer = createWriterFence({
+    filename,
+    ownerId: 'writer-watchdog-default-cadence',
+    leaseMs: 800,
+  });
+
+  const acquired = writer.acquire();
+  await writer.startWatchdog();
+
+  const diagnostics = writer.getWatchdogDiagnostics();
+  assert.equal(diagnostics.intervalMs, Math.floor(800 / DEFAULT_WATCHDOG_INTERVAL_DIVISOR));
+  assert.equal(diagnostics.leaseMs, 800);
+
+  const current = writer.getState();
+  assert.equal(current.ownerId, acquired.ownerId);
+  assert.equal(current.fence, acquired.fence);
+  assert.ok(current.expiresAt > acquired.expiresAt);
+
+  await writer.stopWatchdog();
+  assert.equal(writer.release(), true);
+});
+
+
 test('H-03: watchdog performs an immediate renewal before readiness', async () => {
   const filename = tempFile();
   const writer = createWriterFence({
@@ -63,6 +89,8 @@ test('H-03: watchdog performs an immediate renewal before readiness', async () =
   assert.equal(diagnostics.renewalCount, 1);
   assert.ok(diagnostics.lastRenewedAt >= diagnostics.lastRenewStartedAt);
   assert.ok(diagnostics.lastRenewDurationMs >= 0);
+  assert.ok(diagnostics.lastRenewMonotonicDurationMs >= 0);
+  assert.ok(diagnostics.workerEventLoopUtilization === null || diagnostics.workerEventLoopUtilization >= 0);
 
   await writer.stopWatchdog();
   assert.equal(writer.release(), true);
@@ -95,6 +123,8 @@ test('H-03: watchdog renews fence while main event loop is blocked', async () =>
   assert.ok(diagnostics.renewalCount >= 2);
   assert.ok(diagnostics.lastRenewedAt >= diagnostics.lastRenewStartedAt);
   assert.ok(diagnostics.lastRenewDurationMs >= 0);
+  assert.ok(diagnostics.lastRenewMonotonicDurationMs >= 0);
+  assert.ok(diagnostics.workerEventLoopUtilization === null || diagnostics.workerEventLoopUtilization >= 0);
 
   await writer.stopWatchdog();
   assert.equal(writer.release(), true);
