@@ -42,6 +42,7 @@ const { createDatabase } = require('./core/database');
 const { createRawEventStore } = require('./core/raw-event-store');
 const { appendUnique } = require('./core/raw-store');
 const { loadState, saveState } = require('./core/state');
+const { persistOperationalFailure } = require('./core/operational-failure-persistence');
 const { createLegacyWriteBarrier } = require('./core/legacy-write-freeze');
 const { createWriterFence } = require('./core/single-writer-fence');
 const { assertProductionAuthority } = require('./core/f03-production-authority-record');
@@ -348,12 +349,34 @@ async function main() {
         { legacyWriteBarrier: engine.legacyWriteBarrier }
       );
     } catch (stateError) {
-      console.error('HAHAWEEK OPERATIONAL STATE: FAILED');
+      console.error('HAHAWEEK OPERATIONAL STATE: PRIMARY WRITE FAILED');
       console.error(
         stateError instanceof Error
           ? stateError.message
           : String(stateError)
       );
+
+      /*
+       * If the active writer fence has already expired or become stale,
+       * its guarded operational-state write must fail closed. The
+       * repository already provides a bounded operational-failure writer
+       * which acquires a fresh fence for derived operational state only.
+       * It must never be used for cursor, evidence, checkpoint, or
+       * authority persistence.
+       */
+      try {
+        const fallbackFailure = persistOperationalFailure(error);
+        console.error(
+          `HAHAWEEK OPERATIONAL STATE: FALLBACK PERSISTED ${fallbackFailure.failure_code}`
+        );
+      } catch (fallbackError) {
+        console.error('HAHAWEEK OPERATIONAL STATE: FALLBACK PERSISTENCE FAILED');
+        console.error(
+          fallbackError instanceof Error
+            ? fallbackError.message
+            : String(fallbackError)
+        );
+      }
     }
 
     throw error;
