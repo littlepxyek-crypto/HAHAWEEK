@@ -86,6 +86,10 @@ test('H-03: watchdog renews fence while main event loop is blocked', async () =>
 
   assert.equal(writer.assertOwned(), true);
 
+  // Worker messages queued while the main thread was blocked are delivered
+  // only after the event loop gets a turn.
+  await new Promise(resolve => setImmediate(resolve));
+
   const diagnostics = writer.getWatchdogDiagnostics();
   assert.ok(diagnostics);
   assert.ok(diagnostics.renewalCount >= 2);
