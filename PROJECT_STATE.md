@@ -1,19 +1,17 @@
-## STEP 614 — Writer-Fence Watchdog Failure Propagation — DOCUMENTATION — VERIFIED / RECONCILED / OPERATOR RUNTIME PENDING
+## STEP 614 — Writer-Fence Watchdog Liveness & Failure-State Recovery — CODE / TEST / SECURITY-REGRESSION PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Implementation PR #603 merged as `d1fcf7fbf6e6efd9b4df66ebb430915b68bcf686`.
-- Post-merge verification/documentation PR #604 merged as `e3afd5b8f54dc498b72ef61b3abc24a0919e8b7e`.
-- Reconciliation PR #605 merged as `5e56ef54534548e10e738886e0386fe0b8e52ebc`.
-- Final documentation: `docs/STEP_614_WRITER_FENCE_WATCHDOG_FAILURE_PROPAGATION_FINAL_DOCUMENTATION_V0_1.md`.
-- Repository lifecycle is VERIFIED / RECONCILED / DOCUMENTED through the current bounded remediation.
-- Fresh actual operator runtime on current main remains required.
-- Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
-
-**Current STEP: 614**
-
-**Current phase: DOCUMENTATION**
-
-- **Next STEP: Actual operator runtime evidence collection on current main under the existing STEP 614 Contract.**
+- Trigger: fresh actual operator runtime on `af4f63753a29fa554ba970d142bc2aa81e39a507` reached VERIFIED/AUTHORIZED processing, then failed with `WRITER_FENCE_WATCHDOG_RENEWAL_FAILED` caused by `WRITER_FENCE_EXPIRED`.
+- Read-only post-failure evidence showed no active HAHAWEEK process, no lock file, preserved writer-fence state, and operational state left at RUNNING/INITIALIZING because the active fence could no longer authorize the derived failure-state write.
+- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_LIVENESS_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_LIVENESS_DESIGN_V0_1.md`.
+- Bounded remediation: immediate watchdog renewal before readiness, increased renewal scheduling margin from lease/3 to lease/4 without changing lease/expiry semantics, and fallback persistence through the existing derived operational-failure writer when the active fence can no longer persist its own failure state.
+- No Contract Amendment: authority, evidence, checkpoint, cursor, CBDR, V4, Surveillance, trading, signing, and execution semantics remain unchanged.
+- Code and targeted tests are on branch `step-614-writer-fence-watchdog-liveness-2026-09-28`.
+- **Current STEP: 614**
+- **Current phase: CODE / TEST / SECURITY-REGRESSION PENDING**
+- **Next STEP: Run repository tests and security/regression checks, then CI/review/merge under the existing STEP 614 Contract.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
 ---
 
