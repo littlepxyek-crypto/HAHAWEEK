@@ -1,5 +1,6 @@
 ## STEP 614 — Actual Operator Status / Recovery Evidence — DOCUMENTATION — VERIFIED / CURRENT-MAIN RUNTIME PENDING
 
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - New actual operator evidence: `docs/STEP_614_ACTUAL_OPERATOR_STATUS_RECOVERY_EVIDENCE_V0_5.md`.
 - Screenshot SHA-256: `13101768aa15f3ea3b408616d46598a74f727d874ce2e12c6141232113e4d89d`.
 - Operator checkout reported branch `main`, HEAD `903c2ec3f1a90163bb9e32304cf2865a1dce0cb8`, dirty worktree, operational state HEALTHY, cursor `64989906`, last verified cursor `64989816`, failure NONE, recovery VERIFIED, recovery required false.
