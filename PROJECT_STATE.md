@@ -1,4 +1,4 @@
-## STEP 614 — Writer-Fence Runtime Liveness Hardening — RECONCILIATION — VERIFIED / RECONCILED / RUNTIME PENDING
+## STEP 614 — Writer-Fence Runtime Liveness Hardening — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Fresh operator evidence on 2026-09-28 reproduced `WRITER_FENCE_EXPIRED` after successful watchdog renewals; root cause remains UNKNOWN / UNPROVEN.
@@ -10,12 +10,14 @@
 - Post-Merge Verification PR #642 merged as `4a5be5a78b515baab41a8e3a7d97a1549efc5aed`.
 - PR #642 head `76f35a594fa0f01e3bc5cf1a185f31ec01ddc451`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
 - Reconciliation: `docs/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_RECONCILIATION_V0_1.md`.
-- Exact merge-commit workflow lookups for #641 and #642 merge commits returned no associated runs/statuses; exact merge-head CI GREEN is not claimed.
+- Reconciliation PR #643 is in progress; a CI failure exposed and classified a PROJECT_STATE phase synchronization defect. The fix restores the repository-authoritative DOCUMENTATION phase and preserves reconciliation evidence additively.
+- Final Documentation: `docs/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_FINAL_DOCUMENTATION_V0_1.md`.
+- Exact merge-commit workflow lookups for implementation and post-merge merge commits returned no associated runs/statuses; exact merge-head CI GREEN is not claimed.
 - No Contract Amendment; no lease-duration, expiry, writer-ownership, cursor, evidence, checkpoint, authority, V4, Surveillance, signing, trading, or execution semantics changed.
-- Repository lifecycle for this remediation is VERIFIED / RECONCILED.
+- Repository-side bounded lifecycle is VERIFIED / RECONCILED / DOCUMENTED after the state-synchronization correction.
 - Fresh operator runtime on resulting current main remains mandatory.
 - **Current STEP: 614**
-- **Current phase: RECONCILIATION — VERIFIED / RECONCILED / RUNTIME PENDING**
+- **Current phase: DOCUMENTATION**
 - **Next STEP: Actual operator runtime evidence collection on the resulting current main under the existing STEP 614 Contract.**
 - **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
