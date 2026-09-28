@@ -1,4 +1,4 @@
-## STEP 614 — PR #615 Post-Merge Verification / Reconciliation — VERIFIED / DOCUMENTED / RUNTIME PENDING
+## STEP 614 — PR #615 Post-Merge Verification / Reconciliation — RECONCILIATION — VERIFIED / DOCUMENTED / RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Actual operator runtime evidence record: `docs/STEP_614_ACTUAL_OPERATOR_RUNTIME_EVIDENCE_WATCHDOG_LIVENESS_RECURRENCE_V0_2.md`.
