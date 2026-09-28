@@ -34,7 +34,7 @@ Verified on main after PR #616:
 - PR state: CLOSED / MERGED.
 - Merge commit: `786d754fc376026907a9ad089986b493dbb7554e`.
 - `PROJECT_STATE.md` contains the reconciled STEP 614 authority.
-- `tests/lifecycle-state-authority.test.js` asserts the normalized `RECONCILIATION` phase.
+- `tests/lifecycle-state-authority.test.js` asserts the final `DOCUMENTATION` phase.
 - The actual-runtime evidence document remains present.
 - The PR #615 post-merge verification document remains present.
 - Historical PROJECT_STATE entries remain preserved.
