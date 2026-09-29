@@ -115,8 +115,18 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
   const writerFence = createWriterFence();
   writerFence.acquire();
   const legacyWriteBarrier = createLegacyWriteBarrier({ writerFence });
+  let database = null;
 
-  const database = await createDatabase(undefined, { legacyWriteBarrier });
+  try {
+    /*
+     * Start the existing watchdog immediately after acquiring the fence.
+     * Engine initialization and authority reconciliation may perform
+     * asynchronous work before IngestionEngine.runOnce() starts; the
+     * acquired lease must remain protected during that interval.
+     */
+    await writerFence.startWatchdog();
+
+    database = await createDatabase(undefined, { legacyWriteBarrier });
 
   const rawEventStore = createRawEventStore(database.db, { legacyWriteBarrier });
 
@@ -230,18 +240,11 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     return durableExpectedAuthorityFactory(args);
   });
 
-  try {
-    reconcileProductionAuthorityLifecycleCursor({
-      database,
-      cursor,
-      expectedAuthorityFactory: productionExpectedAuthorityFactory,
-    });
-  } catch (error) {
-    database.close();
-    writerFence.release();
-    provider.destroy();
-    throw error;
-  }
+  reconcileProductionAuthorityLifecycleCursor({
+    database,
+    cursor,
+    expectedAuthorityFactory: productionExpectedAuthorityFactory,
+  });
 
   const ingestion = new IngestionEngine({
     provider,
@@ -262,13 +265,26 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     }),
   });
 
-  return {
-    provider,
-    database,
-    ingestion,
-    legacyWriteBarrier,
-    writerFence,
-  };
+    return {
+      provider,
+      database,
+      ingestion,
+      legacyWriteBarrier,
+      writerFence,
+    };
+  } catch (error) {
+    if (database) {
+      database.close();
+    }
+    try {
+      await writerFence.stopWatchdog();
+    } catch {
+      // Preserve the original initialization failure.
+    }
+    writerFence.release();
+    provider.destroy();
+    throw error;
+  }
 }
 
 async function main() {
