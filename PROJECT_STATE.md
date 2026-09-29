@@ -1,5 +1,6 @@
 ## STEP 614 — Runtime Initialization Writer-Fence Liveness Hardening — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME PENDING
 
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Governing Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Fresh runtime failure after provider timeout reproduced `WRITER_FENCE_EXPIRED`; repository analysis identified the bounded initialization interval in which the writer fence was acquired before watchdog startup.
 - Analysis: `docs/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_ANALYSIS_V0_1.md`.
