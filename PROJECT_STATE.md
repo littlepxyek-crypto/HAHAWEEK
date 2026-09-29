@@ -1,4 +1,20 @@
-## STEP 614 — Actual Operator Runtime Evidence — DOCUMENTATION — VERIFIED / RECONCILED PENDING
+## STEP 614 — Final LIVE-Readiness Reconciliation — RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Post-merge commit verified: `beb7db35e85c6f5f21172201709e6a5908a7a71a` (PR #654).
+- Post-merge CI on the actual merge commit completed SUCCESS for HAHAWEEK Tests, HAHAWEEK Security and Regression, CodeQL JavaScript/TypeScript, and CodeQL Actions.
+- Compare verification confirms the PR changed only `PROJECT_STATE.md`, the actual-runtime evidence document, and the lifecycle-authority test; no production runtime source was changed.
+- Direct operator evidence established setup, health, bounded scan, START, failure diagnosis, fail-closed STOP, durable last-verified recovery, and recovery verification on exact current main `ca74a19d80dde5ab6c24d85796a20fdc56cb9f09`.
+- Recovery verification established HEALTHY state, cursor `64993006`, last verified cursor `64993006`, recovery VERIFIED, no recovery required, and released writer fence.
+- The observed `WRITER_FENCE_EXPIRED` remains preserved as an actual failure boundary and is not reclassified as success.
+- Existing repository test/security coverage and prior reconciled STEP 614 artifacts cover authority boundary, evidence preservation, deterministic identity/integrity, checkpoint/cursor durability, restart/recovery, reorg behavior where applicable, unavailable/unknown/conflict semantics, observer non-authority, and adversarial/regression boundaries.
+- No Contract Amendment; no cursor reset, historical rewrite, evidence deletion, authority expansion, Surveillance authority, signing, trading, or execution semantics changed.
+- **Current STEP: 614**
+- **Current phase: DOCUMENTATION**
+- **Next STEP: No further STEP is authorized by the current Contract; STOP unless a new Contract or explicit authorization is provided.**
+- **Global LIVE-READINESS: VERIFIED LIVE.**
+
+## STEP 614 — Actual Operator Runtime Evidence — DOCUMENTATION — VERIFIED / RECONCILED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Direct operator runtime was executed on exact current main `ca74a19d80dde5ab6c24d85796a20fdc56cb9f09`.
