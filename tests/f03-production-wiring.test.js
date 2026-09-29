@@ -6,7 +6,12 @@ process.env.HAHAWEEK_DATA_DIR=TEST_DATA_DIR;
 process.env.HAHAWEEK_STATE_FILE=path.join(TEST_DATA_DIR,'state.json');
 process.env.HAHAWEEK_RAW_FILE=path.join(TEST_DATA_DIR,'raw-events.jsonl');
 const {createEngine}=require('../src/index');
-async function cleanup(engine){\n await engine.writerFence.stopWatchdog();\n engine.database.close();\n engine.writerFence.release();\n engine.provider.destroy();\n}
+async function cleanup(engine){
+ await engine.writerFence.stopWatchdog();
+ engine.database.close();
+ engine.writerFence.release();
+ engine.provider.destroy();
+}
 test('F-03 production createEngine accepts complete authority factory',async()=>{
  const engine=await createEngine({authorityFactory:({fromBlock,toBlock})=>({segmentId:`seg-${fromBlock}-${toBlock}`,manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:toBlock})});
  try{assert.equal(typeof engine.ingestion.authorityGate,'function');}finally{await cleanup(engine);}
@@ -14,5 +19,5 @@ test('F-03 production createEngine accepts complete authority factory',async()=>
 test('F-03 production createEngine uses repository lifecycle source and fails closed without expected chain',async()=>{
  const engine=await createEngine();
  try{assert.throws(()=>engine.ingestion.authorityGate({checkpointCommitted:true,fromBlock:101,toBlock:101}),/F03_CHAIN_NOT_FOUND/);}
- finally{cleanup(engine);}
+ finally{await cleanup(engine);}
 });
