@@ -11,7 +11,7 @@
 - No Contract Amendment; no cursor reset, historical rewrite, evidence deletion, authority expansion, Surveillance authority, signing, trading, or execution semantics changed.
 - **Current STEP: 614**
 - **Current phase: DOCUMENTATION**
-- **Next STEP: No further STEP is authorized by the current Contract; STOP unless a new Contract or explicit authorization is provided.**
+- **Next STEP: No further STEP is authorized by the current Contract; STOP unless a new Contract or explicit authorization is provided**
 - **Global LIVE-READINESS: VERIFIED LIVE.**
 
 ## STEP 614 — Actual Operator Runtime Evidence — DOCUMENTATION — VERIFIED / RECONCILED
