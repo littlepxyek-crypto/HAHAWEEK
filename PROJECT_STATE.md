@@ -1,3 +1,27 @@
+## STEP 614 — Runtime ECONNRESET Provider Classification — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Actual operator runtime on exact main `22a4bf88d22e49beb1062d045126e09c5e83b7f4` exposed provider transport failure `ECONNRESET` during scan startup after health returned OK.
+- Runtime watchdog diagnostics during the failure showed 8 renewals and `lastRenewFailureCode=null`; the failure was therefore isolated from the previously observed writer-fence expiration path.
+- Analysis: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_ANALYSIS_V0_1.md`.
+- Design: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_DESIGN_V0_1.md`.
+- Implementation PR #650 merged as `5097fa5daedd790ec0fd8c1f4a3e28376863ec28`.
+- PR #650 head `beaf284d938d936bda72e4f42625c6cbd9898961`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
+- Post-Merge Verification: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_POST_MERGE_VERIFICATION_V0_1.md`.
+- Post-Merge Verification PR #651 merged as `1f3bf86b17581529f0a07fd47955841941b34ca4`.
+- PR #651 head `57d7c784d8385bd0ed0a0c3516dcc0bf6f280a9f`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
+- Reconciliation: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_RECONCILIATION_V0_1.md`.
+- Final Documentation: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_FINAL_DOCUMENTATION_V0_1.md`.
+- Current repository-side remediation maps `ECONNRESET` to the existing `PROVIDER_UNAVAILABLE` / `DEGRADED` / `RETRYABLE` boundary and preserves evidence and authority semantics.
+- No Contract Amendment; no cursor reset, evidence deletion/rewrite, authority expansion, writer-fence semantic change, V4 activation, Surveillance authority, signing, trading, or execution semantics changed.
+- Exact merge-head workflow associations for PR #650 and PR #651 returned no runs; exact merge-head CI GREEN is not claimed.
+- Repository-side implementation, CI, review, merge, post-merge verification, reconciliation, and documentation are VERIFIED / RECONCILED / DOCUMENTED.
+- Fresh operator runtime on the resulting current main remains mandatory.
+- **Current STEP: 614**
+- **Current phase: DOCUMENTATION**
+- **Next STEP: Actual operator runtime evidence collection on the resulting current main under the existing STEP 614 Contract.**
+- **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
+
 ## STEP 614 — Runtime Initialization Writer-Fence Liveness Hardening — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
