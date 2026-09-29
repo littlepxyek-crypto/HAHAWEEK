@@ -14,7 +14,7 @@ The observed watchdog diagnostics for the preceding successful scan showed lease
 
 The current `src/index.js` acquires the writer fence in `createEngine()`, then performs asynchronous initialization including database creation and production-authority lifecycle reconciliation, but does not start the writer-fence watchdog until `IngestionEngine.runOnce()`.
 
-The current `src/core/single-writer-fence.js` watchdog is an independent worker-thread timer and performs an immediate renewal before readiness. Node.js documents worker threads as independent JavaScript execution threads with their own event loops and exposes worker event-loop utilization; Node.js also documents that timer callback timing varies with event-loop work. citeturn2search0turn0search1
+The current `src/core/single-writer-fence.js` watchdog is an independent worker-thread timer and performs an immediate renewal before readiness. Node.js documents worker threads as independent JavaScript execution threads with their own event loops and exposes worker event-loop utilization; Node.js also documents that timer callback timing varies with event-loop work.
 
 The resulting bounded liveness gap is:
 
