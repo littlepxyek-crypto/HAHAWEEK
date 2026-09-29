@@ -1,4 +1,4 @@
-## STEP 614 — Final LIVE-Readiness Reconciliation — RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED
+## STEP 614 — Final LIVE-Readiness Reconciliation — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Post-merge commit verified: `beb7db35e85c6f5f21172201709e6a5908a7a71a` (PR #654).
