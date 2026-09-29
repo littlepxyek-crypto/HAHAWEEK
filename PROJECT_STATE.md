@@ -21,7 +21,7 @@
 - Actual operator runtime on exact current main remains mandatory.
 - **Current STEP: 614**
 - **Current phase: DOCUMENTATION**
-- **Next STEP: Actual operator runtime evidence collection on resulting current main under the existing STEP 614 Contract.**
+- **Next STEP: Actual operator runtime evidence collection on the resulting current main under the existing STEP 614 Contract.**
 - **Global LIVE-READINESS: NOT READY / BLOCKED / FAIL-CLOSED.**
 
 ## STEP 614 — Writer-Fence Runtime Liveness Hardening — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME PENDING
