@@ -22,7 +22,7 @@ test('current PROJECT_STATE is valid and exposes STEP 614 current authority', ()
   assert.equal(result.phase, 'DOCUMENTATION');
   assert.ok(PHASES.includes(result.phase));
   assert.match(result.contract, /CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME/);
-  assert.equal(result.next_step, 'No further STEP is authorized by the current Contract; STOP unless a new Contract or explicit authorization is provided.');
+  assert.equal(result.next_step, 'No further STEP is authorized by the current Contract; STOP unless a new Contract or explicit authorization is provided');
 });
 
 test('stale historical next-step text cannot override current state', () => {
