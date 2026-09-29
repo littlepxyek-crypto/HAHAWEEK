@@ -65,6 +65,19 @@ test('H-03: watchdog default cadence uses lease/8 without changing lease duratio
 });
 
 
+test('STEP 614: engine initialization is protected before database setup', () => {
+  const source = fs.readFileSync(
+    path.join(__dirname, '..', 'src', 'index.js'),
+    'utf8'
+  );
+
+  const watchdogStart = source.indexOf('await writerFence.startWatchdog();');
+  const databaseSetup = source.indexOf('database = await createDatabase');
+
+  assert.ok(watchdogStart >= 0);
+  assert.ok(databaseSetup > watchdogStart);
+});
+
 test('H-03: watchdog performs an immediate renewal before readiness', async () => {
   const filename = tempFile();
   const writer = createWriterFence({
