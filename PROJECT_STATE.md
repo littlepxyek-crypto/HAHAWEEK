@@ -1,3 +1,20 @@
+## STEP 614 — Actual Operator Runtime Evidence — DOCUMENTATION — VERIFIED / RECONCILED PENDING
+
+- Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
+- Direct operator runtime was executed on exact current main `ca74a19d80dde5ab6c24d85796a20fdc56cb9f09`.
+- Durable-state verification established an existing readable `data/state.json`; no cursor reset or evidence deletion was performed.
+- Actual provider timeout was observed; a subsequent bounded scan recovered with VERIFIED processing and AUTHORIZED authority.
+- Actual `start` produced successful VERIFIED/AUTHORIZED cycles, then reproduced `WRITER_FENCE_EXPIRED`; the runner persisted the failure, entered BLOCKED, and STOP/FAIL-CLOSED.
+- Post-failure durable state preserved evidence and authority no-advance semantics.
+- Recovery from last verified cursor `64992806` succeeded through cursor `64993006` with VERIFIED processing, CONTINUATION, generation `1`, and AUTHORIZED authority.
+- Post-recovery status was HEALTHY; cursor and last verified cursor were both `64993006`; recovery was VERIFIED and not required; writer fence was released.
+- Final direct runtime evidence is recorded in `docs/STEP_614_ACTUAL_OPERATOR_RUNTIME_FINAL_EVIDENCE_2026-09-29.md`.
+- The observed writer-fence failure remains recorded as a real runtime failure boundary and is not suppressed or reclassified.
+- **Current STEP: 614**
+- **Current phase: DOCUMENTATION**
+- **Next STEP: Final reconciliation of the complete STEP 614 LIVE-READINESS gate using the recorded direct operator evidence.**
+- **Global LIVE-READINESS: NOT YET RECLASSIFIED; FAIL-CLOSED UNTIL COMPLETE GATE RECONCILIATION.**
+
 ## STEP 614 — Runtime ECONNRESET Provider Classification — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
