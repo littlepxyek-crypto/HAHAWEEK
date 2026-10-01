@@ -20,7 +20,8 @@ jobs:
       - id: runtime
         continue-on-error: true
         env:
-          RPC_URL: https://rpc.mainnet.chain.robinhood.com
+          RPC_URL: https://rpc.ordofi.network
+          # Read-only E5 transport fallback; runtime code never calls eth_sendRawTransaction.
           RPC_TIMEOUT_MS: 30000
           # Candidate hint only; every formation/outcome event is re-verified from Robinhood RPC.
           HFI_POOL_ID: "0x387bf619da4d3fb62bb276482693dba1b9b3520f573cabdfe033384a24125982"
