@@ -20,6 +20,7 @@ jobs:
       - id: runtime
         continue-on-error: true
         env:
+          RPC_URL: https://robinhood-rpc.publicnode.com
           RPC_TIMEOUT_MS: 30000
         run: |
           set +e
