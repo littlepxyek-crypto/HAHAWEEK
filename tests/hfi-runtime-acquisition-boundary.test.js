@@ -53,3 +53,8 @@ test('targeted formation acquisition chunks below the public RPC range limit', (
   assert.match(runtime, /n\+=TARGET_FORMATION_CHUNK/);
   assert.match(runtime, /TARGET_POOL_ID\?await targetedFormationLogs/);
 });
+
+test('runtime transport boundary remains read-only', () => {
+  assert.doesNotMatch(runtime, /eth_sendRawTransaction|sendTransaction|Wallet\(/i);
+  assert.doesNotMatch(workflow, /API_KEY|PRIVATE_KEY|SECRET/i);
+});
