@@ -24,8 +24,8 @@ jobs:
           # Read-only E5 transport fallback; runtime code never calls eth_sendRawTransaction.
           RPC_TIMEOUT_MS: 30000
           # Candidate hint only; every formation/outcome event is re-verified from Robinhood RPC.
-          HFI_POOL_ID: "0x387bf619da4d3fb62bb276482693dba1b9b3520f573cabdfe033384a24125982"
-          HFI_POOL_INIT_BLOCK: "169464"
+          HFI_POOL_ID: "0xf399bd1544377680d48c62fd85c2105b869e55906c4189cc5ab3b4e83446928c"
+          HFI_POOL_INIT_BLOCK: "59281988"
         run: |
           set +e
           rm -f docs/runtime/hfi-mvp-e2e-latest.json
