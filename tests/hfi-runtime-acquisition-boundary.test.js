@@ -21,8 +21,8 @@ test('historical discovery is bounded to the minimum window needed for seven-day
 });
 
 test('RPC log acquisition backs off and preserves failure after bounded retries', () => {
-  assert.match(runtime, /retries>5/);
-  assert.match(runtime, /Math\.min\(5000,250\*2\*\*\(retries-1\)\)/);
+  assert.match(runtime, /const retryLimit=TARGET_POOL_ID\?12:5/);
+  assert.match(runtime, /const maxBackoff=TARGET_POOL_ID\?10000:5000/);
 });
 
 
