@@ -55,7 +55,7 @@ test('targeted formation acquisition chunks below the public RPC range limit', (
 });
 
 test('runtime failure formatting preserves nested provider diagnostics', () => {
-  assert.match(runtime, /e\?\.error\|e\?\.info\?\.error/);
+  assert.match(runtime, /const nested=e\?\.error\|\|e\?\.info/);
   assert.match(runtime, /nested\?\.message/);
 });
 
