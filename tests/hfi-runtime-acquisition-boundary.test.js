@@ -54,7 +54,7 @@ test('targeted formation acquisition chunks below the public RPC range limit', (
   assert.match(runtime, /TARGET_POOL_ID\?await targetedFormationLogs/);
 });
 
-test('runtime transport boundary remains read-only', () => {
+test('runtime failure formatting preserves nested provider diagnostics', () => {\n  assert.match(runtime, /e\\?\\.error\\|e\\?\\.info\\?\\.error/);\n  assert.match(runtime, /nested\\?\\.message/);\n});\n\ntest('runtime transport boundary remains read-only', () => {
   assert.doesNotMatch(runtime, /eth_sendRawTransaction|sendTransaction|Wallet\(/i);
   assert.doesNotMatch(workflow, /API_KEY|PRIVATE_KEY|SECRET/i);
 });
