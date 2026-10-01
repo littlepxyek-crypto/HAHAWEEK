@@ -1,0 +1,26 @@
+'use strict';
+
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+
+const runtime = fs.readFileSync('scripts/hfi-mvp-runtime-verify.js', 'utf8');
+const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
+
+test('HFI runtime defaults to the official Robinhood Mainnet RPC', () => {
+  assert.match(runtime, /rpc\.mainnet\.chain\.robinhood\.com/);
+  assert.match(workflow, /RPC_URL: https:\/\/rpc\.mainnet\.chain\.robinhood\.com/);
+  assert.doesNotMatch(workflow, /robinhood-rpc\.publicnode\.com/);
+});
+
+test('historical discovery is bounded to the minimum window needed for seven-day outcome', () => {
+  assert.match(runtime, /DISCOVERY_AGE_DAYS=8/);
+  assert.match(runtime, /DISCOVERY_LOOKBACK_DAYS=15/);
+  assert.match(runtime, /latest-Math\.ceil\(bpd\*DISCOVERY_LOOKBACK_DAYS\)/);
+  assert.match(runtime, /latest-Math\.floor\(bpd\*DISCOVERY_AGE_DAYS\)/);
+});
+
+test('RPC log acquisition backs off and preserves failure after bounded retries', () => {
+  assert.match(runtime, /retries>5/);
+  assert.match(runtime, /Math\.min\(5000,250\*2\*\*\(retries-1\)\)/);
+});
