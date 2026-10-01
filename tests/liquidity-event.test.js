@@ -42,6 +42,7 @@ function fixture() {
     topics: encoded.topics,
     data: encoded.data,
     blockNumber: 200,
+    transactionIndex: 12,
     transactionHash:
       '0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
     index: 7,
@@ -67,6 +68,7 @@ test('liquidity event decodes and preserves provenance', () => {
   assert.equal(event.tickUpper, 600);
   assert.equal(event.liquidityDelta, '123456789');
   assert.equal(event.blockNumber, 200);
+  assert.equal(event.transactionIndex, 12);
   assert.equal(event.logIndex, 7);
 
   assert.equal(

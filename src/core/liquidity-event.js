@@ -66,6 +66,7 @@ function createLiquidityEvent(log, pool) {
     salt,
 
     blockNumber: log.blockNumber,
+    transactionIndex: log.transactionIndex ?? 0,
     transactionHash: log.transactionHash.toLowerCase(),
     logIndex: log.index ?? log.logIndex,
 

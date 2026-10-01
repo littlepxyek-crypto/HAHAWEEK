@@ -75,6 +75,7 @@ function createSwapEvent(log, pool) {
     fee: Number(parsed.args.fee),
 
     blockNumber: log.blockNumber,
+    transactionIndex: log.transactionIndex ?? 0,
     transactionHash: log.transactionHash.toLowerCase(),
     logIndex: log.index ?? log.logIndex,
 
