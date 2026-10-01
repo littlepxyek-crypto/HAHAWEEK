@@ -62,7 +62,7 @@ function outcomeFor(formation) {
     observations: Array.from({ length: 7 }, (_, day) => ({
       evidence_id: day === 0 ? 'ei:first-swap' : `ei:survival-${day}`,
       event_time: `2026-01-0${day + 1}T12:00:00.000Z`,
-      value: { active_liquidity: '100' },
+      value: { active_liquidity: '100', pool_id: '0xpool' },
     })),
     coverage_status: 'COMPLETE',
   });
@@ -77,6 +77,7 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
 
   const criterion = createLiquiditySurvivalCriterion({
     formation_id: formation.formation_id,
+    pool_id: formation.pool_id,
     reference_evidence_id: 'ei:first-swap',
     reference_liquidity: '100',
     window_start: FORMATION_END,
