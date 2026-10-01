@@ -95,3 +95,10 @@ The first OrdoFi E5 attempt completed the targeted 10,000-block formation scan b
 ## Stop condition
 
 Do not declare HFI-MVP complete until AC-01 through AC-28 are supported by the appropriate verification class and reconciled against the resulting main/runtime state.
+
+
+## Current E5 diagnostic boundary — 2026-10-01
+
+Exact-main E5 on merge commit `37c3249b036ab4b615f51d8b3d3d63c3a84f690f` reached the configured read-only Robinhood provider `https://rpc.ordofi.network` and ran for approximately seven minutes. The commit-matched artifact terminated with `NO_VERIFIED_HFI_FORMATION`, but its candidate error was only `could not coalesce error`. This is an acquisition error, not evidence that no formation exists.
+
+The next bounded remediation preserves all RPC calls and HFI semantics and only improves failure diagnostics by retaining nested ethers/provider error code/message fields when the top-level error is opaque. This is required to distinguish provider rejection, range limits, upstream availability, and malformed responses without guessing.
