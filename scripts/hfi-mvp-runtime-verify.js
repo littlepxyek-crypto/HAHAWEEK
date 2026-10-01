@@ -25,6 +25,9 @@ const LIQUIDITY_RULE = 'liquidity-survival-hfi-v1';
 const SEARCH_BLOCKS = Number(process.env.HFI_SEARCH_BLOCKS || 250000);
 const LOG_CHUNK = Number(process.env.HFI_LOG_CHUNK || 10000);
 const FORMATION_LOOKAHEAD = Number(process.env.HFI_FORMATION_LOOKAHEAD || 20000);
+const RPC_RETRIES = Number(process.env.HFI_RPC_RETRIES || 3);
+const RPC_RETRY_DELAY_MS = Number(process.env.HFI_RPC_RETRY_DELAY_MS || 1000);
+const rpcFailures = [];
 
 const initIface = new ethers.Interface([
   'event Initialize(bytes32 indexed id,address indexed currency0,address indexed currency1,uint24 fee,int24 tickSpacing,address hooks,uint160 sqrtPriceX96,int24 tick)'
@@ -58,7 +61,17 @@ function compareLogs(a, b) {
 }
 
 async function rpc(provider, method, params) {
-  return provider.send(method, params);
+  let lastError;
+  for (let attempt = 1; attempt <= RPC_RETRIES; attempt += 1) {
+    try {
+      return await provider.send(method, params);
+    } catch (error) {
+      lastError = error;
+      rpcFailures.push({ method, attempt, code: error.code || error.message, message: error.message });
+      if (attempt < RPC_RETRIES) await new Promise(function (resolve) { setTimeout(resolve, RPC_RETRY_DELAY_MS * attempt); });
+    }
+  }
+  throw lastError;
 }
 
 async function getBlock(provider, number, cache) {
@@ -408,7 +421,8 @@ async function main() {
     research_report: first.report,
     x_content: first.xContent,
     evidence_graph: first.graph,
-    replay
+    replay,
+    rpc_failures: rpcFailures
   };
 
   const output = process.env.HFI_OUTPUT || path.join(process.cwd(), 'docs/runtime/hfi-mvp-e2e-latest.json');
@@ -428,6 +442,9 @@ async function main() {
 }
 
 main().catch(function (error) {
-  console.error(JSON.stringify({ status: 'FAILED', contract_id: CONTRACT_ID, code: error.code || error.message, message: error.message }, null, 2));
+  const output = process.env.HFI_OUTPUT || path.join(process.cwd(), 'docs/runtime/hfi-mvp-e2e-latest.json');
+  fs.mkdirSync(path.dirname(output), { recursive: true });
+  fs.writeFileSync(output, JSON.stringify({ contract_id: CONTRACT_ID, commit: process.env.GITHUB_SHA || 'LOCAL', chain_id: CHAIN_ID, status: 'FAILED', failure: { code: error.code || error.message, message: error.message }, rpc_failures: rpcFailures, captured_at: new Date().toISOString() }, null, 2) + '\n');
+  console.error(JSON.stringify({ status: 'FAILED', contract_id: CONTRACT_ID, code: error.code || error.message, message: error.message, rpc_failures: rpcFailures }, null, 2));
   process.exitCode = 1;
 });
