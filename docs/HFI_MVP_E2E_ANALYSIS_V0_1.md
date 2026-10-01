@@ -10,7 +10,7 @@
 
 ## Current verified baseline
 
-- Main HEAD before this remediation: `6b42d7581f8be2c3090cd477df35cf831a017de9`.
+- Main HEAD before targeted-runtime remediation: `93ccd2ebadef4e4e036a2fc08869e67faa7f7ec0`.
 - HFI governance is ACTIVE in `PROJECT_STATE.md`.
 - Post-merge Tests and Security/Regression for the timestamp fix passed.
 - HFI E5 runtime reached real acquisition but the public official RPC path returned rate-limit failures.
@@ -51,6 +51,16 @@
 | Authority boundary | Required | AC-27 | A0-A5 only | Existing | No external action | VERIFIED | None | Low |
 | History preservation | Required | AC-28 | No deletion/reset | Existing | Preserved failures | VERIFIED | None | Low |
 
+## Targeted runtime remediation analysis
+
+The exact-main E5 rerun on `93ccd2ebadef4e4e036a2fc08869e67faa7f7ec0` reached the same provider boundary: the public Robinhood RPC returned `429 Rate Limit Hit` during the bounded candidate pass. The failure is preserved as E5 runtime evidence and is not treated as formation failure.
+
+The smallest in-scope remediation is a **targeted candidate verification mode**. `HFI_POOL_ID` and `HFI_POOL_INIT_BLOCK` are operator-provided candidate hints only. The verifier still obtains `Initialize`, `ModifyLiquidity`, `Swap`, block timestamps, raw evidence, canonical evidence, formation, outcome, validation, report, graph, and replay data from the Robinhood Mainnet RPC. A candidate hint is never copied into evidence or treated as authoritative by itself.
+
+The initial target hint is the WETH/USDG V4 pool `0x387bf619da4d3fb62bb276482693dba1b9b3520f573cabdfe033384a24125982`, with initialization block `169464`, selected solely to reduce broad historical discovery RPC load. The target must pass an exact `Initialize` lookup before any downstream evidence is accepted. The hint source is not part of the evidence chain.
+
+This mode does not grant external-provider, publication, signing, trading, cursor, writer-fence, identity, or production authority. It only narrows candidate selection for the existing read-only E5 verifier.
+
 ## Critical findings
 
 1. The HFI Contract is active; this is not a governance blocker.
@@ -72,7 +82,7 @@
 - REVIEW: PENDING
 - MERGE: PENDING
 - POST-MERGE VERIFICATION: PENDING
-- RUNTIME: BLOCKED until a fresh exact-commit artifact from the official RPC produces a complete verified formation/outcome or a preserved, accurately classified failure
+- RUNTIME: BLOCKED until a fresh exact-commit artifact from the official RPC produces a complete verified formation/outcome or a preserved, accurately classified failure; targeted candidate mode is now implemented for the next E5 attempt
 - RECONCILIATION: PENDING
 - DOCUMENTATION: THIS ANALYSIS UPDATED; final reconciliation pending
 

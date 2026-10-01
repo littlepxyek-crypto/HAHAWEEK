@@ -22,6 +22,9 @@ jobs:
         env:
           RPC_URL: https://rpc.mainnet.chain.robinhood.com
           RPC_TIMEOUT_MS: 30000
+          # Candidate hint only; every formation/outcome event is re-verified from Robinhood RPC.
+          HFI_POOL_ID: "0x387bf619da4d3fb62bb276482693dba1b9b3520f573cabdfe033384a24125982"
+          HFI_POOL_INIT_BLOCK: "169464"
         run: |
           set +e
           rm -f docs/runtime/hfi-mvp-e2e-latest.json

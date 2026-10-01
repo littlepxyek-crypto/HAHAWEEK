@@ -38,3 +38,11 @@ test('RPC log range defaults to provider-safe 10000-block inclusive windows', ()
   assert.match(runtime, /il\.blockNumber,Math\.min\(latest,il\.blockNumber\+10000\),10000\)/);
   assert.match(runtime, /firstSwap\.blockNumber,hi,10000\)/);
 });
+
+test('runtime supports an explicit candidate hint without treating it as evidence authority', () => {
+  assert.match(runtime, /HFI_POOL_ID/);
+  assert.match(runtime, /HFI_POOL_INIT_BLOCK/);
+  assert.match(runtime, /TARGET_POOL_INITIALIZE_NOT_FOUND/);
+  assert.match(workflow, /HFI_POOL_ID:/);
+  assert.match(workflow, /HFI_POOL_INIT_BLOCK:/);
+});

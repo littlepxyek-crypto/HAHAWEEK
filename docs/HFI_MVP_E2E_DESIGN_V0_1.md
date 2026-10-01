@@ -14,6 +14,14 @@ Authority: A0-A5
 - Do not mutate cursor, checkpoint, writer-fence, or production acquisition state from the verifier.
 - Runtime verifier is read-only with respect to blockchain and produces derived evidence artifacts.
 
+## Targeted candidate verification mode
+
+The default verifier remains bounded historical discovery. For E5 when the public RPC rate limit makes the broad candidate pass non-reproducible, the verifier may receive `HFI_POOL_ID` plus `HFI_POOL_INIT_BLOCK` as candidate-selection hints.
+
+The targeted path performs an exact `eth_getLogs`-equivalent lookup against the authoritative Robinhood PoolManager at the supplied initialization block and requires exactly one matching `Initialize` log. It then runs the unchanged formation, seven-day outcome, validation, report, graph, integrity, and replay pipeline against evidence acquired from that RPC. The hint itself is never included as evidence, identity, provenance, or validation input.
+
+The initial CI hint is the WETH/USDG V4 pool `0x387bf619da4d3fb62bb276482693dba1b9b3520f573cabdfe033384a24125982` at initialization block `169464`. This is a candidate-selection input only; runtime acceptance depends exclusively on verified chain evidence.
+
 ## Vertical slice
 
 1. Query a verified Robinhood Mainnet RPC source for chain_id 4663.
