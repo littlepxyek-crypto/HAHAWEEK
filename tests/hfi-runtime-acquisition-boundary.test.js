@@ -35,7 +35,7 @@ test('runtime uses a large adaptive log range and bounded candidate pass', () =>
 
 test('RPC log range defaults to provider-safe 10000-block inclusive windows', () => {
   assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
-  assert.match(runtime, /il\.blockNumber,Math\.min\(latest,il\.blockNumber\+10000\),10000\)/);
+  assert.match(runtime, /formationEnd=Math\.min\(latest,il\.blockNumber\+10000\)/);
   assert.match(runtime, /firstSwap\.blockNumber,hi,10000\)/);
 });
 
