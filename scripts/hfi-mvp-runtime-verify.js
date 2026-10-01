@@ -186,27 +186,26 @@ async function findCandidate(provider, initLog, blockCache, txCache) {
   if (Math.floor(Date.now() / 1000) - firstSwapTs < 7 * 86400) return null;
 
   const endTs = firstSwapTs + 7 * 86400;
-  const endBlock = await findBlockAtOrAfter(provider, endTs, Number(BigInt(firstSwap.blockNumber)), latest, blockCache);
-  const outcome = await getLogsChunked(provider, POOL_MANAGER, [SWAP_TOPIC0, poolId], Number(BigInt(firstSwap.blockNumber)), Math.min(endBlock, latest));
-
-  const unique = new Map();
-  for (const log of outcome.logs.sort(compareLogs)) unique.set(logKey(log), log);
-
-  const observations = [];
-  for (const log of unique.values()) {
-    const evidence = await makeEvidence(provider, log, blockCache, txCache);
-    if (Date.parse(evidence.event_time) / 1000 <= endTs) {
-      const parsed = swapIface.parseLog({ topics: log.topics, data: log.data });
-      evidence.active_liquidity = parsed.args.liquidity.toString();
-      observations.push(evidence);
-    }
-  }
-
   const buckets = Array.from({ length: 7 }, function () { return null; });
-  for (const observation of observations) {
-    const offset = Math.floor((Date.parse(observation.event_time) / 1000 - firstSwapTs) / 86400);
-    if (offset >= 0 && offset < 7 && !buckets[offset]) buckets[offset] = observation;
+  const outcomeRequests = [];
+  let lowerBlock = Number(BigInt(firstSwap.blockNumber));
+
+  for (let day = 0; day < 7; day += 1) {
+    const dayStartTs = firstSwapTs + day * 86400;
+    const dayEndTs = Math.min(endTs, dayStartTs + 86400);
+    const dayStartBlock = await findBlockAtOrAfter(provider, dayStartTs, lowerBlock, latest, blockCache);
+    const dayEndBlock = await findBlockAtOrAfter(provider, dayEndTs, dayStartBlock, latest, blockCache);
+    const dayLogs = await getLogsChunked(provider, POOL_MANAGER, [SWAP_TOPIC0, poolId], dayStartBlock, Math.min(dayEndBlock, latest));
+    outcomeRequests.push(...dayLogs.requests);
+    const firstDayLog = dayLogs.logs.sort(compareLogs)[0];
+    if (!firstDayLog) return null;
+    const evidence = await makeEvidence(provider, firstDayLog, blockCache, txCache);
+    const parsed = swapIface.parseLog({ topics: firstDayLog.topics, data: firstDayLog.data });
+    evidence.active_liquidity = parsed.args.liquidity.toString();
+    buckets[day] = evidence;
+    lowerBlock = Math.max(dayStartBlock, dayEndBlock);
   }
+
   if (buckets.some(function (v) { return !v; })) return null;
 
   return {
@@ -216,7 +215,7 @@ async function findCandidate(provider, initLog, blockCache, txCache) {
     poolId,
     firstSwapEvidence,
     daily: buckets,
-    requests: liq.requests.concat(swaps.requests, outcome.requests)
+    requests: liq.requests.concat(swaps.requests, outcomeRequests)
   };
 }
 
