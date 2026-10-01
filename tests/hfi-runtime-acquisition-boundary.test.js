@@ -9,7 +9,7 @@ const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
 test('HFI runtime defaults to the official Robinhood Mainnet RPC', () => {
   assert.match(runtime, /rpc\.mainnet\.chain\.robinhood\.com/);
-  assert.match(workflow, /RPC_URL: https:\/\/rpc\.mainnet\.chain\.robinhood\.com/);
+  assert.match(workflow, /RPC_URL: https:\/\/rpc\.ordofi\.network/);
   assert.doesNotMatch(workflow, /PUBLICNODE|API_KEY|api[_-]?key/i);
 });
 
@@ -52,4 +52,9 @@ test('targeted formation acquisition chunks below the public RPC range limit', (
   assert.match(runtime, /async function targetedFormationLogs/);
   assert.match(runtime, /n\+=TARGET_FORMATION_CHUNK/);
   assert.match(runtime, /TARGET_POOL_ID\?await targetedFormationLogs/);
+});
+
+test('runtime transport boundary remains read-only', () => {
+  assert.doesNotMatch(runtime, /eth_sendRawTransaction|sendTransaction|Wallet\(/i);
+  assert.doesNotMatch(workflow, /API_KEY|PRIVATE_KEY|SECRET/i);
 });

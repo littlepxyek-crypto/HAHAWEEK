@@ -63,6 +63,8 @@ This mode does not grant external-provider, publication, signing, trading, curso
 
 The first targeted post-merge run reached the selected pool but failed inside its formation log acquisition with an opaque `AggregateError`. The runtime source uses a 10,000-block formation window; Robinhood ecosystem indexing work documents that public RPC range queries can reject windows once the log count becomes representative. The bounded remediation therefore keeps the same 10,000-block semantic horizon but acquires targeted formation logs in 500-block chunks. Failure diagnostics are also preserved with nested provider messages where available.
 
+A subsequent exact-main run on `5b990a6816c7f82e6bc680dc64fb2df920106aaa` reached the target path but the official public RPC returned transport failures (`ECONNREFUSED` / `ENETUNREACH` / `ETIMEDOUT`) twice. Robinhood's current documentation states that the public endpoint is rate-limited/best-effort and recommends managed providers for sustained or historical reads. The next bounded acquisition change uses `https://rpc.ordofi.network` in CI as a read-only transport. The verifier continues to require chain_id 4663 and performs only standard read methods; no transaction execution, signing, or private-key handling is introduced.
+
 ## Critical findings
 
 1. The HFI Contract is active; this is not a governance blocker.
