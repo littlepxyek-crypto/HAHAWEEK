@@ -7,9 +7,9 @@ const fs = require('node:fs');
 const runtime = fs.readFileSync('scripts/hfi-mvp-runtime-verify.js', 'utf8');
 const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
-test('HFI runtime defaults to the official Robinhood Mainnet RPC', () => {
+test('HFI runtime preserves the official RPC fallback and uses the documented keyless provider in E5', () => {
   assert.match(runtime, /rpc\.mainnet\.chain\.robinhood\.com/);
-  assert.match(workflow, /RPC_URL: https:\/\/rpc\.mainnet\.chain\.robinhood\.com/);
+  assert.match(workflow, /RPC_URL: https:\/\/rpc-robinhood\.blockmachine\.io/);
   assert.doesNotMatch(workflow, /PUBLICNODE|API_KEY|api[_-]?key/i);
 });
 
@@ -25,13 +25,11 @@ test('RPC log acquisition backs off and preserves failure after bounded retries'
   assert.match(runtime, /Math\.min\(5000,250\*2\*\*\(retries-1\)\)/);
 });
 
-
 test('runtime uses a large adaptive log range and bounded candidate pass', () => {
   assert.match(runtime, /MAXC=8/);
   assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
   assert.match(runtime, /Math\.max\(1000,Math\.floor\(z\/2\)\)/);
 });
-
 
 test('RPC log range defaults to provider-safe 10000-block inclusive windows', () => {
   assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
