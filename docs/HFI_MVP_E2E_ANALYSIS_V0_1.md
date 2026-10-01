@@ -16,7 +16,7 @@
 - HFI E5 runtime reached real acquisition but the public official RPC path returned rate-limit failures.
 - The latest runtime artifact associated with the 6b42d7 run embedded an older commit and therefore is NOT valid E5 evidence for that commit.
 - The stale-artifact mismatch is treated as an evidence-boundary failure, not as runtime success or failure of the blockchain itself.
-- PR #670 is the active remediation branch for the RPC acquisition boundary.
+- The merged PR #670 exposed a provider-boundary failure: PublicNode returned 403 for archive requests without a personal token. The Contract does not authorize adding external credentials, so this branch restores the official Robinhood RPC and bounds historical discovery/backoff within the existing A0-A5 runtime authority.
 
 ## Gap Analysis Matrix
 
@@ -56,7 +56,7 @@
 1. The HFI Contract is active; this is not a governance blocker.
 2. The remaining primary gate is E5: one complete real formation and downstream seven-day outcome.
 3. The prior artifact/commit mismatch is a provenance failure. It cannot be used for AC-01 or any downstream E5 claim.
-4. RPC provider rate limiting is an acquisition failure boundary. Changing the read-only RPC endpoint remains within A0-A5 only if chain identity and evidence semantics remain unchanged.
+4. RPC provider rate limiting is an acquisition failure boundary. The official Robinhood RPC remains the configured source; acquisition is bounded to the minimum historical range needed for a seven-day post-formation outcome and transient RPC failures receive bounded exponential backoff. No credential or new provider authority is introduced.
 5. The HFI Liquidity Survival methodology is explicitly versioned as `liquidity-survival-hfi-v1`; missing/incomplete coverage remains INCONCLUSIVE.
 6. The Evidence Graph remains unchanged because its existing deterministic/non-authoritative semantics are sufficient for the vertical slice.
 
@@ -72,7 +72,7 @@
 - REVIEW: PENDING
 - MERGE: PENDING
 - POST-MERGE VERIFICATION: PENDING
-- RUNTIME: BLOCKED until a fresh exact-commit artifact is produced and verified
+- RUNTIME: BLOCKED until a fresh exact-commit artifact from the official RPC produces a complete verified formation/outcome or a preserved, accurately classified failure
 - RECONCILIATION: PENDING
 - DOCUMENTATION: THIS ANALYSIS UPDATED; final reconciliation pending
 
