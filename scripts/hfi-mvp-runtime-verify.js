@@ -166,6 +166,7 @@ async function findCandidate(provider, initLog, blockCache, txCache) {
   if (!firstSwap) return null;
 
   const firstSwapEvidence = await makeEvidence(provider, firstSwap, blockCache, txCache);
+  firstSwapEvidence.active_liquidity = swapIface.parseLog({ topics: firstSwap.topics, data: firstSwap.data }).args.liquidity.toString();
   const firstSwapTs = Date.parse(firstSwapEvidence.event_time) / 1000;
   if (Math.floor(Date.now() / 1000) - firstSwapTs < 7 * 86400) return null;
 
