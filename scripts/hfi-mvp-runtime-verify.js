@@ -90,7 +90,7 @@ async function discoverSpecificToken(provider, blockCache, txCache, receiptCache
   const launchResponse = await fetch(base + '/launches/' + DISCOVERY_TOKEN);
   if (!launchResponse.ok) throw new Error('DISCOVERY_TOKEN_HTTP_' + launchResponse.status);
   const row = await launchResponse.json();
-  if (!row || !row.poolId || !row.launchTx || !row.createdBlock) throw new Error('DISCOVERY_TOKEN_INVALID');
+  if (!row || !row.poolId || !row.launchTx || !row.createdAt) throw new Error('DISCOVERY_TOKEN_INVALID');
   const poolId = String(row.poolId).toLowerCase();
   const launchReceipt = await getReceipt(provider, row.launchTx, receiptCache);
   const poolLogs = launchReceipt.logs.filter(function (log) {
@@ -146,7 +146,7 @@ async function discoverSpecificToken(provider, blockCache, txCache, receiptCache
     firstSwapEvidence: firstSwap,
     daily: buckets,
     requests: [],
-    discovery: { source: base, token: DISCOVERY_TOKEN, launchTx: row.launchTx, createdBlock: row.createdBlock }
+    discovery: { source: base, token: DISCOVERY_TOKEN, launchTx: row.launchTx, createdAt: row.createdAt, createdBlock: Number(BigInt(initLog.blockNumber)) }
   };
 }
 
@@ -167,7 +167,7 @@ async function discoverIndexerCandidate(provider, blockCache, txCache, receiptCa
   const cutoff = Math.floor(Date.now() / 1000) - 7 * 86400;
 
   for (const row of rows) {
-    if (!row || !row.poolId || !row.createdBlock || !row.createdAt || !row.launchTx) continue;
+    if (!row || !row.poolId || !row.createdAt || !row.launchTx) continue;
     if (Number(row.createdAt) > cutoff || Number(row.tradeCount || 0) < 7) continue;
 
     const tradesResponse = await fetch(DISCOVERY_INDEXER + '/trades?token=' + encodeURIComponent(row.token) + '&limit=200');
@@ -258,7 +258,7 @@ async function discoverIndexerCandidate(provider, blockCache, txCache, receiptCa
       firstSwapEvidence: firstSwap,
       daily: buckets,
       requests: [],
-      discovery: { source: DISCOVERY_INDEXER, token: row.token, launchTx: row.launchTx, createdBlock: row.createdBlock }
+      discovery: { source: DISCOVERY_INDEXER, token: row.token, launchTx: row.launchTx, createdAt: row.createdAt, createdBlock: Number(BigInt(initLog.blockNumber)) }
     };
   }
 
