@@ -24,7 +24,7 @@ The initial CI hint is the WETH/USDG V4 pool `0x387bf619da4d3fb62bb276482693dba1
 
 E5 transport may use a verified Robinhood Chain JSON-RPC provider when the official public endpoint is unavailable or rate-limited. The CI fallback is `https://rpc.ordofi.network`; it is used only for read methods. The verifier must still validate chain_id 4663 and preserve the actual RPC URL in runtime evidence. No send, signing, or external mutation method is part of the runtime path.
 
-For the targeted historical candidate, block timestamp reads are batched at up to 25 JSON-RPC calls per transport request. Batching is a transport optimization only: each block lookup remains individually addressable by block number, ethers preserves response-to-request association, and canonical event ordering continues to use block/transaction/log order.
+For the targeted historical candidate, block timestamp reads are batched at up to 25 JSON-RPC calls per transport request and scheduled with at most four batch requests in flight. Batching/concurrency are transport optimizations only: each block lookup remains individually addressable by block number, ethers preserves response-to-request association, and canonical event ordering continues to use block/transaction/log order.
 
 ## Vertical slice
 
