@@ -22,6 +22,8 @@ The targeted path performs an exact `eth_getLogs`-equivalent lookup against the 
 
 The initial CI hint is the WETH/USDG V4 pool `0x387bf619da4d3fb62bb276482693dba1b9b3520f573cabdfe033384a24125982` at initialization block `169464`. This is a candidate-selection input only; runtime acceptance depends exclusively on verified chain evidence.
 
+E5 transport may use a verified Robinhood Chain JSON-RPC provider when the official public endpoint is unavailable or rate-limited. The CI fallback is `https://rpc.ordofi.network`; it is used only for read methods. The verifier must still validate chain_id 4663 and preserve the actual RPC URL in runtime evidence. No send, signing, or external mutation method is part of the runtime path.
+
 ## Vertical slice
 
 1. Query a verified Robinhood Mainnet RPC source for chain_id 4663.
