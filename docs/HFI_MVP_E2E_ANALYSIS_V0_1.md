@@ -65,6 +65,8 @@ The first targeted post-merge run reached the selected pool but failed inside it
 
 A subsequent exact-main run on `5b990a6816c7f82e6bc680dc64fb2df920106aaa` reached the target path but the official public RPC returned transport failures (`ECONNREFUSED` / `ENETUNREACH` / `ETIMEDOUT`) twice. Robinhood's current documentation states that the public endpoint is rate-limited/best-effort and recommends managed providers for sustained or historical reads. The next bounded acquisition change uses `https://rpc.ordofi.network` in CI as a read-only transport. The verifier continues to require chain_id 4663 and performs only standard read methods; no transaction execution, signing, or private-key handling is introduced.
 
+The first OrdoFi E5 attempt completed the targeted 10,000-block formation scan but then failed with `could not coalesce error` during the historical observation phase. The candidate is known to have substantial swap history, and the verifier was issuing one HTTP request per unique swap block because the provider was configured with `batchMaxCount=1`. The next transport-only remediation raises targeted batch size to 25, reducing request count while preserving the same block-level timestamp inputs and event ordering.
+
 ## Critical findings
 
 1. The HFI Contract is active; this is not a governance blocker.
