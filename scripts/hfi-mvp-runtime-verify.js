@@ -15,11 +15,11 @@ const {createXContentProjection}=require('../src/core/x-content-projection');
 const {validateXContentPublicationReadiness}=require('../src/core/x-content-validation-readiness');
 const {createEvidenceGraph}=require('../src/core/evidence-graph');
 const {domainSeparatedHash}=require('../src/reference/v4/hash');
-const OUT='docs/runtime/hfi-mvp-e2e-latest.json',RPC=process.env.RPC_URL||'https://rpc.mainnet.chain.robinhood.com',MAXC=8,MAXS=10000;
+const OUT='docs/runtime/hfi-mvp-e2e-latest.json',RPC=process.env.RPC_URL||'https://rpc.mainnet.chain.robinhood.com',MAXC=8,MAXS=10000,DISCOVERY_AGE_DAYS=8,DISCOVERY_LOOKBACK_DAYS=15;
 const makeProvider=()=>{const r=new ethers.FetchRequest(RPC);r.timeout=30000;return new ethers.JsonRpcProvider(r,ethers.Network.from({name:'robinhood-mainnet',chainId:CHAIN_ID}),{batchMaxCount:1})};
 const ord=(a,b)=>a.blockNumber-b.blockNumber||(a.transactionIndex??0)-(b.transactionIndex??0)||(a.logIndex??a.index??0)-(b.logIndex??b.index??0);
 const raw=l=>{const x={chain_id:CHAIN_ID,block_number:l.blockNumber,transaction_hash:l.transactionHash.toLowerCase(),block_hash:l.blockHash?.toLowerCase()??null,transaction_index:l.transactionIndex??null,log_index:l.index??l.logIndex??0,address:l.address.toLowerCase(),topics:l.topics.map(x=>x.toLowerCase()),data:l.data,captured_at:new Date().toISOString()};return {...x,event_id:'raw:v1:'+rawEventDigest(x)}};
-async function logs(p,f,a,b,s=50000){let o=[],n=a,z=s;while(n<=b){let e=Math.min(b,n+z-1);try{o.push(...await p.getLogs({...f,fromBlock:n,toBlock:e}));n=e+1}catch(x){if(z<=1000)throw x;z=Math.floor(z/2)}}return o}
+async function logs(p,f,a,b,s=50000){let o=[],n=a,z=s,retries=0;while(n<=b){let e=Math.min(b,n+z-1);try{o.push(...await p.getLogs({...f,fromBlock:n,toBlock:e}));n=e+1;z=s;retries=0}catch(x){retries+=1;if(retries>5||z<=1000)throw x;z=Math.max(1000,Math.floor(z/2));await new Promise(r=>setTimeout(r,Math.min(5000,250*2**(retries-1))))}}return o}
 function persist(base){fslib.mkdirSync(path.dirname(OUT),{recursive:true});fslib.writeFileSync(OUT,JSON.stringify(base,null,2)+'\n')}
 function runtimeBase(state){return {verification_class:'E5_RUNTIME',contract_id:'HFI-MVP-E2E-V0_1',commit:process.env.GITHUB_SHA||'UNKNOWN',chain_id:CHAIN_ID,rpc_url:RPC,state,started_at:new Date().toISOString()}}
 function fail(base,error){base.state='FAILED';base.completed_at=new Date().toISOString();base.failure={code:'RUNTIME_VERIFICATION_FAILURE',message:String(error?.message||error),candidate_results:base.candidate_results||[]};persist(base)}
@@ -28,7 +28,7 @@ persist(initialBase);
 process.on('uncaughtException',e=>fail(initialBase,e));
 process.on('unhandledRejection',e=>fail(initialBase,e));
 async function main(){const p=makeProvider(),bc=new Map(),B=async n=>{if(!bc.has(n))bc.set(n,p.getBlock(n));return await bc.get(n)},base=initialBase;let c=[];base.candidate_results=c;
-try{if(Number((await p.getNetwork()).chainId)!==CHAIN_ID)throw Error('CHAIN_ID_MISMATCH');const latest=await p.getBlockNumber(),lb=await B(latest),sb=await B(Math.max(0,latest-5000)),bps=(lb.timestamp-sb.timestamp)/5000,bpd=86400/bps,from=Math.max(0,latest-Math.ceil(bpd*30)),to=latest-Math.floor(bpd*8);
+try{if(Number((await p.getNetwork()).chainId)!==CHAIN_ID)throw Error('CHAIN_ID_MISMATCH');const latest=await p.getBlockNumber(),lb=await B(latest),sb=await B(Math.max(0,latest-5000)),bps=(lb.timestamp-sb.timestamp)/5000,bpd=86400/bps,from=Math.max(0,latest-Math.ceil(bpd*DISCOVERY_LOOKBACK_DAYS)),to=latest-Math.floor(bpd*DISCOVERY_AGE_DAYS);
 const inits=(await logs(p,{address:POOL_MANAGER,topics:[INIT]},from,to)).sort((a,b)=>b.blockNumber-a.blockNumber).slice(0,MAXC);
 for(const il of inits)try{const pool={chainId:CHAIN_ID,poolManager:POOL_MANAGER,poolId:il.topics[1]},fl=await logs(p,{address:POOL_MANAGER,topics:[[LIQ,SWAP],il.topics[1]]},il.blockNumber,Math.min(latest,il.blockNumber+2000),20000),ls=fl.filter(x=>x.topics[0].toLowerCase()===LIQ.toLowerCase()).map(x=>createLiquidityEvent(x,pool)).filter(x=>BigInt(x.liquidityDelta)>0n).sort(ord),ss=fl.filter(x=>x.topics[0].toLowerCase()===SWAP.toLowerCase()).map(x=>createSwapEvent(x,pool)).sort(ord);
 if(!ls.length||!ss.length){c.push({pool_id:il.topics[1],status:'INCOMPLETE_FORMATION'});persist(base);continue}const li=ls[0],firstSwap=ss.find(x=>ord(li,x)<=0);if(!firstSwap||BigInt(firstSwap.liquidity)<=0n){c.push({pool_id:il.topics[1],status:'NO_VALID_FIRST_SWAP'});persist(base);continue}
