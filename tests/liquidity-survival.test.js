@@ -15,7 +15,7 @@ function outcome(overrides = {}) {
   const observations = Array.from({ length: 7 }, (_, day) => ({
     evidence_id: `swap-${day}`,
     event_time: `2026-01-0${day + 1}T12:00:00.000Z`,
-    value: { active_liquidity: '100' },
+    value: { active_liquidity: '100', pool_id: '0xpool' },
   }));
 
   return {
@@ -30,6 +30,7 @@ function outcome(overrides = {}) {
 function input(overrides = {}) {
   return {
     formation_id: 'formation:v1:test',
+    pool_id: '0xpool',
     reference_evidence_id: 'swap-0',
     reference_liquidity: '100',
     window_start: start,
@@ -64,7 +65,7 @@ test('complete coverage with one observation below threshold fails', () => {
 test('exactly 50% threshold passes', () => {
   const observations = outcome().observations.map((observation) => ({
     ...observation,
-    value: { active_liquidity: '50' },
+    value: { active_liquidity: '50', pool_id: '0xpool' },
   }));
 
   const result = createLiquiditySurvivalCriterion(input({
