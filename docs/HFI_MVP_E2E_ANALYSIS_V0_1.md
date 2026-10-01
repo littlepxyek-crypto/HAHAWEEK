@@ -101,3 +101,22 @@ RECONCILIATION: NOT STARTED
 ## Next logical analysis action
 
 Define the exact LIQUIDITY_SURVIVAL methodology and inspect the existing acquisition/event decoding path to determine whether the required real observations can be produced without changing authoritative evidence semantics.
+
+
+## Analysis reconciliation — 2026-10-01
+
+The analysis is now substantially established. The HFI methodology gate is resolved for DESIGN as `liquidity-survival-hfi-v1`:
+
+- reference = liquidity carried by the selected FIRST_SWAP;
+- unit = Pool Manager liquidity units as unsigned integer string;
+- fixed window = 7*24h after formation_end;
+- daily UTC bucket requires at least one verified Swap observation;
+- observation value = Swap liquidity;
+- threshold = 50% of reference;
+- missing/unavailable/incomplete evidence => INCONCLUSIVE;
+- conflicting evidence => CONFLICT/FAILED, never silently resolved;
+- no later evidence may modify Formation.
+
+No new authority is required. The next lifecycle phase is DESIGN.
+
+**ANALYSIS STATUS: VERIFIED / RECONCILED**
