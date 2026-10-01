@@ -1,3 +1,20 @@
+## HFI-MVP-E2E-V0_1 — GOVERNANCE RECONCILIATION — AUTHORIZED / ACTIVE
+
+- Authorization: explicit user authorization received 2026-10-01 for governance reconciliation from STEP 614 to HFI-MVP-E2E-V0_1 and activation of authority classes A0–A5.
+- Contract: `docs/CONTRACT_HFI_MVP_E2E_V0_1.md`.
+- Contract status: `CONTRACT — AUTHORIZED`.
+- HFI-MVP authority: A0 Observation, A1 Analysis, A2 Development, A3 Validation, A4 Integration, A5 Runtime.
+- No A6 authority is granted.
+- STEP 614 remains preserved as historical/completed authority for its own scope; no historical entry, failure boundary, evidence, cursor, or runtime result is deleted or rewritten by this transition.
+- The preserved STEP 614 `WRITER_FENCE_EXPIRED` failure remains a failure boundary and is not reclassified as success.
+- HFI-MVP is now the active governance boundary for the authorized vertical-slice work defined by its Contract.
+- Scope remains limited to the HFI-MVP Contract. External publication, signing, trading, transaction execution, private-key handling, identity/deanonymization, predictive scoring, production V4 activation, and other authority expansion remain unauthorized.
+- Cursor reset, historical deletion/rewrite, silent normalization/overwrite/deduplication, and fabricated evidence remain forbidden.
+- **Current STEP: HFI-MVP-E2E-V0_1 — GOVERNANCE RECONCILIATION**
+- **Current phase: CONTRACT → ANALYSIS**
+- **Next STEP: HFI-MVP GAP ANALYSIS against current implementation, tests, security/regression, CI, runtime, durable state, and applicable frozen contracts.**
+- **Global HFI-MVP STATUS: AUTHORIZED / ACTIVE / NOT YET COMPLETE.**
+
 ## STEP 614 — Final LIVE-Readiness Reconciliation — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
