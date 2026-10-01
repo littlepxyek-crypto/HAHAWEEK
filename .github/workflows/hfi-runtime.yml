@@ -20,7 +20,7 @@ jobs:
       - id: runtime
         continue-on-error: true
         env:
-          RPC_URL: https://rpc.mainnet.chain.robinhood.com
+          RPC_URL: https://rpc-robinhood.blockmachine.io
           RPC_TIMEOUT_MS: 30000
         run: |
           set +e

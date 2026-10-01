@@ -56,7 +56,7 @@
 1. The HFI Contract is active; this is not a governance blocker.
 2. The remaining primary gate is E5: one complete real formation and downstream seven-day outcome.
 3. The prior artifact/commit mismatch is a provenance failure. It cannot be used for AC-01 or any downstream E5 claim.
-4. RPC provider rate limiting is an acquisition failure boundary. The official Robinhood RPC remains the configured source; acquisition is bounded to the minimum historical range needed for a seven-day post-formation outcome and transient RPC failures receive bounded exponential backoff. No credential or new provider authority is introduced.
+4. RPC provider rate limiting is an acquisition failure boundary. The runtime remains read-only and chain_id-bound. Because the official public RPC repeatedly rate-limited historical acquisition, the workflow may use the keyless archive-capable Robinhood RPC source documented for this remediation, with no credential. Acquisition remains bounded to the minimum historical range needed for a seven-day post-formation outcome and transient RPC failures receive bounded exponential backoff.
 5. The HFI Liquidity Survival methodology is explicitly versioned as `liquidity-survival-hfi-v1`; missing/incomplete coverage remains INCONCLUSIVE.
 6. The Evidence Graph remains unchanged because its existing deterministic/non-authoritative semantics are sufficient for the vertical slice.
 
