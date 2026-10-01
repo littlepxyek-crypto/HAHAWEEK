@@ -21,8 +21,8 @@ test('historical discovery is bounded to the minimum window needed for seven-day
 });
 
 test('RPC log acquisition backs off and preserves failure after bounded retries', () => {
-  assert.match(runtime, /retries>5/);
-  assert.match(runtime, /Math\.min\(5000,250\*2\*\*\(retries-1\)\)/);
+  assert.match(runtime, /const retryLimit=TARGET_POOL_ID\?12:5/);
+  assert.match(runtime, /const maxBackoff=TARGET_POOL_ID\?10000:5000/);
 });
 
 
@@ -75,4 +75,9 @@ test('targeted historical block reads cap in-flight RPC batches', () => {
   assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=4/);
   assert.match(runtime, /i\+=TARGET_BLOCK_BATCH_CONCURRENCY/);
   assert.match(runtime, /nums\.slice\(i,i\+TARGET_BLOCK_BATCH_CONCURRENCY\)/);
+});
+
+test('targeted RPC log acquisition tolerates transient provider busy responses', () => {
+  assert.match(runtime, /const retryLimit=TARGET_POOL_ID\?12:5/);
+  assert.match(runtime, /const maxBackoff=TARGET_POOL_ID\?10000:5000/);
 });
