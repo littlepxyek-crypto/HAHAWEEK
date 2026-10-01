@@ -62,3 +62,19 @@ test('unsupported decoded event cannot be silently normalized', () => {
     /UNSUPPORTED_FORMATION_EVENT/
   );
 });
+
+
+test('formation preserves block transaction and log ordering within one block', () => {
+  const result = detectPoolBootstrapFromDecodedEvents([
+    { ...base('POOL_INITIALIZED', 'ei:init-same-block', 100, 1, '2026-01-01T00:00:00.000Z'), transactionIndex: 2 },
+    { ...base('LIQUIDITY_MODIFIED', 'ei:liq-same-block', 100, 2, '2026-01-01T00:00:00.000Z'), transactionIndex: 3, liquidityDelta: '1000' },
+    { ...base('SWAP', 'ei:swap-same-block', 100, 1, '2026-01-01T00:00:00.000Z'), transactionIndex: 4 },
+  ]);
+
+  assert.equal(result.state, 'VALID');
+  assert.deepEqual(result.formation.evidence_ids, [
+    'ei:init-same-block',
+    'ei:liq-same-block',
+    'ei:swap-same-block',
+  ]);
+});
