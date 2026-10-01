@@ -15,11 +15,11 @@ const {createXContentProjection}=require('../src/core/x-content-projection');
 const {validateXContentPublicationReadiness}=require('../src/core/x-content-validation-readiness');
 const {createEvidenceGraph}=require('../src/core/evidence-graph');
 const {domainSeparatedHash}=require('../src/reference/v4/hash');
-const OUT='docs/runtime/hfi-mvp-e2e-latest.json',RPC=process.env.RPC_URL||'https://rpc.mainnet.chain.robinhood.com',MAXC=8,MAXS=10000,DISCOVERY_AGE_DAYS=8,DISCOVERY_LOOKBACK_DAYS=15;
+const OUT='docs/runtime/hfi-mvp-e2e-latest.json',RPC=process.env.RPC_URL||'https://rpc.mainnet.chain.robinhood.com',MAXC=6,MAXS=10000,DISCOVERY_AGE_DAYS=8,DISCOVERY_LOOKBACK_DAYS=15;
 const makeProvider=()=>{const r=new ethers.FetchRequest(RPC);r.timeout=30000;return new ethers.JsonRpcProvider(r,ethers.Network.from({name:'robinhood-mainnet',chainId:CHAIN_ID}),{batchMaxCount:1})};
 const ord=(a,b)=>a.blockNumber-b.blockNumber||(a.transactionIndex??0)-(b.transactionIndex??0)||(a.logIndex??a.index??0)-(b.logIndex??b.index??0);
 const raw=l=>{const x={chain_id:CHAIN_ID,block_number:l.blockNumber,transaction_hash:l.transactionHash.toLowerCase(),block_hash:l.blockHash?.toLowerCase()??null,transaction_index:l.transactionIndex??null,log_index:l.index??l.logIndex??0,address:l.address.toLowerCase(),topics:l.topics.map(x=>x.toLowerCase()),data:l.data,captured_at:new Date().toISOString()};return {...x,event_id:'raw:v1:'+rawEventDigest(x)}};
-async function logs(p,f,a,b,s=50000){let o=[],n=a,z=s,retries=0;while(n<=b){let e=Math.min(b,n+z-1);try{o.push(...await p.getLogs({...f,fromBlock:n,toBlock:e}));n=e+1;z=s;retries=0}catch(x){retries+=1;if(retries>5||z<=1000)throw x;z=Math.max(1000,Math.floor(z/2));await new Promise(r=>setTimeout(r,Math.min(5000,250*2**(retries-1))))}}return o}
+async function logs(p,f,a,b,s=1000000){let o=[],n=a,z=s,retries=0;while(n<=b){let e=Math.min(b,n+z-1);try{o.push(...await p.getLogs({...f,fromBlock:n,toBlock:e}));n=e+1;z=s;retries=0}catch(x){retries+=1;if(retries>5||z<=1000)throw x;z=Math.max(1000,Math.floor(z/2));await new Promise(r=>setTimeout(r,Math.min(5000,250*2**(retries-1))))}}return o}
 function persist(base){fslib.mkdirSync(path.dirname(OUT),{recursive:true});fslib.writeFileSync(OUT,JSON.stringify(base,null,2)+'\n')}
 function runtimeBase(state){return {verification_class:'E5_RUNTIME',contract_id:'HFI-MVP-E2E-V0_1',commit:process.env.GITHUB_SHA||'UNKNOWN',chain_id:CHAIN_ID,rpc_url:RPC,state,started_at:new Date().toISOString()}}
 function fail(base,error){base.state='FAILED';base.completed_at=new Date().toISOString();base.failure={code:'RUNTIME_VERIFICATION_FAILURE',message:String(error?.message||error),candidate_results:base.candidate_results||[]};persist(base)}
