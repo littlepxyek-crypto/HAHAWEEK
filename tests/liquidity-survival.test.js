@@ -133,3 +133,15 @@ test('outcome window must match evaluation window', () => {
     /OUTCOME_WINDOW_MISMATCH/
   );
 });
+
+
+test('observation from another pool is rejected', () => {
+  const observations = outcome().observations.map((observation, index) =>
+    index === 2 ? { ...observation, value: { active_liquidity: '100', pool_id: '0xother' } } : observation
+  );
+
+  assert.throws(
+    () => createLiquiditySurvivalCriterion(input({ outcome: outcome({ observations }) })),
+    /OBSERVATION_POOL_MISMATCH/
+  );
+});
