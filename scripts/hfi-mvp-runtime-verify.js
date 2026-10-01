@@ -74,6 +74,122 @@ async function rpc(provider, method, params) {
   throw lastError;
 }
 
+async function getReceipt(provider, hash, cache) {
+  const key = hash.toLowerCase();
+  if (!cache.has(key)) cache.set(key, await rpc(provider, 'eth_getTransactionReceipt', [key]));
+  const receipt = cache.get(key);
+  assertOk(receipt, 'TRANSACTION_RECEIPT_NOT_FOUND');
+  return receipt;
+}
+
+async function discoverIndexerCandidate(provider, blockCache, txCache, receiptCache) {
+  if (!DISCOVERY_INDEXER) return null;
+  const response = await fetch(DISCOVERY_INDEXER + '/launches?orderBy=tradeCount&orderDirection=desc&limit=100');
+  if (!response.ok) throw new Error('DISCOVERY_INDEXER_HTTP_' + response.status);
+  const body = await response.json();
+  const rows = Array.isArray(body) ? body : body.launches;
+  if (!Array.isArray(rows)) throw new Error('DISCOVERY_INDEXER_INVALID_RESPONSE');
+  const cutoff = Math.floor(Date.now() / 1000) - 7 * 86400;
+
+  for (const row of rows) {
+    if (!row || !row.poolId || !row.createdBlock || !row.createdAt || !row.launchTx) continue;
+    if (Number(row.createdAt) > cutoff || Number(row.tradeCount || 0) < 7) continue;
+
+    const tradesResponse = await fetch(DISCOVERY_INDEXER + '/trades?token=' + encodeURIComponent(row.token) + '&limit=200');
+    if (!tradesResponse.ok) continue;
+    const tradesBody = await tradesResponse.json();
+    const trades = Array.isArray(tradesBody) ? tradesBody : tradesBody.trades;
+    if (!Array.isArray(trades)) continue;
+
+    const poolId = String(row.poolId).toLowerCase();
+    const candidateTrades = trades.filter(function (trade) {
+      return String(trade.poolId || '').toLowerCase() === poolId && trade.txHash;
+    });
+
+    if (candidateTrades.length < 7) continue;
+
+    const launchReceipt = await getReceipt(provider, row.launchTx, receiptCache);
+    const poolLogs = launchReceipt.logs.filter(function (log) {
+      return String(log.address).toLowerCase() === POOL_MANAGER.toLowerCase() &&
+        Array.isArray(log.topics) &&
+        log.topics[1] &&
+        String(log.topics[1]).toLowerCase() === poolId;
+    });
+
+    const initLog = poolLogs.find(function (log) {
+      return String(log.topics[0]).toLowerCase() === INITIALIZE_TOPIC.toLowerCase();
+    });
+    const positiveLiquidity = poolLogs.filter(function (log) {
+      if (String(log.topics[0]).toLowerCase() !== MODIFY_LIQUIDITY_TOPIC.toLowerCase()) return false;
+      try {
+        return BigInt(liqIface.parseLog({ topics: log.topics, data: log.data }).args.liquidityDelta) > 0n;
+      } catch (_) {
+        return false;
+      }
+    }).sort(compareLogs);
+
+    assertOk(initLog && positiveLiquidity.length > 0, 'INDEXER_LOCATOR_FORMATION_NOT_VERIFIED');
+
+    const firstSwapLaunch = poolLogs.filter(function (log) {
+      return String(log.topics[0]).toLowerCase() === SWAP_TOPIC0.toLowerCase();
+    }).sort(compareLogs)[0];
+
+    const tradeLogs = [];
+    for (const trade of candidateTrades) {
+      const receipt = await getReceipt(provider, trade.txHash, receiptCache);
+      const log = receipt.logs.filter(function (entry) {
+        return String(entry.address).toLowerCase() === POOL_MANAGER.toLowerCase() &&
+          String(entry.topics && entry.topics[0]).toLowerCase() === SWAP_TOPIC0.toLowerCase() &&
+          String(entry.topics && entry.topics[1]).toLowerCase() === poolId;
+      }).sort(compareLogs)[0];
+      if (log) tradeLogs.push(log);
+    }
+
+    const allSwaps = [];
+    if (firstSwapLaunch) allSwaps.push(firstSwapLaunch);
+    allSwaps.push(...tradeLogs);
+    const unique = new Map();
+    for (const log of allSwaps) unique.set(logKey(log), log);
+
+    const evidence = [];
+    for (const log of unique.values()) evidence.push(await makeEvidence(provider, log, blockCache, txCache));
+    evidence.sort(function (a, b) { return Date.parse(a.event_time) - Date.parse(b.event_time); });
+
+    const firstSwap = evidence.find(function (e) {
+      return compareLogs(positiveLiquidity[0], e.rpc_log) <= 0;
+    });
+    if (!firstSwap) continue;
+
+    const firstSwapTs = Date.parse(firstSwap.event_time) / 1000;
+    if (Math.floor(Date.now() / 1000) - firstSwapTs < 7 * 86400) continue;
+
+    const buckets = Array.from({ length: 7 }, function () { return null; });
+    for (const e of evidence) {
+      const day = Math.floor((Date.parse(e.event_time) / 1000 - firstSwapTs) / 86400);
+      if (day >= 0 && day < 7 && !buckets[day]) {
+        const parsed = swapIface.parseLog({ topics: e.rpc_log.topics, data: e.rpc_log.data });
+        e.active_liquidity = parsed.args.liquidity.toString();
+        buckets[day] = e;
+      }
+    }
+
+    if (buckets.some(function (v) { return !v; })) continue;
+
+    return {
+      initLog,
+      firstLiquidity: positiveLiquidity[0],
+      firstSwap: firstSwap.rpc_log,
+      poolId,
+      firstSwapEvidence: firstSwap,
+      daily: buckets,
+      requests: [],
+      discovery: { source: DISCOVERY_INDEXER, token: row.token, launchTx: row.launchTx, createdBlock: row.createdBlock }
+    };
+  }
+
+  return null;
+}
+
 async function getBlock(provider, number, cache) {
   const key = String(number);
   if (!cache.has(key)) cache.set(key, await rpc(provider, 'eth_getBlockByNumber', [blockTag(number), false]));
@@ -344,9 +460,11 @@ async function main() {
 
   let initResult;
   let candidate = null;
+  const receiptCache = new Map();
+  if (DISCOVERY_INDEXER) candidate = await discoverIndexerCandidate(provider, blockCache, txCache, receiptCache);
   const hintedPoolId = process.env.HFI_POOL_ID;
   const hintedInitBlock = process.env.HFI_POOL_INIT_BLOCK ? Number(process.env.HFI_POOL_INIT_BLOCK) : null;
-  if (hintedPoolId && hintedInitBlock !== null) {
+  if (!candidate && hintedPoolId && hintedInitBlock !== null) {
     initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC, hintedPoolId.toLowerCase()], hintedInitBlock, hintedInitBlock);
     assertOk(initResult.logs.length > 0, 'HINTED_POOL_INITIALIZE_NOT_FOUND');
     for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
@@ -354,7 +472,7 @@ async function main() {
       if (candidate) break;
     }
     assertOk(candidate, 'HINTED_POOL_HAS_NO_COMPLETE_SEVEN_DAY_FORMATION');
-  } else {
+  } else if (!candidate) {
     initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC], from, latest);
     for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
       candidate = await findCandidate(provider, initLog, blockCache, txCache);
@@ -402,7 +520,7 @@ async function main() {
     rpc_source: RPC_URL,
     status: 'VERIFIED',
     captured_at: new Date().toISOString(),
-    search: { latest_block: latest, from_block: from, initialize_log_count: initResult.logs.length, discovery_requests: initResult.requests.concat(candidate.requests) },
+    search: { latest_block: latest, from_block: from, initialize_log_count: initResult ? initResult.logs.length : 0, discovery_requests: initResult ? initResult.requests.concat(candidate.requests) : candidate.requests, discovery: candidate.discovery || null },
     evidence: Array.from(evidenceMap.values()).map(function (e) {
       return {
         raw: e.raw,
