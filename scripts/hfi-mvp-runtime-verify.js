@@ -40,6 +40,8 @@ function assertOk(value, message) {
   if (!value) throw new Error(message);
 }
 
+function blockTag(number) { return '0x' + Number(number).toString(16); }
+
 function logKey(log) {
   return log.blockHash.toLowerCase() + ':' + log.transactionHash.toLowerCase() + ':' + String(log.logIndex);
 }
@@ -61,7 +63,7 @@ async function rpc(provider, method, params) {
 
 async function getBlock(provider, number, cache) {
   const key = String(number);
-  if (!cache.has(key)) cache.set(key, await rpc(provider, 'eth_getBlockByNumber', [ethers.toBeHex(number), false]));
+  if (!cache.has(key)) cache.set(key, await rpc(provider, 'eth_getBlockByNumber', [blockTag(number), false]));
   const block = cache.get(key);
   assertOk(block, 'BLOCK_NOT_FOUND');
   return block;
@@ -87,8 +89,8 @@ async function getLogsChunked(provider, address, topics, fromBlock, toBlock) {
     const params = [{
       address,
       topics,
-      fromBlock: ethers.toBeHex(from),
-      toBlock: ethers.toBeHex(to)
+      fromBlock: blockTag(from),
+      toBlock: blockTag(to)
     }];
     const response = await rpc(provider, 'eth_getLogs', params);
     requests.push({ method: 'eth_getLogs', params });
