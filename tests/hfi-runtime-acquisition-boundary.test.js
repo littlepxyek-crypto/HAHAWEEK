@@ -58,3 +58,8 @@ test('runtime transport boundary remains read-only', () => {
   assert.doesNotMatch(runtime, /eth_sendRawTransaction|sendTransaction|Wallet\(/i);
   assert.doesNotMatch(workflow, /API_KEY|PRIVATE_KEY|SECRET/i);
 });
+
+test('targeted runtime batches historical block reads without changing event ordering', () => {
+  assert.match(runtime, /TARGET_BATCH_MAX=25/);
+  assert.match(runtime, /batchMaxCount:TARGET_POOL_ID\?TARGET_BATCH_MAX:1/);
+});
