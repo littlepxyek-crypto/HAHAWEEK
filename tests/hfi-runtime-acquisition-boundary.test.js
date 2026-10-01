@@ -14,8 +14,8 @@ test('HFI runtime defaults to the official Robinhood Mainnet RPC', () => {
 });
 
 test('historical discovery is bounded to the minimum window needed for seven-day outcome', () => {
-  assert.match(runtime, /DISCOVERY_AGE_DAYS=8/);
-  assert.match(runtime, /DISCOVERY_LOOKBACK_DAYS=15/);
+  assert.match(runtime, /DISCOVERY_AGE_DAYS=10/);
+  assert.match(runtime, /DISCOVERY_LOOKBACK_DAYS=30/);
   assert.match(runtime, /latest-Math\.ceil\(bpd\*DISCOVERY_LOOKBACK_DAYS\)/);
   assert.match(runtime, /latest-Math\.floor\(bpd\*DISCOVERY_AGE_DAYS\)/);
 });
@@ -27,7 +27,7 @@ test('RPC log acquisition backs off and preserves failure after bounded retries'
 
 
 test('runtime uses a large adaptive log range and bounded candidate pass', () => {
-  assert.match(runtime, /MAXC=6/);
+  assert.match(runtime, /MAXC=8/);
   assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
   assert.match(runtime, /Math\.max\(1000,Math\.floor\(z\/2\)\)/);
 });
@@ -35,6 +35,6 @@ test('runtime uses a large adaptive log range and bounded candidate pass', () =>
 
 test('RPC log range defaults to provider-safe 10000-block inclusive windows', () => {
   assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
-  assert.match(runtime, /il\.blockNumber,Math\.min\(latest,il\.blockNumber\+2000\),10000\)/);
+  assert.match(runtime, /il\.blockNumber,Math\.min\(latest,il\.blockNumber\+10000\),10000\)/);
   assert.match(runtime, /firstSwap\.blockNumber,hi,10000\)/);
 });
