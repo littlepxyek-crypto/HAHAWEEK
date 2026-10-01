@@ -146,3 +146,13 @@ test('observation from another pool is rejected', () => {
     /OBSERVATION_POOL_MISMATCH/
   );
 });
+
+test('HFI methodology uses an explicit version without changing default compatibility', () => {
+  const result = createLiquiditySurvivalCriterion(input({
+    rule_version: 'liquidity-survival-hfi-v1',
+  }));
+
+  assert.equal(result.criterion_id, 'liquidity-survival-hfi-v1');
+  assert.equal(result.detail.rule_version, 'liquidity-survival-hfi-v1');
+  assert.equal(result.status, 'PASS');
+});
