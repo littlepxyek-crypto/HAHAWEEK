@@ -1,0 +1,34 @@
+name: HAHAWEEK HFI-MVP Runtime
+
+on:
+  push:
+    branches: ["hfi-mvp-e2e-v0-1"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  hfi-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm install
+      - run: npm run hfi:runtime
+        env:
+          HFI_SEARCH_BLOCKS: 250000
+          HFI_LOG_CHUNK: 10000
+          HFI_FORMATION_LOOKAHEAD: 20000
+      - name: Upload HFI runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hfi-mvp-e2e-runtime
+          path: docs/runtime/hfi-mvp-e2e-latest.json
+          if-no-files-found: warn
