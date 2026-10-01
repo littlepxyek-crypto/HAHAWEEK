@@ -28,7 +28,7 @@ test('RPC log acquisition backs off and preserves failure after bounded retries'
 
 test('runtime uses a large adaptive log range and bounded candidate pass', () => {
   assert.match(runtime, /MAXC=6/);
-  assert.match(runtime, /async function logs\(p,f,a,b,s=1000000\)/);
+  assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
   assert.match(runtime, /Math\.max\(1000,Math\.floor\(z\/2\)\)/);
 });
 
