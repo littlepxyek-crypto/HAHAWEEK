@@ -29,6 +29,7 @@ const RPC_RETRIES = Number(process.env.HFI_RPC_RETRIES || 3);
 const RPC_RETRY_DELAY_MS = Number(process.env.HFI_RPC_RETRY_DELAY_MS || 1000);
 const rpcFailures = [];
 const DISCOVERY_INDEXER = process.env.HFI_DISCOVERY_INDEXER || '';
+const DISCOVERY_TOKEN = process.env.HFI_DISCOVERY_TOKEN || '';
 
 const initIface = new ethers.Interface([
   'event Initialize(bytes32 indexed id,address indexed currency0,address indexed currency1,uint24 fee,int24 tickSpacing,address hooks,uint160 sqrtPriceX96,int24 tick)'
@@ -81,6 +82,72 @@ async function getReceipt(provider, hash, cache) {
   const receipt = cache.get(key);
   assertOk(receipt, 'TRANSACTION_RECEIPT_NOT_FOUND');
   return receipt;
+}
+
+async function discoverSpecificToken(provider, blockCache, txCache, receiptCache) {
+  if (!DISCOVERY_INDEXER || !DISCOVERY_TOKEN) return null;
+  const base = DISCOVERY_INDEXER.replace(/\\/$/, '');
+  const launchResponse = await fetch(base + '/launches/' + DISCOVERY_TOKEN);
+  if (!launchResponse.ok) throw new Error('DISCOVERY_TOKEN_HTTP_' + launchResponse.status);
+  const row = await launchResponse.json();
+  if (!row || !row.poolId || !row.launchTx || !row.createdBlock) throw new Error('DISCOVERY_TOKEN_INVALID');
+  const poolId = String(row.poolId).toLowerCase();
+  const launchReceipt = await getReceipt(provider, row.launchTx, receiptCache);
+  const poolLogs = launchReceipt.logs.filter(function (log) {
+    return String(log.address).toLowerCase() === POOL_MANAGER.toLowerCase() &&
+      Array.isArray(log.topics) && String(log.topics[1] || '').toLowerCase() === poolId;
+  });
+  const initLog = poolLogs.find(function (log) { return String(log.topics[0]).toLowerCase() === INITIALIZE_TOPIC.toLowerCase(); });
+  const positiveLiquidity = poolLogs.filter(function (log) {
+    if (String(log.topics[0]).toLowerCase() !== MODIFY_LIQUIDITY_TOPIC.toLowerCase()) return false;
+    try { return BigInt(liqIface.parseLog({ topics: log.topics, data: log.data }).args.liquidityDelta) > 0n; } catch (_) { return false; }
+  }).sort(compareLogs);
+  assertOk(initLog && positiveLiquidity.length, 'DISCOVERY_TOKEN_FORMATION_NOT_VERIFIED');
+
+  const tradeResponse = await fetch(base + '/trades?token=' + encodeURIComponent(DISCOVERY_TOKEN) + '&limit=200');
+  if (!tradeResponse.ok) throw new Error('DISCOVERY_TOKEN_TRADES_HTTP_' + tradeResponse.status);
+  const tradeBody = await tradeResponse.json();
+  const trades = Array.isArray(tradeBody) ? tradeBody : tradeBody.trades;
+  assertOk(Array.isArray(trades), 'DISCOVERY_TOKEN_TRADES_INVALID');
+
+  const swapEvidence = [];
+  for (const trade of trades) {
+    if (!trade.txHash) continue;
+    const receipt = await getReceipt(provider, trade.txHash, receiptCache);
+    const log = receipt.logs.filter(function (entry) {
+      return String(entry.address).toLowerCase() === POOL_MANAGER.toLowerCase() &&
+        String(entry.topics && entry.topics[0]).toLowerCase() === SWAP_TOPIC0.toLowerCase() &&
+        String(entry.topics && entry.topics[1]).toLowerCase() === poolId;
+    }).sort(compareLogs)[0];
+    if (log) {
+      const e = await makeEvidence(provider, log, blockCache, txCache);
+      e.active_liquidity = swapIface.parseLog({ topics: log.topics, data: log.data }).args.liquidity.toString();
+      swapEvidence.push(e);
+    }
+  }
+  swapEvidence.sort(function (a, b) { return Date.parse(a.event_time) - Date.parse(b.event_time); });
+  const firstSwap = swapEvidence.find(function (e) { return compareLogs(positiveLiquidity[0], e.rpc_log) <= 0; });
+  assertOk(firstSwap, 'DISCOVERY_TOKEN_FIRST_SWAP_NOT_FOUND');
+  const firstSwapTs = Date.parse(firstSwap.event_time) / 1000;
+  assertOk(Math.floor(Date.now() / 1000) - firstSwapTs >= 7 * 86400, 'DISCOVERY_TOKEN_TOO_RECENT');
+
+  const buckets = Array.from({ length: 7 }, function () { return null; });
+  for (const e of swapEvidence) {
+    const day = Math.floor((Date.parse(e.event_time) / 1000 - firstSwapTs) / 86400);
+    if (day >= 0 && day < 7 && !buckets[day]) buckets[day] = e;
+  }
+  assertOk(!buckets.some(function (v) { return !v; }), 'DISCOVERY_TOKEN_INCOMPLETE_SEVEN_DAY_COVERAGE');
+
+  return {
+    initLog,
+    firstLiquidity: positiveLiquidity[0],
+    firstSwap: firstSwap.rpc_log,
+    poolId,
+    firstSwapEvidence: firstSwap,
+    daily: buckets,
+    requests: [],
+    discovery: { source: base, token: DISCOVERY_TOKEN, launchTx: row.launchTx, createdBlock: row.createdBlock }
+  };
 }
 
 async function discoverIndexerCandidate(provider, blockCache, txCache, receiptCache) {
@@ -469,7 +536,9 @@ async function main() {
   let initResult;
   let candidate = null;
   const receiptCache = new Map();
-  if (DISCOVERY_INDEXER) {
+  if (DISCOVERY_INDEXER && DISCOVERY_TOKEN) {
+    candidate = await discoverSpecificToken(provider, blockCache, txCache, receiptCache);
+  } else if (DISCOVERY_INDEXER) {
     candidate = await discoverIndexerCandidate(provider, blockCache, txCache, receiptCache);
     assertOk(candidate, 'DISCOVERY_INDEXER_NO_VALID_CANDIDATE');
   }
