@@ -46,3 +46,10 @@ test('runtime supports an explicit candidate hint without treating it as evidenc
   assert.match(workflow, /HFI_POOL_ID:/);
   assert.match(workflow, /HFI_POOL_INIT_BLOCK:/);
 });
+
+test('targeted formation acquisition chunks below the public RPC range limit', () => {
+  assert.match(runtime, /TARGET_FORMATION_CHUNK=500/);
+  assert.match(runtime, /async function targetedFormationLogs/);
+  assert.match(runtime, /n\+=TARGET_FORMATION_CHUNK/);
+  assert.match(runtime, /TARGET_POOL_ID\?await targetedFormationLogs/);
+});
