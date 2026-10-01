@@ -95,7 +95,7 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
 
   assert.equal(validation.result, 'CONFIRMED');
 
-  const report = createResearchReport({
+  const reportInput = {
     formation,
     outcome,
     validation,
@@ -104,7 +104,9 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
       statement: 'Observed active liquidity remained at or above the configured threshold throughout the complete seven-day observation window.',
       evidence_ids: criterion.evidence_ids,
     }],
-  });
+  };
+
+  const report = createResearchReport(reportInput);
 
   const projection = createXContentProjection({
     formation,
@@ -115,7 +117,7 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
   });
 
   const readiness = validateXContentPublicationReadiness({
-    research_report: report,
+    research_report: reportInput,
     projection,
   });
 
