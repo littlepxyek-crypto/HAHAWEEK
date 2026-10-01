@@ -23,7 +23,7 @@ jobs:
       - run: npm run hfi:runtime
         env:
           HFI_SEARCH_BLOCKS: 250000
-          HFI_LOG_CHUNK: 10000
+          HFI_LOG_CHUNK: 100000
           HFI_FORMATION_LOOKAHEAD: 20000
           HFI_POOL_ID: "0x387bf619da4d3fb62bb276482693dba1b9b3520f573cabdfe033384a24125982"
           HFI_POOL_INIT_BLOCK: "169464"
