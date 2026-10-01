@@ -28,6 +28,7 @@ const FORMATION_LOOKAHEAD = Number(process.env.HFI_FORMATION_LOOKAHEAD || 20000)
 const RPC_RETRIES = Number(process.env.HFI_RPC_RETRIES || 3);
 const RPC_RETRY_DELAY_MS = Number(process.env.HFI_RPC_RETRY_DELAY_MS || 1000);
 const rpcFailures = [];
+const DISCOVERY_INDEXER = process.env.HFI_DISCOVERY_INDEXER || '';
 
 const initIface = new ethers.Interface([
   'event Initialize(bytes32 indexed id,address indexed currency0,address indexed currency1,uint24 fee,int24 tickSpacing,address hooks,uint160 sqrtPriceX96,int24 tick)'
