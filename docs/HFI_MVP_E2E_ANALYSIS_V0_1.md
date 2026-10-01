@@ -71,6 +71,8 @@ The subsequent exact-main E5 with batch size 25 still ended with `could not coal
 
 The following exact-main E5 then reached `formation_logs` but received a transient OrdoFi `-32005` busy response. Targeted log acquisition now has a longer bounded retry window (12 attempts, maximum 10 seconds between attempts); default non-targeted behavior remains unchanged.
 
+The next exact-main E5 successfully acquired and reconstructed the selected native/USDG candidate, but historical Liquidity Survival was `INCONCLUSIVE` because observation bucket 2 had no evidence. This is preserved as uncertainty. To seek a complete historical outcome without changing the validation rule, CI now targets a separate active USDG/U V4 pool (`0xf399bd1544377680d48c62fd85c2105b869e55906c4189cc5ab3b4e83446928c`, initialization block `59281988`) as a candidate-selection hint. External index data is only a hint; runtime acceptance remains exclusively RPC-derived.
+
 ## Critical findings
 
 1. The HFI Contract is active; this is not a governance blocker.
