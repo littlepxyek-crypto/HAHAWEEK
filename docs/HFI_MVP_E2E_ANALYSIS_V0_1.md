@@ -1,103 +1,81 @@
 # HFI-MVP-E2E-V0_1 — ANALYSIS / GAP ANALYSIS
 
-## Analysis basis
+## Authority
 
-Analyzed against branch `hfi-mvp-e2e-v0-1`, based on main commit:
+- Contract: `docs/CONTRACT_HFI_MVP_E2E_V0_1.md`
+- Contract status: AUTHORIZED
+- Authority: A0-A5
+- Repository: `littlepxyek-crypto/HAHAWEEK`
+- Analysis is limited to the active HFI-MVP vertical slice. No external publication, signing, trading, transaction execution, identity/deanonymization, predictive scoring, or production V4 authority is introduced.
 
-`c6b43ae7bc338b3ff9262ef7db978ddd6e42cfdc`
+## Current verified baseline
 
-Governing activation Contract:
-`docs/CONTRACT_HFI_MVP_E2E_V0_1.md`
-
-## Current-state findings
-
-### Existing reusable components
-
-- Authoritative evidence / canonical evidence / evidence identity boundaries exist.
-- Historical Outcome implementation exists in `src/core/historical-outcome.js`.
-- POOL_BOOTSTRAP implementation exists in `src/core/pool-bootstrap-formation.js`.
-- Evidence Graph implementation exists in `src/core/evidence-graph.js`.
-- Frozen Validation Result Contract and executable Validation Integration Boundary exist.
-- Research Report implementation and frozen contract exist.
-- X Content projection and validation-readiness components exist.
-- Replay and runtime authority boundaries exist.
-- Existing tests cover substantial deterministic, mutation, provenance, formation, outcome, validation, and replay behavior.
+- Main HEAD before this remediation: `6b42d7581f8be2c3090cd477df35cf831a017de9`.
+- HFI governance is ACTIVE in `PROJECT_STATE.md`.
+- Post-merge Tests and Security/Regression for the timestamp fix passed.
+- HFI E5 runtime reached real acquisition but the public official RPC path returned rate-limit failures.
+- The latest runtime artifact associated with the 6b42d7 run embedded an older commit and therefore is NOT valid E5 evidence for that commit.
+- The stale-artifact mismatch is treated as an evidence-boundary failure, not as runtime success or failure of the blockchain itself.
+- PR #670 is the active remediation branch for the RPC acquisition boundary.
 
 ## Gap Analysis Matrix
 
-| Blueprint / Requirement | Contract | Implementation | Tests | Runtime | Status | Gap / Risk |
-|---|---|---|---|---|---|---|
-| Real Robinhood evidence | Required | Acquisition/runtime components exist | Partial | Not yet proven for HFI | PARTIAL | Need one real end-to-end evidence set |
-| Raw evidence preservation | Required | Existing authoritative/raw layers | Existing coverage | Existing runtime boundary | IMPLEMENTED / REUSE | Must prove lineage in HFI slice |
-| Canonical evidence | Required | Existing canonical layer | Existing coverage | Not yet HFI-specific | IMPLEMENTED / REUSE | Need E2E linkage |
-| Deterministic evidence identity | Required | Existing identity layer | Existing coverage | Not yet HFI-specific | IMPLEMENTED / REUSE | Need E2E proof |
-| Integrity / provenance | Required | Existing boundaries | Existing coverage | Existing runtime boundary | IMPLEMENTED / REUSE | Need E2E proof |
-| Evidence Graph | Required | Existing graph | Existing deterministic tests | Not yet HFI runtime | PARTIAL | Graph lacks HYPOTHESIS/VALIDATION semantic node types, but expansion must be justified by E2E need; do not rewrite prematurely |
-| POOL_BOOTSTRAP | Required | Existing implementation | Strong unit coverage | Real evidence not yet proven | PARTIAL | Semantic vocabulary mismatch: implementation detects event_type SWAP for FIRST_SWAP; integration fixtures use POOL_INITIALIZED/LIQUIDITY_MODIFIED/SWAP |
-| Formation temporal order | Required | Block/tx/log ordering exists | Covered | Not yet real runtime | IMPLEMENTED / REUSE | Need event_time semantics verified in real data |
-| Historical Outcome | Required | Generic versioned implementation exists | Unit coverage | Not yet real data | PARTIAL | It stores observations but does not define LIQUIDITY_SURVIVAL semantics |
-| LIQUIDITY_SURVIVAL | Required | No authoritative methodology/evaluator identified | No dedicated evaluator tests identified | Not proven | MISSING | Critical semantic gap; methodology must be defined before implementation |
-| Validation | Required | Frozen result + boundary exist | Existing tests | Not yet E2E | PARTIAL | Generic validation does not itself implement LIQUIDITY_SURVIVAL |
-| Research Report | Required | Existing implementation | Existing tests | Not yet E2E | PARTIAL | Need one real lineage-complete report |
-| Claim lineage | Required | Report claims require evidence IDs | Existing tests | Not yet E2E | PARTIAL | Need E2E material-claim proof |
-| X Content projection | Required | Existing projection/readiness/envelope | Existing tests | External publication excluded | PARTIAL | Need E2E projection only |
-| Replay | Required | Existing authoritative replay | Existing tests | HFI replay not yet proven | PARTIAL | Need same-input equivalence across complete vertical slice |
-| Failure / recovery | Required | Existing runtime boundaries | Existing coverage | STEP 614 runtime already verified for operator layer | PARTIAL | HFI-derived pipeline must preserve the same boundaries |
-| Security / regression | Required | Existing suite | Existing coverage | N/A until changes | PARTIAL | New evaluator/vertical integration needs adversarial tests |
-| CI / merge / post-merge | Required | Repository process exists | Historical CI verified | Future HFI changes | NOT_STARTED | Required after implementation |
+| Area | Blueprint | Contract | Implementation | Tests | Runtime | Status | Gap | Risk |
+|---|---|---|---|---|---|---|---|---|
+| Governance | Contract + A0-A5 | Required | Active | CI lifecycle | Reconciled | VERIFIED | None in scope | Low |
+| Real Robinhood evidence | One real set | AC-01 | Runtime verifier exists | Partial | Not yet valid E5 | PARTIAL | Need successful exact-head E5 artifact | High |
+| Pool Created | Required | AC-02 | Decoder + adapter | Existing | Not proven live | PARTIAL | Real formation required | High |
+| Liquidity Added | Required | AC-03 | Decoder + explicit positive mapping | Existing | Not proven live | PARTIAL | Real formation required | High |
+| First Swap | Required | AC-04 | Decoder + formation ordering | Existing | Not proven live | PARTIAL | Real formation required | High |
+| Temporal order | Required | AC-05 | Block/tx/log ordering + block timestamp | Existing | Not proven live | PARTIAL | Real formation required | High |
+| Raw evidence | Required | AC-06 | Existing raw boundary + runtime capture | Existing | Artifact boundary hardened | IMPLEMENTED / E5 PENDING | Need successful runtime evidence | Medium |
+| Canonical evidence | Required | AC-07 | Existing canonical layer | Existing | E2E pending | PARTIAL | Real runtime lineage | Medium |
+| Deterministic identity | Required | AC-08 | Existing JCS-backed identity | Existing | E2E pending | PARTIAL | Real runtime replay | Medium |
+| Integrity / provenance | Required | AC-09 | Existing integrity primitives + runtime manifest | Existing | E2E pending | PARTIAL | Full runtime lineage proof | High |
+| Evidence Graph | Required | AC-10 | Existing deterministic graph | Existing | E2E pending | PARTIAL | Real formation projection | Medium |
+| Formation ID | Required | AC-11 | Frozen formation engine | Existing | E2E pending | PARTIAL | Real formation | High |
+| Historical Outcome | Required | AC-12 | Versioned outcome implementation | Existing | E2E pending | PARTIAL | Real 7-day observation set | High |
+| Liquidity Survival | Required | AC-13 | HFI methodology documented; evaluator supports version | Dedicated unit tests | E2E pending | PARTIAL | Successful complete coverage | High |
+| Unknown / incomplete semantics | Required | AC-14 | Fail-closed outcome/validation semantics | Existing | Failure evidence preserved | IMPLEMENTED | E5 confirmation pending | Medium |
+| Validation | Required | AC-15 | Frozen boundary + result | Existing | E2E pending | PARTIAL | Real outcome required | High |
+| Research Report | Required | AC-16/17 | Existing report/claim lineage | Existing | E2E pending | PARTIAL | Real validated lineage | High |
+| X projection | Required | AC-18 | Existing derived projection | Existing | E2E pending | PARTIAL | Real report input | Medium |
+| Replay | Required | AC-19 | Runtime replay comparison | Existing | E2E pending | PARTIAL | Exact successful runtime | High |
+| Restart / recovery | Required | AC-20 | Existing repository runtime boundaries | Existing | HFI-specific E5 pending | PARTIAL | Verify HFI restart boundary | High |
+| Reorg / failure | Required | AC-21 | Existing boundaries + HFI failure capture | Security/regression | E5 failure observed | PARTIAL | Applicable live evidence | Medium |
+| Security / regression | Required | AC-22 | Existing suite | Passed on prior merge | HFI remediation CI pending | PARTIAL | Fresh PR-head verification | Medium |
+| CI | Required | AC-23 | Workflow exists | Prior runs passed | New branch pending | PARTIAL | Fresh CI | Medium |
+| Post-merge | Required | AC-24 | Repository process exists | Not yet | Not yet | NOT_STARTED | Merge + exact-head checks | High |
+| PROJECT_STATE | Required | AC-25 | HFI ACTIVE entry exists | N/A | Pending reconciliation | PARTIAL | Reconcile after verified result | Medium |
+| Documentation | Required | AC-26 | Contract/frozen docs + HFI analysis/design | N/A | Must track actual state | PARTIAL | Final reconciliation | Medium |
+| Authority boundary | Required | AC-27 | A0-A5 only | Existing | No external action | VERIFIED | None | Low |
+| History preservation | Required | AC-28 | No deletion/reset | Existing | Preserved failures | VERIFIED | None | Low |
 
-## Critical semantic finding
+## Critical findings
 
-The most important missing piece is not the generic Historical Outcome container. It is the authoritative definition and evaluator for:
-
-`LIQUIDITY_SURVIVAL`
-
-The MVP scope contains an example seven-day window and a predefined liquidity fraction, but the example is not sufficient authorization to treat those values as universal methodology.
-
-Therefore:
-
-1. Do not hard-code an assumed threshold.
-2. Do not label a generic liquidity observation as survival.
-3. Do not produce CONFIRMED/REJECTED until the versioned criterion is explicit.
-4. Preserve PARTIAL/UNKNOWN/INCONCLUSIVE when evidence coverage is insufficient.
-
-## Formation semantic finding
-
-There are two existing formation representations:
-
-1. `pool-bootstrap-formation.js` uses semantic labels `POOL_CREATED`, `LIQUIDITY_ADDED`, and `FIRST_SWAP`, while detecting the actual swap using `event_type === 'SWAP'`.
-2. Formation-flow fixtures use `POOL_INITIALIZED`, `LIQUIDITY_MODIFIED`, and `SWAP`.
-
-This is a material semantic boundary, not a cosmetic naming issue. The HFI implementation must explicitly map or reconcile these representations under the Contract without silently normalizing them.
-
-## Evidence Graph finding
-
-The existing graph is deterministic and non-authoritative, which is suitable for the current vertical slice. It currently has:
-
-- node types through FORMATION
-- edge types including REFERENCES/FOLLOWS
-
-It does not currently model HYPOTHESIS or VALIDATION as graph nodes.
-
-This is not automatically a blocker because Validation and Research Report already have independent provenance contracts. Graph expansion should occur only if the E2E acceptance path demonstrates that the existing graph cannot represent required lineage.
-
-## Operational constraint
-
-The GitHub integration available to this execution can inspect and mutate repository state and inspect GitHub Actions results, but it does not provide a general arbitrary repository-shell execution primitive or workflow-dispatch primitive.
-
-Therefore actual runtime claims will only be made when directly captured/verifiable runtime evidence becomes available through an authorized execution path. CI results alone will not be represented as runtime proof.
+1. The HFI Contract is active; this is not a governance blocker.
+2. The remaining primary gate is E5: one complete real formation and downstream seven-day outcome.
+3. The prior artifact/commit mismatch is a provenance failure. It cannot be used for AC-01 or any downstream E5 claim.
+4. RPC provider rate limiting is an acquisition failure boundary. Changing the read-only RPC endpoint remains within A0-A5 only if chain identity and evidence semantics remain unchanged.
+5. The HFI Liquidity Survival methodology is explicitly versioned as `liquidity-survival-hfi-v1`; missing/incomplete coverage remains INCONCLUSIVE.
+6. The Evidence Graph remains unchanged because its existing deterministic/non-authoritative semantics are sufficient for the vertical slice.
 
 ## Phase status
 
-CONTRACT: AUTHORIZED
-ANALYSIS: IN PROGRESS / SUBSTANTIALLY ESTABLISHED
-DESIGN: NOT STARTED
-CODE: NOT STARTED
-TEST: NOT STARTED FOR HFI CHANGES
-RUNTIME: NOT STARTED FOR HFI E2E
-MERGE: NOT STARTED
-RECONCILIATION: NOT STARTED
+- CONTRACT: VERIFIED / AUTHORIZED
+- ANALYSIS: VERIFIED for current remediation boundary
+- DESIGN: VERIFIED on the HFI remediation branch
+- CODE: IMPLEMENTED on branch; CI pending
+- TEST: PENDING fresh branch CI
+- SECURITY/REGRESSION: PENDING fresh branch CI
+- CI: PENDING
+- REVIEW: PENDING
+- MERGE: PENDING
+- POST-MERGE VERIFICATION: PENDING
+- RUNTIME: BLOCKED until a fresh exact-commit artifact is produced and verified
+- RECONCILIATION: PENDING
+- DOCUMENTATION: THIS ANALYSIS UPDATED; final reconciliation pending
 
-## Next logical analysis action
+## Stop condition
 
-Define the exact LIQUIDITY_SURVIVAL methodology and inspect the existing acquisition/event decoding path to determine whether the required real observations can be produced without changing authoritative evidence semantics.
+Do not declare HFI-MVP complete until AC-01 through AC-28 are supported by the appropriate verification class and reconciled against the resulting main/runtime state.

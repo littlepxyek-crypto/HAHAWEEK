@@ -43,6 +43,9 @@ function createLiquiditySurvivalCriterion(input) {
   const reference = BigInt(input.reference_liquidity);
   if (reference <= 0n) throw new Error('REFERENCE_LIQUIDITY_MUST_BE_POSITIVE');
 
+  const ruleVersion = input.rule_version ?? LIQUIDITY_SURVIVAL_RULE_VERSION;
+  requireString(ruleVersion, 'rule_version');
+
   const windowSeconds = input.window_seconds ?? DEFAULT_WINDOW_SECONDS;
   if (!Number.isSafeInteger(windowSeconds) || windowSeconds <= 0) {
     throw new Error('INVALID_WINDOW_SECONDS');
@@ -132,11 +135,11 @@ function createLiquiditySurvivalCriterion(input) {
   }
 
   return {
-    criterion_id: LIQUIDITY_SURVIVAL_RULE_VERSION,
+    criterion_id: ruleVersion,
     status,
     evidence_ids: [...new Set(evidenceIds)],
     detail: {
-      rule_version: LIQUIDITY_SURVIVAL_RULE_VERSION,
+      rule_version: ruleVersion,
       formation_id: input.formation_id,
       window_start: input.window_start,
       window_end: input.window_end,
