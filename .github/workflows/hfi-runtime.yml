@@ -25,8 +25,8 @@ jobs:
           HFI_SEARCH_BLOCKS: 250000
           HFI_LOG_CHUNK: 100000
           HFI_FORMATION_LOOKAHEAD: 20000
-          HFI_POOL_ID: "0x387bf619da4d3fb62bb276482693dba1b9b3520f573cabdfe033384a24125982"
-          HFI_POOL_INIT_BLOCK: "169464"
+          HFI_POOL_ID: "0xfcfae8fa0bd6da961bcf5d990f27690932deac4f093e99bf3e871691c6586593"
+          HFI_POOL_INIT_BLOCK: "8793983"
       - name: Upload HFI runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
