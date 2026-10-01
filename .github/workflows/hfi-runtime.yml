@@ -23,6 +23,7 @@ jobs:
       - run: npm run hfi:runtime
         env:
           HFI_SEARCH_BLOCKS: 250000
+          HFI_DISCOVERY_INDEXER: https://api.par.family
           HFI_LOG_CHUNK: 100000
           HFI_FORMATION_LOOKAHEAD: 20000
           HFI_POOL_ID: "0xfcfae8fa0bd6da961bcf5d990f27690932deac4f093e99bf3e871691c6586593"
