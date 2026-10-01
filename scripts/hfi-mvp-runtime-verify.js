@@ -330,12 +330,23 @@ async function main() {
   const latest = await provider.getBlockNumber();
   const from = Math.max(0, latest - SEARCH_BLOCKS);
 
-  const initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC], from, latest);
+  let initResult;
   let candidate = null;
-
-  for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
-    candidate = await findCandidate(provider, initLog, blockCache, txCache);
-    if (candidate) break;
+  const hintedPoolId = process.env.HFI_POOL_ID;
+  const hintedInitBlock = process.env.HFI_POOL_INIT_BLOCK ? Number(process.env.HFI_POOL_INIT_BLOCK) : null;
+  if (hintedPoolId && hintedInitBlock !== null) {
+    initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC, hintedPoolId.toLowerCase()], hintedInitBlock, hintedInitBlock);
+    for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
+      candidate = await findCandidate(provider, initLog, blockCache, txCache);
+      if (candidate) break;
+    }
+  }
+  if (!candidate) {
+    initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC], from, latest);
+    for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
+      candidate = await findCandidate(provider, initLog, blockCache, txCache);
+      if (candidate) break;
+    }
   }
 
   assertOk(candidate, 'NO_COMPLETE_SEVEN_DAY_FORMATION_FOUND');
