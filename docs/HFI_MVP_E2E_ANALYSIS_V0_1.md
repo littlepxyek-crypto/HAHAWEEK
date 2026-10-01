@@ -61,6 +61,8 @@ The initial target hint is the WETH/USDG V4 pool `0x387bf619da4d3fb62bb276482693
 
 This mode does not grant external-provider, publication, signing, trading, cursor, writer-fence, identity, or production authority. It only narrows candidate selection for the existing read-only E5 verifier.
 
+The first targeted post-merge run reached the selected pool but failed inside its formation log acquisition with an opaque `AggregateError`. The runtime source uses a 10,000-block formation window; Robinhood ecosystem indexing work documents that public RPC range queries can reject windows once the log count becomes representative. The bounded remediation therefore keeps the same 10,000-block semantic horizon but acquires targeted formation logs in 500-block chunks. Failure diagnostics are also preserved with nested provider messages where available.
+
 ## Critical findings
 
 1. The HFI Contract is active; this is not a governance blocker.
