@@ -69,6 +69,8 @@ The first OrdoFi E5 attempt completed the targeted 10,000-block formation scan b
 
 The subsequent exact-main E5 with batch size 25 still ended with `could not coalesce error`. The diagnostic run then identified the exact cause: OrdoFi returned JSON-RPC `-32005`, `too many concurrent requests from this address (16 in flight for over 2s; slow down)`, during `historical_block_reads`. The next remediation caps targeted block-read batch concurrency at four while retaining 25 block lookups per transport batch. This changes request scheduling only; the block set, timestamps, event ordering, and downstream evidence semantics remain unchanged.
 
+The following exact-main E5 then reached `formation_logs` but received a transient OrdoFi `-32005` busy response. Targeted log acquisition now has a longer bounded retry window (12 attempts, maximum 10 seconds between attempts); default non-targeted behavior remains unchanged.
+
 ## Critical findings
 
 1. The HFI Contract is active; this is not a governance blocker.
