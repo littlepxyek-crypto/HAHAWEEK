@@ -36,6 +36,7 @@ function createLiquiditySurvivalCriterion(input) {
   requireObject(input.outcome, 'outcome');
 
   requireString(input.formation_id, 'formation_id');
+  requireString(input.pool_id, 'pool_id');
   requireString(input.reference_evidence_id, 'reference_evidence_id');
   integerString(input.reference_liquidity, 'reference_liquidity');
 
@@ -80,6 +81,10 @@ function createLiquiditySurvivalCriterion(input) {
     timestamp(observation.event_time, 'event_time');
     requireObject(observation.value, 'value');
     integerString(observation.value.active_liquidity, 'active_liquidity');
+    requireString(observation.value.pool_id, 'pool_id');
+    if (observation.value.pool_id.toLowerCase() !== input.pool_id.toLowerCase()) {
+      throw new Error('OBSERVATION_POOL_MISMATCH');
+    }
 
     if (observation.event_time < input.window_start || observation.event_time > input.window_end) {
       throw new Error('OBSERVATION_OUTSIDE_WINDOW');
@@ -136,6 +141,7 @@ function createLiquiditySurvivalCriterion(input) {
       window_start: input.window_start,
       window_end: input.window_end,
       window_seconds: windowSeconds,
+      pool_id: input.pool_id.toLowerCase(),
       reference_evidence_id: input.reference_evidence_id,
       reference_liquidity: input.reference_liquidity,
       minimum_fraction_bps: minimumFractionBps,
