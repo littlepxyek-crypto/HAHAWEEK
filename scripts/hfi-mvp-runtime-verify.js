@@ -462,10 +462,13 @@ async function main() {
   let initResult;
   let candidate = null;
   const receiptCache = new Map();
-  if (DISCOVERY_INDEXER) candidate = await discoverIndexerCandidate(provider, blockCache, txCache, receiptCache);
+  if (DISCOVERY_INDEXER) {
+    candidate = await discoverIndexerCandidate(provider, blockCache, txCache, receiptCache);
+    assertOk(candidate, 'DISCOVERY_INDEXER_NO_VALID_CANDIDATE');
+  }
   const hintedPoolId = process.env.HFI_POOL_ID;
   const hintedInitBlock = process.env.HFI_POOL_INIT_BLOCK ? Number(process.env.HFI_POOL_INIT_BLOCK) : null;
-  if (!candidate && hintedPoolId && hintedInitBlock !== null) {
+  if (!DISCOVERY_INDEXER && !candidate && hintedPoolId && hintedInitBlock !== null) {
     initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC, hintedPoolId.toLowerCase()], hintedInitBlock, hintedInitBlock);
     assertOk(initResult.logs.length > 0, 'HINTED_POOL_INITIALIZE_NOT_FOUND');
     for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
@@ -473,7 +476,7 @@ async function main() {
       if (candidate) break;
     }
     assertOk(candidate, 'HINTED_POOL_HAS_NO_COMPLETE_SEVEN_DAY_FORMATION');
-  } else if (!candidate) {
+  } else if (!DISCOVERY_INDEXER && !candidate) {
     initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC], from, latest);
     for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
       candidate = await findCandidate(provider, initLog, blockCache, txCache);
