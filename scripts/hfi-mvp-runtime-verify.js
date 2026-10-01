@@ -348,12 +348,13 @@ async function main() {
   const hintedInitBlock = process.env.HFI_POOL_INIT_BLOCK ? Number(process.env.HFI_POOL_INIT_BLOCK) : null;
   if (hintedPoolId && hintedInitBlock !== null) {
     initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC, hintedPoolId.toLowerCase()], hintedInitBlock, hintedInitBlock);
+    assertOk(initResult.logs.length > 0, 'HINTED_POOL_INITIALIZE_NOT_FOUND');
     for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
       candidate = await findCandidate(provider, initLog, blockCache, txCache);
       if (candidate) break;
     }
-  }
-  if (!candidate) {
+    assertOk(candidate, 'HINTED_POOL_HAS_NO_COMPLETE_SEVEN_DAY_FORMATION');
+  } else {
     initResult = await getLogsChunked(provider, POOL_MANAGER, [INITIALIZE_TOPIC], from, latest);
     for (const initLog of initResult.logs.sort(compareLogs).reverse()) {
       candidate = await findCandidate(provider, initLog, blockCache, txCache);
