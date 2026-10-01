@@ -41,6 +41,7 @@ function makeLog(overrides = {}) {
     topics: encoded.topics,
     data: encoded.data,
     blockNumber: 100,
+    transactionIndex: 9,
     transactionHash: '0x' + '33'.repeat(32),
     index: 7,
     ...overrides,
@@ -66,6 +67,7 @@ test('decodes Swap and preserves provenance', () => {
   assert.equal(event.tick, -123);
   assert.equal(event.fee, 3000);
   assert.equal(event.blockNumber, 100);
+  assert.equal(event.transactionIndex, 9);
   assert.equal(event.logIndex, 7);
 });
 
