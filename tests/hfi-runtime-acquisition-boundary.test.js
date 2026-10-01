@@ -63,3 +63,10 @@ test('targeted runtime batches historical block reads without changing event ord
   assert.match(runtime, /TARGET_BATCH_MAX=25/);
   assert.match(runtime, /batchMaxCount:TARGET_POOL_ID\?TARGET_BATCH_MAX:1/);
 });
+
+test('runtime preserves acquisition stage and nested provider diagnostics', () => {
+  assert.match(runtime, /stage='formation_logs'/);
+  assert.match(runtime, /stage,error:errorText\(e\)/);
+  assert.match(runtime, /e\?\.error\?\.message/);
+  assert.match(runtime, /e\?\.info\?\.error\?\.message/);
+});
