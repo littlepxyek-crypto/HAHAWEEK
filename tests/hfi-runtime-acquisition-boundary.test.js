@@ -35,7 +35,7 @@ test('runtime uses a large adaptive log range and bounded candidate pass', () =>
 
 test('RPC log range defaults to provider-safe 10000-block inclusive windows', () => {
   assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
-  assert.match(runtime, /il\.blockNumber,Math\.min\(latest,il\.blockNumber\+10000\),10000\)/);
+  assert.match(runtime, /formationEnd=Math\.min\(latest,il\.blockNumber\+10000\)/);
   assert.match(runtime, /firstSwap\.blockNumber,hi,10000\)/);
 });
 
@@ -45,4 +45,11 @@ test('runtime supports an explicit candidate hint without treating it as evidenc
   assert.match(runtime, /TARGET_POOL_INITIALIZE_NOT_FOUND/);
   assert.match(workflow, /HFI_POOL_ID:/);
   assert.match(workflow, /HFI_POOL_INIT_BLOCK:/);
+});
+
+test('targeted formation acquisition chunks below the public RPC range limit', () => {
+  assert.match(runtime, /TARGET_FORMATION_CHUNK=500/);
+  assert.match(runtime, /async function targetedFormationLogs/);
+  assert.match(runtime, /n\+=TARGET_FORMATION_CHUNK/);
+  assert.match(runtime, /TARGET_POOL_ID\?await targetedFormationLogs/);
 });
