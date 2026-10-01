@@ -85,11 +85,18 @@ async function getReceipt(provider, hash, cache) {
 
 async function discoverIndexerCandidate(provider, blockCache, txCache, receiptCache) {
   if (!DISCOVERY_INDEXER) return null;
-  const response = await fetch(DISCOVERY_INDEXER + '/launches?orderBy=tradeCount&orderDirection=desc&limit=100');
-  if (!response.ok) throw new Error('DISCOVERY_INDEXER_HTTP_' + response.status);
-  const body = await response.json();
-  const rows = Array.isArray(body) ? body : body.launches;
-  if (!Array.isArray(rows)) throw new Error('DISCOVERY_INDEXER_INVALID_RESPONSE');
+  const urls = [
+    DISCOVERY_INDEXER + '/launches?orderBy=tradeCount&orderDirection=desc&limit=100',
+    DISCOVERY_INDEXER + '/launches?orderBy=createdAt&orderDirection=asc&limit=100'
+  ];
+  const rows = [];
+  for (const url of urls) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('DISCOVERY_INDEXER_HTTP_' + response.status);
+    const body = await response.json();
+    const values = Array.isArray(body) ? body : body.launches;
+    if (Array.isArray(values)) rows.push(...values);
+  }
   const cutoff = Math.floor(Date.now() / 1000) - 7 * 86400;
 
   for (const row of rows) {
