@@ -28,6 +28,13 @@ test('RPC log acquisition backs off and preserves failure after bounded retries'
 
 test('runtime uses a large adaptive log range and bounded candidate pass', () => {
   assert.match(runtime, /MAXC=6/);
-  assert.match(runtime, /async function logs\(p,f,a,b,s=1000000\)/);
+  assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
   assert.match(runtime, /Math\.max\(1000,Math\.floor\(z\/2\)\)/);
+});
+
+
+test('RPC log range defaults to provider-safe 10000-block inclusive windows', () => {
+  assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
+  assert.match(runtime, /il\.blockNumber,Math\.min\(latest,il\.blockNumber\+2000\),10000\)/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,10000\)/);
 });
