@@ -11,7 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: true
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
@@ -28,12 +27,15 @@ jobs:
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
-      - if: always()
+      - name: Upload HFI-MVP runtime evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hfi-mvp-e5-runtime-${{ github.run_id }}
+          name: hfi-mvp-e2e-runtime-evidence-${{ github.sha }}
           path: docs/runtime/hfi-mvp-e2e-latest.json
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
       - if: steps.runtime.outputs.exit_code != '0'
-        run: exit 1
+        run: |
+          echo "HFI-MVP runtime verification did not reach VERIFIED; preserved runtime evidence is authoritative."
+          exit 1
