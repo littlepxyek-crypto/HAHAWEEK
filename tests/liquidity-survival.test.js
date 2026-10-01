@@ -52,7 +52,7 @@ test('complete seven-day coverage with 50% threshold passes deterministically', 
 test('complete coverage with one observation below threshold fails', () => {
   const observations = outcome().observations.map((observation, index) => ({
     ...observation,
-    value: { active_liquidity: index === 4 ? '49' : '100' },
+    value: { ...observation.value, active_liquidity: index === 4 ? '49' : '100' },
   }));
 
   const result = createLiquiditySurvivalCriterion(input({
@@ -65,7 +65,7 @@ test('complete coverage with one observation below threshold fails', () => {
 test('exactly 50% threshold passes', () => {
   const observations = outcome().observations.map((observation) => ({
     ...observation,
-    value: { active_liquidity: '50', pool_id: '0xpool' },
+    value: { ...observation.value, active_liquidity: '50' },
   }));
 
   const result = createLiquiditySurvivalCriterion(input({
@@ -134,10 +134,11 @@ test('outcome window must match evaluation window', () => {
   );
 });
 
-
 test('observation from another pool is rejected', () => {
   const observations = outcome().observations.map((observation, index) =>
-    index === 2 ? { ...observation, value: { active_liquidity: '100', pool_id: '0xother' } } : observation
+    index === 2
+      ? { ...observation, value: { ...observation.value, pool_id: '0xother' } }
+      : observation
   );
 
   assert.throws(
