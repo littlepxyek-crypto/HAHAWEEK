@@ -67,7 +67,7 @@ A subsequent exact-main run on `5b990a6816c7f82e6bc680dc64fb2df920106aaa` reache
 
 The first OrdoFi E5 attempt completed the targeted 10,000-block formation scan but then failed with `could not coalesce error` during the historical observation phase. The candidate is known to have substantial swap history, and the verifier was issuing one HTTP request per unique swap block because the provider was configured with `batchMaxCount=1`. The next transport-only remediation raises targeted batch size to 25, reducing request count while preserving the same block-level timestamp inputs and event ordering.
 
-The subsequent exact-main E5 with batch size 25 still ended with `could not coalesce error`. The next change is diagnostic-only: preserve a stage label (`formation_logs`, `outcome_logs`, `historical_block_reads`, `canonical_formation`, `liquidity_survival`, `downstream_projection`, or `replay`) plus nested provider error fields. No acceptance semantics are altered by this diagnostic layer.
+The subsequent exact-main E5 with batch size 25 still ended with `could not coalesce error`. The diagnostic run then identified the exact cause: OrdoFi returned JSON-RPC `-32005`, `too many concurrent requests from this address (16 in flight for over 2s; slow down)`, during `historical_block_reads`. The next remediation caps targeted block-read batch concurrency at four while retaining 25 block lookups per transport batch. This changes request scheduling only; the block set, timestamps, event ordering, and downstream evidence semantics remain unchanged.
 
 ## Critical findings
 
