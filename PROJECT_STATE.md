@@ -1,19 +1,29 @@
-## HFI-MVP-E2E-V0_1 — GOVERNANCE RECONCILIATION — AUTHORIZED / ACTIVE
+## HFI-MVP-E2E-V0_1 — FINAL RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED
 
-- Authorization: explicit user authorization received 2026-10-01 for governance reconciliation from STEP 614 to HFI-MVP-E2E-V0_1 and activation of authority classes A0–A5.
+- Authorization: explicit user authorization received 2026-10-01 for HFI-MVP-E2E-V0_1 and A0-A5.
 - Contract: `docs/CONTRACT_HFI_MVP_E2E_V0_1.md`.
-- Contract status: `CONTRACT — AUTHORIZED`.
-- HFI-MVP authority: A0 Observation, A1 Analysis, A2 Development, A3 Validation, A4 Integration, A5 Runtime.
-- No A6 authority is granted.
-- STEP 614 remains preserved as historical/completed authority for its own scope; no historical entry, failure boundary, evidence, cursor, or runtime result is deleted or rewritten by this transition.
-- The preserved STEP 614 `WRITER_FENCE_EXPIRED` failure remains a failure boundary and is not reclassified as success.
-- HFI-MVP is now the active governance boundary for the authorized vertical-slice work defined by its Contract.
-- Scope remains limited to the HFI-MVP Contract. External publication, signing, trading, transaction execution, private-key handling, identity/deanonymization, predictive scoring, production V4 activation, and other authority expansion remain unauthorized.
-- Cursor reset, historical deletion/rewrite, silent normalization/overwrite/deduplication, and fabricated evidence remain forbidden.
-- **Current STEP: HFI-MVP-E2E-V0_1 — GOVERNANCE RECONCILIATION**
-- **Current phase: CONTRACT → ANALYSIS**
-- **Next STEP: HFI-MVP GAP ANALYSIS against current implementation, tests, security/regression, CI, runtime, durable state, and applicable frozen contracts.**
-- **Global HFI-MVP STATUS: AUTHORIZED / ACTIVE / NOT YET COMPLETE.**
+- Exact resulting main commit verified: `835381f6e5e3e6bb228faf0f0529937017ce76c5`.
+- HFI E5 runtime workflow run verified: `36950270117`.
+- HFI E5 runtime result: VERIFIED.
+- Runtime artifact: `hfi-mvp-e2e-runtime-evidence-835381f6e5e3e6bb228faf0f0529937017ce76c5`, artifact ID `11205101153`.
+- Real Robinhood Mainnet evidence verified on chain_id 4663.
+- Verified Pool Bootstrap formation: `formation:v1:7070be7b2d9239ad96edc4e1abe99740600a154565f9c6a3c5a2e27d0e4cde6d`.
+- Verified seven-day Historical Outcome: `outcome:v1:d9bfe21f5c84016c17dd5bb4714c75e48bec41e8b7fc6922961de847d0177a8b`, coverage COMPLETE.
+- Verified LIQUIDITY_SURVIVAL criterion: PASS.
+- Verified Validation: `validation:v1:f2aa476f38b731ef1427aa3bab7af5cc77c3c3f6dfab02daacd720d2387dba19`, result CONFIRMED.
+- Verified Research Report: `report:v1:7d5eca8160a35d6943107e8e1fcaf76da39b3e854ec1e543dd7b5edd6758e6e4`.
+- Verified claim lineage and X Content projection; external publication was not executed.
+- Runtime captured 8,664 raw and 8,664 canonical evidence records with deterministic IDs and provenance references.
+- Runtime graph projection contained 25,337 nodes and 34,410 edges.
+- Runtime replay reported equivalent=true and reproduced the formation/outcome/validation/report IDs.
+- Existing V4 integrity, checkpoint/cursor, writer-fence, restart/recovery, reorg, and security/regression boundaries remain preserved and tested; no cursor reset or historical rewrite occurred.
+- Prior runtime failures remain preserved as historical failures and were not reclassified.
+- No A6 authority was exercised. No external publication, signing, trading, transaction execution, or external mutation occurred.
+- **Current STEP: HFI-MVP-E2E-V0_1 — FINAL RECONCILIATION**
+- **Current phase: RECONCILIATION → DOCUMENTATION**
+- **Next STEP: HFI-RADAR — NEW CONTRACT REQUIRED**
+- **Global HFI-MVP STATUS: VERIFIED / RECONCILED / DOCUMENTED / COMPLETE**
+- **Authorization after completion: STOP. HFI-RADAR is a logical next phase only; completion of this Contract does not authorize it.**
 
 ## STEP 614 — Final LIVE-Readiness Reconciliation — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
