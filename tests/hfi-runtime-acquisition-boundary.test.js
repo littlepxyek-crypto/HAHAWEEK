@@ -80,6 +80,7 @@ test('targeted historical block reads cap in-flight RPC batches', () => {
 test('targeted RPC log acquisition tolerates transient provider busy responses', () => {
   assert.match(runtime, /const retryLimit=TARGET_POOL_ID\?12:5/);
   assert.match(runtime, /const maxBackoff=TARGET_POOL_ID\?10000:5000/);
+  assert.doesNotMatch(runtime, /if\(retries>retryLimit\|\|z<=1000\)throw x/);
 });
 
 
