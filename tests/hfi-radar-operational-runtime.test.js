@@ -18,8 +18,8 @@ test('A7 operational runtime is bound to real-mainnet upstream evidence', () => 
   assert.match(script, /REAL_MAINNET_AUTHORITY_NOT_VERIFIED/);
   assert.match(script, /VALIDATION_NOT_CONFIRMED/);
   assert.doesNotMatch(script, /eth_sendRawTransaction/);
-  assert.match(script, /validationInputForIntelligence/);
-  assert.match(script, /Validation may legitimately reference the same evidence/);
+  assert.match(script, /intelligenceInputs/);
+  assert.match(script, /Formation, Outcome, and Validation may legitimately reference the same/);
 });
 
 test('A7 Candidate projection boundary excludes FIRST_SWAP from candidate input', () => {

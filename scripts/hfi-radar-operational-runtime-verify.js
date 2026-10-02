@@ -114,34 +114,70 @@ function candidateInput(artifact, blockTimes) {
   ];
 }
 
-function validationInputForIntelligence(artifact) {
-  const upstreamEvidence = new Set([
-    ...artifact.formation.evidence_ids,
-    ...artifact.outcome.evidence_ids,
-  ]);
-
+function intelligenceInputs(artifact) {
+  const formationEvidence = artifact.formation.evidence_ids;
+  const outcomeEvidence = artifact.outcome.evidence_ids;
   const validationEvidence = artifact.validation.evidence_ids;
+
+  if (!Array.isArray(formationEvidence) || formationEvidence.length === 0) {
+    throw new Error('FORMATION_EVIDENCE_IDS_REQUIRED');
+  }
+  if (!Array.isArray(outcomeEvidence) || outcomeEvidence.length === 0) {
+    throw new Error('OUTCOME_EVIDENCE_IDS_REQUIRED');
+  }
   if (!Array.isArray(validationEvidence) || validationEvidence.length === 0) {
     throw new Error('VALIDATION_EVIDENCE_IDS_REQUIRED');
   }
 
-  const seen = new Set();
-  for (const evidenceId of validationEvidence) {
-    if (seen.has(evidenceId)) throw new Error('VALIDATION_EVIDENCE_IDS_DUPLICATE');
-    seen.add(evidenceId);
-  }
+  const validateLocalUniqueness = (ids, code) => {
+    const seen = new Set();
+    for (const evidenceId of ids) {
+      if (seen.has(evidenceId)) throw new Error(code);
+      seen.add(evidenceId);
+    }
+  };
 
-  // Validation may legitimately reference the same evidence already present
-  // in Outcome/Formation. Remove only duplicate references at this adapter
-  // boundary; authoritative Validation evidence remains unchanged. The
-  // downstream Intelligence projection still receives the complete set union.
+  validateLocalUniqueness(formationEvidence, 'FORMATION_EVIDENCE_IDS_DUPLICATE');
+  validateLocalUniqueness(outcomeEvidence, 'OUTCOME_EVIDENCE_IDS_DUPLICATE');
+  validateLocalUniqueness(validationEvidence, 'VALIDATION_EVIDENCE_IDS_DUPLICATE');
+
+  const formationSet = new Set(formationEvidence);
+  const outcomeOnlyEvidence = outcomeEvidence.filter(
+    (evidenceId) => !formationSet.has(evidenceId)
+  );
+  const intelligenceUpstreamSet = new Set([
+    ...formationEvidence,
+    ...outcomeOnlyEvidence,
+  ]);
   const validationOnlyEvidence = validationEvidence.filter(
-    (evidenceId) => !upstreamEvidence.has(evidenceId)
+    (evidenceId) => !intelligenceUpstreamSet.has(evidenceId)
   );
 
+  // Formation, Outcome, and Validation may legitimately reference the same
+  // deterministic evidence. Remove only cross-layer duplicate references at
+  // this adapter boundary. Authoritative records remain unchanged and the
+  // frozen Intelligence Projection receives the complete set union.
   return {
-    ...artifact.validation,
-    evidence_ids: validationOnlyEvidence,
+    outcome: {
+      ...artifact.outcome,
+      evidence_ids: outcomeOnlyEvidence,
+    },
+    validation: {
+      ...artifact.validation,
+      evidence_ids: validationOnlyEvidence,
+    },
+    reference_counts: {
+      formation: formationEvidence.length,
+      outcome_original: outcomeEvidence.length,
+      outcome_only: outcomeOnlyEvidence.length,
+      validation_original: validationEvidence.length,
+      validation_only: validationOnlyEvidence.length,
+      union: new Set([
+        ...formationEvidence,
+        ...outcomeEvidence,
+        ...validationEvidence,
+      ]).size,
+    },
   };
 }
 
@@ -214,17 +250,17 @@ function main() {
         throw new Error('FORMATION_REPLAY_NON_EQUIVALENT');
       }
 
-      const validationForIntelligence = validationInputForIntelligence(artifact);
+      const intelligenceInput = intelligenceInputs(artifact);
       const intelligence = createIntelligenceProjection({
         formation: artifact.formation,
-        outcome: artifact.outcome,
-        validation: validationForIntelligence,
+        outcome: intelligenceInput.outcome,
+        validation: intelligenceInput.validation,
       });
       const summary = createIntelligenceEvidenceSummary({
         intelligence,
         formation: artifact.formation,
-        outcome: artifact.outcome,
-        validation: validationForIntelligence,
+        outcome: intelligenceInput.outcome,
+        validation: intelligenceInput.validation,
       });
       const validatedRadar = createValidatedRadarRecord({ summary });
       const validatedProjection = createHfiRadarProjection({
@@ -234,14 +270,14 @@ function main() {
 
       const intelligenceReplay = createIntelligenceProjection({
         formation: artifact.formation,
-        outcome: artifact.outcome,
-        validation: validationForIntelligence,
+        outcome: intelligenceInput.outcome,
+        validation: intelligenceInput.validation,
       });
       const summaryReplay = createIntelligenceEvidenceSummary({
         intelligence: intelligenceReplay,
         formation: artifact.formation,
-        outcome: artifact.outcome,
-        validation: validationForIntelligence,
+        outcome: intelligenceInput.outcome,
+        validation: intelligenceInput.validation,
       });
       const validatedReplay = createValidatedRadarRecord({ summary: summaryReplay });
 
@@ -327,9 +363,13 @@ function main() {
           candidate_evidence_ids: candidate.evidence_ids,
           formation_evidence_ids: formationRadar.evidence_ids,
           validated_evidence_ids: validatedRadar.evidence_ids,
-          validation_reference_deduplicated_at_adapter: true,
-          validation_reference_count: artifact.validation.evidence_ids.length,
-          validation_reference_new_count: validationForIntelligence.evidence_ids.length,
+          cross_layer_reference_deduplicated_at_adapter: true,
+          formation_reference_count: intelligenceInput.reference_counts.formation,
+          outcome_reference_count: intelligenceInput.reference_counts.outcome_original,
+          outcome_reference_only_count: intelligenceInput.reference_counts.outcome_only,
+          validation_reference_count: intelligenceInput.reference_counts.validation_original,
+          validation_reference_only_count: intelligenceInput.reference_counts.validation_only,
+          evidence_union_count: intelligenceInput.reference_counts.union,
         },
         radar_integrity: {
           ...radarIntegrity,
