@@ -20,23 +20,26 @@ test('historical discovery is bounded to the minimum window needed for seven-day
   assert.match(runtime, /latest-Math\.floor\(bpd\*DISCOVERY_AGE_DAYS\)/);
 });
 
-test('RPC log acquisition backs off and preserves failure after bounded retries', () => {
-  assert.match(runtime, /const retryLimit=TARGET_POOL_ID\?12:5/);
-  assert.match(runtime, /const maxBackoff=TARGET_POOL_ID\?10000:5000/);
+test('RPC log acquisition uses bounded adaptive retries and range splitting', () => {
+  assert.match(runtime, /while\(attempt<3\)/);
+  assert.match(runtime, /if\(e-n\+1<=minChunk\)throw last/);
+  assert.match(runtime, /fetchRange\(n,mid/);
+  assert.match(runtime, /fetchRange\(mid\+1,e/);
 });
 
 
-test('runtime uses a large adaptive log range and bounded candidate pass', () => {
+test('runtime uses large adaptive outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
-  assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
-  assert.match(runtime, /Math\.max\(1000,Math\.floor\(z\/2\)\)/);
+  assert.match(runtime, /TARGET_OUTCOME_CHUNK=100000/);
+  assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
+  assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
 
 
-test('RPC log range defaults to provider-safe 10000-block inclusive windows', () => {
-  assert.match(runtime, /async function logs\(p,f,a,b,s=10000\)/);
+test('formation and outcome acquisition retain explicit bounded windows', () => {
   assert.match(runtime, /formationEnd=Math\.min\(latest,il\.blockNumber\+10000\)/);
-  assert.match(runtime, /firstSwap\.blockNumber,hi,10000\)/);
+  assert.match(runtime, /TARGET_FORMATION_CHUNK=500/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK\)/);
 });
 
 test('runtime supports an explicit candidate hint without treating it as evidence authority', () => {
@@ -72,15 +75,16 @@ test('runtime preserves acquisition stage and nested provider diagnostics', () =
 });
 
 test('targeted historical block reads cap in-flight RPC batches', () => {
-  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=4/);
+  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=8/);
   assert.match(runtime, /i\+=TARGET_BLOCK_BATCH_CONCURRENCY/);
   assert.match(runtime, /nums\.slice\(i,i\+TARGET_BLOCK_BATCH_CONCURRENCY\)/);
 });
 
-test('targeted RPC log acquisition tolerates transient provider busy responses', () => {
-  assert.match(runtime, /const retryLimit=TARGET_POOL_ID\?12:5/);
-  assert.match(runtime, /const maxBackoff=TARGET_POOL_ID\?10000:5000/);
-  assert.doesNotMatch(runtime, /if\(retries>retryLimit\|\|z<=1000\)throw x/);
+test('parallel acquisition is deterministically ordered before downstream interpretation', () => {
+  assert.match(runtime, /out\.sort\(\(x,y\)=>/);
+  assert.match(runtime, /x\.blockNumber/);
+  assert.match(runtime, /x\.transactionIndex/);
+  assert.match(runtime, /x\.index\?\?x\.logIndex/);
 });
 
 
