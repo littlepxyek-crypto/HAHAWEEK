@@ -170,3 +170,13 @@ A6 can be marked COMPLETE only after:
 - claim ledger completed;
 - no external action occurred.
 
+
+
+## 12. Post-E5 Reconciliation
+
+- Fresh exact-main runtime completed VERIFIED on `95516cf669a7ad6cb9215f9057a8917ef9e2acf1`.
+- Acquisition optimization was the only runtime-source change demonstrated as necessary; HFI proof semantics were preserved.
+- Required runtime gates, integrity, replay, no-look-ahead, claim lineage, and X projection were verified from artifact `11218450343`.
+- Final reconciliation: `docs/A6_FINAL_RECONCILIATION_V0_1.md`.
+- Claim ledger: `docs/A6_CLAIM_LEDGER_V0_1.md`.
+- **A6 completion state: VERIFIED / RECONCILED / DOCUMENTED / COMPLETE.**
