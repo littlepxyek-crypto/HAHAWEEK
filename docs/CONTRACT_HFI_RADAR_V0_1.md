@@ -2,7 +2,7 @@
 
 ## Status
 
-CONTRACT — PROPOSED / PENDING EXPLICIT AUTHORIZATION
+CONTRACT — AUTHORIZED
 
 Contract ID: `HFI-RADAR-V0_1`
 
@@ -528,11 +528,11 @@ Completion does not authorize HFI-PUBLISH, trading, signing, external publicatio
 
 Until populated, this section remains pending.
 
-- Authorization source: **PENDING**
-- Authorization date/time: **PENDING**
-- Authorized scope: **PENDING**
-- Authorized authority classes: **PENDING**
-- Authorizing statement: **PENDING**
+- Authorization source: **Explicit user authorization in ChatGPT conversation**
+- Authorization date/time: **2026-10-02 (user authorization recorded in this execution)**
+- Authorized scope: **HFI-RADAR-V0_1 exactly as defined by this Contract**
+- Authorized authority classes: **A0 Observation, A1 Analysis, A2 Development, A3 Validation, A4 Integration, A5 Runtime**
+- Authorizing statement: **User explicitly authorized HFI-RADAR-V0_1 for activation as the next HAHAWEEK phase, with A0-A5 authority and scope strictly limited to this Contract, and instructed execution through VERIFIED / RECONCILED / DOCUMENTED.**
 
 After explicit authorization is recorded, the Contract may transition from:
 
