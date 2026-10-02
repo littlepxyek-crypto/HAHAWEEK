@@ -72,3 +72,14 @@ A7 invokes the existing read-only HFI-MVP runtime. It does not invoke `eth_sendR
 **DESIGN = VERIFIED**
 
 Implementation is limited to the operational bridge and workflow/provenance changes required to prove the A7 acceptance criteria.
+
+
+## Post-runtime corrective design
+
+The first exact-main A7 runtime reached verified HFI-MVP evidence but exposed an integration boundary: Validation legitimately reused Outcome evidence IDs, while the frozen Intelligence Projection helper rejects cross-layer duplicate references.
+
+The corrective adapter removes only those repeated Validation references from the adapter copy. Authoritative Formation, Outcome, and Validation records are not mutated. The resulting Intelligence evidence set remains the deterministic union of all three sources.
+
+Duplicate evidence IDs within one authoritative source remain invalid.
+
+**Corrective design = VERIFIED.**
