@@ -114,6 +114,37 @@ function candidateInput(artifact, blockTimes) {
   ];
 }
 
+function validationInputForIntelligence(artifact) {
+  const upstreamEvidence = new Set([
+    ...artifact.formation.evidence_ids,
+    ...artifact.outcome.evidence_ids,
+  ]);
+
+  const validationEvidence = artifact.validation.evidence_ids;
+  if (!Array.isArray(validationEvidence) || validationEvidence.length === 0) {
+    throw new Error('VALIDATION_EVIDENCE_IDS_REQUIRED');
+  }
+
+  const seen = new Set();
+  for (const evidenceId of validationEvidence) {
+    if (seen.has(evidenceId)) throw new Error('VALIDATION_EVIDENCE_IDS_DUPLICATE');
+    seen.add(evidenceId);
+  }
+
+  // Validation may legitimately reference the same evidence already present
+  // in Outcome/Formation. Remove only duplicate references at this adapter
+  // boundary; authoritative Validation evidence remains unchanged. The
+  // downstream Intelligence projection still receives the complete set union.
+  const validationOnlyEvidence = validationEvidence.filter(
+    (evidenceId) => !upstreamEvidence.has(evidenceId)
+  );
+
+  return {
+    ...artifact.validation,
+    evidence_ids: validationOnlyEvidence,
+  };
+}
+
 function main() {
   const startedAt = new Date().toISOString();
   write({
@@ -183,16 +214,17 @@ function main() {
         throw new Error('FORMATION_REPLAY_NON_EQUIVALENT');
       }
 
+      const validationForIntelligence = validationInputForIntelligence(artifact);
       const intelligence = createIntelligenceProjection({
         formation: artifact.formation,
         outcome: artifact.outcome,
-        validation: artifact.validation,
+        validation: validationForIntelligence,
       });
       const summary = createIntelligenceEvidenceSummary({
         intelligence,
         formation: artifact.formation,
         outcome: artifact.outcome,
-        validation: artifact.validation,
+        validation: validationForIntelligence,
       });
       const validatedRadar = createValidatedRadarRecord({ summary });
       const validatedProjection = createHfiRadarProjection({
@@ -203,13 +235,13 @@ function main() {
       const intelligenceReplay = createIntelligenceProjection({
         formation: artifact.formation,
         outcome: artifact.outcome,
-        validation: artifact.validation,
+        validation: validationForIntelligence,
       });
       const summaryReplay = createIntelligenceEvidenceSummary({
         intelligence: intelligenceReplay,
         formation: artifact.formation,
         outcome: artifact.outcome,
-        validation: artifact.validation,
+        validation: validationForIntelligence,
       });
       const validatedReplay = createValidatedRadarRecord({ summary: summaryReplay });
 
@@ -295,6 +327,9 @@ function main() {
           candidate_evidence_ids: candidate.evidence_ids,
           formation_evidence_ids: formationRadar.evidence_ids,
           validated_evidence_ids: validatedRadar.evidence_ids,
+          validation_reference_deduplicated_at_adapter: true,
+          validation_reference_count: artifact.validation.evidence_ids.length,
+          validation_reference_new_count: validationForIntelligence.evidence_ids.length,
         },
         radar_integrity: {
           ...radarIntegrity,
