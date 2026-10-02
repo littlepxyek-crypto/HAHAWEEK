@@ -1,3 +1,30 @@
+## A8 — Acquisition Boundary Foundation — COMPLETE / VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/CONTRACT_A8_ACQUISITION_BOUNDARY_V0_1.md`.
+- Implementation PR #703 merged to main as `18203d6d6b4cd1a292020346cf1a8403ec68e573`.
+- PR head before merge: `8555afbedbba582b2085bae4064737e6d6ed8f72`.
+- A8 implementation is bounded to acquisition metadata, source registry/health, immutable AcquisitionResult, target security policy, provenance, tests, and documentation.
+- Target network acquisition, crawling, browser execution, stealth/bypass, cursor advancement, raw/canonical mutation, actor inference, publication, trading/signing/transactions, and LLM evidence authority remain inactive/non-scope.
+- Deep provenance immutability verified by CI tests.
+- Strict source-health FSM verified; invalid transitions fail closed and FAILED recovery requires PROBING.
+- Authority escalation is rejected; source authority remains ACQUISITION_ONLY.
+- Target security policy is deny-by-default with explicit protocol/host allowlists, credential-in-URL rejection, DNS evidence requirement, redirect bounds, response/concurrency/timeout/retry limits, and private/special-address rejection.
+- Adversarial fixtures cover malformed targets, credential URLs, localhost/private targets, DNS rebinding, hash mismatch, nested mutation, invalid health transitions, and authority escalation.
+- PR-head Tests run `37008999125`: SUCCESS.
+- PR-head Security/Regression run `37008999013`: SUCCESS.
+- PR-head CodeQL dynamic run `37008997845`: SUCCESS.
+- Post-merge main Tests run `37009161572`: SUCCESS.
+- Post-merge main Security/Regression run `37009161643`: SUCCESS.
+- Post-merge main dynamic/CodeQL wrapper run `37009160829`: SUCCESS.
+- Main exact commit verified: `18203d6d6b4cd1a292020346cf1a8403ec68e573`.
+- Baseline reconciliation: compare from A7 main `073eda10bf87fe833e7d63bcc1b8a9983f69d555` to A8 merge contains only the seven A8 acquisition-boundary files; no A6/A7 evidence, canonical evidence, formation, outcome, validation, radar, cursor, or historical-failure files changed.
+- Local clone execution was attempted but the execution environment could not resolve github.com; therefore no local-test claim is made. CI is the execution proof for the A8 change.
+- Existing HFI-MVP runtime verification triggered by the main push remained an independent pre-existing runtime path and was not used as evidence for A8 acquisition activation.
+- Reconciliation: A6/A7 authority preserved; A8 adds an isolated acquisition boundary only.
+- **A8 STATUS: COMPLETE / VERIFIED / RECONCILED / DOCUMENTED.**
+- **A8 backend activation: NOT AUTHORIZED / NOT ACTIVATED.**
+- **Next phase: A9 requires a new contract and explicit authorization.**
+
 ## HFI-RADAR OPERATIONALIZATION A7 — FINAL RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `HAHAWEEK-HFI-RADAR-OPERATIONALIZATION-V0_2`.
