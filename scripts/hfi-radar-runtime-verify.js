@@ -8,6 +8,7 @@ const { createFormationRadarRecord } = require('../src/core/hfi-radar-formation'
 const { createCandidateRadarRecord } = require('../src/core/hfi-radar-candidate');
 const { createHfiRadarProjection } = require('../src/core/hfi-radar-projection');
 const { createValidatedRadarRecord } = require('../src/core/validated-radar-record');
+const { createRadarReconciliation } = require('../src/core/hfi-radar-reconciliation');
 
 const OUT = 'docs/runtime/hfi-radar-latest.json';
 const COMMIT = process.env.GITHUB_SHA || 'UNKNOWN';
@@ -38,6 +39,15 @@ async function main(){
   const validatedProjection=createHfiRadarProjection({kind:'VALIDATED',validated_radar:validated});
   assertOk(validatedProjection.radar_state==='VALIDATED','VALIDATED_RADAR_STATE_INVALID');
   assertOk(validatedProjection.validated_radar_id===validated.radar_id,'VALIDATED_RADAR_LINEAGE_INVALID');
+  const reconciliation = createRadarReconciliation({
+    reason: 'REORG',
+    previous: { radar_id: 'radar:v1:previous', evidence_ids: ['ei:v1:old'] },
+    current: { radar_id: candidate.radar_id, evidence_ids: candidate.evidence_ids },
+  });
+  assertOk(reconciliation.state === 'RECONCILED', 'REORG_RECONCILIATION_NOT_VERIFIED');
+  assertOk(reconciliation.historical_previous_preserved === true, 'REORG_HISTORY_NOT_PRESERVED');
+  assertOk(reconciliation.authoritative_evidence_mutated === false, 'REORG_MUTATED_AUTHORITATIVE_EVIDENCE');
+
   const mutationProbe=createCandidateRadarRecord({events});
   mutationProbe.evidence_ids.push('ei:v1:mutation');
   assertOk(events[0].evidence_id==='ei:v1:runtime-created','CALLER_INPUT_MUTATION_DETECTED');
@@ -45,7 +55,8 @@ async function main(){
   let futureRejected=false;
   try{createCandidateRadarRecord({events:withFutureSwap});}catch(error){futureRejected=error.message==='CANDIDATE_RADAR_REQUIRES_CANDIDATE_FORMATION_STATE';}
   assertOk(futureRejected,'FUTURE_SWAP_LEAKAGE_NOT_BLOCKED');
-  const result={verification_class:'E5_RUNTIME',contract_id:'HFI-RADAR-V0_1',commit:COMMIT,state:'VERIFIED',started_at:startedAt,completed_at:new Date().toISOString(),environment:{runtime:process.version,platform:process.platform,external_network:false,external_actions:false},checks:{candidate_projection:true,candidate_replay_equivalent:true,formation_projection:true,formation_replay_equivalent:true,validated_projection:true,caller_mutation_isolation:true,no_lookahead:futureRejected},ids:{candidate_radar_id:candidate.radar_id,formation_radar_id:formationRadar.radar_id,validated_radar_id:validated.radar_id,validated_projection_id:validatedProjection.projection_id},lineage:{candidate_evidence_ids:candidate.evidence_ids,formation_evidence_ids:formationRadar.evidence_ids,validated_evidence_ids:validated.evidence_ids,validation_id:validated.validation_id,formation_id:formation.formation_id},artifact_digest:digest({candidate:candidate.radar_id,formation:formationRadar.radar_id,validated:validated.radar_id})};
+  const result={verification_class:'E5_RUNTIME',contract_id:'HFI-RADAR-V0_1',commit:COMMIT,state:'VERIFIED',started_at:startedAt,completed_at:new Date().toISOString(),environment:{runtime:process.version,platform:process.platform,external_network:false,external_actions:false},checks:{candidate_projection:true,candidate_replay_equivalent:true,formation_projection:true,formation_replay_equivalent:true,validated_projection:true,caller_mutation_isolation:true,no_lookahead:futureRejected,reorg_reconciliation:true,prior_observation_preserved:true},ids:{candidate_radar_id:candidate.radar_id,formation_radar_id:formationRadar.radar_id,validated_radar_id:validated.radar_id,validated_projection_id:validatedProjection.projection_id},reconciliation_id:reconciliation.reconciliation_id,
+    lineage:{candidate_evidence_ids:candidate.evidence_ids,formation_evidence_ids:formationRadar.evidence_ids,validated_evidence_ids:validated.evidence_ids,validation_id:validated.validation_id,formation_id:formation.formation_id},artifact_digest:digest({candidate:candidate.radar_id,formation:formationRadar.radar_id,validated:validated.radar_id})};
   write(result);
 }
 main().catch(error=>{write({verification_class:'E5_RUNTIME',contract_id:'HFI-RADAR-V0_1',commit:COMMIT,state:'FAILED',completed_at:new Date().toISOString(),failure:{message:error instanceof Error?error.message:String(error)}});process.exitCode=1;});
