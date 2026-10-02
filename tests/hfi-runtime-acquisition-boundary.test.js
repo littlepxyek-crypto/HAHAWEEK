@@ -81,3 +81,14 @@ test('targeted RPC log acquisition tolerates transient provider busy responses',
   assert.match(runtime, /const retryLimit=TARGET_POOL_ID\?12:5/);
   assert.match(runtime, /const maxBackoff=TARGET_POOL_ID\?10000:5000/);
 });
+
+
+test('runtime preserves a terminal state when CI cancellation sends SIGTERM', () => {
+  assert.match(runtime, /process\.on\('SIGTERM'/);
+  assert.match(runtime, /state='CANCELLED'/);
+  assert.match(runtime, /code:'RUNTIME_CANCELLED'/);
+});
+
+test('HFI runtime has a bounded completion window suitable for historical E5', () => {
+  assert.match(workflow, /timeout-minutes: 45/);
+});
