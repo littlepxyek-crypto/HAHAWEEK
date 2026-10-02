@@ -1,3 +1,20 @@
+## HFI-RADAR-V0_1 — FINAL RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED
+
+- Explicit user authorization recorded for HFI-RADAR-V0_1 with A0-A5 authority.
+- Contract: `docs/CONTRACT_HFI_RADAR_V0_1.md`.
+- Implementation main commit verified: `01b64e7b71e639874ba540367fd3507380191165`.
+- HFI-RADAR E5 runtime workflow run verified: `36972849534` (run #2).
+- HFI-RADAR runtime artifact: `hfi-radar-runtime-evidence-01b64e7b71e639874ba540367fd3507380191165`, artifact ID `11212401817`.
+- Runtime artifact SHA-256: `85ce25f9a7b4fecbd4c7c9664899916f50db29b7434b8f77dd12255514f25aa2`.
+- Candidate Radar, Formation Radar, Validated Radar projection, replay, no-look-ahead, mutation isolation, and reorg reconciliation were verified E5.
+- HFI-RADAR Tests and Security/Regression were terminal-success on the implementation/reconciliation lifecycle.
+- No authoritative raw/canonical evidence mutation, cursor reset, writer-fence mutation, external publication, signing, trading, transaction execution, or A6 authority occurred.
+- HFI-RADAR product level: L5 — Radar for the authorized scope.
+- **Current STEP: HFI-RADAR-V0_1 — FINAL RECONCILIATION**
+- **Current phase: RECONCILIATION → DOCUMENTATION**
+- **Global HFI-RADAR STATUS: VERIFIED / RECONCILED / DOCUMENTED / COMPLETE**
+- **Authorization after completion: STOP. Any next phase requires a new Contract and explicit authorization.**
+
 ## HFI-MVP-E2E-V0_1 — FINAL RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Authorization: explicit user authorization received 2026-10-01 for HFI-MVP-E2E-V0_1 and A0-A5.
