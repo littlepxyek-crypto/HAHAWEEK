@@ -2,6 +2,13 @@ name: HAHAWEEK HFI-RADAR Runtime Verification
 on:
   push:
     branches: ["main"]
+    paths:
+      - "src/core/hfi-radar-*.js"
+      - "tests/hfi-radar-*.test.js"
+      - "scripts/hfi-radar-runtime-verify.js"
+      - ".github/workflows/hfi-radar-runtime.yml"
+      - "package.json"
+      - "package-lock.json"
 permissions:
   contents: read
 jobs:
