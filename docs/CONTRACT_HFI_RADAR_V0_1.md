@@ -10,9 +10,7 @@ Repository: `littlepxyek-crypto/HAHAWEEK`
 
 Base state: HFI-MVP-E2E-V0_1 VERIFIED / RECONCILED / DOCUMENTED / COMPLETE.
 
-This document defines the proposed authority boundary for the next logical phase. Creation of this document does **not** activate HFI-RADAR and does not authorize implementation, runtime execution, production activation, publication, trading, signing, or external action.
-
-Explicit user authorization to activate this Contract MUST be recorded before the CONTRACT → AUTHORITY gate may pass.
+This document defines the authorized authority boundary for the HFI-RADAR phase. Its creation did not activate HFI-RADAR; activation is established by the explicit authorization record in Section 22 and the resulting merge to `main`. The Contract does not authorize production activation, publication, trading, signing, or external action.
 
 ## 1. Objective
 
