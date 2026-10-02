@@ -1,0 +1,35 @@
+name: HAHAWEEK HFI-RADAR Runtime Verification
+on:
+  push:
+    branches: ["main"]
+permissions:
+  contents: read
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: |
+          rm -f docs/runtime/hfi-radar-latest.json
+          node scripts/hfi-radar-runtime-verify.js
+      - name: Verify runtime artifact provenance
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          test -f docs/runtime/hfi-radar-latest.json
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-radar-latest.json','utf8'));if(x.commit!==process.env.GITHUB_SHA||x.state!=='VERIFIED'||x.verification_class!=='E5_RUNTIME'||x.contract_id!=='HFI-RADAR-V0_1'){console.error('HFI_RADAR_RUNTIME_PROVENANCE_INVALID',x);process.exit(1)}"
+      - name: Upload HFI-RADAR runtime evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: hfi-radar-runtime-evidence-${{ github.sha }}
+          path: docs/runtime/hfi-radar-latest.json
+          if-no-files-found: error
+          retention-days: 90
