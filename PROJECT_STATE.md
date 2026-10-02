@@ -1,3 +1,21 @@
+## A9 — Continuous Acquisition Runtime — COMPLETE / VERIFIED / RECONCILED / DOCUMENTED
+
+- Contract: `docs/CONTRACT_A9_CONTINUOUS_ACQUISITION_RUNTIME_V0_1.md`.
+- Implementation PR #705 merged as `e04b32bb1cfef9c197b2f81af9f43ce90eb6527d`.
+- Implementation head before merge: `8f439cdfa89b23ee6e2bab720b534ad884ae3446`.
+- A9 establishes an explicit Acquisition Runtime above A8 with bounded HTTP acquisition, lease ownership, execution checkpoints, DNS evidence, and bounded continuous cycles.
+- Execution state is separate from authoritative evidence and the blockchain cursor; checkpoints are atomic and integrity protected.
+- Backend selection is explicit; there is no silent escalation. Scrapling, Patchright, and Agent-Reach remain separate future adapters and were not activated.
+- Live runtime verification succeeded against explicitly allowlisted `https://example.com`; external network=true; external_actions=false; publication_executed=false.
+- PR-head Tests: run `37016761085` SUCCESS; Security/Regression: run `37016761268` SUCCESS; A9 Runtime: run `37016760925` SUCCESS.
+- A9 runtime push verification: run `37016755109` SUCCESS.
+- A prior A9 verifier failure caused by shell/Node harness quoting was preserved as an implementation finding; runtime semantics were unchanged.
+- Advanced CodeQL workflow was attempted but rejected by GitHub because repository Default Setup is enabled; the workflow was removed. No conflicting CodeQL configuration remains.
+- A8/A7/A6 authoritative evidence, cursor, formation, outcome, validation, radar, and historical artifacts were not changed by the A9 diff.
+- A9 does not activate crawling expansion, browser execution, stealth/bypass, Agent-Reach, Scrapling, Patchright, downstream evidence mutation, trading, signing, publication, or external actions.
+- **A9 STATUS: COMPLETE / VERIFIED / RECONCILED / DOCUMENTED.**
+- **Next phase: A10 — Off-chain Evidence Graph.**
+
 ## A8 — Acquisition Boundary Foundation — COMPLETE / VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_A8_ACQUISITION_BOUNDARY_V0_1.md`.
