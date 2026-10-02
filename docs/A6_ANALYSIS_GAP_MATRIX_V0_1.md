@@ -109,3 +109,13 @@ Next:
 
 **DESIGN — A6 runtime/reconciliation and minimal-change design**
 
+
+
+## A6 — POST-RUNTIME RECONCILIATION
+
+- Fresh exact-main E5 runtime is now terminal VERIFIED on `95516cf669a7ad6cb9215f9057a8917ef9e2acf1`.
+- Runtime workflow `36986308282`; artifact `11218450343`; artifact digest `7fa44f9091a5d598b51511b86e68742d06cd9df03d932819598d18ff6fc643e4`.
+- The acquisition bottleneck was resolved without changing HFI proof semantics: adaptive range retrieval, bounded concurrency, deterministic ordering, and bounded block reads.
+- Formation, Outcome, Liquidity Survival, Validation, Research Report, Claims, X Content, integrity, replay, and no-look-ahead are reconciled from the fresh artifact.
+- This matrix's earlier PENDING runtime statements are historical analysis state; the final authoritative state is recorded in `docs/A6_FINAL_RECONCILIATION_V0_1.md`.
+- **A6 GAP MATRIX: RECONCILED.**
