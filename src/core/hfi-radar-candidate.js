@@ -4,6 +4,7 @@ const crypto = require('node:crypto');
 
 const {
   detectPoolBootstrap,
+  compareOrder,
   FORMATION_RULE_VERSION,
 } = require('./pool-bootstrap-formation');
 
@@ -41,20 +42,11 @@ function createCandidateRadarRecord(input) {
 
   const created = input.events
     .filter((event) => event.event_type === 'POOL_CREATED')
-    .sort((a, b) => [a.block_number, a.transaction_index, a.log_index]
-      .map((_, index) => [a.block_number, a.transaction_index, a.log_index][index])
-      .reduce((diff, value, index) => diff || value - [b.block_number, b.transaction_index, b.log_index][index], 0))[0];
+    .sort(compareOrder)[0];
 
   const liquidity = input.events
     .filter((event) => event.event_type === 'LIQUIDITY_ADDED')
-    .sort((a, b) => {
-      const ao = [a.block_number, a.transaction_index, a.log_index];
-      const bo = [b.block_number, b.transaction_index, b.log_index];
-      for (let i = 0; i < ao.length; i += 1) {
-        if (ao[i] !== bo[i]) return ao[i] - bo[i];
-      }
-      return 0;
-    })[0];
+    .sort(compareOrder)[0];
 
   requireObject(created, 'created_event');
   requireObject(liquidity, 'liquidity_event');
