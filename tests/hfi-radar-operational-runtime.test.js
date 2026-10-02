@@ -27,7 +27,7 @@ test('A7 Candidate projection boundary excludes FIRST_SWAP from candidate input'
   );
 
   assert.match(script, /eventType, evidenceId, eventTime/);
-  assert.match(script, /event_type: 'POOL_CREATED'/);
-  assert.match(script, /event_type: 'LIQUIDITY_ADDED'/);
+  assert.match(script, /eventFromCanonical\\(\\s*artifact,\\s*'POOL_CREATED'/);
+  assert.match(script, /eventFromCanonical\\(\\s*artifact,\\s*'LIQUIDITY_ADDED'/);
   assert.match(script, /candidate_excludes_first_swap: true/);
 });
