@@ -29,6 +29,7 @@ const initialBase=runtimeBase('RUNNING');
 persist(initialBase);
 process.on('uncaughtException',e=>fail(initialBase,e));
 process.on('unhandledRejection',e=>fail(initialBase,e));
+process.on('SIGTERM',()=>{initialBase.state='CANCELLED';initialBase.completed_at=new Date().toISOString();initialBase.failure={code:'RUNTIME_CANCELLED',message:'Runtime process received SIGTERM before terminal verification.'};persist(initialBase);process.exit(143)});
 async function main(){const p=makeProvider(),bc=new Map(),B=async n=>{if(!bc.has(n))bc.set(n,p.getBlock(n));return await bc.get(n)},base=initialBase;let c=[];base.candidate_results=c;
 try{if(Number((await p.getNetwork()).chainId)!==CHAIN_ID)throw Error('CHAIN_ID_MISMATCH');const latest=await p.getBlockNumber(),lb=await B(latest),sb=await B(Math.max(0,latest-5000)),bps=(lb.timestamp-sb.timestamp)/5000,bpd=86400/bps,from=Math.max(0,latest-Math.ceil(bpd*DISCOVERY_LOOKBACK_DAYS)),to=latest-Math.floor(bpd*DISCOVERY_AGE_DAYS);
 const inits=TARGET_POOL_ID&&Number.isSafeInteger(TARGET_POOL_INIT_BLOCK)?await logs(p,{address:POOL_MANAGER,topics:[INIT,TARGET_POOL_ID]},TARGET_POOL_INIT_BLOCK,TARGET_POOL_INIT_BLOCK,1): (await logs(p,{address:POOL_MANAGER,topics:[INIT]},from,to)).sort((a,b)=>b.blockNumber-a.blockNumber).slice(0,MAXC);
