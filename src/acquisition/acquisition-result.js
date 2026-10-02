@@ -1,6 +1,7 @@
 "use strict";
 
 const crypto = require("node:crypto");
+const { cloneAndFreeze } = require("./source-registry");
 
 const STATUSES = Object.freeze(["OBSERVED", "UNAVAILABLE", "DEGRADED", "FAILED"]);
 
@@ -16,7 +17,9 @@ function hashContent(content) {
 }
 
 function createAcquisitionResult(input) {
-  if (!input || typeof input !== "object") throw new TypeError("ACQUISITION_REQUIRED");
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    throw new TypeError("ACQUISITION_REQUIRED");
+  }
 
   requiredString(input.acquisition_id, "ACQUISITION_ID_REQUIRED");
   requiredString(input.source_id, "SOURCE_ID_REQUIRED");
@@ -33,7 +36,7 @@ function createAcquisitionResult(input) {
     requiredString(input.content_type, "CONTENT_TYPE_REQUIRED");
     if (input.content === undefined) throw new TypeError("CONTENT_REQUIRED");
     const computedHash = hashContent(input.content);
-    if (input.content_hash && input.content_hash !== computedHash) {
+    if (input.content_hash !== undefined && input.content_hash !== computedHash) {
       throw new Error("CONTENT_HASH_MISMATCH");
     }
     input = { ...input, content_hash: computedHash };
@@ -43,11 +46,11 @@ function createAcquisitionResult(input) {
     throw new Error("NON_OBSERVED_CONTENT_FORBIDDEN");
   }
 
-  if (input.raw_reference !== undefined) requiredString(input.raw_reference, "RAW_REFERENCE_INVALID");
+  if (input.raw_reference !== undefined) {
+    requiredString(input.raw_reference, "RAW_REFERENCE_INVALID");
+  }
 
-  const provenance = input.provenance && typeof input.provenance === "object"
-    ? structuredClone(input.provenance)
-    : {};
+  const provenance = cloneAndFreeze(input.provenance || {}, "PROVENANCE_INVALID");
 
   return Object.freeze({
     acquisition_id: input.acquisition_id,
@@ -61,7 +64,7 @@ function createAcquisitionResult(input) {
     ...(input.content_type ? { content_type: input.content_type } : {}),
     ...(input.content_hash ? { content_hash: input.content_hash } : {}),
     ...(input.raw_reference ? { raw_reference: input.raw_reference } : {}),
-    provenance: Object.freeze(provenance),
+    provenance,
   });
 }
 
