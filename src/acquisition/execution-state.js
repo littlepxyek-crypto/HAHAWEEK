@@ -1,0 +1,8 @@
+"use strict";
+const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
+function checksum(payload){return crypto.createHash("sha256").update(JSON.stringify(payload)).digest("hex");}
+function createExecutionState(input={}){if(!input||typeof input!=="object"||Array.isArray(input))throw new TypeError("EXECUTION_STATE_REQUIRED");const state={version:1,revision:Number.isInteger(input.revision)?input.revision:0,runtime_id:input.runtime_id||null,request_id:input.request_id||null,last_checkpoint:input.last_checkpoint||null,updated_at:input.updated_at||new Date().toISOString()};return Object.freeze({...state,integrity:checksum(state)});}
+function verifyExecutionState(state){if(!state||state.version!==1||typeof state.integrity!=="string")throw new Error("EXECUTION_STATE_INVALID");const {integrity,...payload}=state;if(checksum(payload)!==integrity)throw new Error("EXECUTION_STATE_INTEGRITY_MISMATCH");return true;}
+function writeExecutionState(filePath,input){if(typeof filePath!=="string"||!filePath)throw new TypeError("STATE_PATH_REQUIRED");const state=createExecutionState(input),dir=path.dirname(filePath);fs.mkdirSync(dir,{recursive:true});const temp=filePath+".tmp-"+process.pid+"-"+crypto.randomUUID();const fd=fs.openSync(temp,"w",0o600);try{fs.writeFileSync(fd,JSON.stringify(state,null,2)+"\n","utf8");fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(temp,filePath);return state;}
+function readExecutionState(filePath){if(!fs.existsSync(filePath))return null;const state=JSON.parse(fs.readFileSync(filePath,"utf8"));verifyExecutionState(state);return Object.freeze(state);}
+module.exports={createExecutionState,verifyExecutionState,writeExecutionState,readExecutionState};

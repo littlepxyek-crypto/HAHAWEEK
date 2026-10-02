@@ -1,0 +1,33 @@
+name: HAHAWEEK A9 Runtime Verification
+
+on:
+  push:
+    branches: ["main", "a9-*"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  a9-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: bounded live HTTP verification
+        env:
+          A9_TARGET: https://example.com
+        run: node scripts/a9-live-runtime-verify.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a9-continuous-acquisition-runtime-evidence
+          path: /tmp/hahaweek-a9-runtime-evidence.json

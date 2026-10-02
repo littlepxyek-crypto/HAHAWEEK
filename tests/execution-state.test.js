@@ -1,0 +1,5 @@
+"use strict";
+const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path");
+const {writeExecutionState,readExecutionState}=require("../src/acquisition/execution-state");
+test("execution state survives restart and verifies integrity",()=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),"hahaweek-a9-")),file=path.join(dir,"state.json");const written=writeExecutionState(file,{runtime_id:"exec-1",request_id:"req-1",revision:1,last_checkpoint:{state:"CHECKPOINTED",sequence:5}});const recovered=readExecutionState(file);assert.equal(recovered.revision,1);assert.equal(recovered.last_checkpoint.sequence,5);assert.equal(written.integrity,recovered.integrity);});
+test("tampered execution state fails closed",()=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),"hahaweek-a9-")),file=path.join(dir,"state.json");writeExecutionState(file,{runtime_id:"exec-1",request_id:"req-1",revision:1});const value=JSON.parse(fs.readFileSync(file,"utf8"));value.revision=99;fs.writeFileSync(file,JSON.stringify(value));assert.throws(()=>readExecutionState(file),/EXECUTION_STATE_INTEGRITY_MISMATCH/);});
