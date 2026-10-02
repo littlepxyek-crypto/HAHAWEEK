@@ -101,3 +101,10 @@ The next exact-main E5 successfully acquired and reconstructed the selected nati
 ## Stop condition
 
 Do not declare HFI-MVP complete until AC-01 through AC-28 are supported by the appropriate verification class and reconciled against the resulting main/runtime state.
+
+
+## 2026-10-02 Runtime Timeout Boundary
+
+Exact-main E5 on `41a5df1758f4d87c757e4bd40ac0977f980333f7` selected the configured historical candidate but the GitHub runtime job reached its 25-minute timeout and was cancelled. The preserved artifact remained `RUNNING`, so the run is not accepted as E5 verification and is not interpreted as a candidate failure.
+
+The bounded remediation increases only the HFI runtime workflow timeout to 45 minutes and adds SIGTERM terminal-state preservation: a runtime process cancelled by the workflow records `CANCELLED` with `RUNTIME_CANCELLED` rather than leaving a misleading `RUNNING` artifact. No formation, outcome, validation, evidence, identity, cursor, writer-fence, or external-action semantics change.
