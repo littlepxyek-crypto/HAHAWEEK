@@ -84,7 +84,7 @@ test('parallel acquisition is deterministically ordered before downstream interp
   assert.match(runtime, /out\.sort\(\(x,y\)=>/);
   assert.match(runtime, /x\.blockNumber/);
   assert.match(runtime, /x\.transactionIndex/);
-  assert.match(runtime, /x\.index\?x\.logIndex/);
+  assert.match(runtime, /x\.index\?\?x\.logIndex/);
 });
 
 
