@@ -1,11 +1,15 @@
-name: HAHAWEEK HFI-RADAR Runtime Verification
+name: HAHAWEEK HFI-RADAR Operational Runtime Verification
 on:
   push:
     branches: ["main"]
     paths:
       - "src/core/hfi-radar-*.js"
+      - "src/core/intelligence-*.js"
+      - "src/core/validated-radar-record.js"
+      - "src/core/validated-radar-record-integration.js"
+      - "scripts/hfi-mvp-runtime-verify.js"
+      - "scripts/hfi-radar-operational-runtime-verify.js"
       - "tests/hfi-radar-*.test.js"
-      - "scripts/hfi-radar-runtime-verify.js"
       - ".github/workflows/hfi-radar-runtime.yml"
       - "package.json"
       - "package-lock.json"
@@ -14,7 +18,7 @@ permissions:
 jobs:
   runtime:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,19 +28,37 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: |
-          rm -f docs/runtime/hfi-radar-latest.json
-          node scripts/hfi-radar-runtime-verify.js
-      - name: Verify runtime artifact provenance
+      - id: runtime
+        continue-on-error: true
+        env:
+          RPC_URL: https://rpc.ordofi.network
+          RPC_TIMEOUT_MS: 30000
+          HFI_POOL_ID: "0xf399bd1544377680d48c62fd85c2105b869e55906c4189cc5ab3b4e83446928c"
+          HFI_POOL_INIT_BLOCK: "59281988"
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          set +e
+          rm -f docs/runtime/hfi-mvp-e2e-latest.json docs/runtime/hfi-radar-operational-latest.json
+          node scripts/hfi-radar-operational-runtime-verify.js
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Verify operational runtime artifact provenance
+        if: always()
         env:
           GITHUB_SHA: ${{ github.sha }}
         run: |
-          test -f docs/runtime/hfi-radar-latest.json
-          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-radar-latest.json','utf8'));if(x.commit!==process.env.GITHUB_SHA||x.state!=='VERIFIED'||x.verification_class!=='E5_RUNTIME'||x.contract_id!=='HFI-RADAR-V0_1'){console.error('HFI_RADAR_RUNTIME_PROVENANCE_INVALID',x);process.exit(1)}"
-      - name: Upload HFI-RADAR runtime evidence
+          test -f docs/runtime/hfi-radar-operational-latest.json
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-radar-operational-latest.json','utf8'));if(x.commit!==process.env.GITHUB_SHA||x.state!=='VERIFIED'||x.verification_class!=='E5_RUNTIME'||x.contract_id!=='HAHAWEEK-HFI-RADAR-OPERATIONALIZATION-V0_2'||x.chain_id!==4663||x.source?.external_network!==true||x.source?.external_actions!==false){console.error('A7_RUNTIME_PROVENANCE_INVALID',x);process.exit(1)}"
+      - name: Upload operational runtime evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hfi-radar-runtime-evidence-${{ github.sha }}
-          path: docs/runtime/hfi-radar-latest.json
+          name: hfi-radar-operational-runtime-evidence-${{ github.sha }}
+          path: docs/runtime/hfi-radar-operational-latest.json
           if-no-files-found: error
           retention-days: 90
+      - if: steps.runtime.outputs.exit_code != '0'
+        run: |
+          echo "HFI-RADAR A7 operational runtime did not reach VERIFIED; preserved runtime evidence is authoritative."
+          exit 1
