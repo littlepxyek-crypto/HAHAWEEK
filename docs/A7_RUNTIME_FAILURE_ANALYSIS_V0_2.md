@@ -48,3 +48,7 @@ The failed A7 runtime remains preserved as a failure observation and is not recl
 **Minimal corrective change authorized by A7.**
 
 A new runtime is required before A7 can be marked VERIFIED.
+
+
+## Second runtime finding
+The first corrective attempt removed Validation references already present upstream, but the frozen Intelligence Projection also rejects the legitimate Formation/Outcome overlap at the First Swap evidence boundary. The corrected adapter therefore computes a deterministic set union across all three authoritative evidence lists while preserving each source record unchanged. Local duplicates inside any one source remain failures.
