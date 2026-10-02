@@ -83,3 +83,7 @@ The corrective adapter removes only those repeated Validation references from th
 Duplicate evidence IDs within one authoritative source remain invalid.
 
 **Corrective design = VERIFIED.**
+
+
+## Corrective design refinement
+The adapter must normalize cross-layer evidence **references** across Formation, Outcome, and Validation, not only Validation. The deterministic output remains the complete set union of authoritative evidence IDs. No authoritative source is mutated and no evidence is removed from the union.
