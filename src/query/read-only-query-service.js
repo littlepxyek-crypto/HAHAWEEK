@@ -7,10 +7,9 @@ const {
   isImplementedOperation,
   capabilities,
 } = require('./evidence-query-contract');
+const { MAX_ROWS, MAX_BLOCK_SPAN, createResourceBudget, paginate } = require('./resource-budget');
 
 const READONLY_SQL_PREFIX = /^(SELECT|PRAGMA|EXPLAIN)\b/i;
-const MAX_ROWS = 1000;
-const MAX_BLOCK_SPAN = 100000;
 
 function requiredString(value, field) {
   if (typeof value !== 'string' || value.length === 0) throw new Error(field.toUpperCase() + '_REQUIRED');
@@ -27,9 +26,14 @@ function rowObject(statement) {
   return value && Object.keys(value).length ? value : null;
 }
 
-function allRows(statement) {
+function allRows(statement, budget) {
   const rows = [];
-  while (statement.step()) rows.push(statement.getAsObject());
+  while (statement.step()) {
+    budget.check();
+    rows.push(statement.getAsObject());
+    if (rows.length > MAX_ROWS) break;
+  }
+  budget.check();
   return rows;
 }
 
@@ -103,57 +107,60 @@ function createReadOnlyQueryService(database) {
     }, { evidence_refs: result.evidence_refs, provenance_refs: result.provenance_refs, limitations: result.limitations });
   }
 
-  function getBlockContext(chainId, blockNumber) {
+  function getBlockContext(chainId, blockNumber, resource = {}) {
     if (!Number.isInteger(chainId) || chainId < 0) throw new Error('CHAIN_ID_INVALID');
     if (!Number.isInteger(blockNumber) || blockNumber < 0) throw new Error('BLOCK_NUMBER_INVALID');
+    const budget = createResourceBudget(resource);
     const statement = safePrepare(db, `SELECT re.chain_id, re.block_number, re.block_hash, COUNT(*) AS raw_event_count FROM raw_events re WHERE re.chain_id = ? AND re.block_number = ? GROUP BY re.chain_id, re.block_number, re.block_hash ORDER BY re.block_hash LIMIT ${MAX_ROWS + 1}`, [chainId, blockNumber]);
-    const bounded = boundedRows(allRows(statement)); statement.free();
+    const bounded = boundedRows(allRows(statement, budget), budget); statement.free();
     const rows = bounded.rows;
     if (!rows.length) return response('block:' + chainId + ':' + blockNumber, 'UNKNOWN', null, { limitations: ['BLOCK_NOT_FOUND_IN_RAW_EVENT_SCOPE'] });
-    return response('block:' + chainId + ':' + blockNumber, bounded.partial ? 'PARTIAL' : 'COMPLETE', { chain_id: chainId, block_number: blockNumber, observations: rows }, { limitations: ['BLOCK_CONTEXT_IS_EVIDENCE_SCOPED; PROVIDER_LEVEL_ABSENCE_IS_NOT_INFERRED'] });
+    return response('block:' + chainId + ':' + blockNumber, bounded.partial ? 'PARTIAL' : 'COMPLETE', { chain_id: chainId, block_number: blockNumber, observations: rows, pagination: bounded.pagination }, { limitations: ['BLOCK_CONTEXT_IS_EVIDENCE_SCOPED; PROVIDER_LEVEL_ABSENCE_IS_NOT_INFERRED'] });
   }
 
-  function boundedRows(rows) {
-    const partial = rows.length > MAX_ROWS;
-    return { rows: partial ? rows.slice(0, MAX_ROWS) : rows, partial };
+  function boundedRows(rows, budget) {
+    return paginate(rows, budget);
   }
 
-  function getTransactionContext(chainId, transactionHash) {
+  function getTransactionContext(chainId, transactionHash, resource = {}) {
     if (!Number.isInteger(chainId) || chainId < 0) throw new Error('CHAIN_ID_INVALID');
     requiredString(transactionHash, 'transaction_hash');
+    const budget = createResourceBudget(resource);
     const statement = safePrepare(db, `SELECT re.event_id, re.chain_id, re.block_number, re.transaction_hash, re.block_hash, re.transaction_index, re.log_index, re.address, re.topics_json, re.data, re.captured_at, ce.evidence_id, ce.identity_hash, ce.canonical_hash FROM raw_events re LEFT JOIN canonical_evidence ce ON ce.raw_event_id = re.event_id WHERE re.chain_id = ? AND re.transaction_hash = ? ORDER BY re.log_index LIMIT ${MAX_ROWS + 1}`, [chainId, transactionHash]);
     const bounded = boundedRows(allRows(statement)); statement.free();
     const rows = bounded.rows;
     if (!rows.length) return response('tx:' + chainId + ':' + transactionHash, 'UNKNOWN', null, { limitations: ['TRANSACTION_NOT_FOUND_IN_RAW_EVENT_SCOPE'] });
-    return response('tx:' + chainId + ':' + transactionHash, bounded.partial ? 'PARTIAL' : 'COMPLETE', { chain_id: chainId, transaction_hash: transactionHash, events: rows.map(row => ({ event_id: row.event_id, evidence_id: row.evidence_id, block_number: row.block_number, block_hash: row.block_hash, transaction_index: row.transaction_index, log_index: row.log_index, address: row.address, topics: parseJson(row.topics_json, []), data: row.data, captured_at: row.captured_at, identity_hash: row.identity_hash, canonical_hash: row.canonical_hash })) });
+    return response('tx:' + chainId + ':' + transactionHash, bounded.partial ? 'PARTIAL' : 'COMPLETE', { chain_id: chainId, transaction_hash: transactionHash, events: rows, pagination: bounded.pagination, event_details: rows.map(row => ({ event_id: row.event_id, evidence_id: row.evidence_id, block_number: row.block_number, block_hash: row.block_hash, transaction_index: row.transaction_index, log_index: row.log_index, address: row.address, topics: parseJson(row.topics_json, []), data: row.data, captured_at: row.captured_at, identity_hash: row.identity_hash, canonical_hash: row.canonical_hash })) });
   }
 
-  function getWalletActivity(chainId, address, startBlock = null, endBlock = null) {
+  function getWalletActivity(chainId, address, startBlock = null, endBlock = null, resource = {}) {
     if (!Number.isInteger(chainId) || chainId < 0) throw new Error('CHAIN_ID_INVALID');
     requiredString(address, 'address');
     if (startBlock !== null && (!Number.isInteger(startBlock) || startBlock < 0)) throw new Error('START_BLOCK_INVALID');
     if (endBlock !== null && (!Number.isInteger(endBlock) || endBlock < 0)) throw new Error('END_BLOCK_INVALID');
     if (startBlock !== null && endBlock !== null && startBlock > endBlock) throw new Error('BLOCK_RANGE_INVALID');
     if (startBlock !== null && endBlock !== null && endBlock - startBlock > MAX_BLOCK_SPAN) throw new Error('BLOCK_RANGE_TOO_LARGE');
+    const budget = createResourceBudget(resource);
     const statement = safePrepare(db, `SELECT event_id, chain_id, pool_id, pool_manager, sender AS address, tick_lower, tick_upper, liquidity_delta, salt, block_number, transaction_hash, log_index, captured_at FROM liquidity_events WHERE chain_id = ? AND lower(sender) = lower(?) AND (? IS NULL OR block_number >= ?) AND (? IS NULL OR block_number <= ?) ORDER BY block_number, log_index LIMIT ${MAX_ROWS + 1}`, [chainId, address, startBlock, startBlock, endBlock, endBlock]);
     const bounded = boundedRows(allRows(statement)); statement.free();
     const rows = bounded.rows;
-    return response('wallet:' + chainId + ':' + address, bounded.partial ? 'PARTIAL' : 'COMPLETE', { chain_id: chainId, address, observed_liquidity_events: rows, scope: { start_block: startBlock, end_block: endBlock } }, { limitations: ['CURRENT_SCHEMA_EXPOSES_LIQUIDITY_EVENTS_FOR_WALLET_ACTIVITY', 'SWAP_SENDER_ACTIVITY_IS_NOT_YET_EXPOSED_BY_A_DEDICATED_AUTHORITY_TABLE', 'NO_IDENTITY_INFERENCE_IS_PERFORMED'] });
+    return response('wallet:' + chainId + ':' + address, bounded.partial ? 'PARTIAL' : 'COMPLETE', { chain_id: chainId, address, observed_liquidity_events: rows, pagination: bounded.pagination, scope: { start_block: startBlock, end_block: endBlock } }, { limitations: ['CURRENT_SCHEMA_EXPOSES_LIQUIDITY_EVENTS_FOR_WALLET_ACTIVITY', 'SWAP_SENDER_ACTIVITY_IS_NOT_YET_EXPOSED_BY_A_DEDICATED_AUTHORITY_TABLE', 'NO_IDENTITY_INFERENCE_IS_PERFORMED'] });
   }
 
-  function getPoolContext(chainId, poolId) {
+  function getPoolContext(chainId, poolId, resource = {}) {
     if (!Number.isInteger(chainId) || chainId < 0) throw new Error('CHAIN_ID_INVALID');
     requiredString(poolId, 'pool_id');
+    const budget = createResourceBudget(resource);
     const poolStatement = safePrepare(db, `SELECT * FROM pools WHERE chain_id = ? AND pool_id = ?`, [chainId, poolId]);
     const pool = rowObject(poolStatement); poolStatement.free();
     const liquidityStatement = safePrepare(db, `SELECT * FROM liquidity_events WHERE chain_id = ? AND pool_id = ? ORDER BY block_number, log_index LIMIT ${MAX_ROWS + 1}`, [chainId, poolId]);
-    const liquidityBounded = boundedRows(allRows(liquidityStatement)); liquidityStatement.free();
+    const liquidityBounded = boundedRows(allRows(liquidityStatement, budget), budget); liquidityStatement.free();
     const liquidityEvents = liquidityBounded.rows;
     const flowStatement = safePrepare(db, `SELECT * FROM flow_windows WHERE chain_id = ? AND pool_id = ? ORDER BY window_start LIMIT ${MAX_ROWS + 1}`, [chainId, poolId]);
-    const flowBounded = boundedRows(allRows(flowStatement)); flowStatement.free();
+    const flowBounded = boundedRows(allRows(flowStatement, budget), budget); flowStatement.free();
     const flowWindows = flowBounded.rows;
     if (!pool && !liquidityEvents.length && !flowWindows.length) return response('pool:' + chainId + ':' + poolId, 'UNKNOWN', null, { limitations: ['POOL_NOT_FOUND_IN_CURRENT_READ_SCOPE'] });
-    return response('pool:' + chainId + ':' + poolId, (liquidityBounded.partial || flowBounded.partial) ? 'PARTIAL' : 'COMPLETE', { pool, liquidity_events: liquidityEvents, flow_windows: flowWindows }, { limitations: ['POOL_CONTEXT_IS_READ_ONLY', 'CURRENT_SCHEMA_DOES_NOT_EXPOSE_A_DEDICATED_FIRST_SWAP_AUTHORITY_TABLE'] });
+    return response('pool:' + chainId + ':' + poolId, (liquidityBounded.partial || flowBounded.partial) ? 'PARTIAL' : 'COMPLETE', { pool, liquidity_events: liquidityEvents, flow_windows: flowWindows, pagination: { liquidity: liquidityBounded.pagination, flow: flowBounded.pagination } }, { limitations: ['POOL_CONTEXT_IS_READ_ONLY', 'CURRENT_SCHEMA_DOES_NOT_EXPOSE_A_DEDICATED_FIRST_SWAP_AUTHORITY_TABLE'] });
   }
 
   function execute(operation, input = {}) {
@@ -162,10 +169,10 @@ function createReadOnlyQueryService(database) {
     switch (operation) {
       case QUERY_OPERATIONS.GET_EVIDENCE: return getEvidence(requiredString(input.evidence_id, 'evidence_id'), input.temporal || {});
       case QUERY_OPERATIONS.GET_EVIDENCE_LINEAGE: return getEvidenceLineage(requiredString(input.evidence_id, 'evidence_id'), input.temporal || {});
-      case QUERY_OPERATIONS.GET_BLOCK_CONTEXT: return getBlockContext(input.chain_id, input.block_number);
-      case QUERY_OPERATIONS.GET_TRANSACTION_CONTEXT: return getTransactionContext(input.chain_id, input.transaction_hash);
-      case QUERY_OPERATIONS.GET_WALLET_ACTIVITY: return getWalletActivity(input.chain_id, input.address, input.start_block, input.end_block);
-      case QUERY_OPERATIONS.GET_POOL_CONTEXT: return getPoolContext(input.chain_id, input.pool_id);
+      case QUERY_OPERATIONS.GET_BLOCK_CONTEXT: return getBlockContext(input.chain_id, input.block_number, input.resource || {});
+      case QUERY_OPERATIONS.GET_TRANSACTION_CONTEXT: return getTransactionContext(input.chain_id, input.transaction_hash, input.resource || {});
+      case QUERY_OPERATIONS.GET_WALLET_ACTIVITY: return getWalletActivity(input.chain_id, input.address, input.start_block, input.end_block, input.resource || {});
+      case QUERY_OPERATIONS.GET_POOL_CONTEXT: return getPoolContext(input.chain_id, input.pool_id, input.resource || {});
       default: throw new Error('QUERY_OPERATION_NOT_IMPLEMENTED');
     }
   }
