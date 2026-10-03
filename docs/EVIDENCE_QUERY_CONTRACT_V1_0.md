@@ -1484,3 +1484,14 @@ Multi-agent orchestration remains downstream of single-agent/EQC correctness.
 ## Core invariant
 
 > HAHAWEEK owns the evidence. The Evidence Query Contract exposes it. Agents reason over it. No Agent can rewrite what the evidence was.
+
+
+---
+
+## Resource Boundary Reconciliation
+
+The executable EQC resource boundary is defined by `EQC-RESOURCE-1.0`. Implemented read queries are constrained by a maximum scan budget, bounded page size/offset, traversal depth, block span, deterministic pagination, and an execution deadline. Pagination is consumer navigation state and is never the V4 ingestion cursor.
+
+The query implementation accepts only internally constructed SELECT statements; PRAGMA/EXPLAIN and arbitrary SQL are rejected at the read boundary. Resource exhaustion fails closed and is not converted into negative evidence.
+
+This resource closure does not imply that unimplemented analytical query operations are available. Unsupported operations remain fail-closed.
