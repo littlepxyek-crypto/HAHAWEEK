@@ -457,3 +457,33 @@ Correction applied on the active execution branch:
 Status: IMPLEMENTED; runtime verification pending on the new exact commit.
 Residual: analytical transition history is still not a durable system-wide runtime
 chain; this remains separate from the Hypothesis linkage closure.
+
+
+---
+
+# 11. RECONCILIATION UPDATE — 2026-10-03 — CI STALL CONTAINMENT
+
+Problem record: P2-CI-TEST-STALL-001.
+
+The exact PR head `940f6917445c4a767bcb0bd90938c6381bad4a20` entered the
+`HAHAWEEK Tests` workflow at 2026-10-03T11:10:47Z and remained in
+`npm test` for an extended period without a terminal result. The GitHub
+Actions job exposed no live log blob, so the underlying hanging test remains
+UNKNOWN and is not attributed to a specific implementation without evidence.
+
+Containment applied without weakening assertions or bypassing verification:
+- `npm test` now uses Node's `--test-timeout=60000` per-test execution bound.
+- The GitHub test job now has a 20-minute job timeout.
+- Existing test concurrency remains serial (`--test-concurrency=1`).
+- V4 verification and coverage steps remain mandatory after `npm test`.
+- No test was deleted, skipped, weakened, or reclassified.
+- No authority, cursor, checkpoint, manifest, canonical evidence, or frozen
+  architecture semantics were changed.
+
+Rationale: Node.js 20 documents `--test-timeout` as a fail-closed execution
+bound; its default is infinite. This converts an indefinite test stall into a
+diagnosable CI failure while preserving the existing test suite.
+
+Status: CONTAINED; ROOT CAUSE UNKNOWN; NEW EXACT-HEAD VERIFICATION REQUIRED.
+Residual risk: the current in-flight workflow remains unaffected by the new
+configuration; the next exact-head workflow must provide the diagnostic result.
