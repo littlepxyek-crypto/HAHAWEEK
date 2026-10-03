@@ -26,6 +26,8 @@ function input(overrides = {}) {
     outcome_rule_version: outcome.outcome_rule_version,
     formation,
     outcome,
+    formation_cutoff: '2026-10-03T00:00:00.000Z',
+    evidence_temporal_context: [{ evidence_id: 'ei:future-1', event_time: '2026-10-02T23:00:00.000Z' }],
     criteria_results: [
       {
         criterion_id: 'C1',
@@ -49,6 +51,7 @@ test('creates deterministic CONFIRMED validation', () => {
 
 test('a failed criterion produces REJECTED', () => {
   const result = createValidationResult(input({
+    evidence_temporal_context: [{ evidence_id: 'ei:future-2', event_time: '2026-10-02T23:00:00.000Z' }],
     criteria_results: [{
       criterion_id: 'C1',
       status: 'FAIL',
@@ -56,6 +59,16 @@ test('a failed criterion produces REJECTED', () => {
     }],
   }));
   assert.equal(result.result, 'REJECTED');
+});
+
+test('unknown coverage produces UNKNOWN', () => {
+  const result = createValidationResult(input({
+    outcome: {
+      ...input().outcome,
+      coverage_status: 'UNKNOWN',
+    },
+  }));
+  assert.equal(result.result, 'UNKNOWN');
 });
 
 test('incomplete historical coverage produces INCONCLUSIVE', () => {
@@ -81,6 +94,15 @@ test('partial coverage cannot be silently rejected by a failed criterion', () =>
     }],
   }));
   assert.equal(result.result, 'INCONCLUSIVE');
+});
+
+test('future evidence relative to formation cutoff is rejected', () => {
+  assert.throws(
+    () => createValidationResult(input({
+      evidence_temporal_context: [{ evidence_id: 'ei:future-1', event_time: '2026-10-04T00:00:00.000Z' }],
+    })),
+    /FUTURE_EVIDENCE_RELATIVE_TO_FORMATION_CUTOFF/
+  );
 });
 
 test('an inconclusive criterion produces INCONCLUSIVE', () => {
