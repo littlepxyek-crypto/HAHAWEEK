@@ -135,6 +135,25 @@ test('EQC transaction query is bounded and reports PARTIAL when limit is exceede
 });
 
 
+test('EQC wallet activity applies the same bounded resource budget', () => {
+  const rows = Array.from({ length: 1001 }, (_, i) => ({
+    event_id: 'e' + i, chain_id: 4663, pool_id: 'p', pool_manager: 'pm',
+    address: '0xwallet', tick_lower: 0, tick_upper: 0, liquidity_delta: '1',
+    salt: 's' + i, block_number: i + 1, transaction_hash: '0xtx' + i,
+    log_index: i, captured_at: '2026-10-03T00:00:00.000Z',
+  }));
+  const db = { prepare() { return fakeStatement(null, rows); } };
+  const service = createReadOnlyQueryService({ db });
+  const result = service.execute(QUERY_OPERATIONS.GET_WALLET_ACTIVITY, {
+    chain_id: 4663,
+    address: '0xwallet',
+    resource: { page_size: 100 },
+  });
+  assert.equal(result.status, 'PARTIAL');
+  assert.equal(result.data.observed_liquidity_events.length, 100);
+  assert.equal(result.data.pagination.next_page_offset, 100);
+});
+
 test('EQC as-of query reconstructs canonicality from transitions at or before the requested time', () => {
   const db = {
     prepare(sql) {
