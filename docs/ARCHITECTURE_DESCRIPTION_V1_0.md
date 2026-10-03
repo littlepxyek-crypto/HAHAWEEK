@@ -1099,7 +1099,7 @@ contract does not activate production authority.
 
 ## Current verification state
 
-The current PR head `2e4df3f2472e31f703003c6c6ffd8b7cf65c31ca` has terminal-success
+The current PR head `325bf88bade6706042f5388090ea3699eaa21168` has terminal-success
 GitHub Actions for Tests, Security/Regression, and A9 Runtime Verification.
 
 The Tests workflow executed:
