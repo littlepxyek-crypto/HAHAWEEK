@@ -435,3 +435,25 @@ intentional.
 
 The architecture remains IMPLEMENTATION FREEZE BLOCKED and V4 production authority
 remains INACTIVE.
+
+
+---
+
+# 10. RECONCILIATION UPDATE — 2026-10-03 — HYPOTHESIS RUNTIME INTEGRATION
+
+The HFI MVP runtime previously executed Formation → Validation → Research → X Content,
+but Hypothesis was not a mandatory executable boundary in the E5 vertical slice.
+
+Correction applied on the active execution branch:
+- E5 runtime now creates a DERIVED Hypothesis only from VALID Formation evidence.
+- Validation is explicitly linked to that Hypothesis through
+  HYPOTHESIS_VALIDATION provenance.
+- Replay recreates the Hypothesis and its Validation linkage and checks deterministic
+  identity equivalence.
+- No V4 cursor, checkpoint, manifest, canonical evidence, or authority state is mutated.
+- The integration test now exercises the same Formation → Hypothesis → Validation
+  boundary.
+
+Status: IMPLEMENTED; runtime verification pending on the new exact commit.
+Residual: analytical transition history is still not a durable system-wide runtime
+chain; this remains separate from the Hypothesis linkage closure.
