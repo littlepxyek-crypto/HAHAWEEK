@@ -564,3 +564,33 @@ The replay Validation V2 invocation now supplies:
 - OUTCOME temporal context for later outcome observations
 
 Status: FIX IMPLEMENTED; EXACT-HEAD CI/RUNTIME VERIFICATION PENDING.
+
+
+## 2026-10-04 Runtime Reconciliation — P1-HFI-REPLAY-TEMPORAL-003
+
+Status: RESOLVED — implementation corrected; exact-head CI/runtime verification pending.
+
+The HFI-MVP runtime reached the replay stage on the prior exact workflow attempt and failed with REPLAY_NON_EQUIVALENT. The preserved runtime artifact showed the failure was deterministic replay divergence, not RPC unavailability.
+
+Root cause:
+
+- the first swap is legitimately both Formation evidence and an Outcome observation because the seven-day observation window begins at first-swap event time;
+- the primary validation temporal context merged that evidence into roles FORMATION + OUTCOME;
+- the replay path filtered the overlapping observation out of the Outcome temporal context, leaving only FORMATION;
+- VALIDATION_STATE_V2 includes temporal roles in the deterministic validation identity, so the two validation IDs diverged.
+
+Corrective action:
+
+- replay temporal-context construction now preserves overlapping evidence and merges temporal roles deterministically;
+- the integration test now asserts replay validation identity and temporal-context equivalence for overlapping Formation/Outcome evidence.
+
+Impact:
+
+- no canonical evidence was mutated;
+- no V4 authority, cursor, checkpoint, or manifest was advanced;
+- no analytical conclusion was promoted to authority;
+- the failure correctly blocked E5 runtime verification.
+
+Residual verification requirement:
+
+The fix is not considered VERIFIED until the exact new head passes the integration/security/test suites and HFI-MVP runtime reaches VERIFIED with replay equivalence.
