@@ -1,7 +1,7 @@
 # HAHAWEEK — EVIDENCE QUERY CONTRACT v1.0
 
-Status: Draft / Architecture Boundary
-Branch: architecture/evidence-query-contract-v1
+Status: IMPLEMENTED / VERIFICATION PENDING CI
+Branch: architecture/agent-read-boundary-v1
 Purpose: Define the read-only interface between future Agent/research consumers and HAHAWEEK authoritative evidence and analytical projections.
 
 ## 1. Purpose
