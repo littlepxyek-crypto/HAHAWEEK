@@ -2,10 +2,10 @@
 
 const crypto = require('node:crypto');
 
-const VALIDATION_SCHEMA_VERSION = '1';
-const VALIDATION_RULE_VERSION = 'validation-v1';
-const RESULTS = new Set(['CONFIRMED', 'REJECTED', 'INCONCLUSIVE']);
-const CRITERION_STATUSES = new Set(['PASS', 'FAIL', 'INCONCLUSIVE']);
+const VALIDATION_SCHEMA_VERSION = '2';
+const VALIDATION_RULE_VERSION = 'validation-v2';
+const RESULTS = new Set(['CONFIRMED', 'REJECTED', 'UNKNOWN', 'INCONCLUSIVE']);
+const CRITERION_STATUSES = new Set(['PASS', 'FAIL', 'UNKNOWN', 'INCONCLUSIVE']);
 
 function requireObject(value, name) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -39,6 +39,22 @@ function canonicalCriterion(criterion) {
   };
 }
 
+function requireTemporalEvidence(input, formationCutoff) {
+  requireString(formationCutoff, 'formation_cutoff');
+  const cutoff = Date.parse(formationCutoff);
+  if (!Number.isFinite(cutoff)) throw new Error('INVALID_FORMATION_CUTOFF');
+  if (!Array.isArray(input.evidence_temporal_context)) throw new Error('EVIDENCE_TEMPORAL_CONTEXT_REQUIRED');
+  for (const item of input.evidence_temporal_context) {
+    requireObject(item, 'evidence_temporal_context');
+    requireString(item.evidence_id, 'evidence_id');
+    requireString(item.event_time, 'event_time');
+    const eventTime = Date.parse(item.event_time);
+    if (!Number.isFinite(eventTime)) throw new Error('INVALID_EVIDENCE_EVENT_TIME');
+    if (eventTime > cutoff) throw new Error('FUTURE_EVIDENCE_RELATIVE_TO_FORMATION_CUTOFF');
+  }
+  return cutoff;
+}
+
 function validationId(payload) {
   return `validation:v1:${crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex')}`;
 }
@@ -50,6 +66,8 @@ function createValidationResult(input) {
   requireString(input.outcome_id, 'outcome_id');
   requireString(input.outcome_rule_version, 'outcome_rule_version');
   requireString(input.validation_rule_version ?? VALIDATION_RULE_VERSION, 'validation_rule_version');
+  const formationCutoff = input.formation_cutoff;
+  requireTemporalEvidence(input, formationCutoff);
 
   requireObject(input.formation, 'formation');
   requireObject(input.outcome, 'outcome');
@@ -78,7 +96,9 @@ function createValidationResult(input) {
   }
 
   let result = 'CONFIRMED';
-  if (outcomeCoverage !== 'COMPLETE' || criteriaResults.some((criterion) => criterion.status === 'INCONCLUSIVE')) {
+  if (outcomeCoverage === 'UNKNOWN' || criteriaResults.some((criterion) => criterion.status === 'UNKNOWN')) {
+    result = 'UNKNOWN';
+  } else if (outcomeCoverage !== 'COMPLETE' || criteriaResults.some((criterion) => criterion.status === 'INCONCLUSIVE')) {
     result = 'INCONCLUSIVE';
   } else if (criteriaResults.some((criterion) => criterion.status === 'FAIL')) {
     result = 'REJECTED';
@@ -111,6 +131,8 @@ function createValidationResult(input) {
     criteria_results: criteriaResults,
     evidence_ids: evidenceIds,
     uncertainties,
+    formation_cutoff: formationCutoff,
+    evidence_temporal_context: input.evidence_temporal_context,
   };
 
   return {
