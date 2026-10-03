@@ -9,7 +9,7 @@ const {
 } = require('./evidence-query-contract');
 const { MAX_ROWS, MAX_BLOCK_SPAN, createResourceBudget, paginate } = require('./resource-budget');
 
-const READONLY_SQL_PREFIX = /^(SELECT|PRAGMA|EXPLAIN)\b/i;
+const READONLY_SQL_PREFIX = /^SELECT\b/i;
 
 function requiredString(value, field) {
   if (typeof value !== 'string' || value.length === 0) throw new Error(field.toUpperCase() + '_REQUIRED');
@@ -127,7 +127,7 @@ function createReadOnlyQueryService(database) {
     requiredString(transactionHash, 'transaction_hash');
     const budget = createResourceBudget(resource);
     const statement = safePrepare(db, `SELECT re.event_id, re.chain_id, re.block_number, re.transaction_hash, re.block_hash, re.transaction_index, re.log_index, re.address, re.topics_json, re.data, re.captured_at, ce.evidence_id, ce.identity_hash, ce.canonical_hash FROM raw_events re LEFT JOIN canonical_evidence ce ON ce.raw_event_id = re.event_id WHERE re.chain_id = ? AND re.transaction_hash = ? ORDER BY re.log_index LIMIT ${MAX_ROWS + 1}`, [chainId, transactionHash]);
-    const bounded = boundedRows(allRows(statement)); statement.free();
+    const bounded = boundedRows(allRows(statement, budget), budget); statement.free();
     const rows = bounded.rows;
     if (!rows.length) return response('tx:' + chainId + ':' + transactionHash, 'UNKNOWN', null, { limitations: ['TRANSACTION_NOT_FOUND_IN_RAW_EVENT_SCOPE'] });
     return response('tx:' + chainId + ':' + transactionHash, bounded.partial ? 'PARTIAL' : 'COMPLETE', { chain_id: chainId, transaction_hash: transactionHash, events: rows, pagination: bounded.pagination, event_details: rows.map(row => ({ event_id: row.event_id, evidence_id: row.evidence_id, block_number: row.block_number, block_hash: row.block_hash, transaction_index: row.transaction_index, log_index: row.log_index, address: row.address, topics: parseJson(row.topics_json, []), data: row.data, captured_at: row.captured_at, identity_hash: row.identity_hash, canonical_hash: row.canonical_hash })) });
