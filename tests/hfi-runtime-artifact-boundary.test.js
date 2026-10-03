@@ -19,5 +19,5 @@ test('workflow removes stale artifact before runtime execution', () => {
 
 test('workflow rejects runtime artifact from a different commit', () => {
   assert.match(workflow, /RUNTIME_ARTIFACT_COMMIT_MISMATCH/);
-  assert.match(workflow, /x\.commit!==process\.env\.GITHUB_SHA/);
+  assert.match(workflow, /x\.commit!==process\.env\.EXPECTED_COMMIT/);\n  assert.match(workflow, /ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
 });
