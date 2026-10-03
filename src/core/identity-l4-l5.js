@@ -42,6 +42,7 @@ function assertL4(input) {
   lines.forEach(validateEvidenceLine);
   if (!input.falsifier || typeof input.falsifier !== 'object') throw new Error('L4_FALSIFIER_REQUIRED');
   const matching = lines.filter(line => line.relation === relation);
+  assertNoDirectContradiction(matching);
   if (matching.length < 2) throw new Error('L4_RELATION_CORROBORATION_REQUIRED');
   const lineages = new Set(matching.map(line => line.source_lineage_id));
   if (lineages.size < 2) throw new Error('L4_INDEPENDENT_LINEAGES_REQUIRED');
@@ -52,7 +53,6 @@ function assertL4(input) {
   }
   if (matching.some(line => line.temporally_compatible !== true)) throw new Error('L4_TEMPORAL_COMPATIBILITY_REQUIRED');
   if (matching.some(line => line.direct_contradiction === true)) throw new Error('L4_DIRECT_CONTRADICTION');
-  assertNoDirectContradiction(matching);
   return Object.freeze({ level:'L4', relation, evidence_count:matching.length, independent_lineages:lineages.size });
 }
 function assertL5(input) {
