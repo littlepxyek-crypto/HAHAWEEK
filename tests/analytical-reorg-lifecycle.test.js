@@ -83,7 +83,8 @@ test('reorg lifecycle durably records invalidation then deterministic rebuild', 
     assert.equal(latestGraph.state, 'REBUILT');
     assert.equal(latestFormation.state, 'REBUILT');
     assert.equal(latestGraph.contract_version, CONTRACT_VERSION);
-    assert.equal(latestFormation.previous_event_sequence > latestGraph.event_sequence, true);
+    assert.equal(latestGraph.previous_event_sequence, 1);
+    assert.equal(latestFormation.previous_event_sequence, 2);
 
     const history = database.db.exec(
       "SELECT state FROM derived_projection_lifecycle ORDER BY event_sequence"
