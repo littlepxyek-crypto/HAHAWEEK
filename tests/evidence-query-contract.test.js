@@ -127,10 +127,11 @@ test('EQC transaction query is bounded and reports PARTIAL when limit is exceede
   const rows = Array.from({ length: 1001 }, (_, i) => ({ event_id: 'e' + i, chain_id: 4663, block_number: 1, transaction_hash: '0xtx', block_hash: '0xb', transaction_index: 0, log_index: i, address: '0xa', topics_json: '[]', data: '0x', captured_at: '2026-10-03T00:00:00.000Z', evidence_id: 'ev' + i, identity_hash: 'ih' + i, canonical_hash: 'ch' + i }));
   const db = { prepare(sql) { calls.push(sql); return fakeStatement(null, rows); } };
   const service = createReadOnlyQueryService({ db });
-  const result = service.execute(QUERY_OPERATIONS.GET_TRANSACTION_CONTEXT, { chain_id: 4663, transaction_hash: '0xtx' });
+  const result = service.execute(QUERY_OPERATIONS.GET_TRANSACTION_CONTEXT, { chain_id: 4663, transaction_hash: '0xtx', resource: { page_size: 100 } });
   assert.equal(result.status, 'PARTIAL');
-  assert.equal(result.data.events.length, 1000);
+  assert.equal(result.data.events.length, 100);
   assert.match(calls[0], /LIMIT 1001/);
+  assert.equal(result.data.pagination.next_page_offset, 100);
 });
 
 
