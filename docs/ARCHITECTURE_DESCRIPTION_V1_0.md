@@ -1143,3 +1143,15 @@ The repository now contains an executable Social Snapshot Provenance V1 boundary
 This boundary records source identity, acquisition identity, publisher, first-seen/capture timestamps, content identity, snapshot identity, digest, derivation method, temporal scope, parent lineage, and origin kind. HAHAWEEK-generated publication observations are explicitly marked as not automatically independent external sources.
 
 This does not activate social ingestion, modify canonical/V4 authority, or promote social content into authoritative evidence. CI and runtime verification remain required before the contract can be marked VERIFIED.
+
+---
+
+## Current-head reconciliation — Claim Promotion Provenance V1
+
+The repository now contains an executable Claim Promotion Provenance V1 boundary at src/core/claim-promotion-provenance.js with negative tests at tests/claim-promotion-provenance.test.js.
+
+Claim promotion produces only a DERIVED_RESEARCH_ONLY artifact. It cannot mutate or become canonical evidence, V4 authority, identity authority, publication authority, or an independent source.
+
+Promotion requires the claim to exist in the research report, claim evidence to exist in the report evidence set and provenance reference, and an allowed validation result. INCONCLUSIVE remains INCONCLUSIVE.
+
+CI/runtime verification remains required before the contract is marked VERIFIED.
