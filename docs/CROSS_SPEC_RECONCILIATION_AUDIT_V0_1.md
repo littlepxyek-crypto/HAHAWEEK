@@ -507,3 +507,33 @@ Correction:
 - No production authority or canonical evidence behavior was changed.
 
 Status: IMPLEMENTED; EXACT-HEAD HFI-MVP RUNTIME VERIFICATION PENDING.
+
+
+---
+
+# 13. RECONCILIATION UPDATE — 2026-10-03 — E5 VALIDATION TEMPORAL CONTRACT FIX
+
+Problem record: P1-HFI-VALIDATION-TEMPORAL-001.
+
+The first PR-enabled HFI-MVP runtime execution produced a preserved artifact with:
+`stage=hypothesis_validation` and `FORMATION_CUTOFF_REQUIRED`.
+
+Root cause:
+`scripts/hfi-mvp-runtime-verify.js` invoked the already-verified Validation
+V2 boundary without supplying its mandatory `formation_cutoff` and
+`evidence_temporal_context`.
+
+Impact:
+The E5 vertical runtime could not reach Validation, so Hypothesis, Research,
+Report, X Content, publication-readiness, and replay were not runtime-verified.
+No canonical evidence or V4 authority state was mutated.
+
+Correction:
+- Runtime now sets `formation_cutoff=formation.formation_end`.
+- Formation evidence is explicitly assigned the `FORMATION` temporal role.
+- Outcome observations are assigned the `OUTCOME` role.
+- Evidence that legitimately serves both roles is represented with both roles.
+- Validation V2 remains the authority for rejecting future formation evidence.
+- No contract weakening or temporal-boundary bypass was introduced.
+
+Status: FIX IMPLEMENTED; REGRESSION/EXACT-HEAD RUNTIME VERIFICATION PENDING.
