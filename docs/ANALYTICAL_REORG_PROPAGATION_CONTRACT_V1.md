@@ -1,6 +1,6 @@
 # ANALYTICAL REORG PROPAGATION CONTRACT V1
 
-Status: IMPLEMENTED / VERIFIED — implementation CI verified at 68037b51d067c93682517a98f0ebea19d6b60f4c; documentation reconciled at current head
+Status: IMPLEMENTED / VERIFIED — planner CI verified at 68037b51d067c93682517a98f0ebea19d6b60f4c; durable lifecycle implementation added on current branch and requires current-head CI verification
 
 ## Purpose
 
@@ -22,7 +22,7 @@ Affected projections MUST be marked for invalidation and deterministic rebuild. 
 
 ## Authority boundary
 
-The implementation is a pure planning boundary.
+The planning function remains pure. A separate durable lifecycle executor now records derived invalidation/rebuild state in an append-only SQLite table. Canonical/V4 authority remains outside this lifecycle.
 
 It MUST NOT:
 
@@ -59,8 +59,14 @@ CONTRACT
 → DOCUMENTATION
 → RECONCILIATION
 
-The contract does not activate production authority and does not itself perform a rebuild.
+The contract does not activate production authority and does not mutate canonical evidence.
+
+## Durable lifecycle
+
+The derived lifecycle persists append-only events with states INVALIDATED, REBUILT, and FAILED. A rebuild executor must supply a deterministic projection rebuild function. A successful rebuild is recorded only after the rebuilt projection digest is computed. A failed rebuild remains FAILED and is never silently treated as valid.
+
+The lifecycle does not persist authoritative evidence or replace the existing projection constructors. It records lifecycle authority for derived validity and rebuild verification.
 
 ## Current limitation
 
-This contract verifies the propagation decision boundary. It does not yet connect the planner to a persistent projection store or execute automatic rebuilds.
+The lifecycle verifies and records derived rebuild completion, but individual projection implementations remain caller-owned rebuild functions. The lifecycle does not invent hidden dependencies or become V4 authority.
