@@ -132,3 +132,75 @@ test('EQC transaction query is bounded and reports PARTIAL when limit is exceede
   assert.equal(result.data.events.length, 1000);
   assert.match(calls[0], /LIMIT 1001/);
 });
+
+
+test('EQC as-of query reconstructs canonicality from transitions at or before the requested time', () => {
+  const db = {
+    prepare(sql) {
+      if (sql.includes('FROM canonical_evidence')) {
+        return fakeStatement({
+          evidence_id: 'e1', identity_schema_version: '1', identity_hash: 'ih1',
+          raw_event_id: 'r1', raw_hash: 'rh1', canonical_hash: 'ch1',
+          canonical_json: JSON.stringify({ evidence_type: 'RAW_LOG', event_time: '2026-10-03T00:00:00.000Z' }),
+          interpretation_status: 'OBSERVED',
+          provenance_json: JSON.stringify({ acquisition_id: 'a1', source_id: 'rpc-1', source_lineage_id: 'lineage-1' }),
+          stored_at: '2026-10-03T00:01:00.000Z', chain_id: 4663, block_number: 10,
+          transaction_hash: '0xtx', block_hash: '0xblock', transaction_index: 0, log_index: 0,
+          address: '0xpool', captured_at: '2026-10-03T00:00:01.000Z',
+        });
+      }
+      if (sql.includes('FROM canonical_transitions')) {
+        return fakeStatement({
+          to_state: 'CANONICAL',
+          committed_at: '2026-10-03T00:02:00.000Z',
+          sequence: '1',
+          transition_hash: 'h1',
+        });
+      }
+      return fakeStatement(null, []);
+    },
+  };
+  const service = createReadOnlyQueryService({ db });
+  const result = service.execute(QUERY_OPERATIONS.GET_EVIDENCE, {
+    evidence_id: 'e1',
+    temporal: { as_of: '2026-10-03T00:03:00.000Z' },
+  });
+  assert.equal(result.status, 'COMPLETE');
+  assert.equal(result.data.temporal.canonicality, 'CANONICAL');
+  assert.equal(result.data.temporal.as_of, '2026-10-03T00:03:00.000Z');
+  assert.equal(result.consistency.canonicality, 'CANONICAL');
+});
+
+test('EQC as-of query excludes transitions after the requested time', () => {
+  const db = {
+    prepare(sql) {
+      if (sql.includes('FROM canonical_evidence')) {
+        return fakeStatement({
+          evidence_id: 'e1', identity_schema_version: '1', identity_hash: 'ih1',
+          raw_event_id: 'r1', raw_hash: 'rh1', canonical_hash: 'ch1',
+          canonical_json: '{}', interpretation_status: 'OBSERVED',
+          provenance_json: '{}', stored_at: '2026-10-03T00:01:00.000Z',
+          chain_id: 4663, block_number: 10, transaction_hash: '0xtx', block_hash: '0xb',
+          transaction_index: 0, log_index: 0, address: '0xpool', captured_at: '2026-10-03T00:00:01.000Z',
+        });
+      }
+      if (sql.includes('FROM canonical_transitions')) return fakeStatement(null, []);
+      return fakeStatement(null, []);
+    },
+  };
+  const service = createReadOnlyQueryService({ db });
+  const result = service.execute(QUERY_OPERATIONS.GET_EVIDENCE, {
+    evidence_id: 'e1',
+    temporal: { as_of: '2026-10-03T00:01:30.000Z' },
+  });
+  assert.equal(result.data.temporal.canonicality, 'UNKNOWN');
+  assert.equal(result.consistency.canonicality, 'UNKNOWN');
+});
+
+test('EQC rejects invalid as-of timestamps', () => {
+  const service = createReadOnlyQueryService({ db: fakeDatabase().db });
+  assert.throws(() => service.execute(QUERY_OPERATIONS.GET_EVIDENCE, {
+    evidence_id: 'e1',
+    temporal: { as_of: 'not-a-time' },
+  }), /AS_OF_INVALID/);
+});

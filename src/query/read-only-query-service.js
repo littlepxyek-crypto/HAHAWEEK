@@ -59,28 +59,41 @@ function parseJson(value, fallback = null) {
 function createReadOnlyQueryService(database) {
   const db = requireDatabase(database);
 
-  function getEvidence(evidenceId) {
+  function getEvidence(evidenceId, temporal = {}) {
     requiredString(evidenceId, 'evidence_id');
+    const asOf = temporal && temporal.as_of !== undefined ? requiredString(temporal.as_of, 'as_of') : null;
+    if (asOf !== null && Number.isNaN(Date.parse(asOf))) throw new Error('AS_OF_INVALID');
     const statement = safePrepare(db, `SELECT ce.evidence_id, ce.identity_schema_version, ce.identity_hash, ce.raw_event_id, ce.raw_hash, ce.canonical_hash, ce.canonical_json, ce.interpretation_status, ce.provenance_json, ce.stored_at, re.chain_id, re.block_number, re.transaction_hash, re.block_hash, re.transaction_index, re.log_index, re.address, re.captured_at FROM canonical_evidence ce LEFT JOIN raw_events re ON re.event_id = ce.raw_event_id WHERE ce.evidence_id = ?`, [evidenceId]);
     const row = rowObject(statement); statement.free();
     if (!row) return response('evidence:' + evidenceId, 'UNKNOWN', null, { limitations: ['EVIDENCE_NOT_FOUND'] });
     const canonical = parseJson(row.canonical_json, {});
     const provenance = parseJson(row.provenance_json, {});
+    let temporalState = null;
+    let temporalConsistency = { authority_layer: 'V4', canonicality: 'UNKNOWN', reorg_affected: false };
+    if (asOf !== null) {
+      const transitionStatement = safePrepare(db, `SELECT to_state, committed_at, sequence, transition_hash FROM canonical_transitions WHERE evidence_id = ? AND committed_at <= ? ORDER BY committed_at DESC, CAST(sequence AS INTEGER) DESC LIMIT 1`, [evidenceId, asOf]);
+      const transition = rowObject(transitionStatement); transitionStatement.free();
+      const state = transition ? transition.to_state : 'UNKNOWN';
+      temporalState = { as_of: asOf, canonicality: state === 'CANONICAL' ? 'CANONICAL' : state === 'ORPHANED' ? 'ORPHANED' : 'UNKNOWN', transition: transition || null };
+      temporalConsistency = { authority_layer: 'V4', snapshot_ref: null, manifest_ref: null, checkpoint_ref: null, canonicality: temporalState.canonicality, reorg_affected: state === 'ORPHANED' };
+    }
     return response('evidence:' + evidenceId, 'COMPLETE', {
       evidence_id: row.evidence_id, identity_schema_version: row.identity_schema_version, identity_hash: row.identity_hash,
       raw_event_id: row.raw_event_id, raw_hash: row.raw_hash, canonical_hash: row.canonical_hash, canonical,
       interpretation_status: row.interpretation_status, provenance, stored_at: row.stored_at,
       location: { chain_id: row.chain_id, block_number: row.block_number, transaction_hash: row.transaction_hash, block_hash: row.block_hash, transaction_index: row.transaction_index, log_index: row.log_index, address: row.address },
       observation: { captured_at: row.captured_at },
+      temporal: temporalState,
     }, {
+      consistency: temporalConsistency,
+      limitations: asOf === null ? ['CURRENT_SCHEMA_DOES_NOT_EXPOSE_A_CANONICALITY_JOIN_FOR_EACH_EVIDENCE_ID'] : ['AS_OF_STATE_RECONSTRUCTED_FROM_APPEND_ONLY_CANONICAL_TRANSITIONS'],
       evidence_refs: [{ evidence_id: row.evidence_id, evidence_type: canonical.evidence_type || null, chain_id: row.chain_id, event_time: canonical.event_time || null, observation_time: row.captured_at, processing_time: row.stored_at, canonicality: 'UNKNOWN', acquisition_ref: provenance.acquisition_id || null, source_lineage_ref: provenance.source_lineage_id || null }],
       provenance_refs: [provenance],
-      limitations: ['CURRENT_SCHEMA_DOES_NOT_EXPOSE_A_CANONICALITY_JOIN_FOR_EACH_EVIDENCE_ID'],
     });
   }
 
-  function getEvidenceLineage(evidenceId) {
-    const result = getEvidence(evidenceId);
+  function getEvidenceLineage(evidenceId, temporal = {}) {
+    const result = getEvidence(evidenceId, temporal);
     if (result.status !== 'COMPLETE') return result;
     return response('lineage:' + evidenceId, 'COMPLETE', {
       evidence_id: result.data.evidence_id, acquisition: result.data.provenance,
@@ -147,8 +160,8 @@ function createReadOnlyQueryService(database) {
     if (!isSupportedOperation(operation)) throw new Error('QUERY_OPERATION_UNSUPPORTED');
     if (!isImplementedOperation(operation)) throw new Error('QUERY_OPERATION_NOT_IMPLEMENTED');
     switch (operation) {
-      case QUERY_OPERATIONS.GET_EVIDENCE: return getEvidence(requiredString(input.evidence_id, 'evidence_id'));
-      case QUERY_OPERATIONS.GET_EVIDENCE_LINEAGE: return getEvidenceLineage(requiredString(input.evidence_id, 'evidence_id'));
+      case QUERY_OPERATIONS.GET_EVIDENCE: return getEvidence(requiredString(input.evidence_id, 'evidence_id'), input.temporal || {});
+      case QUERY_OPERATIONS.GET_EVIDENCE_LINEAGE: return getEvidenceLineage(requiredString(input.evidence_id, 'evidence_id'), input.temporal || {});
       case QUERY_OPERATIONS.GET_BLOCK_CONTEXT: return getBlockContext(input.chain_id, input.block_number);
       case QUERY_OPERATIONS.GET_TRANSACTION_CONTEXT: return getTransactionContext(input.chain_id, input.transaction_hash);
       case QUERY_OPERATIONS.GET_WALLET_ACTIVITY: return getWalletActivity(input.chain_id, input.address, input.start_block, input.end_block);
