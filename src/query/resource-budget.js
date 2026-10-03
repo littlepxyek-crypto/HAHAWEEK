@@ -44,7 +44,7 @@ function paginate(rows, budget) {
   budget.check();
   const start = budget.page_offset;
   const selected = rows.slice(start, start + budget.page_size);
-  const hasMore = rows.length > start + budget.page_size;
+  const hasMore = rows.length > start + budget.page_size && start + budget.page_size < budget.max_rows;
   return {
     rows: selected,
     partial: rows.length > budget.max_rows,
