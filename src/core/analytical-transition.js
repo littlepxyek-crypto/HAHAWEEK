@@ -10,6 +10,23 @@ const DOMAINS = Object.freeze({
   VALIDATION: 'HAHAWEEK-EVIDENCE-V4-VALIDATION-TRANSITION',
 });
 
+const LEGAL_TRANSITIONS = Object.freeze({
+  FORMATION: Object.freeze([
+    ['OBSERVED', 'PARTIAL'], ['OBSERVED', 'UNKNOWN'], ['OBSERVED', 'INCONCLUSIVE'],
+    ['PARTIAL', 'CANDIDATE'], ['PARTIAL', 'UNKNOWN'], ['PARTIAL', 'INCONCLUSIVE'],
+    ['CANDIDATE', 'VALID'], ['CANDIDATE', 'UNKNOWN'], ['CANDIDATE', 'INCONCLUSIVE'],
+    ['VALID', 'UNKNOWN'], ['VALID', 'INCONCLUSIVE'],
+  ]),
+  HYPOTHESIS: Object.freeze([
+    ['PROPOSED', 'SUPPORTED'], ['PROPOSED', 'REFUTED'], ['PROPOSED', 'UNKNOWN'], ['PROPOSED', 'INCONCLUSIVE'],
+    ['SUPPORTED', 'REFUTED'], ['SUPPORTED', 'UNKNOWN'], ['SUPPORTED', 'INCONCLUSIVE'],
+  ]),
+  VALIDATION: Object.freeze([
+    ['PENDING', 'EVALUATING'], ['PENDING', 'UNKNOWN'], ['PENDING', 'INCONCLUSIVE'],
+    ['EVALUATING', 'CONFIRMED'], ['EVALUATING', 'REJECTED'], ['EVALUATING', 'UNKNOWN'], ['EVALUATING', 'INCONCLUSIVE'],
+  ]),
+});
+
 const DOMAIN_STATES = Object.freeze({
   FORMATION: Object.freeze(['OBSERVED', 'PARTIAL', 'CANDIDATE', 'VALID', 'UNKNOWN', 'INCONCLUSIVE']),
   HYPOTHESIS: Object.freeze(['PROPOSED', 'SUPPORTED', 'REFUTED', 'UNKNOWN', 'INCONCLUSIVE']),
@@ -63,6 +80,8 @@ function createAnalyticalTransition(domain, input) {
     throw new Error('ANALYTICAL_STATE_INVALID');
   }
   if (input.previous_state === input.next_state) throw new Error('ANALYTICAL_NOOP_TRANSITION');
+  const legal = LEGAL_TRANSITIONS[domainName].some(([from, to]) => from === input.previous_state && to === input.next_state);
+  if (!legal) throw new Error('ANALYTICAL_TRANSITION_NOT_ALLOWED');
 
   if (!Array.isArray(input.evidence_ids)) throw new Error('EVIDENCE_IDS_REQUIRED');
   for (const evidenceId of input.evidence_ids) requireString(evidenceId, 'evidence_id');
@@ -96,6 +115,7 @@ module.exports = {
   ANALYTICAL_TRANSITION_SCHEMA_VERSION,
   DOMAINS,
   DOMAIN_STATES,
+  LEGAL_TRANSITIONS,
   canonicalize,
   createAnalyticalTransition,
 };
