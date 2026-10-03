@@ -79,6 +79,15 @@ function createAnalyticalReorgPropagationPlan(input) {
   const byId = new Map(projections.map((p) => [p.id, p]));
   if (byId.size !== projections.length) throw new Error('DUPLICATE_PROJECTION_ID');
 
+  // Dependency declarations must resolve to known projections. Failing closed
+  // here prevents an undeclared/unknown dependency from silently leaving a
+  // potentially stale descendant valid.
+  for (const projection of projections) {
+    for (const dependencyId of projection.depends_on) {
+      if (!byId.has(dependencyId)) throw new Error('UNKNOWN_PROJECTION_DEPENDENCY');
+    }
+  }
+
   // Initial impact: projection directly references changed canonical evidence.
   const affected = new Set();
   for (const projection of projections) {
@@ -87,8 +96,8 @@ function createAnalyticalReorgPropagationPlan(input) {
     }
   }
 
-  // Cascade only through declared dependencies. Unknown dependencies are
-  // rejected so a stale descendant cannot be silently preserved.
+  // Cascade only through declared dependencies. Hidden dependencies are never
+  // inferred merely from analytical layer ordering.
   let changed = true;
   while (changed) {
     changed = false;
