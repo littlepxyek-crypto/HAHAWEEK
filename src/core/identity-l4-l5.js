@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertIndependentEvidence } = require('./source-independence');
+
 const CONTRACT_VERSION = 'IDENTITY-L4-L5-EXECUTABLE-V1';
 const LEVELS = Object.freeze(['L0','L1','L2','L3','L4','L5']);
 
@@ -43,6 +45,11 @@ function assertL4(input) {
   if (matching.length < 2) throw new Error('L4_RELATION_CORROBORATION_REQUIRED');
   const lineages = new Set(matching.map(line => line.source_lineage_id));
   if (lineages.size < 2) throw new Error('L4_INDEPENDENT_LINEAGES_REQUIRED');
+  try {
+    assertIndependentEvidence(matching, 'I3');
+  } catch (error) {
+    throw new Error('L4_SOURCE_INDEPENDENCE_REQUIRED', { cause: error });
+  }
   if (matching.some(line => line.temporally_compatible !== true)) throw new Error('L4_TEMPORAL_COMPATIBILITY_REQUIRED');
   if (matching.some(line => line.direct_contradiction === true)) throw new Error('L4_DIRECT_CONTRADICTION');
   assertNoDirectContradiction(matching);
