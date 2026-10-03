@@ -7,7 +7,29 @@ const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'hahaweek.sqlite');
-const SCHEMA_VERSION = 8;
+const SCHEMA_VERSION = 9;
+
+const DERIVED_PROJECTION_LIFECYCLE_DDL = [
+  'CREATE TABLE derived_projection_lifecycle (',
+  '  event_sequence INTEGER PRIMARY KEY AUTOINCREMENT,',
+  '  lifecycle_event_id TEXT NOT NULL UNIQUE,',
+  '  reorg_id TEXT NOT NULL,',
+  '  projection_id TEXT NOT NULL,',
+  '  projection_layer TEXT NOT NULL,',
+  "  state TEXT NOT NULL CHECK (state IN ('INVALIDATED','REBUILT','FAILED')) ,",
+  '  reason TEXT NOT NULL,',
+  '  invalidated_evidence_digest TEXT NOT NULL,',
+  '  projection_input_digest TEXT NOT NULL,',
+  '  rebuilt_projection_digest TEXT NULL,',
+  '  contract_version TEXT NOT NULL,',
+  '  previous_event_sequence INTEGER NULL,',
+  '  committed_at TEXT NOT NULL',
+  ');',
+  "CREATE INDEX derived_projection_lifecycle_projection_idx ON derived_projection_lifecycle (projection_id, event_sequence);",
+  "CREATE INDEX derived_projection_lifecycle_reorg_idx ON derived_projection_lifecycle (reorg_id, event_sequence);",
+  "CREATE TRIGGER derived_projection_lifecycle_no_update BEFORE UPDATE ON derived_projection_lifecycle BEGIN SELECT RAISE(ABORT, 'DERIVED_PROJECTION_LIFECYCLE_APPEND_ONLY'); END;",
+  "CREATE TRIGGER derived_projection_lifecycle_no_delete BEFORE DELETE ON derived_projection_lifecycle BEGIN SELECT RAISE(ABORT, 'DERIVED_PROJECTION_LIFECYCLE_APPEND_ONLY'); END;",
+].join('\n');
 
 const CANONICAL_DECISION_DDL = {
   records: [
@@ -422,6 +444,7 @@ function createBaseSchema(db) {
     RUNTIME_LINEAGE_DDL.triggers,
     PRODUCTION_AUTHORITY_LIFECYCLE_DDL.table,
     PRODUCTION_AUTHORITY_LIFECYCLE_DDL.triggers,
+    DERIVED_PROJECTION_LIFECYCLE_DDL,
   ].join('\n'));
 }
 
@@ -598,6 +621,66 @@ function assertRuntimeLineageTable(db, tableName, expectedColumns, expectedForei
   }
   const foreignKeys = db.exec('PRAGMA foreign_key_list(' + tableName + ')')[0]?.values ?? [];
   if (foreignKeys.length !== expectedForeignKeys.length) throw new Error('RUNTIME_LINEAGE_FOREIGN_KEYS_INVALID_' + tableName.toUpperCase());
+}
+
+function migrateV8ToV9(db) {
+  assertRequiredBaseSchema(db);
+  assertF03Schema(db);
+  assertProcessingResultSchema(db);
+  assertCanonicalDecisionSchema(db);
+  assertRuntimeLineageSchema(db);
+  assertProductionAuthorityLifecycleSchema(db);
+  db.run('BEGIN');
+  let committed = false;
+  try {
+    if (!hasTable(db, 'derived_projection_lifecycle')) {
+      db.run(DERIVED_PROJECTION_LIFECYCLE_DDL);
+    }
+    assertDerivedProjectionLifecycleSchema(db);
+    db.run("UPDATE schema_meta SET value = '9' WHERE key = 'schema_version'");
+    db.run('COMMIT');
+    committed = true;
+  } finally {
+    if (!committed) {
+      try { db.run('ROLLBACK'); } catch {}
+    }
+  }
+}
+
+function assertDerivedProjectionLifecycleSchema(db) {
+  if (!hasTable(db, 'derived_projection_lifecycle')) {
+    throw new Error('DERIVED_PROJECTION_LIFECYCLE_TABLE_MISSING');
+  }
+  const columns = db.exec('PRAGMA table_info(derived_projection_lifecycle)')[0]?.values ?? [];
+  const expected = [
+    ['event_sequence','INTEGER',0,1],
+    ['lifecycle_event_id','TEXT',1,0],
+    ['reorg_id','TEXT',1,0],
+    ['projection_id','TEXT',1,0],
+    ['projection_layer','TEXT',1,0],
+    ['state','TEXT',1,0],
+    ['reason','TEXT',1,0],
+    ['invalidated_evidence_digest','TEXT',1,0],
+    ['projection_input_digest','TEXT',1,0],
+    ['rebuilt_projection_digest','TEXT',0,0],
+    ['contract_version','TEXT',1,0],
+    ['previous_event_sequence','INTEGER',0,0],
+    ['committed_at','TEXT',1,0],
+  ];
+  if (columns.length !== expected.length || columns.some((c, i) =>
+    c[1] !== expected[i][0] ||
+    c[2] !== expected[i][1] ||
+    c[3] !== expected[i][2] ||
+    c[5] !== expected[i][3]
+  )) {
+    throw new Error('DERIVED_PROJECTION_LIFECYCLE_SCHEMA_INVALID');
+  }
+  const triggers = db.exec(
+    "SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('derived_projection_lifecycle_no_update','derived_projection_lifecycle_no_delete')"
+  )[0]?.values ?? [];
+  if (triggers.length !== 2) {
+    throw new Error('DERIVED_PROJECTION_LIFECYCLE_APPEND_ONLY_TRIGGERS_MISSING');
+  }
 }
 
 function migrateV7ToV8(db) {
@@ -823,6 +906,16 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       assertCanonicalDecisionSchema(db);
       assertRuntimeLineageSchema(db);
       assertProductionAuthorityLifecycleSchema(db);
+      migrateV8ToV9(db);
+      assertDerivedProjectionLifecycleSchema(db);
+    } else if (version === 9) {
+      assertRequiredBaseSchema(db);
+      assertF03Schema(db);
+      assertProcessingResultSchema(db);
+      assertCanonicalDecisionSchema(db);
+      assertRuntimeLineageSchema(db);
+      assertProductionAuthorityLifecycleSchema(db);
+      assertDerivedProjectionLifecycleSchema(db);
     } else {
       throw new Error('UNSUPPORTED_SCHEMA_VERSION');
     }
@@ -908,6 +1001,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
         assertCanonicalDecisionSchema(db);
         assertRuntimeLineageSchema(db);
         assertProductionAuthorityLifecycleSchema(db);
+        assertDerivedProjectionLifecycleSchema(db);
       }
     },
     close() {
