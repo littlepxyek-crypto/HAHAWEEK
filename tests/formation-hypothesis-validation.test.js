@@ -62,7 +62,7 @@ test('validation linkage preserves hypothesis and validation provenance without 
     hypothesis,
     validation: {
       validation_id: 'validation:v2:test',
-      validation_result: 'INCONCLUSIVE',
+      result: 'INCONCLUSIVE',
       evidence_ids: ['e:outcome'],
     },
   });
@@ -79,7 +79,7 @@ test('validation result cannot be silently promoted into hypothesis authority', 
       hypothesis: { ...hypothesis, authority: 'V4' },
       validation: {
         validation_id: 'validation:v2:test',
-        validation_result: 'CONFIRMED',
+        result: 'CONFIRMED',
         evidence_ids: ['e:outcome'],
       },
     }),
