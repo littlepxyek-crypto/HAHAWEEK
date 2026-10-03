@@ -1,6 +1,6 @@
 # ANALYTICAL REORG PROPAGATION CONTRACT V1
 
-Status: IMPLEMENTED / VERIFIED — CI HEAD 422de8b9657ab6b88d6a3e5ba590bda1c485b608
+Status: IMPLEMENTED / VERIFICATION PENDING CI
 
 ## Purpose
 
@@ -35,7 +35,9 @@ It MUST NOT:
 
 ## Dependency semantics
 
-Dependencies MUST be explicit. The implementation MUST NOT infer hidden dependencies merely from layer order.
+Dependencies MUST be explicit and MUST resolve to projection IDs present in the same planning input. An unknown dependency is rejected fail-closed.
+
+The implementation MUST NOT infer hidden dependencies merely from layer order.
 
 This is important because Formation and Graph are parallel projections from canonical evidence. Graph is therefore not a prerequisite for Formation.
 
