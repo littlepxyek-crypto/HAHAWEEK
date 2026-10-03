@@ -2,6 +2,9 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 
 const { createDatabase, SCHEMA_VERSION } = require('../src/core/database');
 const {
@@ -150,4 +153,27 @@ test('invalid plan and missing rebuild function fail closed', async () => {
       /REBUILD_FUNCTION_REQUIRED/
     );
   });
+});
+
+test('schema 8 databases migrate to schema 9 and preserve authoritative tables', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hahaweek-reorg-migration-'));
+  const filename = path.join(dir, 'test.sqlite');
+  const first = await createDatabase(filename);
+  first.db.run('DROP TABLE derived_projection_lifecycle');
+  first.db.run("UPDATE schema_meta SET value = '8' WHERE key = 'schema_version'");
+  first.save();
+  first.close();
+
+  const reopened = await createDatabase(filename);
+  assert.equal(reopened.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '9');
+  assert.equal(
+    reopened.db.exec("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'derived_projection_lifecycle'")[0].values.length,
+    1
+  );
+  assert.equal(
+    reopened.db.exec("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'canonical_evidence'")[0].values.length,
+    1
+  );
+  reopened.close();
+  fs.rmSync(dir, { recursive: true, force: true });
 });
