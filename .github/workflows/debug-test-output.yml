@@ -1,0 +1,32 @@
+name: HAHAWEEK Temporary Test Diagnostics
+
+on:
+  push:
+    branches: ["architecture/agent-read-boundary-v1"]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Capture npm test output
+        shell: bash
+        run: |
+          set +e
+          npm test > test-output.log 2>&1
+          status=$?
+          echo "npm_test_exit=$status" >> test-output.log
+          exit "$status"
+      - name: Upload test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hahaweek-test-output
+          path: test-output.log
