@@ -139,6 +139,15 @@ test('schema v1 migrates through v3 to v9 without rewriting legacy rows', async 
   assert.ok(database.db.exec(
     "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'canonical_evidence'"
   ).length);
+  assert.ok(database.db.exec(
+    "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'derived_projection_lifecycle'"
+  ).length);
+  assert.equal(
+    database.db.exec(
+      "SELECT COUNT(*) FROM sqlite_master WHERE type = 'trigger' AND name IN ('derived_projection_lifecycle_no_update','derived_projection_lifecycle_no_delete')"
+    )[0].values[0][0],
+    2
+  );
 
   database.close();
 });
