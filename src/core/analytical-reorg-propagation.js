@@ -17,15 +17,6 @@ const LAYERS = Object.freeze([
   'REPORT',
 ]);
 
-const DOWNSTREAM = Object.freeze({
-  GRAPH: ['FORMATION'],
-  FORMATION: ['HYPOTHESIS', 'VALIDATION'],
-  HYPOTHESIS: ['VALIDATION'],
-  VALIDATION: ['RESEARCH'],
-  RESEARCH: ['REPORT'],
-  REPORT: [],
-});
-
 function requireObject(value, name) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     throw new Error(name.toUpperCase() + '_REQUIRED');
