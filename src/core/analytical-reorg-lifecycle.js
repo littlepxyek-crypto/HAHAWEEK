@@ -177,6 +177,41 @@ function createAnalyticalReorgLifecycle(database, clock = () => new Date().toISO
 
     const rebuilt = [];
     for (const projection of input.plan.affected_projections) {
+      const affectedDependencyIds = projection.depends_on.filter((id) => projections.has(id));
+      const missingRebuiltDependency = affectedDependencyIds.find(
+        (id) => !rebuilt.some((item) => item.projection_id === id)
+      );
+      if (missingRebuiltDependency) {
+        database.db.run('BEGIN');
+        let committedFailure = false;
+        try {
+          appendLifecycleEvent(database, {
+            reorg_id: input.reorg_id,
+            projection_id: projection.id,
+            projection_layer: projection.layer,
+            state: 'FAILED',
+            reason: 'DEPENDENCY_NOT_REBUILT',
+            invalidated_evidence_digest: input.invalidated_evidence_digest,
+            projection_input_digest: digest(projection),
+            committed_at: clock(),
+          });
+          database.db.run('COMMIT');
+          committedFailure = true;
+        } finally {
+          if (!committedFailure) {
+            try { database.db.run('ROLLBACK'); } catch {}
+          }
+        }
+        return {
+          status: 'REBUILD_FAILED',
+          reorg_id: input.reorg_id,
+          rebuilt,
+          failed_projection_id: projection.id,
+          error_code: 'DEPENDENCY_NOT_REBUILT',
+          dependency_id: missingRebuiltDependency,
+        };
+      }
+
       const context = {
         reorg_id: input.reorg_id,
         invalidated_evidence_digest: input.invalidated_evidence_digest,
