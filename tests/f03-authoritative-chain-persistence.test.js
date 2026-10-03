@@ -143,11 +143,11 @@ async function createFileDatabase(dir, filename = 'hahaweek.sqlite') {
   return { ...authority, database };
 }
 
-test('F-03 fresh database is schema 8 with all authoritative-chain tables', async () => {
+test('F-03 fresh database is schema 9 with all authoritative-chain tables', async () => {
   const dir = tempDir();
   const { database, writerFence } = await createFileDatabase(dir);
 
-  assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '8');
+  assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '9');
   for (const table of ['f03_segments', 'f03_manifests', 'f03_checkpoints']) {
     assert.equal(database.db.exec(
       "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
@@ -159,7 +159,7 @@ test('F-03 fresh database is schema 8 with all authoritative-chain tables', asyn
   writerFence.release();
 });
 
-test('F-03 schema 3 migrates in place through schema 8 and preserves existing rows', async () => {
+test('F-03 schema 3 migrates in place through schema 9 and preserves existing rows', async () => {
   const dir = tempDir();
   const file = path.join(dir, 'hahaweek.sqlite');
   const first = await createFileDatabase(dir);
@@ -187,7 +187,7 @@ test('F-03 schema 3 migrates in place through schema 8 and preserves existing ro
   first.writerFence.release();
 
   const second = await createFileDatabase(dir);
-  assert.equal(second.database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '8');
+  assert.equal(second.database.db.exec("SELECT value FROM schema_meta WHERE key = 'schema_version'")[0].values[0][0], '9');
   assert.equal(second.database.db.exec("SELECT event_id FROM raw_events WHERE event_id = 'legacy-1'")[0].values[0][0], 'legacy-1');
 
   second.database.close();

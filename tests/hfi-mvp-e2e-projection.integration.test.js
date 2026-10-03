@@ -90,6 +90,21 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
   const validation = createValidationBoundary({
     formation,
     outcome,
+    formation_cutoff: FORMATION_END,
+    evidence_temporal_context: [
+      ...formation.evidence_ids.map((evidence_id) => ({
+        evidence_id,
+        event_time: decodedEvents().find((event) => event.identity === evidence_id).event_time,
+        role: 'FORMATION',
+      })),
+      ...outcome.observations
+        .filter((observation) => observation.evidence_id !== 'ei:first-swap')
+        .map((observation) => ({
+          evidence_id: observation.evidence_id,
+          event_time: observation.event_time,
+          role: 'OUTCOME',
+        })),
+    ],
     criteria_results: [criterion],
     uncertainties: [],
   });

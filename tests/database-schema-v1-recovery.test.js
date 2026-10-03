@@ -104,7 +104,7 @@ async function createSchemaV1Fixture(filename, { malformed = false } = {}) {
   db.close();
 }
 
-test('schema v1 migrates through v3 to v8 without rewriting legacy rows', async () => {
+test('schema v1 migrates through v3 to v9 without rewriting legacy rows', async () => {
   const filename = tempDatabasePath();
   await createSchemaV1Fixture(filename);
 
@@ -113,7 +113,7 @@ test('schema v1 migrates through v3 to v8 without rewriting legacy rows', async 
   const version = database.db.exec(
     "SELECT value FROM schema_meta WHERE key = 'schema_version'"
   )[0].values[0][0];
-  assert.equal(version, '8');
+  assert.equal(version, '9');
 
   const row = database.db.exec(`
     SELECT event_id, chain_id, block_number, transaction_hash,
