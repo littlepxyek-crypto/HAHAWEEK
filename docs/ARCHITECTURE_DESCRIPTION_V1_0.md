@@ -1068,3 +1068,65 @@ This document is an Architecture Description V1.0 review baseline, not a final a
 The next gate is contract closure, not feature expansion.
 
 No new broad Agent capability, social ingestion, predictive scoring, autonomous publication, or production V4 activation should be treated as architecturally authorized until the closure conditions above are met.
+
+---
+
+# 21. RECONCILIATION OVERLAY — 2026-10-03
+
+This append-only overlay records the current implementation state without rewriting
+the historical architecture review sections above.
+
+## Current verified implementation deltas
+
+- Graph Identity: implemented with dedicated node/edge domains; CI vectors pass.
+- Analytical Transition: implemented with separate Formation/Hypothesis/Validation
+  domains and legal transition checks; CI vectors pass.
+- Validation State v2: authoritative result vocabulary and explicit FORMATION/OUTCOME
+  temporal roles are implemented; current PR CI passes the temporal negative vectors.
+- Acquisition Completeness: standalone contract and executable tests are implemented;
+  runtime integration is still pending.
+- Authority Activation State Machine: standalone activation sequence and negative
+  vectors are implemented; integration into the existing production authority
+  lifecycle is still pending.
+- EQC: six read-only operations are implemented and CI-tested; arbitrary SQL and
+  write surfaces are rejected. Canonicality coverage, as-of semantics, and resource
+  bounds remain incomplete.
+
+## Current authority state
+
+V4 production authority remains INACTIVE. The presence of an activation-state
+contract does not activate production authority.
+
+## Current verification state
+
+The current PR head `2e4df3f2472e31f703003c6c6ffd8b7cf65c31ca` has terminal-success
+GitHub Actions for Tests, Security/Regression, and A9 Runtime Verification.
+
+The Tests workflow executed:
+- `npm test`: 841 tests, 840 passed, 1 skipped, 0 failed;
+- `npm run verify:v4`: 1 golden vector verified;
+- `npm run verify:v4:coverage`: 4 fixture sets / 10 vectors verified.
+
+Security/Regression executed the test suite with 840 passed, 1 skipped, 0 failed,
+plus `npm audit --audit-level=high` with 0 vulnerabilities and tracked-secret
+baseline passing.
+
+A9 runtime verification succeeded against its explicitly allowlisted
+`https://example.com` target with external network enabled, external actions
+disabled, and publication not executed. This runtime is acquisition-boundary
+verification; it is not evidence of production V4 activation.
+
+## Remaining architecture blockers
+
+- executable L4/L5 vectors;
+- executable source-independence enforcement;
+- R-08 acquisition-completeness runtime integration;
+- full analytical transition-chain integration;
+- EQC bounded-resource contract;
+- EQC historical/as-of contract;
+- analytical reorg propagation;
+- claim-promotion provenance contract;
+- deployment architecture;
+- full system-wide recovery/replay verification beyond existing V4 and MVP slices.
+
+Architecture Gate remains NOT PASSED and implementation freeze remains BLOCKED.
