@@ -113,3 +113,22 @@ test('service has no database mutation method', () => {
   assert.equal(typeof service.save, 'undefined');
   assert.equal(typeof service.mutate, 'undefined');
 });
+
+
+test('EQC resource boundary rejects oversized block ranges', () => {
+  const service = createReadOnlyQueryService(fakeDatabase());
+  assert.throws(() => service.execute(QUERY_OPERATIONS.GET_WALLET_ACTIVITY, {
+    chain_id: 4663, address: '0xwallet', start_block: 1, end_block: 100002,
+  }), /BLOCK_RANGE_TOO_LARGE/);
+});
+
+test('EQC transaction query is bounded and reports PARTIAL when limit is exceeded', () => {
+  const calls = [];
+  const rows = Array.from({ length: 1001 }, (_, i) => ({ event_id: 'e' + i, chain_id: 4663, block_number: 1, transaction_hash: '0xtx', block_hash: '0xb', transaction_index: 0, log_index: i, address: '0xa', topics_json: '[]', data: '0x', captured_at: '2026-10-03T00:00:00.000Z', evidence_id: 'ev' + i, identity_hash: 'ih' + i, canonical_hash: 'ch' + i }));
+  const db = { prepare(sql) { calls.push(sql); return fakeStatement(null, rows); } };
+  const service = createReadOnlyQueryService({ db });
+  const result = service.execute(QUERY_OPERATIONS.GET_TRANSACTION_CONTEXT, { chain_id: 4663, transaction_hash: '0xtx' });
+  assert.equal(result.status, 'PARTIAL');
+  assert.equal(result.data.events.length, 1000);
+  assert.match(calls[0], /LIMIT 1001/);
+});
