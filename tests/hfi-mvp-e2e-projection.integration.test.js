@@ -53,6 +53,32 @@ function decodedEvents() {
   ];
 }
 
+function temporalContext(formation, outcome) {
+  const byId = new Map(
+    formation.evidence_ids.map((evidence_id) => [
+      evidence_id,
+      {
+        evidence_id,
+        event_time: decodedEvents().find((event) => event.identity === evidence_id).event_time,
+        roles: ['FORMATION'],
+      },
+    ])
+  );
+  for (const observation of outcome.observations) {
+    const existing = byId.get(observation.evidence_id);
+    if (existing) {
+      existing.roles = [...new Set([...existing.roles, 'OUTCOME'])];
+    } else {
+      byId.set(observation.evidence_id, {
+        evidence_id: observation.evidence_id,
+        event_time: observation.event_time,
+        roles: ['OUTCOME'],
+      });
+    }
+  }
+  return [...byId.values()];
+}
+
 function outcomeFor(formation) {
   return createHistoricalOutcome({
     formation_id: formation.formation_id,
@@ -92,25 +118,34 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
     formation,
     outcome,
     formation_cutoff: FORMATION_END,
-    evidence_temporal_context: [
-      ...formation.evidence_ids.map((evidence_id) => ({
-        evidence_id,
-        event_time: decodedEvents().find((event) => event.identity === evidence_id).event_time,
-        role: 'FORMATION',
-      })),
-      ...outcome.observations
-        .filter((observation) => observation.evidence_id !== 'ei:first-swap')
-        .map((observation) => ({
-          evidence_id: observation.evidence_id,
-          event_time: observation.event_time,
-          role: 'OUTCOME',
-        })),
-    ],
+    evidence_temporal_context: temporalContext(formation, outcome),
     criteria_results: [criterion],
     uncertainties: [],
   });
 
   assert.equal(validation.result, 'CONFIRMED');
+
+  const replayFormation = detectPoolBootstrapFromDecodedEvents(decodedEvents()).formation;
+  const replayOutcome = outcomeFor(replayFormation);
+  const replayCriterion = createLiquiditySurvivalCriterion({
+    formation_id: replayFormation.formation_id,
+    pool_id: replayFormation.pool_id,
+    reference_evidence_id: 'ei:first-swap',
+    reference_liquidity: '100',
+    window_start: FORMATION_END,
+    window_end: WINDOW_END,
+    outcome: replayOutcome,
+  });
+  const replayValidation = createValidationBoundary({
+    formation: replayFormation,
+    outcome: replayOutcome,
+    formation_cutoff: FORMATION_END,
+    evidence_temporal_context: temporalContext(replayFormation, replayOutcome),
+    criteria_results: [replayCriterion],
+    uncertainties: [],
+  });
+  assert.equal(validation.validation_id, replayValidation.validation_id);
+  assert.deepEqual(validation.evidence_temporal_context, replayValidation.evidence_temporal_context);
 
   const hypothesis = createHypothesis({
     formation_id: formation.formation_id,
