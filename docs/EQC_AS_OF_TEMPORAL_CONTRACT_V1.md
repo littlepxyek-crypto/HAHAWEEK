@@ -1,6 +1,6 @@
 # HAHAWEEK — EQC AS-OF TEMPORAL CONTRACT V1
 
-Status: IMPLEMENTED / VERIFIED — CI HEAD 08100615cde2ab538a5e58739f50ec21468e8e9c
+Status: IMPLEMENTED / VERIFIED — evidence-item as-of slice
 Contract: EQC-AS-OF-1.0
 
 ## Purpose
@@ -60,4 +60,7 @@ This contract closes the evidence-item as-of slice only. It does NOT claim that 
 
 CONTRACT → IMPLEMENTATION → TEST → NEGATIVE TEST → RUNTIME VERIFICATION → RECONCILIATION.
 
-Current status remains pending until CI verifies the new implementation.
+
+## Verification Reconciliation
+
+The evidence-item as-of implementation is exercised by the EQC test suite. Exact-head CI also verifies the repository test suite, V4 verification/coverage, security/regression, and A9 runtime on the active EQC branch. This contract remains deliberately scoped to evidence-item historical canonicality; broader historical semantics remain out of scope until separately implemented.
