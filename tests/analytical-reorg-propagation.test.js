@@ -74,6 +74,15 @@ test('non-reorg canonicality change fails closed', () => {
   assert.throws(() => createAnalyticalReorgPropagationPlan(input), /CANONICALITY_CHANGE_MUST_BE_REORG/);
 });
 
+test('unknown dependency fails closed instead of silently preserving a stale descendant', () => {
+  const input = fixture();
+  input.projections[1].depends_on = ['missing-projection'];
+  assert.throws(
+    () => createAnalyticalReorgPropagationPlan(input),
+    /UNKNOWN_PROJECTION_DEPENDENCY/
+  );
+});
+
 test('missing dependency declaration does not silently create an inferred dependency', () => {
   const input = fixture();
   input.projections[1].depends_on = [];
