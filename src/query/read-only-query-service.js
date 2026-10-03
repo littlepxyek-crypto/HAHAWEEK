@@ -7,7 +7,7 @@ const {
   isImplementedOperation,
   capabilities,
 } = require('./evidence-query-contract');
-const { MAX_ROWS, MAX_BLOCK_SPAN, createResourceBudget, paginate } = require('./resource-budget');
+const { DEFAULT_MAX_ROWS: MAX_ROWS, MAX_BLOCK_SPAN, createResourceBudget, paginate } = require('./resource-budget');
 
 const READONLY_SQL_PREFIX = /^SELECT\b/i;
 
@@ -142,7 +142,7 @@ function createReadOnlyQueryService(database) {
     if (startBlock !== null && endBlock !== null && endBlock - startBlock > MAX_BLOCK_SPAN) throw new Error('BLOCK_RANGE_TOO_LARGE');
     const budget = createResourceBudget(resource);
     const statement = safePrepare(db, `SELECT event_id, chain_id, pool_id, pool_manager, sender AS address, tick_lower, tick_upper, liquidity_delta, salt, block_number, transaction_hash, log_index, captured_at FROM liquidity_events WHERE chain_id = ? AND lower(sender) = lower(?) AND (? IS NULL OR block_number >= ?) AND (? IS NULL OR block_number <= ?) ORDER BY block_number, log_index LIMIT ${MAX_ROWS + 1}`, [chainId, address, startBlock, startBlock, endBlock, endBlock]);
-    const bounded = boundedRows(allRows(statement)); statement.free();
+    const bounded = boundedRows(allRows(statement, budget), budget); statement.free();
     const rows = bounded.rows;
     return response('wallet:' + chainId + ':' + address, bounded.partial ? 'PARTIAL' : 'COMPLETE', { chain_id: chainId, address, observed_liquidity_events: rows, pagination: bounded.pagination, scope: { start_block: startBlock, end_block: endBlock } }, { limitations: ['CURRENT_SCHEMA_EXPOSES_LIQUIDITY_EVENTS_FOR_WALLET_ACTIVITY', 'SWAP_SENDER_ACTIVITY_IS_NOT_YET_EXPOSED_BY_A_DEDICATED_AUTHORITY_TABLE', 'NO_IDENTITY_INFERENCE_IS_PERFORMED'] });
   }
