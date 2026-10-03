@@ -22,6 +22,8 @@ function input(overrides = {}) {
   return {
     formation,
     outcome,
+    formation_cutoff: '2026-10-03T00:00:00.000Z',
+    evidence_temporal_context: [{ evidence_id: 'ei:future-1', event_time: '2026-10-02T23:00:00.000Z' }],
     criteria_results: [{
       criterion_id: 'C1',
       status: 'PASS',
@@ -79,7 +81,9 @@ test('preserves validation coverage semantics at the boundary', () => {
     outcome: {
       ...input().outcome,
       coverage_status: 'PARTIAL',
+      evidence_ids: ['ei:partial'],
     },
+    evidence_temporal_context: [{ evidence_id: 'ei:partial', event_time: '2026-10-02T23:00:00.000Z' }],
     criteria_results: [{
       criterion_id: 'C1',
       status: 'FAIL',

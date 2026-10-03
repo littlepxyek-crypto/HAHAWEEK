@@ -79,7 +79,7 @@ test('existing validation result constraints remain authoritative', () => {
       reportInput({
         validation: {
           ...reportInput().validation,
-          result: 'UNKNOWN',
+          result: 'NOT_A_VALIDATION_RESULT',
         },
       })
     ),
