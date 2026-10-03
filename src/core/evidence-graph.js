@@ -1,5 +1,7 @@
 'use strict';
 
+const { graphNodeIdentity, graphEdgeIdentity } = require('./graph-identity');
+
 /**
  * Evidence Graph v0.1
  *
@@ -65,6 +67,7 @@ function createEvidenceGraph() {
       id: id,
       type,
       attributes: { ...attributes },
+      graph_identity: graphNodeIdentity(type, id),
     };
 
     if (existing) {
@@ -86,6 +89,7 @@ function createEvidenceGraph() {
       type,
       to,
       attributes: { ...attributes },
+      graph_identity: graphEdgeIdentity(from, type, to),
     };
 
     if (existing) {
