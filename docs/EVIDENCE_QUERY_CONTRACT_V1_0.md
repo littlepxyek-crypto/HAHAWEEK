@@ -1,6 +1,6 @@
 # HAHAWEEK — EVIDENCE QUERY CONTRACT v1.0
 
-Status: IMPLEMENTED / VERIFIED — RECONCILED HEAD 68037b51d067c93682517a98f0ebea19d6b60f4c
+Status: IMPLEMENTED / VERIFIED — implementation CI verified previously; documentation reconciled at current head
 Branch: architecture/agent-read-boundary-v1
 Purpose: Define the read-only interface between future Agent/research consumers and HAHAWEEK authoritative evidence and analytical projections.
 
