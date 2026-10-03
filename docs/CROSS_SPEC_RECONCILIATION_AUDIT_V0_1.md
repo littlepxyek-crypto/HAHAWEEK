@@ -537,3 +537,30 @@ Correction:
 - No contract weakening or temporal-boundary bypass was introduced.
 
 Status: FIX IMPLEMENTED; REGRESSION/EXACT-HEAD RUNTIME VERIFICATION PENDING.
+
+
+---
+
+# 14. RECONCILIATION UPDATE — 2026-10-03 — REPLAY TEMPORAL BOUNDARY REGRESSION
+
+Problem record: P1-HFI-VALIDATION-TEMPORAL-002.
+
+Inspection of the corrected E5 runtime found a second call site in the
+replay path that invoked Validation V2 without its mandatory temporal
+boundary.
+
+Root cause:
+The initial temporal-boundary correction covered the primary execution path
+but not the deterministic replay path.
+
+Impact:
+Without correction, primary execution could pass while replay verification
+would fail, violating the E5 replay equivalence requirement.
+
+Correction:
+The replay Validation V2 invocation now supplies:
+- `formation_cutoff`
+- FORMATION temporal context for replay formation evidence
+- OUTCOME temporal context for later outcome observations
+
+Status: FIX IMPLEMENTED; EXACT-HEAD CI/RUNTIME VERIFICATION PENDING.
