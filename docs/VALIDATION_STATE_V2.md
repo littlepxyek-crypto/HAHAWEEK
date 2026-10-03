@@ -11,9 +11,6 @@ Validation result is one of:
 - UNKNOWN
 - INCONCLUSIVE
 
-The previous split between a result vocabulary and a separate PASS/FAIL
-interpretation is not used for the authoritative validation result.
-
 Criterion status remains a local explanatory field:
 
 - PASS
@@ -30,31 +27,31 @@ Criterion status does not replace the authoritative validation result.
 - UNKNOWN coverage or UNKNOWN criterion => UNKNOWN
 - PARTIAL coverage or INCONCLUSIVE criterion => INCONCLUSIVE
 
-An unavailable or incomplete validation input must never become REJECTED
-solely because required evidence was not acquired.
+An unavailable or incomplete validation input must never become REJECTED solely because required evidence was not acquired.
 
 ## Temporal boundary
+
+Validation separates the historical formation boundary from the later outcome window.
 
 Every validation must declare:
 
 - formation_cutoff
 - evidence_temporal_context
 
-Every evidence item contributing to the validation must have an event_time
-and must satisfy:
+Each temporal context entry declares one or both roles:
 
-event_time <= formation_cutoff
+- FORMATION — evidence used to establish the historical formation state. Its event_time MUST satisfy event_time <= formation_cutoff.
+- OUTCOME — evidence used to evaluate a post-formation historical outcome. It may occur after formation_cutoff because that later evidence is the subject of validation, not evidence used to establish the past formation state.
 
-Evidence after the formation cutoff is rejected with
-FUTURE_EVIDENCE_RELATIVE_TO_FORMATION_CUTOFF.
+Evidence may carry both roles when the same event is legitimately both part of formation and the boundary/reference event for the outcome.
 
-This prevents validation from using future evidence to alter the historical
-formation assessment.
+This prevents future leakage into formation assessment without incorrectly rejecting the historical outcome window that validation is explicitly designed to measure.
+
+Formation evidence attached to the Formation object must have a corresponding FORMATION temporal role. Evidence referenced by validation must have temporal context. Missing temporal context is an error, not a negative result.
 
 ## Identity
 
-Validation identity includes the state vocabulary, rule version, formation
-cutoff, evidence references, criteria, and temporal evidence context.
+Validation identity includes the state vocabulary, rule version, formation cutoff, evidence references, criteria, and temporal evidence context including temporal roles.
 
 Changing temporal context therefore produces a different validation identity.
 
