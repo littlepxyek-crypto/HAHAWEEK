@@ -1,6 +1,6 @@
 # ANALYTICAL REORG PROPAGATION CONTRACT V1
 
-Status: IMPLEMENTED / VERIFIED — CI HEAD 68037b51d067c93682517a98f0ebea19d6b60f4c
+Status: IMPLEMENTED / VERIFIED — implementation CI verified at 68037b51d067c93682517a98f0ebea19d6b60f4c; documentation reconciled at current head
 
 ## Purpose
 
