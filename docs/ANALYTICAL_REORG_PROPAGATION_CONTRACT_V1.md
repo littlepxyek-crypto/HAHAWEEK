@@ -1,6 +1,6 @@
 # ANALYTICAL REORG PROPAGATION CONTRACT V1
 
-Status: IMPLEMENTED / VERIFIED — planner CI verified at 68037b51d067c93682517a98f0ebea19d6b60f4c; durable lifecycle implementation added on current branch and requires current-head CI verification
+Status: IMPLEMENTED / VERIFIED — planner and durable lifecycle verified by CI at 33d37dfe57768034c0989e6e30954fb44f3453b3; final cleanup-head CI remains pending
 
 ## Purpose
 
@@ -70,3 +70,10 @@ The lifecycle does not persist authoritative evidence or replace the existing pr
 ## Current limitation
 
 The lifecycle verifies and records derived rebuild completion, but individual projection implementations remain caller-owned rebuild functions. The lifecycle does not invent hidden dependencies or become V4 authority.
+
+
+## Migration boundary
+
+The durable lifecycle is persisted in schema v9. Legacy database migration paths that converge at schema v8 MUST subsequently execute the v8→v9 lifecycle migration exactly once. This preserves historical evidence while ensuring fresh and migrated databases expose the same lifecycle schema.
+
+The migration is additive: it does not rewrite canonical evidence or derived historical records.
