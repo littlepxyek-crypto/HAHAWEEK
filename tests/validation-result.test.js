@@ -51,6 +51,10 @@ test('creates deterministic CONFIRMED validation', () => {
 
 test('a failed criterion produces REJECTED', () => {
   const result = createValidationResult(input({
+    outcome: {
+      ...input().outcome,
+      evidence_ids: ['ei:future-2'],
+    },
     evidence_temporal_context: [{ evidence_id: 'ei:future-2', event_time: '2026-10-02T23:00:00.000Z' }],
     criteria_results: [{
       criterion_id: 'C1',
@@ -86,7 +90,9 @@ test('partial coverage cannot be silently rejected by a failed criterion', () =>
     outcome: {
       ...input().outcome,
       coverage_status: 'PARTIAL',
+      evidence_ids: ['ei:partial'],
     },
+    evidence_temporal_context: [{ evidence_id: 'ei:partial', event_time: '2026-10-02T23:00:00.000Z' }],
     criteria_results: [{
       criterion_id: 'C1',
       status: 'FAIL',
