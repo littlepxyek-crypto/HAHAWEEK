@@ -634,7 +634,27 @@ function migrateV8ToV9(db) {
   let committed = false;
   try {
     if (!hasTable(db, 'derived_projection_lifecycle')) {
-      db.run(DERIVED_PROJECTION_LIFECYCLE_DDL);
+      db.run(`
+        CREATE TABLE derived_projection_lifecycle (
+          event_sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+          lifecycle_event_id TEXT NOT NULL UNIQUE,
+          reorg_id TEXT NOT NULL,
+          projection_id TEXT NOT NULL,
+          projection_layer TEXT NOT NULL,
+          state TEXT NOT NULL CHECK (state IN ('INVALIDATED','REBUILT','FAILED')),
+          reason TEXT NOT NULL,
+          invalidated_evidence_digest TEXT NOT NULL,
+          projection_input_digest TEXT NOT NULL,
+          rebuilt_projection_digest TEXT NULL,
+          contract_version TEXT NOT NULL,
+          previous_event_sequence INTEGER NULL,
+          committed_at TEXT NOT NULL
+        )
+      `);
+      db.run('CREATE INDEX derived_projection_lifecycle_projection_idx ON derived_projection_lifecycle (projection_id, event_sequence)');
+      db.run('CREATE INDEX derived_projection_lifecycle_reorg_idx ON derived_projection_lifecycle (reorg_id, event_sequence)');
+      db.run("CREATE TRIGGER derived_projection_lifecycle_no_update BEFORE UPDATE ON derived_projection_lifecycle BEGIN SELECT RAISE(ABORT, 'DERIVED_PROJECTION_LIFECYCLE_APPEND_ONLY'); END");
+      db.run("CREATE TRIGGER derived_projection_lifecycle_no_delete BEFORE DELETE ON derived_projection_lifecycle BEGIN SELECT RAISE(ABORT, 'DERIVED_PROJECTION_LIFECYCLE_APPEND_ONLY'); END");
     }
     assertDerivedProjectionLifecycleSchema(db);
     db.run("UPDATE schema_meta SET value = '9' WHERE key = 'schema_version'");
