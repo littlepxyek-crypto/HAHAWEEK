@@ -594,3 +594,23 @@ Impact:
 Residual verification requirement:
 
 The fix is not considered VERIFIED until the exact new head passes the integration/security/test suites and HFI-MVP runtime reaches VERIFIED with replay equivalence.
+
+
+## 2026-10-04 Runtime Reconciliation — P2-DB-SCHEMA-V9-MIGRATION-004
+
+Status: RESOLVED — migration implementation hardened; exact-head test/runtime verification pending.
+
+The full test suite reproduced a 60-second timeout in `tests/database-schema-v1-recovery.test.js` on two consecutive attempts. The timeout was isolated to the legacy schema v1 migration path after the introduction of schema v9 derived-projection lifecycle storage.
+
+Evidence:
+- main branch previously verified the same migration test through schema v8;
+- PR #711 changed the target schema to v9 and added the v8→v9 lifecycle migration;
+- exact-head Tests failed twice at the same test with `test timed out after 60000ms`;
+- Security/Regression remained successful, so no security-boundary regression was indicated.
+
+Corrective action:
+- preserve schema v9 and its authority model;
+- execute the v8→v9 lifecycle table, indexes, and append-only triggers as separate SQL statements inside the existing transaction instead of one compound DDL string;
+- extend the migration regression test to assert the v9 lifecycle table and both append-only triggers exist after legacy migration.
+
+No legacy evidence is rewritten or deleted. The migration remains transactional and fail-closed.
