@@ -11,6 +11,7 @@ const {
 function input(overrides = {}) {
   return {
     measurement_id: 'measurement:v1:test',
+    measurement_rule_version: DESCRIPTIVE_MEASUREMENT_RULE_VERSION,
     metric_name: 'liquidity_added_native',
     value: 12.5,
     unit: 'native_asset',
@@ -43,6 +44,13 @@ test('rejects invalid measurement timestamps', () => {
   );
 });
 
+test('rejects missing measurement rule version', () => {
+  assert.throws(
+    () => createDescriptiveMeasurement(input({ measurement_rule_version: undefined })),
+    /MEASUREMENT_RULE_VERSION_REQUIRED/
+  );
+});
+
 test('rejects missing evidence', () => {
   assert.throws(
     () => createDescriptiveMeasurement(input({ evidence_ids: [] })),
@@ -51,7 +59,7 @@ test('rejects missing evidence', () => {
 });
 
 test('rejects predictive/ranking decision fields', () => {
-  for (const field of ['score', 'rank', 'prediction', 'signal', 'recommendation', 'buy_sell']) {
+  for (const field of ['score', 'rank', 'ranking', 'prediction', 'signal', 'recommendation', 'action', 'buy_sell', 'trading_decision']) {
     assert.throws(
       () => createDescriptiveMeasurement(input({ [field]: 1 })),
       new RegExp('DESCRIPTIVE_DECISION_FIELD_FORBIDDEN:' + field)
