@@ -56,7 +56,7 @@ function requireTemporalEvidence(input, formationCutoff) {
 }
 
 function validationId(payload) {
-  return `validation:v1:${crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex')}`;
+  return `validation:v2:${crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex')}`;
 }
 
 function createValidationResult(input) {
@@ -151,6 +151,8 @@ function createValidationResult(input) {
     criteria_results: criteriaResults,
     evidence_ids: evidenceIds,
     uncertainties,
+    formation_cutoff: formationCutoff,
+    evidence_temporal_context: input.evidence_temporal_context,
     provenance_reference: provenance,
   };
 }
