@@ -1133,3 +1133,13 @@ verification; it is not evidence of production V4 activation.
 - full system-wide recovery/replay verification beyond existing V4 and MVP slices.
 
 Architecture Gate remains NOT PASSED and implementation freeze remains BLOCKED.
+
+---
+
+## Current-head reconciliation — Social Snapshot Provenance V1
+
+The repository now contains an executable Social Snapshot Provenance V1 boundary at src/core/social-snapshot-provenance.js with negative tests at tests/social-snapshot-provenance.test.js.
+
+This boundary records source identity, acquisition identity, publisher, first-seen/capture timestamps, content identity, snapshot identity, digest, derivation method, temporal scope, parent lineage, and origin kind. HAHAWEEK-generated publication observations are explicitly marked as not automatically independent external sources.
+
+This does not activate social ingestion, modify canonical/V4 authority, or promote social content into authoritative evidence. CI and runtime verification remain required before the contract can be marked VERIFIED.
