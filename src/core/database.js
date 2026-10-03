@@ -919,6 +919,13 @@ async function createDatabase(filename = DB_FILE, options = {}) {
     } else {
       throw new Error('UNSUPPORTED_SCHEMA_VERSION');
     }
+
+    // All legacy migration paths converge on schema v8 before the v9 lifecycle
+    // migration. Apply v8→v9 exactly once after the legacy branch completes.
+    if (schemaVersion(db) === 8) {
+      migrateV8ToV9(db);
+      assertDerivedProjectionLifecycleSchema(db);
+    }
   }
 
   const isReadOnlyStatement = sql => {
