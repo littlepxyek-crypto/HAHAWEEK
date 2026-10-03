@@ -487,3 +487,23 @@ diagnosable CI failure while preserving the existing test suite.
 Status: CONTAINED; ROOT CAUSE UNKNOWN; NEW EXACT-HEAD VERIFICATION REQUIRED.
 Residual risk: the current in-flight workflow remains unaffected by the new
 configuration; the next exact-head workflow must provide the diagnostic result.
+
+
+---
+
+# 12. RECONCILIATION UPDATE — 2026-10-03 — HFI RUNTIME PR GATE
+
+The HFI-MVP runtime verification workflow previously executed only on pushes to
+`main`. Therefore PR changes to the E5 runtime were covered by unit/integration
+tests but did not receive the dedicated `npm run hfi:runtime` vertical runtime
+gate before merge.
+
+Correction:
+- `.github/workflows/hfi-runtime.yml` now runs for pull requests targeting
+  `main` as well as pushes to `main`.
+- Existing read-only RPC transport, runtime artifact provenance check, artifact
+  retention, and non-zero runtime failure behavior are unchanged.
+- The runtime job remains bounded by its existing 45-minute job timeout.
+- No production authority or canonical evidence behavior was changed.
+
+Status: IMPLEMENTED; EXACT-HEAD HFI-MVP RUNTIME VERIFICATION PENDING.
