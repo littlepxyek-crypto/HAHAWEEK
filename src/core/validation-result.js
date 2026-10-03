@@ -109,6 +109,11 @@ function createValidationResult(input) {
     ...(Array.isArray(input.outcome.evidence_ids) ? input.outcome.evidence_ids : []),
   ])];
 
+  const temporalIds = new Set(input.evidence_temporal_context.map((item) => item.evidence_id));
+  for (const evidenceId of evidenceIds) {
+    if (!temporalIds.has(evidenceId)) throw new Error('EVIDENCE_TEMPORAL_CONTEXT_INCOMPLETE');
+  }
+
   const uncertainties = input.uncertainties ?? [];
   if (!Array.isArray(uncertainties)) throw new Error('UNCERTAINTIES_REQUIRED');
   for (const uncertainty of uncertainties) requireString(uncertainty, 'uncertainty');
