@@ -5,14 +5,14 @@ const { CONTRACT_VERSION, assertL4, assertL5, evaluate } = require('../src/core/
 
 test('requires materially independent lineages for L4', () => {
   assert.throws(() => assertL4({relation:'controls_wallet',evidence_lines:[
-    {source_id:'a',source_lineage_id:'lineage-a',acquisition_id:'acq-a',relation:'controls_wallet',temporally_compatible:true},
-    {source_id:'b',source_lineage_id:'lineage-a',acquisition_id:'acq-b',relation:'controls_wallet',temporally_compatible:true}
+    {source_id:'a',source_lineage_id:'lineage-a',acquisition_id:'acq-a',independence_class:'I3',relation:'controls_wallet',temporally_compatible:true},
+    {source_id:'b',source_lineage_id:'lineage-a',acquisition_id:'acq-b',independence_class:'I3',relation:'controls_wallet',temporally_compatible:true}
   ],falsifier:{type:'contradiction'}}), /L4_INDEPENDENT_LINEAGES_REQUIRED/);
 });
 test('accepts L4 with two compatible independent lineages and a falsifier', () => {
   const result=assertL4({relation:'controls_wallet',evidence_lines:[
     {source_id:'a',source_lineage_id:'lineage-a',acquisition_id:'acq-a',relation:'controls_wallet',temporally_compatible:true,polarity:'SUPPORT'},
-    {source_id:'b',source_lineage_id:'lineage-b',acquisition_id:'acq-b',relation:'controls_wallet',temporally_compatible:true,polarity:'SUPPORT'}
+    {source_id:'b',source_lineage_id:'lineage-b',acquisition_id:'acq-b',independence_class:'I3',relation:'controls_wallet',temporally_compatible:true,polarity:'SUPPORT'}
   ],falsifier:{type:'contradiction'}});
   assert.equal(result.level,'L4'); assert.equal(result.independent_lineages,2);
 });
