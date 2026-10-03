@@ -7,6 +7,7 @@ const { detectPoolBootstrapFromDecodedEvents } = require('../src/core/hfi-format
 const { createHistoricalOutcome } = require('../src/core/historical-outcome');
 const { createLiquiditySurvivalCriterion } = require('../src/core/liquidity-survival');
 const { createValidationBoundary } = require('../src/core/validation-boundary');
+const { createHypothesis, linkValidationToHypothesis } = require('../src/core/formation-hypothesis-validation');
 const { createResearchReport } = require('../src/core/research-report');
 const { createXContentProjection } = require('../src/core/x-content-projection');
 const {
@@ -110,6 +111,21 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
   });
 
   assert.equal(validation.result, 'CONFIRMED');
+
+  const hypothesis = createHypothesis({
+    formation_id: formation.formation_id,
+    formation_state: formation.state,
+    statement: 'Observed active liquidity survives the configured seven-day validation window.',
+    evidence_ids: [...new Set([...formation.evidence_ids, ...criterion.evidence_ids])],
+    temporal_context: { formation_cutoff: formation.formation_end, validation_window_end: outcome.observation_end },
+    processing_context_id: 'test:hfi-mvp',
+    provenance: { formation_id: formation.formation_id, validation_rule_version: validation.validation_rule_version },
+  });
+  const hypothesisValidation = linkValidationToHypothesis({ hypothesis, validation });
+  assert.equal(hypothesis.authority, 'DERIVED');
+  assert.equal(hypothesisValidation.authority, 'DERIVED');
+  assert.equal(hypothesisValidation.hypothesis_id, hypothesis.hypothesis_id);
+  assert.equal(hypothesisValidation.validation_id, validation.validation_id);
 
   const reportInput = {
     formation,
