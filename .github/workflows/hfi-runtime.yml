@@ -2,6 +2,8 @@ name: HAHAWEEK HFI-MVP Runtime Verification
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
 permissions:
   contents: read
 jobs:

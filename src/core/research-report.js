@@ -4,7 +4,7 @@ const crypto = require('node:crypto');
 
 const REPORT_SCHEMA_VERSION = '1';
 const REPORT_RULE_VERSION = 'research-report-v1';
-const VALID_VALIDATION_RESULTS = new Set(['CONFIRMED', 'REJECTED', 'INCONCLUSIVE']);
+const VALID_VALIDATION_RESULTS = new Set(['CONFIRMED', 'REJECTED', 'UNKNOWN', 'INCONCLUSIVE']);
 
 function requireObject(value, name) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
