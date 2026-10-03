@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "node --test --test-concurrency=1",
+    "test": "node --test --test-concurrency=1 --test-timeout=60000",
     "start": "node src/index.js",
     "scan": "node src/index.js --once",
     "health": "node src/health.js",
