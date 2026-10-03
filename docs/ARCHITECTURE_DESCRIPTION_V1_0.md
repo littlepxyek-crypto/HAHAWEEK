@@ -1091,6 +1091,9 @@ the historical architecture review sections above.
 - EQC: six read-only operations are implemented and CI-tested; arbitrary SQL and
   write surfaces are rejected. Canonicality coverage, as-of semantics, and resource
   bounds remain incomplete.
+- Descriptive Measurement Boundary: standalone contract, implementation, and
+  negative vectors now exist on the follow-up branch; integration into broader
+  analytical consumers remains pending.
 
 ## Current authority state
 
