@@ -82,6 +82,7 @@ test('preserves validation coverage semantics at the boundary', () => {
       ...input().outcome,
       coverage_status: 'PARTIAL',
     },
+    evidence_temporal_context: [{ evidence_id: 'ei:partial', event_time: '2026-10-02T23:00:00.000Z' }],
     criteria_results: [{
       criterion_id: 'C1',
       status: 'FAIL',
