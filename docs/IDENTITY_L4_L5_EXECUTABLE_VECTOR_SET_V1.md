@@ -17,4 +17,4 @@ The executable tests reject same-lineage L4 evidence, direct contradiction, miss
 This validator does not mutate V4 evidence, identity, cursor, checkpoint, manifest, canonicality, or production authority.
 
 ## Remaining risk
-Runtime integration with the broader identity-resolution pipeline and executable source-independence classification remain open.
+Runtime integration with the broader identity-resolution pipeline remains open. L4 executable validation now delegates materially-independent-source enforcement to the SOURCE-INDEPENDENCE-EXECUTION-V1 contract; broader acquisition/source-lineage integration remains outside this validator.
