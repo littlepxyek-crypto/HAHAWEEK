@@ -50,6 +50,13 @@ test('hypothesis and validation use distinct transition domains', () => {
   assert.notEqual(h.transition_id, v.transition_id);
 });
 
+test('illegal state transition fails closed', () => {
+  assert.throws(
+    () => createAnalyticalTransition(DOMAINS.FORMATION, { ...base, previous_state: 'OBSERVED', next_state: 'VALID' }),
+    /ANALYTICAL_TRANSITION_NOT_ALLOWED/
+  );
+});
+
 test('invalid state and missing provenance fail closed', () => {
   assert.throws(
     () => createAnalyticalTransition(DOMAINS.FORMATION, { ...base, next_state: 'CONFIRMED' }),
