@@ -302,3 +302,136 @@ Threat Model attempts to break those assumptions.
 MVP proves one complete chain.
 
 Only after those boundaries are executable should HAHAWEEK expand into Radar or broader intelligence.
+
+---
+
+# 9. RECONCILIATION UPDATE — 2026-10-03
+
+This section is an append-only reconciliation overlay. The original findings above
+remain historical audit evidence and are not rewritten.
+
+## R-01 — Graph Identity
+
+Status: IMPLEMENTED / CI VERIFIED / RUNTIME REBUILD VERIFICATION PENDING.
+
+The repository now contains a dedicated Graph Identity implementation and contract:
+- `src/core/graph-identity.js`
+- `docs/GRAPH_IDENTITY_CONTRACT_V1.md`
+- `tests/graph-identity.test.js`
+
+Node and edge identities use dedicated domains and canonical objects. Graph identity
+does not replace V4 evidence identity.
+
+The PR-head test suite passed the Graph Identity vectors. Full graph rebuild runtime
+equivalence remains an open verification item.
+
+## R-02 / R-13 — Analytical Transition Separation
+
+Status: IMPLEMENTED / CI VERIFIED / SYSTEM-WIDE RUNTIME INTEGRATION PENDING.
+
+The repository now contains:
+- `src/core/analytical-transition.js`
+- `docs/ANALYTICAL_TRANSITION_CONTRACT_V1.md`
+- `tests/analytical-transition.test.js`
+
+Formation, Hypothesis, and Validation have distinct analytical domains and legal
+transition matrices. These transitions are explicitly outside V4 authority.
+
+The implementation is CI-verified on the current PR head. Complete integration of
+transition history across all analytical runtimes remains open.
+
+## R-04 — L4/L5 Boundary
+
+Status: DOCUMENTED / EXECUTABLE VECTOR SET STILL REQUIRED.
+
+The repository contract explicitly separates L4 corroboration from L5
+relation-specific direct cryptographic/direct-control proof. A wallet signature
+does not by itself establish a real-world identity relation.
+
+Executable positive/negative vectors and runtime enforcement remain open.
+
+## R-05 — Source Independence
+
+Status: DOCUMENTED / EXECUTABLE ENFORCEMENT STILL REQUIRED.
+
+The source-independence contract defines source lineage and I0-I4 classes and
+explicitly prevents URL count, reposts, mirrors, aggregators, or acquisition count
+from being treated as independent evidence.
+
+Executable enforcement vectors remain open.
+
+## R-06 — Single-RPC Omission Limitation
+
+Status: ACCEPTED LIMITATION / FORMAL EXECUTION CONTRACT STILL OPEN.
+
+The current design does not claim cross-provider censorship/omission detection from
+a single RPC provider. This remains an explicit limitation.
+
+## R-07 — V4 Authority Activation
+
+Status: IMPLEMENTED CONTRACT / LIFECYCLE INTEGRATION PENDING / PRODUCTION INACTIVE.
+
+The repository contains `src/core/authority-activation-state.js`,
+`docs/AUTHORITY_ACTIVATION_STATE_MACHINE_V1.md`, and executable negative tests
+for the activation sequence IMPLEMENTED → VERIFIED → AUTHORIZED → ACTIVE.
+
+This contract is not yet integrated into the existing production authority lifecycle.
+V4 production authority therefore remains INACTIVE.
+
+## R-08 — Acquisition Completeness
+
+Status: IMPLEMENTED CONTRACT / ACQUISITION RUNTIME INTEGRATION PENDING.
+
+The repository contains `src/acquisition/completeness.js`,
+`docs/ACQUISITION_COMPLETENESS_CONTRACT_V1.md`, and negative tests ensuring
+PARTIAL/FAILED/UNKNOWN/EXPIRED cannot become negative absence evidence.
+
+Integration with the acquisition runtime remains open.
+
+## R-09 — Validation Vocabulary
+
+Status: IMPLEMENTED / CI VERIFIED / STATE-MACHINE INTEGRATION PENDING.
+
+Validation v2 now has an authoritative result vocabulary:
+CONFIRMED, REJECTED, UNKNOWN, INCONCLUSIVE.
+
+Criterion statuses remain PASS, FAIL, UNKNOWN, INCONCLUSIVE and do not replace the
+authoritative validation result. CI on the current PR head verifies these semantics.
+
+The remaining work is integration with the broader Formation/Hypothesis/Validation
+transition lifecycle.
+
+## R-10 — Descriptive Measurement Boundary
+
+Status: DOCUMENTED / FORMAL CONTRACT CLOSURE PENDING.
+
+Current implementation does not introduce an overall predictive score or BUY/SELL
+ranking. A formal executable measurement-boundary contract remains open.
+
+## R-11 — Threshold Versioning
+
+Status: DEFERRED / SOCIAL-NARRATIVE SCOPE NOT ACTIVE.
+
+No new social/narrative threshold authority is activated by this PR.
+
+## R-12 — Social Snapshot Provenance
+
+Status: DEFERRED / SOCIAL INPUT NOT ACTIVE.
+
+Social acquisition remains outside the current authoritative MVP path.
+
+## R-14 — Claim Promotion Provenance
+
+Status: PARTIALLY IMPLEMENTED / FORMAL PROMOTION CONTRACT PENDING.
+
+Research artifacts retain evidence references, but the full explicit claim-promotion
+contract and autonomous-promotion prohibition remain to be formalized.
+
+## Current closure interpretation
+
+No R-01…R-14 item is declared CLOSED solely by this overlay. The distinction between
+implemented code, CI verification, runtime verification, and contract closure is
+intentional.
+
+The architecture remains IMPLEMENTATION FREEZE BLOCKED and V4 production authority
+remains INACTIVE.
