@@ -52,7 +52,7 @@ jobs:
           node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-radar-operational-latest.json','utf8'));if(x.commit!==process.env.GITHUB_SHA||x.state!=='VERIFIED'||x.verification_class!=='E5_RUNTIME'||x.contract_id!=='HAHAWEEK-HFI-RADAR-OPERATIONALIZATION-V0_2'||x.chain_id!==4663||x.source?.external_network!==true||x.source?.external_actions!==false){console.error('A7_RUNTIME_PROVENANCE_INVALID',x);process.exit(1)}"
       - name: Upload operational runtime evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hfi-radar-operational-runtime-evidence-${{ github.sha }}
           path: docs/runtime/hfi-radar-operational-latest.json
