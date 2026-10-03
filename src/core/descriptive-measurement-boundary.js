@@ -32,7 +32,7 @@ function requireString(value, name) {
 function canonicalize(input) {
   requireObject(input, 'input');
   requireString(input.measurement_id, 'measurement_id');
-  requireString(input.measurement_rule_version ?? DESCRIPTIVE_MEASUREMENT_RULE_VERSION, 'measurement_rule_version');
+  requireString(input.measurement_rule_version, 'measurement_rule_version');
   requireString(input.metric_name, 'metric_name');
   requireString(input.unit, 'unit');
   requireString(input.measurement_time, 'measurement_time');
@@ -59,7 +59,7 @@ function canonicalize(input) {
   return {
     schema_version: DESCRIPTIVE_MEASUREMENT_SCHEMA_VERSION,
     measurement_id: input.measurement_id,
-    measurement_rule_version: input.measurement_rule_version ?? DESCRIPTIVE_MEASUREMENT_RULE_VERSION,
+    measurement_rule_version: input.measurement_rule_version,
     metric_name: input.metric_name,
     value: input.value,
     unit: input.unit,
