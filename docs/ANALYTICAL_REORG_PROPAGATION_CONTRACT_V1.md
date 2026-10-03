@@ -1,6 +1,6 @@
 # ANALYTICAL REORG PROPAGATION CONTRACT V1
 
-Status: IMPLEMENTED / VERIFIED — planner and durable lifecycle verified by CI at 33d37dfe57768034c0989e6e30954fb44f3453b3; final cleanup-head CI remains pending
+Status: IMPLEMENTED / VERIFIED / RECONCILED — planner and durable lifecycle verified by current-head CI at b6d6f1fe298ff11c3081c6df083bec7b91cd61a4
 
 ## Purpose
 
