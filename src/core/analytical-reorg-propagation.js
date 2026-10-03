@@ -155,6 +155,5 @@ function createAnalyticalReorgPropagationPlan(input) {
 
 module.exports = {
   LAYERS,
-  DOWNSTREAM,
   createAnalyticalReorgPropagationPlan,
 };
