@@ -758,3 +758,25 @@ Status: IMPLEMENTED; CI and exact-head runtime verification PENDING.
 Residual risk:
 The selected free RPC may still reject valid smaller ranges. The runtime must preserve
 FAIL CLOSED semantics rather than increase budgets indefinitely.
+
+
+## 2026-10-04 Runtime Reconciliation — P2-HFI-OUTCOME-RANGE-010
+
+Status: FIX IMPLEMENTED — exact-head CI and HFI runtime re-verification required.
+
+The exact-head HFI run at `282b9cf6984e0ea1bd66f0a249bfa26877a17ac4` preserved an artifact bound to the exact checked-out commit, but failed at `stage=outcome_logs` with `HFI_LOG_REQUEST_BUDGET_EXCEEDED` after the new global 4096-request budget was exhausted.
+
+Evidence shows the failure is an acquisition/resource-boundary condition, not a formation negative and not an authority mutation. The adaptive helper started outcome acquisition with 100,000-block ranges; repeated provider rejection/splitting can consume the global budget before the seven-day window is covered. Formation acquisition already uses 500-block ranges successfully on the same runtime path.
+
+Correction:
+- outcome log acquisition now starts at 500-block ranges, matching the observed provider-compatible formation range;
+- the one-block adaptive floor and split-depth bound remain intact;
+- the 4096-request / 20-minute fail-closed budget remains intact;
+- budget exhaustion now records request_count and elapsed_ms diagnostics for terminal evidence;
+- no authority, evidence, cursor, checkpoint, or architecture boundary was weakened.
+
+Rationale:
+The correction reduces avoidable failed parent-range attempts while preserving bounded acquisition. It does not increase the resource budget or assume that missing outcome logs imply absence.
+
+Residual risk:
+If the provider rejects 500-block outcome requests or the seven-day event density requires more than the bounded request budget, HFI must remain FAILED/INCONCLUSIVE rather than infer a negative result. A terminal exact-head runtime verification is required before Phase 15 closure.
