@@ -20,6 +20,14 @@ test('historical discovery is bounded to the minimum window needed for seven-day
   assert.match(runtime, /latest-Math\.floor\(bpd\*DISCOVERY_AGE_DAYS\)/);
 });
 
+test('RPC log acquisition has a global runtime and request budget', () => {
+  assert.match(runtime, /MAX_LOG_REQUESTS=4096/);
+  assert.match(runtime, /MAX_RUNTIME_MS=20\*60\*1000/);
+  assert.match(runtime, /HFI_RUNTIME_RESOURCE_TIMEOUT/);
+  assert.match(runtime, /HFI_LOG_REQUEST_BUDGET_EXCEEDED/);
+  assert.match(runtime, /requestCount>=MAX_LOG_REQUESTS/);
+});
+
 test('RPC log acquisition uses bounded adaptive retries and range splitting', () => {
   assert.match(runtime, /while\(attempt<3\)/);
   assert.match(runtime, /const minChunk=1,maxSplitDepth=14/);
