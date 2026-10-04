@@ -1,3 +1,18 @@
+## HFI RUNTIME POST-MERGE RECONCILIATION — 2026-10-04 — VERIFIED / RECONCILED
+
+- Main merge commit: `ea30da0bada75d3aa2b7ff912d893fdf51d979af` (PR #715, `fix(hfi): classify log range failures before recursive splitting`).
+- Root cause corrected: non-range `eth_getLogs` transport/provider failures no longer trigger recursive range splitting; explicit range/result-limit errors retain bounded splitting.
+- Post-merge HAHAWEEK Tests: SUCCESS; Security/Regression: SUCCESS; CodeQL Actions: SUCCESS; CodeQL JavaScript/TypeScript: SUCCESS; A9 Runtime: SUCCESS; HFI-MVP Runtime: SUCCESS; HFI-Radar Operational Runtime: SUCCESS.
+- HFI-MVP E5 runtime artifact: `hfi-mvp-e2e-runtime-evidence-ea30da0bada75d3aa2b7ff912d893fdf51d979af`, artifact ID `11302721388`, SHA-256 `cf43ced32a5c6f4db0ba13fdd37055713e5808333357c8099d0905ff6170971f`.
+- HFI-MVP runtime: state VERIFIED; chain_id 4663; raw/canonical evidence 8,664/8,664; Formation VALID; Validation CONFIRMED; replay equivalent=true; X publication not executed.
+- HFI-Radar E5 operational artifact: `hfi-radar-operational-runtime-evidence-ea30da0bada75d3aa2b7ff912d893fdf51d979af`, artifact ID `11302216576`, SHA-256 `953b33269e46650988f99058b058b06fdf611d20b4d18385c52f786d48005b38`.
+- HFI-Radar runtime: state VERIFIED; chain_id 4663; upstream HFI commit bound to the same merge commit; no-lookahead=true; authoritative_evidence_mutated=false; external_action=false; publication_executed=false; reconciliation_idempotent=true.
+- Historical problem P1-HFI-LOG-RANGE-001 is RESOLVED and regression-tested. The prior 4,096-request budget exhaustion is preserved as historical failure evidence and is not reclassified as a successful runtime.
+- No cursor reset, canonical evidence rewrite/deletion, authority bypass, external action, trading, signing, or publication occurred.
+- **Post-merge HFI runtime status: COMPLETE / VERIFIED / RECONCILED / DOCUMENTED.**
+- **V4 production authority remains INACTIVE.**
+- **Architecture Gate remains BLOCKED by pre-existing contract-closure/lifecycle integration gaps; this runtime fix does not authorize V4 activation or a new architectural phase.**
+
 ## A9 — Continuous Acquisition Runtime — COMPLETE / VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_A9_CONTINUOUS_ACQUISITION_RUNTIME_V0_1.md`.
