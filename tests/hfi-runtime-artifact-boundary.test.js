@@ -17,7 +17,7 @@ test('runtime artifact is commit-bound at startup', () => {
 
 test('runtime log acquisition can adaptively split provider-rejected ranges with a bounded depth', () => {
   assert.match(runtime, /const minChunk=1,maxSplitDepth=14/);
-  assert.match(runtime, /if\(depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
+  assert.match(runtime, /if\(!isRangeLimitError\(last\)\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
 });
 
 test('workflow removes stale artifact before runtime execution', () => {
