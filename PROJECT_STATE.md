@@ -1,3 +1,19 @@
+## SOURCE INDEPENDENCE RUNTIME BOUNDARY — PR #717 — 2026-10-04 — VERIFIED / RECONCILED / DOCUMENTED
+
+- Current exact main merge commit: `3f84e207bd279ac3ee38339e14747cd56947e8e3`.
+- PR #717 head: `55d8b59f91a2abbcf3752ed016ef64bf48fe4fad`; merge tree comparison is empty, confirming the merge commit introduces no tree divergence from the verified PR head.
+- Scope verified: acquisition result ↔ source-registry provenance lineage binding and executable source-independence runtime verification.
+- Runtime/CI verification on PR #717 head: HAHAWEEK Tests SUCCESS (run `37204993205`), Security/Regression SUCCESS (run `37204993213`), A9 Runtime SUCCESS (run `37204993204`), HFI-MVP Runtime SUCCESS (run `37204993219`).
+- Source-independence runtime verifier is wired into the test workflow through `npm run verify:source-independence`.
+- Positive vector verified: two observed acquisitions with distinct source lineages qualify as I3.
+- Negative vector verified: same acquisition lineage is rejected with `INDEPENDENT_SOURCE_THRESHOLD_NOT_MET`.
+- Non-observed acquisition and source-ID mismatch are explicitly rejected by the executable boundary.
+- No V4 authority, cursor, checkpoint, manifest, canonical evidence, formation, validation, publication, trading, signing, or external action was changed by PR #717.
+- **PR #717 STATUS: VERIFIED / RECONCILED / DOCUMENTED.**
+- **V4 production authority remains INACTIVE.**
+- **Architecture Gate remains BLOCKED by pre-existing contract-closure/lifecycle integration gaps.**
+- This entry is reconciliation-only; it does not authorize a new analytical phase or activate production authority.
+
 ## HFI RUNTIME POST-MERGE RECONCILIATION — 2026-10-04 — VERIFIED / RECONCILED
 
 - Main merge commit: `ea30da0bada75d3aa2b7ff912d893fdf51d979af` (PR #715, `fix(hfi): classify log range failures before recursive splitting`).
