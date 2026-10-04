@@ -53,10 +53,10 @@ function makeFence(dir) {
   });
 }
 
-test('STEP 603 fresh database uses schema 8 and lifecycle is append-only', async () => {
+test('STEP 603 fresh database uses schema 9 and lifecycle is append-only', async () => {
   const database = await createDatabase(':memory:');
   try {
-    assert.equal(SCHEMA_VERSION, 8);
+    assert.equal(SCHEMA_VERSION, 9);
     const tables = database.db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='production_authority_lifecycle'");
     assert.equal(tables[0].values.length, 1);
     const triggers = database.db.exec("SELECT name FROM sqlite_master WHERE type='trigger' AND name LIKE 'production_authority_lifecycle_no_%'");
@@ -229,7 +229,7 @@ test('STEP 603 upgrades schema 7 to 8 and survives durable restart', async () =>
   const fence = makeFence(dir);
   fence.acquire();
   try {
-    assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '8');
+    assert.equal(database.db.exec("SELECT value FROM schema_meta WHERE key='schema_version'")[0].values[0][0], '9');
     const authority = establishProductionAuthorityLifecycle({
       database,
       writerFence: fence,

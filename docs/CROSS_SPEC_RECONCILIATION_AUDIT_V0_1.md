@@ -302,3 +302,486 @@ Threat Model attempts to break those assumptions.
 MVP proves one complete chain.
 
 Only after those boundaries are executable should HAHAWEEK expand into Radar or broader intelligence.
+
+---
+
+# 9. RECONCILIATION UPDATE — 2026-10-03
+
+This section is an append-only reconciliation overlay. The original findings above
+remain historical audit evidence and are not rewritten.
+
+## R-01 — Graph Identity
+
+Status: IMPLEMENTED / CI VERIFIED / RUNTIME REBUILD VERIFICATION PENDING.
+
+The repository now contains a dedicated Graph Identity implementation and contract:
+- `src/core/graph-identity.js`
+- `docs/GRAPH_IDENTITY_CONTRACT_V1.md`
+- `tests/graph-identity.test.js`
+
+Node and edge identities use dedicated domains and canonical objects. Graph identity
+does not replace V4 evidence identity.
+
+The PR-head test suite passed the Graph Identity vectors. Full graph rebuild runtime
+equivalence remains an open verification item.
+
+## R-02 / R-13 — Analytical Transition Separation
+
+Status: IMPLEMENTED / CI VERIFIED / SYSTEM-WIDE RUNTIME INTEGRATION PENDING.
+
+The repository now contains:
+- `src/core/analytical-transition.js`
+- `docs/ANALYTICAL_TRANSITION_CONTRACT_V1.md`
+- `tests/analytical-transition.test.js`
+
+Formation, Hypothesis, and Validation have distinct analytical domains and legal
+transition matrices. These transitions are explicitly outside V4 authority.
+
+The implementation is CI-verified on the current PR head. Complete integration of
+transition history across all analytical runtimes remains open.
+
+## R-04 — L4/L5 Boundary
+
+Status: DOCUMENTED / EXECUTABLE VECTOR SET STILL REQUIRED.
+
+The repository contract explicitly separates L4 corroboration from L5
+relation-specific direct cryptographic/direct-control proof. A wallet signature
+does not by itself establish a real-world identity relation.
+
+Executable positive/negative vectors and runtime enforcement remain open.
+
+## R-05 — Source Independence
+
+Status: DOCUMENTED / EXECUTABLE ENFORCEMENT STILL REQUIRED.
+
+The source-independence contract defines source lineage and I0-I4 classes and
+explicitly prevents URL count, reposts, mirrors, aggregators, or acquisition count
+from being treated as independent evidence.
+
+Executable enforcement vectors remain open.
+
+## R-06 — Single-RPC Omission Limitation
+
+Status: ACCEPTED LIMITATION / FORMAL EXECUTION CONTRACT STILL OPEN.
+
+The current design does not claim cross-provider censorship/omission detection from
+a single RPC provider. This remains an explicit limitation.
+
+## R-07 — V4 Authority Activation
+
+Status: IMPLEMENTED CONTRACT / LIFECYCLE INTEGRATION PENDING / PRODUCTION INACTIVE.
+
+The repository contains `src/core/authority-activation-state.js`,
+`docs/AUTHORITY_ACTIVATION_STATE_MACHINE_V1.md`, and executable negative tests
+for the activation sequence IMPLEMENTED → VERIFIED → AUTHORIZED → ACTIVE.
+
+This contract is not yet integrated into the existing production authority lifecycle.
+V4 production authority therefore remains INACTIVE.
+
+## R-08 — Acquisition Completeness
+
+Status: IMPLEMENTED CONTRACT / ACQUISITION RUNTIME INTEGRATION PENDING.
+
+The repository contains `src/acquisition/completeness.js`,
+`docs/ACQUISITION_COMPLETENESS_CONTRACT_V1.md`, and negative tests ensuring
+PARTIAL/FAILED/UNKNOWN/EXPIRED cannot become negative absence evidence.
+
+Integration with the acquisition runtime remains open.
+
+## R-09 — Validation Vocabulary
+
+Status: IMPLEMENTED / CI VERIFIED / STATE-MACHINE INTEGRATION PENDING.
+
+Validation v2 now has an authoritative result vocabulary:
+CONFIRMED, REJECTED, UNKNOWN, INCONCLUSIVE.
+
+Criterion statuses remain PASS, FAIL, UNKNOWN, INCONCLUSIVE and do not replace the
+authoritative validation result. CI on the current PR head verifies these semantics.
+
+The remaining work is integration with the broader Formation/Hypothesis/Validation
+transition lifecycle.
+
+## R-10 — Descriptive Measurement Boundary
+
+Status: DOCUMENTED / FORMAL CONTRACT CLOSURE PENDING.
+
+Current implementation does not introduce an overall predictive score or BUY/SELL
+ranking. A formal executable measurement-boundary contract remains open.
+
+## R-11 — Threshold Versioning
+
+Status: DEFERRED / SOCIAL-NARRATIVE SCOPE NOT ACTIVE.
+
+No new social/narrative threshold authority is activated by this PR.
+
+## R-12 — Social Snapshot Provenance
+
+Status: DEFERRED / SOCIAL INPUT NOT ACTIVE.
+
+Social acquisition remains outside the current authoritative MVP path.
+
+## R-14 — Claim Promotion Provenance
+
+Status: PARTIALLY IMPLEMENTED / FORMAL PROMOTION CONTRACT PENDING.
+
+Research artifacts retain evidence references, but the full explicit claim-promotion
+contract and autonomous-promotion prohibition remain to be formalized.
+
+## Current closure interpretation
+
+No R-01…R-14 item is declared CLOSED solely by this overlay. The distinction between
+implemented code, CI verification, runtime verification, and contract closure is
+intentional.
+
+The architecture remains IMPLEMENTATION FREEZE BLOCKED and V4 production authority
+remains INACTIVE.
+
+
+---
+
+# 10. RECONCILIATION UPDATE — 2026-10-03 — HYPOTHESIS RUNTIME INTEGRATION
+
+The HFI MVP runtime previously executed Formation → Validation → Research → X Content,
+but Hypothesis was not a mandatory executable boundary in the E5 vertical slice.
+
+Correction applied on the active execution branch:
+- E5 runtime now creates a DERIVED Hypothesis only from VALID Formation evidence.
+- Validation is explicitly linked to that Hypothesis through
+  HYPOTHESIS_VALIDATION provenance.
+- Replay recreates the Hypothesis and its Validation linkage and checks deterministic
+  identity equivalence.
+- No V4 cursor, checkpoint, manifest, canonical evidence, or authority state is mutated.
+- The integration test now exercises the same Formation → Hypothesis → Validation
+  boundary.
+
+Status: IMPLEMENTED; runtime verification pending on the new exact commit.
+Residual: analytical transition history is still not a durable system-wide runtime
+chain; this remains separate from the Hypothesis linkage closure.
+
+
+---
+
+# 11. RECONCILIATION UPDATE — 2026-10-03 — CI STALL CONTAINMENT
+
+Problem record: P2-CI-TEST-STALL-001.
+
+The exact PR head `940f6917445c4a767bcb0bd90938c6381bad4a20` entered the
+`HAHAWEEK Tests` workflow at 2026-10-03T11:10:47Z and remained in
+`npm test` for an extended period without a terminal result. The GitHub
+Actions job exposed no live log blob, so the underlying hanging test remains
+UNKNOWN and is not attributed to a specific implementation without evidence.
+
+Containment applied without weakening assertions or bypassing verification:
+- `npm test` now uses Node's `--test-timeout=60000` per-test execution bound.
+- The GitHub test job now has a 20-minute job timeout.
+- Existing test concurrency remains serial (`--test-concurrency=1`).
+- V4 verification and coverage steps remain mandatory after `npm test`.
+- No test was deleted, skipped, weakened, or reclassified.
+- No authority, cursor, checkpoint, manifest, canonical evidence, or frozen
+  architecture semantics were changed.
+
+Rationale: Node.js 20 documents `--test-timeout` as a fail-closed execution
+bound; its default is infinite. This converts an indefinite test stall into a
+diagnosable CI failure while preserving the existing test suite.
+
+Status: CONTAINED; ROOT CAUSE UNKNOWN; NEW EXACT-HEAD VERIFICATION REQUIRED.
+Residual risk: the current in-flight workflow remains unaffected by the new
+configuration; the next exact-head workflow must provide the diagnostic result.
+
+
+---
+
+# 12. RECONCILIATION UPDATE — 2026-10-03 — HFI RUNTIME PR GATE
+
+The HFI-MVP runtime verification workflow previously executed only on pushes to
+`main`. Therefore PR changes to the E5 runtime were covered by unit/integration
+tests but did not receive the dedicated `npm run hfi:runtime` vertical runtime
+gate before merge.
+
+Correction:
+- `.github/workflows/hfi-runtime.yml` now runs for pull requests targeting
+  `main` as well as pushes to `main`.
+- Existing read-only RPC transport, runtime artifact provenance check, artifact
+  retention, and non-zero runtime failure behavior are unchanged.
+- The runtime job remains bounded by its existing 45-minute job timeout.
+- No production authority or canonical evidence behavior was changed.
+
+Status: IMPLEMENTED; EXACT-HEAD HFI-MVP RUNTIME VERIFICATION PENDING.
+
+
+---
+
+# 13. RECONCILIATION UPDATE — 2026-10-03 — E5 VALIDATION TEMPORAL CONTRACT FIX
+
+Problem record: P1-HFI-VALIDATION-TEMPORAL-001.
+
+The first PR-enabled HFI-MVP runtime execution produced a preserved artifact with:
+`stage=hypothesis_validation` and `FORMATION_CUTOFF_REQUIRED`.
+
+Root cause:
+`scripts/hfi-mvp-runtime-verify.js` invoked the already-verified Validation
+V2 boundary without supplying its mandatory `formation_cutoff` and
+`evidence_temporal_context`.
+
+Impact:
+The E5 vertical runtime could not reach Validation, so Hypothesis, Research,
+Report, X Content, publication-readiness, and replay were not runtime-verified.
+No canonical evidence or V4 authority state was mutated.
+
+Correction:
+- Runtime now sets `formation_cutoff=formation.formation_end`.
+- Formation evidence is explicitly assigned the `FORMATION` temporal role.
+- Outcome observations are assigned the `OUTCOME` role.
+- Evidence that legitimately serves both roles is represented with both roles.
+- Validation V2 remains the authority for rejecting future formation evidence.
+- No contract weakening or temporal-boundary bypass was introduced.
+
+Status: FIX IMPLEMENTED; REGRESSION/EXACT-HEAD RUNTIME VERIFICATION PENDING.
+
+
+---
+
+# 14. RECONCILIATION UPDATE — 2026-10-03 — REPLAY TEMPORAL BOUNDARY REGRESSION
+
+Problem record: P1-HFI-VALIDATION-TEMPORAL-002.
+
+Inspection of the corrected E5 runtime found a second call site in the
+replay path that invoked Validation V2 without its mandatory temporal
+boundary.
+
+Root cause:
+The initial temporal-boundary correction covered the primary execution path
+but not the deterministic replay path.
+
+Impact:
+Without correction, primary execution could pass while replay verification
+would fail, violating the E5 replay equivalence requirement.
+
+Correction:
+The replay Validation V2 invocation now supplies:
+- `formation_cutoff`
+- FORMATION temporal context for replay formation evidence
+- OUTCOME temporal context for later outcome observations
+
+Status: FIX IMPLEMENTED; EXACT-HEAD CI/RUNTIME VERIFICATION PENDING.
+
+
+## 2026-10-04 Runtime Reconciliation — P1-HFI-REPLAY-TEMPORAL-003
+
+Status: RESOLVED — implementation corrected; exact-head CI/runtime verification pending.
+
+The HFI-MVP runtime reached the replay stage on the prior exact workflow attempt and failed with REPLAY_NON_EQUIVALENT. The preserved runtime artifact showed the failure was deterministic replay divergence, not RPC unavailability.
+
+Root cause:
+
+- the first swap is legitimately both Formation evidence and an Outcome observation because the seven-day observation window begins at first-swap event time;
+- the primary validation temporal context merged that evidence into roles FORMATION + OUTCOME;
+- the replay path filtered the overlapping observation out of the Outcome temporal context, leaving only FORMATION;
+- VALIDATION_STATE_V2 includes temporal roles in the deterministic validation identity, so the two validation IDs diverged.
+
+Corrective action:
+
+- replay temporal-context construction now preserves overlapping evidence and merges temporal roles deterministically;
+- the integration test now asserts replay validation identity and temporal-context equivalence for overlapping Formation/Outcome evidence.
+
+Impact:
+
+- no canonical evidence was mutated;
+- no V4 authority, cursor, checkpoint, or manifest was advanced;
+- no analytical conclusion was promoted to authority;
+- the failure correctly blocked E5 runtime verification.
+
+Residual verification requirement:
+
+The fix is not considered VERIFIED until the exact new head passes the integration/security/test suites and HFI-MVP runtime reaches VERIFIED with replay equivalence.
+
+
+## 2026-10-04 Runtime Reconciliation — P2-DB-SCHEMA-V9-MIGRATION-004
+
+Status: RESOLVED — migration implementation hardened; exact-head test/runtime verification pending.
+
+The full test suite reproduced a 60-second timeout in `tests/database-schema-v1-recovery.test.js` on two consecutive attempts. The timeout was isolated to the legacy schema v1 migration path after the introduction of schema v9 derived-projection lifecycle storage.
+
+Evidence:
+- main branch previously verified the same migration test through schema v8;
+- PR #711 changed the target schema to v9 and added the v8→v9 lifecycle migration;
+- exact-head Tests failed twice at the same test with `test timed out after 60000ms`;
+- Security/Regression remained successful, so no security-boundary regression was indicated.
+
+Corrective action:
+- preserve schema v9 and its authority model;
+- execute the v8→v9 lifecycle table, indexes, and append-only triggers as separate SQL statements inside the existing transaction instead of one compound DDL string;
+- extend the migration regression test to assert the v9 lifecycle table and both append-only triggers exist after legacy migration.
+
+No legacy evidence is rewritten or deleted. The migration remains transactional and fail-closed.
+
+
+## 2026-10-04 Runtime Reconciliation — P2-HFI-ARTIFACT-PROVENANCE-005
+
+Status: RESOLVED — workflow provenance corrected; exact-head HFI verification pending.
+
+The first PR-enabled HFI runtime run completed successfully but its artifact was bound to the GitHub pull-request merge SHA rather than the PR head SHA. The runtime artifact contained commit 0b2d58f4385bc7262cf66804130ecffac656bb35 while PR #711 HEAD was 877d3d2249624f77f535596c519f0c47ef254fcb.
+
+Root cause:
+- github.sha on pull_request execution identifies the workflow merge ref;
+- checkout also followed the default merge ref;
+- the artifact provenance assertion therefore verified the merge ref rather than the repository head being reconciled.
+
+Correction:
+- PR HFI workflow checkout now explicitly uses github.event.pull_request.head.sha || github.sha;
+- runtime GITHUB_SHA is bound to that same expected commit;
+- artifact provenance verifies against EXPECTED_COMMIT;
+- artifact naming uses the same expected commit.
+
+This preserves push-to-main behavior while making PR runtime evidence explicitly attributable to the PR head.
+
+## 2026-10-04 Runtime Reconciliation — P2-HFI-PROVENANCE-TEST-006
+
+Status: RESOLVED — regression test corrected and exact-head CI re-run.
+
+The provenance correction initially caused the existing hfi-runtime-artifact-boundary.test.js fixture to fail because it still asserted the previous GITHUB_SHA workflow expression.
+
+A first test correction contained a literal newline escape and produced a SyntaxError. This was immediately reproduced by exact-head CI and corrected.
+
+Final test now asserts:
+- artifact comparison uses EXPECTED_COMMIT;
+- PR checkout is explicitly bound to PR head SHA.
+
+No production runtime behavior was weakened. The full test suite, security regression suite, and A9 runtime verification subsequently passed on commit 876fa79d16405307bbc36fedc6e882f28134eb21.
+
+Residual requirement:
+the HFI runtime workflow must reach terminal VERIFIED on the final documented head before Phase 15 can be marked COMPLETE.
+
+
+## 12. RECONCILIATION UPDATE — 2026-10-04 — HFI ARTIFACT COMMIT BINDING
+
+Problem record: P1-HFI-ARTIFACT-COMMIT-BINDING-007.
+
+The exact-head HFI run at repository HEAD `421755aea1082b39221b97754fdc922144b902ca`
+executed the checked-out commit correctly and produced a `VERIFIED` runtime artifact,
+but the artifact recorded merge commit `c7ad11e8c48bde0e6da0440401ff83ce001585b6`.
+The workflow provenance gate therefore rejected the artifact.
+
+Root cause:
+The runtime artifact identity was sourced from `process.env.GITHUB_SHA`, which is
+not a sufficiently strong binding to the actual checked-out repository object for
+this execution path. The runner logs proved the checkout itself was exactly
+`421755aea1082b39221b97754fdc922144b902ca`, while the persisted artifact carried
+the merge SHA.
+
+Impact:
+- HFI evidence execution itself reached `VERIFIED`.
+- Artifact provenance was invalid for exact-head verification.
+- No canonical evidence, V4 authority, cursor, checkpoint, or production state was
+  mutated by this failure.
+- Phase 15 exact-head verification remained BLOCKED.
+
+Correction:
+The runtime now derives artifact commit provenance from the checked-out repository
+using `git rev-parse HEAD`, with the environment value retained only as a fallback
+outside a Git checkout. The regression test requires this binding and the workflow
+continues to independently compare the artifact commit with the expected PR head.
+
+Verification required:
+The correction is implemented on the active branch and must pass:
+- repository test suite;
+- Security/Regression;
+- A9 Runtime Verification;
+- exact-head HFI runtime;
+- artifact provenance check with artifact.commit equal to the checked-out HEAD.
+
+Status: IMPLEMENTED; exact-head runtime re-verification PENDING.
+
+Residual risk:
+Until the corrected exact-head HFI run reaches terminal VERIFIED with matching artifact
+commit, Phase 15, Architecture Gate, and production activation remain BLOCKED.
+
+
+## 13. RECONCILIATION UPDATE — 2026-10-04 — HFI RPC RANGE ADAPTATION
+
+Problem record: P2-HFI-RPC-RANGE-008.
+
+The corrected provenance run at `104f59f3dceedd1d7f6f8c10c6745c3daacdb41f`
+successfully verified artifact provenance, but the HFI runtime failed during
+Formation acquisition. The configured RPC returned an external range-limit error
+for a 500-block `eth_getLogs` request.
+
+Root cause:
+The HFI log helper used `minChunk=1000` while the Formation caller intentionally
+requested 500-block ranges. When the provider rejected a 500-block range, the
+adaptive splitter treated that range as already below its split floor and failed
+immediately. The provider's error text was itself inconsistent with the actual
+500-block request ("ranges over 10000 blocks"), so the runtime must respond to the
+observed RPC rejection rather than assume the provider's stated threshold.
+
+Impact:
+- canonical evidence was not produced for this candidate in the failed run;
+- no V4 authority or cursor mutation occurred;
+- the failure is classified as an acquisition/runtime dependency boundary issue,
+  not evidence of absence or a formation negative;
+- exact-head HFI remained BLOCKED.
+
+Correction:
+The log helper now permits adaptive splitting down to a one-block floor with a
+bounded maximum split depth of 14. A regression vector asserts the bounded
+adaptive-splitting guard. This preserves fail-closed behavior while allowing
+free-tier/provider range constraints to be handled without unbounded recursion.
+
+Status: IMPLEMENTED; exact-head runtime re-verification PENDING.
+
+Residual risk:
+The RPC remains an external dependency. If the provider rejects even one-block
+requests, or imposes another unsupported constraint, HFI must remain FAILED rather
+than invent or infer evidence.
+
+
+## 14. RECONCILIATION UPDATE — 2026-10-04 — HFI GLOBAL ACQUISITION RESOURCE BUDGET
+
+Problem record: P2-HFI-RESOURCE-BOUND-009.
+
+The HFI adaptive log splitter was bounded by retry count and split depth, but had no
+global acquisition request or execution budget. A provider rejection on large outcome
+ranges could therefore expand into a very large bounded-but-operationally-unacceptable
+request tree.
+
+Correction:
+- MAX_LOG_REQUESTS = 4096 across each log acquisition operation;
+- MAX_RUNTIME_MS = 20 minutes per log acquisition operation;
+- every provider request checks the budget before execution;
+- budget exhaustion fails closed with explicit error codes.
+
+This does not convert incomplete acquisition into negative evidence. It produces an
+explicit runtime failure that remains external-dependency/resource-boundary evidence.
+
+Status: IMPLEMENTED; CI and exact-head runtime verification PENDING.
+
+Residual risk:
+The selected free RPC may still reject valid smaller ranges. The runtime must preserve
+FAIL CLOSED semantics rather than increase budgets indefinitely.
+
+
+## 2026-10-04 Runtime Reconciliation — P2-HFI-OUTCOME-RANGE-010
+
+Status: FIX IMPLEMENTED — exact-head CI and HFI runtime re-verification required.
+
+The exact-head HFI run at `282b9cf6984e0ea1bd66f0a249bfa26877a17ac4` preserved an artifact bound to the exact checked-out commit, but failed at `stage=outcome_logs` with `HFI_LOG_REQUEST_BUDGET_EXCEEDED` after the new global 4096-request budget was exhausted.
+
+Evidence shows the failure is an acquisition/resource-boundary condition, not a formation negative and not an authority mutation. The adaptive helper started outcome acquisition with 100,000-block ranges; repeated provider rejection/splitting can consume the global budget before the seven-day window is covered. Formation acquisition already uses 500-block ranges successfully on the same runtime path.
+
+Correction:
+- outcome log acquisition now starts at 10,000-block ranges, matching the provider's documented range boundary while retaining adaptive splitting for smaller provider limits;
+- the one-block adaptive floor and split-depth bound remain intact;
+- the 4096-request / 20-minute fail-closed budget remains intact;
+- budget exhaustion now records request_count and elapsed_ms diagnostics for terminal evidence;
+- no authority, evidence, cursor, checkpoint, or architecture boundary was weakened.
+
+Rationale:
+The correction reduces avoidable failed parent-range attempts while preserving bounded acquisition. It does not increase the resource budget or assume that missing outcome logs imply absence.
+
+Residual risk:
+If the provider rejects 10,000-block outcome requests or the seven-day event density requires more than the bounded request budget, HFI must remain FAILED/INCONCLUSIVE rather than infer a negative result. A terminal exact-head runtime verification is required before Phase 15 closure.
+
+
+## Runtime E5 resource-boundary reconciliation — 2026-10-04
+
+The HFI seven-day outcome scan runs on Robinhood Chain at approximately 100 ms/block, so a seven-day window spans roughly 6 million blocks. The previous 10,000-block initial chunk caused hundreds of bounded RPC calls and exhausted the 20-minute runtime budget before validation. The runtime now uses a 10,000-block initial chunk with adaptive recursive splitting, request-count and wall-clock budgets unchanged, and bounded concurrency increased to 16 workers after the 100,000-block experiment was shown to trigger excessive recursive splitting. This is an execution optimization only; it does not remove fail-closed behavior or convert incomplete acquisition into negative evidence. OrdoFi documents eth_getLogs ranges above 10,000 blocks as supported, with higher request-unit cost.

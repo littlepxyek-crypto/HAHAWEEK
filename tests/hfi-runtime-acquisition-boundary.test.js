@@ -20,18 +20,27 @@ test('historical discovery is bounded to the minimum window needed for seven-day
   assert.match(runtime, /latest-Math\.floor\(bpd\*DISCOVERY_AGE_DAYS\)/);
 });
 
+test('RPC log acquisition has a global runtime and request budget', () => {
+  assert.match(runtime, /MAX_LOG_REQUESTS=4096/);
+  assert.match(runtime, /MAX_RUNTIME_MS=20\*60\*1000/);
+  assert.match(runtime, /HFI_RUNTIME_RESOURCE_TIMEOUT/);
+  assert.match(runtime, /HFI_LOG_REQUEST_BUDGET_EXCEEDED/);
+  assert.match(runtime, /requestCount>=MAX_LOG_REQUESTS/);
+});
+
 test('RPC log acquisition uses bounded adaptive retries and range splitting', () => {
   assert.match(runtime, /while\(attempt<3\)/);
-  assert.match(runtime, /if\(e-n\+1<=minChunk\)throw last/);
+  assert.match(runtime, /const minChunk=1,maxSplitDepth=14/);
+  assert.match(runtime, /if\(depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
   assert.match(runtime, /fetchRange\(n,mid/);
   assert.match(runtime, /fetchRange\(mid\+1,e/);
 });
 
 
-test('runtime uses large adaptive outcome ranges and bounded acquisition concurrency', () => {
+test('runtime uses provider-supported bounded outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
-  assert.match(runtime, /TARGET_OUTCOME_CHUNK=100000/);
-  assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
+  assert.match(runtime, /TARGET_OUTCOME_CHUNK=10000/);
+  assert.match(runtime, /TARGET_LOG_CONCURRENCY=16/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
 
@@ -96,4 +105,12 @@ test('runtime preserves a terminal state when CI cancellation sends SIGTERM', ()
 
 test('HFI runtime has a bounded completion window suitable for historical E5', () => {
   assert.match(workflow, /timeout-minutes: 45/);
+});
+
+
+test('resource-budget failures retain request and elapsed diagnostics', () => {
+  assert.match(runtime, /e\.request_count=requestCount/);
+  assert.match(runtime, /e\.elapsed_ms=Date\.now\(\)-startedAt/);
+  assert.match(runtime, /request_count=\$\{e\.request_count\}/);
+  assert.match(runtime, /elapsed_ms=\$\{e\.elapsed_ms\}/);
 });

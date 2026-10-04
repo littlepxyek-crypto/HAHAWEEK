@@ -2,6 +2,8 @@ name: HAHAWEEK HFI-MVP Runtime Verification
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
 permissions:
   contents: read
 jobs:
@@ -12,6 +14,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -21,9 +24,8 @@ jobs:
         continue-on-error: true
         env:
           RPC_URL: https://rpc.ordofi.network
-          # Read-only E5 transport fallback; runtime code never calls eth_sendRawTransaction.
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           RPC_TIMEOUT_MS: 30000
-          # Candidate hint only; every formation/outcome event is re-verified from Robinhood RPC.
           HFI_POOL_ID: "0xf399bd1544377680d48c62fd85c2105b869e55906c4189cc5ab3b4e83446928c"
           HFI_POOL_INIT_BLOCK: "59281988"
         run: |
@@ -36,15 +38,15 @@ jobs:
       - name: Verify runtime artifact provenance
         if: always()
         env:
-          GITHUB_SHA: ${{ github.sha }}
+          EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           test -f docs/runtime/hfi-mvp-e2e-latest.json
-          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-mvp-e2e-latest.json','utf8'));if(x.commit!==process.env.GITHUB_SHA){console.error('RUNTIME_ARTIFACT_COMMIT_MISMATCH',x.commit,process.env.GITHUB_SHA);process.exit(1)}"
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-mvp-e2e-latest.json','utf8'));if(x.commit!==process.env.EXPECTED_COMMIT){console.error('RUNTIME_ARTIFACT_COMMIT_MISMATCH',x.commit,process.env.EXPECTED_COMMIT);process.exit(1)}"
       - name: Upload HFI-MVP runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hfi-mvp-e2e-runtime-evidence-${{ github.sha }}
+          name: hfi-mvp-e2e-runtime-evidence-${{ github.event.pull_request.head.sha || github.sha }}
           path: docs/runtime/hfi-mvp-e2e-latest.json
           if-no-files-found: error
           retention-days: 90

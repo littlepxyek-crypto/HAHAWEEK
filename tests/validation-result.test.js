@@ -26,6 +26,8 @@ function input(overrides = {}) {
     outcome_rule_version: outcome.outcome_rule_version,
     formation,
     outcome,
+    formation_cutoff: '2026-10-03T00:00:00.000Z',
+    evidence_temporal_context: [{ evidence_id: 'ei:future-1', event_time: '2026-10-02T23:00:00.000Z', role: 'FORMATION' }],
     criteria_results: [
       {
         criterion_id: 'C1',
@@ -49,6 +51,11 @@ test('creates deterministic CONFIRMED validation', () => {
 
 test('a failed criterion produces REJECTED', () => {
   const result = createValidationResult(input({
+    outcome: {
+      ...input().outcome,
+      evidence_ids: ['ei:future-2'],
+    },
+    evidence_temporal_context: [{ evidence_id: 'ei:future-2', event_time: '2026-10-02T23:00:00.000Z', role: 'FORMATION' }],
     criteria_results: [{
       criterion_id: 'C1',
       status: 'FAIL',
@@ -56,6 +63,16 @@ test('a failed criterion produces REJECTED', () => {
     }],
   }));
   assert.equal(result.result, 'REJECTED');
+});
+
+test('unknown coverage produces UNKNOWN', () => {
+  const result = createValidationResult(input({
+    outcome: {
+      ...input().outcome,
+      coverage_status: 'UNKNOWN',
+    },
+  }));
+  assert.equal(result.result, 'UNKNOWN');
 });
 
 test('incomplete historical coverage produces INCONCLUSIVE', () => {
@@ -73,7 +90,9 @@ test('partial coverage cannot be silently rejected by a failed criterion', () =>
     outcome: {
       ...input().outcome,
       coverage_status: 'PARTIAL',
+      evidence_ids: ['ei:partial'],
     },
+    evidence_temporal_context: [{ evidence_id: 'ei:partial', event_time: '2026-10-02T23:00:00.000Z', role: 'FORMATION' }],
     criteria_results: [{
       criterion_id: 'C1',
       status: 'FAIL',
@@ -81,6 +100,15 @@ test('partial coverage cannot be silently rejected by a failed criterion', () =>
     }],
   }));
   assert.equal(result.result, 'INCONCLUSIVE');
+});
+
+test('future evidence relative to formation cutoff is rejected', () => {
+  assert.throws(
+    () => createValidationResult(input({
+      evidence_temporal_context: [{ evidence_id: 'ei:future-1', event_time: '2026-10-04T00:00:00.000Z', role: 'FORMATION' }],
+    })),
+    /FUTURE_EVIDENCE_RELATIVE_TO_FORMATION_CUTOFF/
+  );
 });
 
 test('an inconclusive criterion produces INCONCLUSIVE', () => {
@@ -106,5 +134,43 @@ test('formation and outcome identity mismatches are rejected', () => {
       formation_rule_version: 'pool-bootstrap-v2',
     })),
     /FORMATION_RULE_VERSION_MISMATCH/
+  );
+});
+
+
+test('post-formation outcome evidence is allowed only as OUTCOME evidence', () => {
+  const result = createValidationResult(input({
+    outcome: {
+      ...input().outcome,
+      evidence_ids: ['ei:outcome-1'],
+    },
+    evidence_temporal_context: [{
+      evidence_id: 'ei:outcome-1',
+      event_time: '2026-10-04T00:00:00.000Z',
+      role: 'OUTCOME',
+    }],
+    criteria_results: [{
+      criterion_id: 'C1',
+      status: 'PASS',
+      evidence_ids: ['ei:outcome-1'],
+    }],
+  }));
+  assert.equal(result.result, 'CONFIRMED');
+});
+
+test('formation evidence cannot be represented only as OUTCOME evidence', () => {
+  assert.throws(
+    () => createValidationResult(input({
+      formation: {
+        ...input().formation,
+        evidence_ids: ['ei:future-1'],
+      },
+      evidence_temporal_context: [{
+        evidence_id: 'ei:future-1',
+        event_time: '2026-10-02T23:00:00.000Z',
+        role: 'OUTCOME',
+      }],
+    })),
+    /FORMATION_EVIDENCE_ROLE_REQUIRED/
   );
 });

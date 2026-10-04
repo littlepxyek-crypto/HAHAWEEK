@@ -7,6 +7,7 @@ const { detectPoolBootstrapFromDecodedEvents } = require('../src/core/hfi-format
 const { createHistoricalOutcome } = require('../src/core/historical-outcome');
 const { createLiquiditySurvivalCriterion } = require('../src/core/liquidity-survival');
 const { createValidationBoundary } = require('../src/core/validation-boundary');
+const { createHypothesis, linkValidationToHypothesis } = require('../src/core/formation-hypothesis-validation');
 const { createResearchReport } = require('../src/core/research-report');
 const { createXContentProjection } = require('../src/core/x-content-projection');
 const {
@@ -52,6 +53,32 @@ function decodedEvents() {
   ];
 }
 
+function temporalContext(formation, outcome) {
+  const byId = new Map(
+    formation.evidence_ids.map((evidence_id) => [
+      evidence_id,
+      {
+        evidence_id,
+        event_time: decodedEvents().find((event) => event.identity === evidence_id).event_time,
+        roles: ['FORMATION'],
+      },
+    ])
+  );
+  for (const observation of outcome.observations) {
+    const existing = byId.get(observation.evidence_id);
+    if (existing) {
+      existing.roles = [...new Set([...existing.roles, 'OUTCOME'])];
+    } else {
+      byId.set(observation.evidence_id, {
+        evidence_id: observation.evidence_id,
+        event_time: observation.event_time,
+        roles: ['OUTCOME'],
+      });
+    }
+  }
+  return [...byId.values()];
+}
+
 function outcomeFor(formation) {
   return createHistoricalOutcome({
     formation_id: formation.formation_id,
@@ -90,11 +117,50 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
   const validation = createValidationBoundary({
     formation,
     outcome,
+    formation_cutoff: FORMATION_END,
+    evidence_temporal_context: temporalContext(formation, outcome),
     criteria_results: [criterion],
     uncertainties: [],
   });
 
   assert.equal(validation.result, 'CONFIRMED');
+
+  const replayFormation = detectPoolBootstrapFromDecodedEvents(decodedEvents()).formation;
+  const replayOutcome = outcomeFor(replayFormation);
+  const replayCriterion = createLiquiditySurvivalCriterion({
+    formation_id: replayFormation.formation_id,
+    pool_id: replayFormation.pool_id,
+    reference_evidence_id: 'ei:first-swap',
+    reference_liquidity: '100',
+    window_start: FORMATION_END,
+    window_end: WINDOW_END,
+    outcome: replayOutcome,
+  });
+  const replayValidation = createValidationBoundary({
+    formation: replayFormation,
+    outcome: replayOutcome,
+    formation_cutoff: FORMATION_END,
+    evidence_temporal_context: temporalContext(replayFormation, replayOutcome),
+    criteria_results: [replayCriterion],
+    uncertainties: [],
+  });
+  assert.equal(validation.validation_id, replayValidation.validation_id);
+  assert.deepEqual(validation.evidence_temporal_context, replayValidation.evidence_temporal_context);
+
+  const hypothesis = createHypothesis({
+    formation_id: formation.formation_id,
+    formation_state: formation.state,
+    statement: 'Observed active liquidity survives the configured seven-day validation window.',
+    evidence_ids: [...new Set([...formation.evidence_ids, ...criterion.evidence_ids])],
+    temporal_context: { formation_cutoff: formation.formation_end, validation_window_end: outcome.observation_end },
+    processing_context_id: 'test:hfi-mvp',
+    provenance: { formation_id: formation.formation_id, validation_rule_version: validation.validation_rule_version },
+  });
+  const hypothesisValidation = linkValidationToHypothesis({ hypothesis, validation });
+  assert.equal(hypothesis.authority, 'DERIVED');
+  assert.equal(hypothesisValidation.authority, 'DERIVED');
+  assert.equal(hypothesisValidation.hypothesis_id, hypothesis.hypothesis_id);
+  assert.equal(hypothesisValidation.validation_id, validation.validation_id);
 
   const reportInput = {
     formation,
