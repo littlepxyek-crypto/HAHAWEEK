@@ -117,7 +117,7 @@ function createFinding(input) {
   const allowed = evidenceSet(input.admission);
   assertEvidenceRefs(evidenceRefs, allowed);
   object(input.temporal_scope, 'temporal_scope');
-  string(input.temporal_scope.as_of, 'temporal_scope.as_of');
+  if (input.temporal_scope.as_of !== null) timestamp(input.temporal_scope.as_of, 'temporal_scope.as_of');
   if (input.temporal_scope.observed_from !== null) timestamp(input.temporal_scope.observed_from, 'temporal_scope.observed_from');
   if (input.temporal_scope.observed_to !== null) timestamp(input.temporal_scope.observed_to, 'temporal_scope.observed_to');
   string(input.rule_version, 'rule_version');
