@@ -35,4 +35,32 @@ function assertIndependentEvidence(lines, minimumClass='I3') {
   }
   throw new Error('INDEPENDENT_SOURCE_THRESHOLD_NOT_MET');
 }
-module.exports={CONTRACT_VERSION,CLASSES,classifySourceRelationship,assertIndependentEvidence};
+
+function createAcquisitionEvidenceLine({ acquisitionResult, source: sourceDefinition }) {
+  object(acquisitionResult, 'acquisition_result');
+  object(sourceDefinition, 'source');
+  if (acquisitionResult.status !== 'OBSERVED') {
+    throw new Error('SOURCE_INDEPENDENCE_ACQUISITION_NOT_OBSERVED');
+  }
+  if (acquisitionResult.source_id !== sourceDefinition.source_id) {
+    throw new Error('SOURCE_INDEPENDENCE_SOURCE_ID_MISMATCH');
+  }
+  const provenance = sourceDefinition.provenance;
+  object(provenance, 'source_provenance');
+  const line = {
+    source_id: acquisitionResult.source_id,
+    source_lineage_id: provenance.source_lineage_id,
+    acquisition_id: acquisitionResult.acquisition_id,
+    independence_class: provenance.independence_class,
+    direct_independence_proof: provenance.direct_independence_proof === true,
+  };
+  source(line, 0);
+  return Object.freeze({
+    ...line,
+    independence_class: line.independence_class || 'I0',
+    content_hash: acquisitionResult.content_hash,
+    observed_at: acquisitionResult.completed_at,
+  });
+}
+
+module.exports={CONTRACT_VERSION,CLASSES,classifySourceRelationship,assertIndependentEvidence,createAcquisitionEvidenceLine};

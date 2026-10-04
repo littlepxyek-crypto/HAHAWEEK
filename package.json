@@ -16,7 +16,8 @@
     "verify:v4": "node scripts/verify-golden-vectors.js",
     "verify:v4:coverage": "node scripts/verify-golden-vector-coverage.js",
     "hfi:runtime": "node scripts/hfi-mvp-runtime-verify.js",
-    "hfi:radar:runtime": "node scripts/hfi-radar-operational-runtime-verify.js"
+    "hfi:radar:runtime": "node scripts/hfi-radar-operational-runtime-verify.js",
+    "verify:source-independence": "node scripts/source-independence-runtime-verify.js"
   },
   "repository": {
     "type": "git",
