@@ -7,10 +7,10 @@ Status: IMPLEMENTED / VERIFICATION PENDING
 This reconciliation covers the current-main reconciliation PR #719.
 
 Base current main:
-`ea30da0bada75d3aa2b7ff912d893fdf51d979af`
+`3f84e207bd279ac3ee38339e14747cd56947e8e3`
 
 Current reconciliation head:
-`00ac47c2d4864f403815c6b83f7d606678fa52e6`
+`58d1a9de9ae9382aaec183ac015ef2199fa02cc8`
 
 PR #714 is historical and superseded. Its stale-branch HFI-MVP runtime failure remains preserved as historical failure evidence and is not used as evidence for the current-main behavioral utility.
 
@@ -125,7 +125,7 @@ Security/Regression:
 VERIFIED on current-main CI
 
 Runtime:
-PENDING / IN_PROGRESS for the HFI-MVP workflow; this workflow is separate from utility-level tests
+FAILED on HFI-MVP run #143 (`37207882783`) with preserved E5 runtime evidence; failure is `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs` after 2,078 requests / 1,200,391 ms. This is not utility-level test failure and does not authorize merge
 
 Documentation:
 RECONCILED
