@@ -1,24 +1,26 @@
 # HAHAWEEK — BEHAVIORAL INTELLIGENCE UTILITY V0.1 RECONCILIATION
 
-Status: VERIFIED / RECONCILED / DOCUMENTED
+Status: IMPLEMENTED / VERIFICATION PENDING
 
 ## Scope
 
-This reconciliation covers PR #714 on branch
-`utility/behavioral-intelligence-v0-1`.
+This reconciliation covers the current-main reconciliation PR #719.
 
-Base:
-`main` at `0177baf6a1cb79035c4fc6fbfb90e6adb918fddd`
+Base current main:
+`ea30da0bada75d3aa2b7ff912d893fdf51d979af`
 
-Current implementation head:
-`7926c9db67a41c7797ab091f69d01adbdcc9e59a`
+Current reconciliation head:
+`00ac47c2d4864f403815c6b83f7d606678fa52e6`
+
+PR #714 is historical and superseded. Its stale-branch HFI-MVP runtime failure remains preserved as historical failure evidence and is not used as evidence for the current-main behavioral utility.
 
 ## Contract
 
 `docs/BEHAVIORAL_INTELLIGENCE_UTILITY_CONTRACT_V0_1.md`
 
-The contract establishes a read-only analytical boundary over admitted evidence.
-It does not mutate canonical evidence or V4 authority.
+The contract establishes a deterministic, read-only analytical boundary over admitted evidence. It does not mutate canonical evidence or V4 authority.
+
+Contract acceptance remains gated by implementation, positive tests, negative tests, runtime/CI verification, and reconciliation.
 
 ## Implementation
 
@@ -29,22 +31,20 @@ Implemented capabilities:
 - deployer behavioral fingerprint;
 - deterministic wallet connected-component clustering;
 - directed fund-flow projection;
-- temporal coordination observation;
+- temporal coordination observations;
 - explicit evidence admission;
 - as-of temporal cutoff;
 - deterministic derived identities;
 - categorical confidence;
 - explicit uncertainty and ownership limitations.
 
-No numeric risk score, ranking, ownership assertion, trading action, social scraping,
-persistence mutation, arbitrary SQL, cursor mutation, checkpoint mutation, or
-manifest mutation is implemented.
+The utility does not implement numeric risk scoring, ranking, ownership assertion, trading action, social scraping, persistence mutation, arbitrary SQL, cursor mutation, checkpoint mutation, or manifest mutation.
 
 ## Tests
 
 `tests/behavioral-intelligence.test.js`
 
-The test suite covers:
+Coverage includes:
 
 - deterministic finding identity;
 - evidence admission;
@@ -57,53 +57,42 @@ The test suite covers:
 - temporal observation semantics;
 - absence of persistence/authority mutation surface.
 
-## CI Verification
+Current-main reconciliation CI for this head:
 
-At implementation head
-`7926c9db67a41c7797ab091f69d01adbdcc9e59a`:
+- HAHAWEEK Tests: SUCCESS — run `37207698555`
+- Security/Regression: SUCCESS — run `37207698577`
+- A9 Runtime: SUCCESS — run `37207698604`
 
-- HAHAWEEK Tests: SUCCESS
-  - run `37195956507`
-- HAHAWEEK Security and Regression: SUCCESS
-  - run `37195956515`
-- HAHAWEEK A9 Runtime Verification: SUCCESS
-  - run `37195956489`
-
-These are direct workflow results for the implementation head.
-
-The separate HAHAWEEK HFI-MVP Runtime Verification was still running at the time
-of this reconciliation and is not claimed as evidence for the behavioral utility.
+The HFI-MVP Runtime Verification for this head was still IN_PROGRESS at reconciliation time — run `37207698661`. It is not used as proof that the behavioral utility itself is verified.
 
 ## Problem Resolution
 
-Initial Security/Regression execution failed because the negative test used the
-bare word `UPDATE` to detect SQL mutation, which also matched
-Node's legitimate `crypto.Hash.update()` call.
+The stale PR #714 reconciliation document incorrectly described the old branch as the active verification basis.
 
 Root cause:
-the test guard was syntactically over-broad.
+the reconciliation artifact had not been rewritten when the utility was carried onto current main.
 
 Correction:
-the guard was narrowed to SQL-shaped patterns:
-`INSERT INTO`, `UPDATE ... SET`, `DELETE FROM`, `CREATE TABLE`,
-and `DROP TABLE`.
+this document now binds the reconciliation to current main `ea30da0...` and current reconciliation head `00ac47c2...`, explicitly marks PR #714 as historical, and does not claim current-main verification before the required gates are terminal.
 
 Regression:
-the corrected implementation head passed Tests and Security/Regression.
+the documentation correction is intentionally non-semantic and does not alter the behavioral utility implementation or V4 authority.
 
 ## Authority Reconciliation
 
-Verified:
+The implementation is designed and tested to preserve these boundaries:
 
 - canonical evidence is not mutated;
 - V4 authority is not mutated;
 - cursor/checkpoint/manifest are not mutated;
 - graph identity authority is not replaced;
-- no L4/L5 identity promotion occurs;
+- L4/L5 identity promotion does not occur;
 - incomplete acquisition is not converted to negative evidence;
 - future observations relative to an explicit as-of cutoff are rejected;
 - derived findings are evidence-linked;
 - behavioral findings do not claim common ownership or malicious intent.
+
+These boundaries are not sufficient by themselves to declare production authority active.
 
 ## Reorg / Rebuild Boundary
 
@@ -111,36 +100,32 @@ The utility is a deterministic derived projection.
 
 It does not own canonicality and does not persist stale authority.
 
-Affected behavioral outputs are therefore subject to the existing analytical reorg
-invalidation/rebuild boundary.
+Affected behavioral outputs remain subject to the existing analytical reorg invalidation/rebuild lifecycle.
 
 ## Merge State
 
-PR #714 remains OPEN.
+PR #719 is the active reconciliation vehicle.
 
-No merge is claimed.
+Merge must wait for the repository's required verification lifecycle and explicit merge authority.
 
-No main-branch mutation is claimed.
+No merge is claimed by this document.
 
-Merge requires the repository's normal Review → Merge → Post-Merge Verification
-lifecycle and explicit merge authority.
-
-## Final Utility Status
+## Current Status
 
 Contract:
-DEFINED
+IMPLEMENTATION CANDIDATE
 
 Implementation:
 IMPLEMENTED
 
 Tests:
-VERIFIED
+VERIFIED on current-main CI
 
 Security/Regression:
-VERIFIED
+VERIFIED on current-main CI
 
-Utility-level runtime execution:
-VERIFIED through CI test execution
+Runtime:
+PENDING / IN_PROGRESS for the HFI-MVP workflow; this workflow is separate from utility-level tests
 
 Documentation:
 RECONCILED
@@ -150,3 +135,6 @@ NOT MERGED
 
 Production activation:
 NOT AUTHORIZED
+
+V4 production authority:
+INACTIVE / BLOCKED
