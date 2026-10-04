@@ -26,7 +26,9 @@ async function logs(p,f,a,b,s=10000){
 const minChunk=1,maxSplitDepth=14,concurrency=TARGET_LOG_CONCURRENCY;const startedAt=Date.now();let requestCount=0;const budgetCheck=()=>{if(Date.now()-startedAt>MAX_RUNTIME_MS){const e=new Error('HFI_RUNTIME_RESOURCE_TIMEOUT');e.code='HFI_RUNTIME_RESOURCE_TIMEOUT';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}if(requestCount>=MAX_LOG_REQUESTS){const e=new Error('HFI_LOG_REQUEST_BUDGET_EXCEEDED');e.code='HFI_LOG_REQUEST_BUDGET_EXCEEDED';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}};
 const ranges=[];for(let n=a;n<=b;n+=s)ranges.push([n,Math.min(b,n+s-1)]);
 async function fetchRange(n,e,depth=0){let attempt=0,last;
-while(attempt<3){budgetCheck();requestCount++;try{return await p.getLogs({...f,fromBlock:n,toBlock:e})}catch(x){last=x;attempt++;await new Promise(r=>setTimeout(r,Math.min(10000,250*2**(attempt-1))))}}
+while(attempt<3){budgetCheck();requestCount++;try{return await p.getLogs({...f,fromBlock:n,toBlock:e})}catch(x){last=x;attempt++;
+if(depth<maxSplitDepth&&e-n+1>minChunk)break;
+await new Promise(r=>setTimeout(r,Math.min(10000,250*2**(attempt-1))))}}
 if(depth>=maxSplitDepth||e-n+1<=minChunk)throw last;
 const mid=Math.floor((n+e)/2);return (await Promise.all([fetchRange(n,mid,depth+1),fetchRange(mid+1,e,depth+1)])).flat();}
 const out=[];let cursor=0;
