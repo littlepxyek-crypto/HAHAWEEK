@@ -36,16 +36,16 @@ function assertIndependentEvidence(lines, minimumClass='I3') {
   throw new Error('INDEPENDENT_SOURCE_THRESHOLD_NOT_MET');
 }
 
-function createAcquisitionEvidenceLine({ acquisitionResult, source }) {
+function createAcquisitionEvidenceLine({ acquisitionResult, source: sourceDefinition }) {
   object(acquisitionResult, 'acquisition_result');
-  object(source, 'source');
+  object(sourceDefinition, 'source');
   if (acquisitionResult.status !== 'OBSERVED') {
     throw new Error('SOURCE_INDEPENDENCE_ACQUISITION_NOT_OBSERVED');
   }
-  if (acquisitionResult.source_id !== source.source_id) {
+  if (acquisitionResult.source_id !== sourceDefinition.source_id) {
     throw new Error('SOURCE_INDEPENDENCE_SOURCE_ID_MISMATCH');
   }
-  const provenance = source.provenance;
+  const provenance = sourceDefinition.provenance;
   object(provenance, 'source_provenance');
   const line = {
     source_id: acquisitionResult.source_id,
