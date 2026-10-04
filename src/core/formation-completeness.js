@@ -22,7 +22,18 @@ function assertEvents(events) {
     if (typeof event.evidence_id !== 'string' || !event.evidence_id) {
       throw new Error('EVIDENCE_ID_REQUIRED');
     }
+    if (!Number.isSafeInteger(event.block_number) || event.block_number < 0 ||
+        !Number.isSafeInteger(event.transaction_index) || event.transaction_index < 0 ||
+        !Number.isSafeInteger(event.log_index) || event.log_index < 0) {
+      throw new Error('EVENT_ORDER_REQUIRED');
+    }
   }
+}
+
+function compareOrder(a, b) {
+  if (a.block_number !== b.block_number) return a.block_number - b.block_number;
+  if (a.transaction_index !== b.transaction_index) return a.transaction_index - b.transaction_index;
+  return a.log_index - b.log_index;
 }
 
 function classifyFormationCompleteness({ events, acquisition_status = 'COMPLETE', contradictory = false } = {}) {
@@ -40,9 +51,10 @@ function classifyFormationCompleteness({ events, acquisition_status = 'COMPLETE'
   const types = new Set(events.map((event) => event.event_type));
   if (types.size === 0) return Object.freeze({ state: 'OBSERVED', reason: 'NO_FORMATION_EVENTS' });
 
-  const created = events.find((event) => event.event_type === 'POOL_CREATED');
-  const liquidity = events.find((event) => event.event_type === 'LIQUIDITY_ADDED');
-  const swap = events.find((event) => event.event_type === 'FIRST_SWAP' || event.event_type === 'SWAP');
+  const ordered = [...events].sort(compareOrder);
+  const created = ordered.find((event) => event.event_type === 'POOL_CREATED');
+  const liquidity = ordered.find((event) => event.event_type === 'LIQUIDITY_ADDED' && (!created || compareOrder(created, event) <= 0));
+  const swap = ordered.find((event) => (event.event_type === 'FIRST_SWAP' || event.event_type === 'SWAP') && (!liquidity || compareOrder(liquidity, event) <= 0));
 
   if (!created || !liquidity || !swap) {
     if (created && liquidity) return Object.freeze({ state: 'CANDIDATE', reason: 'FIRST_SWAP_MISSING' });
@@ -56,5 +68,6 @@ module.exports = {
   FORMATION_COMPLETENESS_CONTRACT_VERSION,
   REQUIRED_EVENTS,
   STATES,
+  compareOrder,
   classifyFormationCompleteness,
 };

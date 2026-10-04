@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { classifyFormationCompleteness, STATES } = require('../src/core/formation-completeness');
 
-const e=(event_type,evidence_id)=>({event_type,evidence_id});
+const e=(event_type,evidence_id,block_number)=>({event_type,evidence_id,block_number,transaction_index:0,log_index:block_number});
 
 test('formation completeness reaches VALID only with the complete bootstrap sequence',()=>{
   const result=classifyFormationCompleteness({
@@ -44,4 +44,12 @@ test('contradictory evidence is INCONCLUSIVE',()=>{
 
 test('invalid acquisition status fails closed',()=>{
   assert.throws(()=>classifyFormationCompleteness({events:[],acquisition_status:'FALSE'}),/ACQUISITION_STATUS_INVALID/);
+});
+
+test('out-of-order evidence cannot become VALID',()=>{
+  const result=classifyFormationCompleteness({
+    events:[e('FIRST_SWAP','e3',1),e('LIQUIDITY_ADDED','e2',2),e('POOL_CREATED','e1',3)],
+    acquisition_status:'COMPLETE',
+  });
+  assert.notEqual(result.state,'VALID');
 });
