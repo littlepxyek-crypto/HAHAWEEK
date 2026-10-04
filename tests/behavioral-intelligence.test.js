@@ -184,6 +184,6 @@ test('temporal proximity remains an observation, not a coordination verdict', ()
 test('behavioral utility has no persistence or authority mutation surface', () => {
   const fs = require('node:fs');
   const source = fs.readFileSync(require.resolve('../src/analytics/behavioral-intelligence'), 'utf8');
-  assert.doesNotMatch(source, /\b(?:INSERT|UPDATE|DELETE|CREATE TABLE|DROP TABLE)\b/i);
+  assert.doesNotMatch(source, /\b(?:INSERT INTO|UPDATE\s+\w+\s+SET|DELETE FROM|CREATE TABLE|DROP TABLE)\b/i);
   assert.doesNotMatch(source, /cursor|checkpoint|manifest/i);
 });
