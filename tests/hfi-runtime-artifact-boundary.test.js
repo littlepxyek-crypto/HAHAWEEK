@@ -8,7 +8,9 @@ const runtime = fs.readFileSync('scripts/hfi-mvp-runtime-verify.js', 'utf8');
 const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
 test('runtime artifact is commit-bound at startup', () => {
-  assert.match(runtime, /const runtimeCommit=\(\)=>/);\n  assert.match(runtime, /commit:runtimeCommit\(\)/);\n  assert.match(runtime, /execFileSync\('git',\['rev-parse','HEAD'\]/);
+  assert.match(runtime, /const runtimeCommit=\(\)=>/);
+  assert.match(runtime, /commit:runtimeCommit\(\)/);
+  assert.match(runtime, /execFileSync\('git',\['rev-parse','HEAD'\]/);
   assert.match(runtime, /runtimeBase\('RUNNING'\)/);
   assert.match(runtime, /persist\(initialBase\)/);
 });
