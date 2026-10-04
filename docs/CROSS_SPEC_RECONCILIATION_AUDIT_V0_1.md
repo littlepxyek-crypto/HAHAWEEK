@@ -614,3 +614,40 @@ Corrective action:
 - extend the migration regression test to assert the v9 lifecycle table and both append-only triggers exist after legacy migration.
 
 No legacy evidence is rewritten or deleted. The migration remains transactional and fail-closed.
+
+
+## 2026-10-04 Runtime Reconciliation — P2-HFI-ARTIFACT-PROVENANCE-005
+
+Status: RESOLVED — workflow provenance corrected; exact-head HFI verification pending.
+
+The first PR-enabled HFI runtime run completed successfully but its artifact was bound to the GitHub pull-request merge SHA rather than the PR head SHA. The runtime artifact contained commit 0b2d58f4385bc7262cf66804130ecffac656bb35 while PR #711 HEAD was 877d3d2249624f77f535596c519f0c47ef254fcb.
+
+Root cause:
+- github.sha on pull_request execution identifies the workflow merge ref;
+- checkout also followed the default merge ref;
+- the artifact provenance assertion therefore verified the merge ref rather than the repository head being reconciled.
+
+Correction:
+- PR HFI workflow checkout now explicitly uses github.event.pull_request.head.sha || github.sha;
+- runtime GITHUB_SHA is bound to that same expected commit;
+- artifact provenance verifies against EXPECTED_COMMIT;
+- artifact naming uses the same expected commit.
+
+This preserves push-to-main behavior while making PR runtime evidence explicitly attributable to the PR head.
+
+## 2026-10-04 Runtime Reconciliation — P2-HFI-PROVENANCE-TEST-006
+
+Status: RESOLVED — regression test corrected and exact-head CI re-run.
+
+The provenance correction initially caused the existing hfi-runtime-artifact-boundary.test.js fixture to fail because it still asserted the previous GITHUB_SHA workflow expression.
+
+A first test correction contained a literal newline escape and produced a SyntaxError. This was immediately reproduced by exact-head CI and corrected.
+
+Final test now asserts:
+- artifact comparison uses EXPECTED_COMMIT;
+- PR checkout is explicitly bound to PR head SHA.
+
+No production runtime behavior was weakened. The full test suite, security regression suite, and A9 runtime verification subsequently passed on commit 876fa79d16405307bbc36fedc6e882f28134eb21.
+
+Residual requirement:
+the HFI runtime workflow must reach terminal VERIFIED on the final documented head before Phase 15 can be marked COMPLETE.
