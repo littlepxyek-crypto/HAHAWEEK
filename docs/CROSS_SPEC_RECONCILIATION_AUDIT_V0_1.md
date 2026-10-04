@@ -733,3 +733,28 @@ Residual risk:
 The RPC remains an external dependency. If the provider rejects even one-block
 requests, or imposes another unsupported constraint, HFI must remain FAILED rather
 than invent or infer evidence.
+
+
+## 14. RECONCILIATION UPDATE — 2026-10-04 — HFI GLOBAL ACQUISITION RESOURCE BUDGET
+
+Problem record: P2-HFI-RESOURCE-BOUND-009.
+
+The HFI adaptive log splitter was bounded by retry count and split depth, but had no
+global acquisition request or execution budget. A provider rejection on large outcome
+ranges could therefore expand into a very large bounded-but-operationally-unacceptable
+request tree.
+
+Correction:
+- MAX_LOG_REQUESTS = 4096 across each log acquisition operation;
+- MAX_RUNTIME_MS = 20 minutes per log acquisition operation;
+- every provider request checks the budget before execution;
+- budget exhaustion fails closed with explicit error codes.
+
+This does not convert incomplete acquisition into negative evidence. It produces an
+explicit runtime failure that remains external-dependency/resource-boundary evidence.
+
+Status: IMPLEMENTED; CI and exact-head runtime verification PENDING.
+
+Residual risk:
+The selected free RPC may still reject valid smaller ranges. The runtime must preserve
+FAIL CLOSED semantics rather than increase budgets indefinitely.
