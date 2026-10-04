@@ -4,8 +4,8 @@
 - PR #717 exact-head verification: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
 - The earlier `ea30da0...` HFI post-merge snapshot remains historical evidence below; it is not the current main commit.
 - Current-main HFI-MVP E5 has no commit-associated workflow result exposed by the repository workflow-run API at reconciliation time; therefore no current-main E5 result is asserted here.
-- PR #719 behavioral-intelligence reconciliation remains OPEN and NOT MERGED. Its HFI-MVP run #143 produced preserved E5 failure evidence: `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs`, 2,078 requests, 1,200,391 ms; this is not current-main runtime evidence and is not promoted to a HAHAWEEK logic failure without further RCA.
-- PR #720 contract-status reconciliation remains OPEN and NOT MERGED. Its HFI-MVP run #144 was still IN_PROGRESS at the latest repository inspection; no terminal result is asserted.
+- PR #719 behavioral-intelligence reconciliation remains OPEN and NOT MERGED. Its latest HFI-MVP run #145 produced preserved E5 failure evidence: `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs`, 3,482 requests, 1,200,384 ms; this is not current-main runtime evidence and is not promoted to a HAHAWEEK logic failure without further RCA.
+- PR #720 contract-status reconciliation remains OPEN and NOT MERGED. Its HFI-MVP run #144 terminalized FAILED with preserved E5 failure evidence: `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs`, 3,900 requests, 1,201,707 ms; this is not current-main runtime evidence.
 - V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED pending contract/lifecycle closure.
 - This section is additive reconciliation only; historical project-state entries are preserved unchanged.
 
