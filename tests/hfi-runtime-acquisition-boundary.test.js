@@ -37,9 +37,9 @@ test('RPC log acquisition uses bounded adaptive retries and range splitting', ()
 });
 
 
-test('runtime uses large adaptive outcome ranges and bounded acquisition concurrency', () => {
+test('runtime uses provider-compatible bounded outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
-  assert.match(runtime, /TARGET_OUTCOME_CHUNK=100000/);
+  assert.match(runtime, /TARGET_OUTCOME_CHUNK=500/);
   assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
@@ -105,4 +105,12 @@ test('runtime preserves a terminal state when CI cancellation sends SIGTERM', ()
 
 test('HFI runtime has a bounded completion window suitable for historical E5', () => {
   assert.match(workflow, /timeout-minutes: 45/);
+});
+
+
+test('resource-budget failures retain request and elapsed diagnostics', () => {
+  assert.match(runtime, /e\.request_count=requestCount/);
+  assert.match(runtime, /e\.elapsed_ms=Date\.now\(\)-startedAt/);
+  assert.match(runtime, /request_count=\$\{e\.request_count\}/);
+  assert.match(runtime, /elapsed_ms=\$\{e\.elapsed_ms\}/);
 });
