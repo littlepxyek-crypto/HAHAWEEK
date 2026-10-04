@@ -1,3 +1,14 @@
+## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
+
+- Current main commit: `3f84e207bd279ac3ee38339e14747cd56947e8e3` (merge PR #717, source-independence runtime boundary).
+- PR #717 exact-head verification: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
+- The earlier `ea30da0...` HFI post-merge snapshot remains historical evidence below; it is not the current main commit.
+- Current-main HFI-MVP E5 has no commit-associated workflow result exposed by the repository workflow-run API at reconciliation time; therefore no current-main E5 result is asserted here.
+- PR #719 behavioral-intelligence reconciliation remains OPEN and NOT MERGED. Its HFI-MVP run #143 produced preserved E5 failure evidence: `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs`, 2,078 requests, 1,200,391 ms; this is not current-main runtime evidence and is not promoted to a HAHAWEEK logic failure without further RCA.
+- PR #720 contract-status reconciliation remains OPEN and NOT MERGED. Its HFI-MVP run #144 was still IN_PROGRESS at the latest repository inspection; no terminal result is asserted.
+- V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED pending contract/lifecycle closure.
+- This section is additive reconciliation only; historical project-state entries are preserved unchanged.
+
 ## HFI RUNTIME POST-MERGE RECONCILIATION — 2026-10-04 — VERIFIED / RECONCILED
 
 - Main merge commit: `ea30da0bada75d3aa2b7ff912d893fdf51d979af` (PR #715, `fix(hfi): classify log range failures before recursive splitting`).
