@@ -114,3 +114,14 @@ test('resource-budget failures retain request and elapsed diagnostics', () => {
   assert.match(runtime, /request_count=\$\{e\.request_count\}/);
   assert.match(runtime, /elapsed_ms=\$\{e\.elapsed_ms\}/);
 });
+
+test('RPC transport failures do not trigger recursive range splitting', () => {
+  assert.match(runtime, /function isRangeLimitError\(error\)/);
+  assert.match(runtime, /if\(!isRangeLimitError\(x\)&&attempt>=3\)throw last/);
+  assert.match(runtime, /if\(!isRangeLimitError\(last\)\|\|depth>=maxSplitDepth/);
+});
+
+test('range splitting is reserved for explicit eth_getLogs range/result-limit failures', () => {
+  assert.match(runtime, /eth_getlogs\|logs\? matched\|too many logs\|too many results\|result\[s\]\? limit/);
+  assert.match(runtime, /exceeds \(\?:the \)\?\(\?:maximum \)\?\(\?:block \)\?range/);
+});
