@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { classifyFormationCompleteness, STATES } = require('../src/core/formation-completeness');
 
-const e=(event_type,evidence_id,block_number)=>({event_type,evidence_id,block_number,transaction_index:0,log_index:block_number});
+const e=(event_type,evidence_id,block_number=0)=>({event_type,evidence_id,block_number,transaction_index:0,log_index:block_number});
 
 test('formation completeness reaches VALID only with the complete bootstrap sequence',()=>{
   const result=classifyFormationCompleteness({
