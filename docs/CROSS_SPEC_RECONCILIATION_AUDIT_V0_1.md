@@ -651,3 +651,47 @@ No production runtime behavior was weakened. The full test suite, security regre
 
 Residual requirement:
 the HFI runtime workflow must reach terminal VERIFIED on the final documented head before Phase 15 can be marked COMPLETE.
+
+
+## 12. RECONCILIATION UPDATE — 2026-10-04 — HFI ARTIFACT COMMIT BINDING
+
+Problem record: P1-HFI-ARTIFACT-COMMIT-BINDING-007.
+
+The exact-head HFI run at repository HEAD `421755aea1082b39221b97754fdc922144b902ca`
+executed the checked-out commit correctly and produced a `VERIFIED` runtime artifact,
+but the artifact recorded merge commit `c7ad11e8c48bde0e6da0440401ff83ce001585b6`.
+The workflow provenance gate therefore rejected the artifact.
+
+Root cause:
+The runtime artifact identity was sourced from `process.env.GITHUB_SHA`, which is
+not a sufficiently strong binding to the actual checked-out repository object for
+this execution path. The runner logs proved the checkout itself was exactly
+`421755aea1082b39221b97754fdc922144b902ca`, while the persisted artifact carried
+the merge SHA.
+
+Impact:
+- HFI evidence execution itself reached `VERIFIED`.
+- Artifact provenance was invalid for exact-head verification.
+- No canonical evidence, V4 authority, cursor, checkpoint, or production state was
+  mutated by this failure.
+- Phase 15 exact-head verification remained BLOCKED.
+
+Correction:
+The runtime now derives artifact commit provenance from the checked-out repository
+using `git rev-parse HEAD`, with the environment value retained only as a fallback
+outside a Git checkout. The regression test requires this binding and the workflow
+continues to independently compare the artifact commit with the expected PR head.
+
+Verification required:
+The correction is implemented on the active branch and must pass:
+- repository test suite;
+- Security/Regression;
+- A9 Runtime Verification;
+- exact-head HFI runtime;
+- artifact provenance check with artifact.commit equal to the checked-out HEAD.
+
+Status: IMPLEMENTED; exact-head runtime re-verification PENDING.
+
+Residual risk:
+Until the corrected exact-head HFI run reaches terminal VERIFIED with matching artifact
+commit, Phase 15, Architecture Gate, and production activation remain BLOCKED.
