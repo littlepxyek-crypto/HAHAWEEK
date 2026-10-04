@@ -22,7 +22,7 @@ test('historical discovery is bounded to the minimum window needed for seven-day
 
 test('RPC log acquisition uses bounded adaptive retries and range splitting', () => {
   assert.match(runtime, /while\(attempt<3\)/);
-  assert.match(runtime, /if\(e-n\+1<=minChunk\)throw last/);
+  assert.match(runtime, /const minChunk=1,maxSplitDepth=14/);\n  assert.match(runtime, /if\(depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
   assert.match(runtime, /fetchRange\(n,mid/);
   assert.match(runtime, /fetchRange\(mid\+1,e/);
 });
