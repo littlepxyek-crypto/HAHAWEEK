@@ -695,3 +695,41 @@ Status: IMPLEMENTED; exact-head runtime re-verification PENDING.
 Residual risk:
 Until the corrected exact-head HFI run reaches terminal VERIFIED with matching artifact
 commit, Phase 15, Architecture Gate, and production activation remain BLOCKED.
+
+
+## 13. RECONCILIATION UPDATE — 2026-10-04 — HFI RPC RANGE ADAPTATION
+
+Problem record: P2-HFI-RPC-RANGE-008.
+
+The corrected provenance run at `104f59f3dceedd1d7f6f8c10c6745c3daacdb41f`
+successfully verified artifact provenance, but the HFI runtime failed during
+Formation acquisition. The configured RPC returned an external range-limit error
+for a 500-block `eth_getLogs` request.
+
+Root cause:
+The HFI log helper used `minChunk=1000` while the Formation caller intentionally
+requested 500-block ranges. When the provider rejected a 500-block range, the
+adaptive splitter treated that range as already below its split floor and failed
+immediately. The provider's error text was itself inconsistent with the actual
+500-block request ("ranges over 10000 blocks"), so the runtime must respond to the
+observed RPC rejection rather than assume the provider's stated threshold.
+
+Impact:
+- canonical evidence was not produced for this candidate in the failed run;
+- no V4 authority or cursor mutation occurred;
+- the failure is classified as an acquisition/runtime dependency boundary issue,
+  not evidence of absence or a formation negative;
+- exact-head HFI remained BLOCKED.
+
+Correction:
+The log helper now permits adaptive splitting down to a one-block floor with a
+bounded maximum split depth of 14. A regression vector asserts the bounded
+adaptive-splitting guard. This preserves fail-closed behavior while allowing
+free-tier/provider range constraints to be handled without unbounded recursion.
+
+Status: IMPLEMENTED; exact-head runtime re-verification PENDING.
+
+Residual risk:
+The RPC remains an external dependency. If the provider rejects even one-block
+requests, or imposes another unsupported constraint, HFI must remain FAILED rather
+than invent or infer evidence.
