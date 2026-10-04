@@ -780,3 +780,8 @@ The correction reduces avoidable failed parent-range attempts while preserving b
 
 Residual risk:
 If the provider rejects 10,000-block outcome requests or the seven-day event density requires more than the bounded request budget, HFI must remain FAILED/INCONCLUSIVE rather than infer a negative result. A terminal exact-head runtime verification is required before Phase 15 closure.
+
+
+## Runtime E5 resource-boundary reconciliation — 2026-10-04
+
+The HFI seven-day outcome scan runs on Robinhood Chain at approximately 100 ms/block, so a seven-day window spans roughly 6 million blocks. The previous 10,000-block initial chunk caused hundreds of bounded RPC calls and exhausted the 20-minute runtime budget before validation. The runtime now uses a 100,000-block initial chunk with adaptive recursive splitting, request-count and wall-clock budgets unchanged, and bounded concurrency. This is an execution optimization only; it does not remove fail-closed behavior or convert incomplete acquisition into negative evidence. OrdoFi documents eth_getLogs ranges above 10,000 blocks as supported, with higher request-unit cost.
