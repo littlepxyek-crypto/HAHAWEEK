@@ -17,6 +17,7 @@ const {createEvidenceGraph}=require('../src/core/evidence-graph');
 const {createHypothesis,linkValidationToHypothesis}=require('../src/core/formation-hypothesis-validation');
 const {domainSeparatedHash}=require('../src/reference/v4/hash');
 const OUT='docs/runtime/hfi-mvp-e2e-latest.json',RPC=process.env.RPC_URL||'https://rpc.mainnet.chain.robinhood.com',MAXC=8,MAXS=10000,DISCOVERY_AGE_DAYS=10,DISCOVERY_LOOKBACK_DAYS=30,TARGET_POOL_ID=(process.env.HFI_POOL_ID||'').toLowerCase(),TARGET_POOL_INIT_BLOCK=process.env.HFI_POOL_INIT_BLOCK?Number(process.env.HFI_POOL_INIT_BLOCK):null,TARGET_FORMATION_CHUNK=500,TARGET_OUTCOME_CHUNK=100000,TARGET_BATCH_MAX=25,TARGET_BLOCK_BATCH_CONCURRENCY=8,TARGET_LOG_CONCURRENCY=4;
+const runtimeCommit=()=>{try{return require('node:child_process').execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()}catch{return process.env.GITHUB_SHA||'UNKNOWN'}};
 const makeProvider=()=>{const r=new ethers.FetchRequest(RPC);r.timeout=30000;return new ethers.JsonRpcProvider(r,ethers.Network.from({name:'robinhood-mainnet',chainId:CHAIN_ID}),{batchMaxCount:TARGET_POOL_ID?TARGET_BATCH_MAX:1})};
 const ord=(a,b)=>a.blockNumber-b.blockNumber||(a.transactionIndex??0)-(b.transactionIndex??0)||(a.logIndex??a.index??0)-(b.logIndex??b.index??0);
 const raw=l=>{const x={chain_id:CHAIN_ID,block_number:l.blockNumber,transaction_hash:l.transactionHash.toLowerCase(),block_hash:l.blockHash?.toLowerCase()??null,transaction_index:l.transactionIndex??null,log_index:l.index??l.logIndex??0,address:l.address.toLowerCase(),topics:l.topics.map(x=>x.toLowerCase()),data:l.data,captured_at:new Date().toISOString()};return {...x,event_id:'raw:v1:'+rawEventDigest(x)}};
@@ -34,7 +35,7 @@ return out.sort((x,y)=>(x.blockNumber??0)-(y.blockNumber??0)||(x.transactionInde
 function persist(base){fslib.mkdirSync(path.dirname(OUT),{recursive:true});fslib.writeFileSync(OUT,JSON.stringify(base,null,2)+'\n')}
 function errorText(e){const v=[e?.shortMessage,e?.message,e?.code,e?.error?.shortMessage,e?.error?.message,e?.info?.error?.message,e?.cause?.message];if(e?.errors?.length)v.push(...e.errors.flatMap(x=>[x?.shortMessage,x?.message,x?.code]));return [...new Set(v.filter(Boolean).map(String))].join(' | ')||String(e)}
 async function targetedFormationLogs(p,poolId,start,end){const out=[];for(let n=start;n<=end;n+=TARGET_FORMATION_CHUNK){const e=Math.min(end,n+TARGET_FORMATION_CHUNK-1);out.push(...await logs(p,{address:POOL_MANAGER,topics:[[LIQ,SWAP],poolId]},n,e,TARGET_FORMATION_CHUNK))}return out}
-function runtimeBase(state){return {verification_class:'E5_RUNTIME',contract_id:'HFI-MVP-E2E-V0_1',commit:process.env.GITHUB_SHA||'UNKNOWN',chain_id:CHAIN_ID,rpc_url:RPC,state,started_at:new Date().toISOString()}}
+function runtimeBase(state){return {verification_class:'E5_RUNTIME',contract_id:'HFI-MVP-E2E-V0_1',commit:runtimeCommit(),chain_id:CHAIN_ID,rpc_url:RPC,state,started_at:new Date().toISOString()}}
 function fail(base,error){base.state='FAILED';base.completed_at=new Date().toISOString();base.failure={code:'RUNTIME_VERIFICATION_FAILURE',message:String(error?.message||error),candidate_results:base.candidate_results||[]};persist(base)}
 const initialBase=runtimeBase('RUNNING');
 persist(initialBase);
