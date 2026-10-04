@@ -30,7 +30,7 @@ test('RPC log acquisition has a global runtime and request budget', () => {
 
 test('RPC log acquisition uses bounded adaptive retries and range splitting', () => {
   assert.match(runtime, /while\(attempt<3\)/);
-  assert.match(runtime, /const minChunk=1,maxSplitDepth=14/);
+  assert.match(runtime, /const minChunk=1000,maxSplitDepth=14/);
   assert.match(runtime, /if\(depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
   assert.match(runtime, /fetchRange\(n,mid/);
   assert.match(runtime, /fetchRange\(mid\+1,e/);
@@ -39,7 +39,7 @@ test('RPC log acquisition uses bounded adaptive retries and range splitting', ()
 
 test('runtime uses provider-supported bounded outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
-  assert.match(runtime, /TARGET_OUTCOME_CHUNK=10000/);
+  assert.match(runtime, /TARGET_OUTCOME_CHUNK=5000/);
   assert.match(runtime, /TARGET_LOG_CONCURRENCY=16/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });

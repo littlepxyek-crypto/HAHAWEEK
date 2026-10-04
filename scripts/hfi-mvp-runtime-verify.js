@@ -17,16 +17,18 @@ const {validateXContentPublicationReadiness}=require('../src/core/x-content-vali
 const {createEvidenceGraph}=require('../src/core/evidence-graph');
 const {createHypothesis,linkValidationToHypothesis}=require('../src/core/formation-hypothesis-validation');
 const {domainSeparatedHash}=require('../src/reference/v4/hash');
-const OUT='docs/runtime/hfi-mvp-e2e-latest.json',RPC=process.env.RPC_URL||'https://rpc.mainnet.chain.robinhood.com',MAXC=8,MAXS=10000,DISCOVERY_AGE_DAYS=10,DISCOVERY_LOOKBACK_DAYS=30,TARGET_POOL_ID=(process.env.HFI_POOL_ID||'').toLowerCase(),TARGET_POOL_INIT_BLOCK=process.env.HFI_POOL_INIT_BLOCK?Number(process.env.HFI_POOL_INIT_BLOCK):null,TARGET_FORMATION_CHUNK=500,TARGET_OUTCOME_CHUNK=10000,TARGET_BATCH_MAX=25,TARGET_BLOCK_BATCH_CONCURRENCY=8,TARGET_LOG_CONCURRENCY=16,MAX_LOG_REQUESTS=4096,MAX_RUNTIME_MS=20*60*1000;
+const OUT='docs/runtime/hfi-mvp-e2e-latest.json',RPC=process.env.RPC_URL||'https://rpc.mainnet.chain.robinhood.com',MAXC=8,MAXS=10000,DISCOVERY_AGE_DAYS=10,DISCOVERY_LOOKBACK_DAYS=30,TARGET_POOL_ID=(process.env.HFI_POOL_ID||'').toLowerCase(),TARGET_POOL_INIT_BLOCK=process.env.HFI_POOL_INIT_BLOCK?Number(process.env.HFI_POOL_INIT_BLOCK):null,TARGET_FORMATION_CHUNK=500,TARGET_OUTCOME_CHUNK=5000,TARGET_BATCH_MAX=25,TARGET_BLOCK_BATCH_CONCURRENCY=8,TARGET_LOG_CONCURRENCY=16,MAX_LOG_REQUESTS=4096,MAX_RUNTIME_MS=20*60*1000;
 const runtimeCommit=()=>{try{return require('node:child_process').execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()}catch{return process.env.GITHUB_SHA||'UNKNOWN'}};
 const makeProvider=()=>{const r=new ethers.FetchRequest(RPC);r.timeout=30000;return new ethers.JsonRpcProvider(r,ethers.Network.from({name:'robinhood-mainnet',chainId:CHAIN_ID}),{batchMaxCount:TARGET_POOL_ID?TARGET_BATCH_MAX:1})};
 const ord=(a,b)=>a.blockNumber-b.blockNumber||(a.transactionIndex??0)-(b.transactionIndex??0)||(a.logIndex??a.index??0)-(b.logIndex??b.index??0);
 const raw=l=>{const x={chain_id:CHAIN_ID,block_number:l.blockNumber,transaction_hash:l.transactionHash.toLowerCase(),block_hash:l.blockHash?.toLowerCase()??null,transaction_index:l.transactionIndex??null,log_index:l.index??l.logIndex??0,address:l.address.toLowerCase(),topics:l.topics.map(x=>x.toLowerCase()),data:l.data,captured_at:new Date().toISOString()};return {...x,event_id:'raw:v1:'+rawEventDigest(x)}};
 async function logs(p,f,a,b,s=10000){
-const minChunk=1,maxSplitDepth=14,concurrency=TARGET_LOG_CONCURRENCY;const startedAt=Date.now();let requestCount=0;const budgetCheck=()=>{if(Date.now()-startedAt>MAX_RUNTIME_MS){const e=new Error('HFI_RUNTIME_RESOURCE_TIMEOUT');e.code='HFI_RUNTIME_RESOURCE_TIMEOUT';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}if(requestCount>=MAX_LOG_REQUESTS){const e=new Error('HFI_LOG_REQUEST_BUDGET_EXCEEDED');e.code='HFI_LOG_REQUEST_BUDGET_EXCEEDED';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}};
+const minChunk=1000,maxSplitDepth=14,concurrency=TARGET_LOG_CONCURRENCY;const startedAt=Date.now();let requestCount=0;const budgetCheck=()=>{if(Date.now()-startedAt>MAX_RUNTIME_MS){const e=new Error('HFI_RUNTIME_RESOURCE_TIMEOUT');e.code='HFI_RUNTIME_RESOURCE_TIMEOUT';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}if(requestCount>=MAX_LOG_REQUESTS){const e=new Error('HFI_LOG_REQUEST_BUDGET_EXCEEDED');e.code='HFI_LOG_REQUEST_BUDGET_EXCEEDED';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}};
 const ranges=[];for(let n=a;n<=b;n+=s)ranges.push([n,Math.min(b,n+s-1)]);
 async function fetchRange(n,e,depth=0){let attempt=0,last;
-while(attempt<3){budgetCheck();requestCount++;try{return await p.getLogs({...f,fromBlock:n,toBlock:e})}catch(x){last=x;attempt++;await new Promise(r=>setTimeout(r,Math.min(10000,250*2**(attempt-1))))}}
+while(attempt<3){budgetCheck();requestCount++;try{return await p.getLogs({...f,fromBlock:n,toBlock:e})}catch(x){last=x;attempt++;
+if(depth<maxSplitDepth&&e-n+1>minChunk)break;
+await new Promise(r=>setTimeout(r,Math.min(10000,250*2**(attempt-1))))}}
 if(depth>=maxSplitDepth||e-n+1<=minChunk)throw last;
 const mid=Math.floor((n+e)/2);return (await Promise.all([fetchRange(n,mid,depth+1),fetchRange(mid+1,e,depth+1)])).flat();}
 const out=[];let cursor=0;
