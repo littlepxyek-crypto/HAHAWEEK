@@ -9,7 +9,7 @@ const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
 test('HFI runtime defaults to the official Robinhood Mainnet RPC', () => {
   assert.match(runtime, /rpc\.mainnet\.chain\.robinhood\.com/);
-  assert.match(workflow, /RPC_URL: https:\/\/rpc\.ordofi\.network/);
+      assert.match(workflow, /RPC_URL: https:\/\/rpc\.ordofi\.network/);
   assert.doesNotMatch(workflow, /PUBLICNODE|API_KEY|api[_-]?key/i);
 });
 
@@ -39,8 +39,8 @@ test('RPC log acquisition uses bounded adaptive retries and range splitting', ()
 
 test('runtime uses provider-supported bounded outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
-  assert.match(runtime, /TARGET_OUTCOME_CHUNK=10000/);
-  assert.match(runtime, /TARGET_LOG_CONCURRENCY=16/);
+    assert.match(runtime, /TARGET_OUTCOME_CHUNK=10000/);
+  assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
 
@@ -122,6 +122,7 @@ test('RPC transport failures do not trigger recursive range splitting', () => {
 });
 
 test('range splitting is reserved for explicit eth_getLogs range/result-limit failures', () => {
-  assert.match(runtime, /eth_getlogs\|logs\? matched\|too many logs\|too many results\|result\[s\]\? limit/);
+  assert.doesNotMatch(runtime, /eth_getlogs\|logs\? matched/);
+  assert.match(runtime, /logs\? matched\|too many logs\|too many results\|result\[s\]\? limit/);
   assert.match(runtime, /exceeds \(\?:the \)\?\(\?:maximum \)\?\(\?:block \)\?range/);
 });
