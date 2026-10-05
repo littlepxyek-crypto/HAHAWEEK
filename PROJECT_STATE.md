@@ -1,6 +1,6 @@
 ## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
 
-- Current main commit: `00a63f957a89e1754fea69f19dc2ab8985430c08` (merge PR #732, official Robinhood Mainnet RPC for HFI runtime verification).
+- Current main commit: `0d4c043bf95657db9a91acb975128626ad990495` (merge PR #733, current-main documentation reconciliation).
 - PR #732 exact-head verification: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
 - HFI-MVP E5 artifact: `hfi-mvp-e2e-runtime-evidence-e0af766c52385c01098d87702aeb1eeb06c2f92b`, artifact ID `11326482273`, digest `sha256:4f0ccf6a2d75ac47b82d9b4e85480fdfc72d88135ab99a6d727b24eea1803e96`.
 - HFI-MVP E5: state VERIFIED; chain_id 4663; official RPC `https://rpc.mainnet.chain.robinhood.com`; raw/canonical 8,664/8,664; Formation VALID; Validation CONFIRMED; replay equivalent=true; X publication_ready=true; no_external_publication=true.
