@@ -122,6 +122,7 @@ test('RPC transport failures do not trigger recursive range splitting', () => {
 });
 
 test('range splitting is reserved for explicit eth_getLogs range/result-limit failures', () => {
-  assert.match(runtime, /eth_getlogs\|logs\? matched\|too many logs\|too many results\|result\[s\]\? limit/);
+  assert.doesNotMatch(runtime, /eth_getlogs\|logs\? matched/);
+  assert.match(runtime, /logs\? matched\|too many logs\|too many results\|result\[s\]\? limit/);
   assert.match(runtime, /exceeds \(\?:the \)\?\(\?:maximum \)\?\(\?:block \)\?range/);
 });
