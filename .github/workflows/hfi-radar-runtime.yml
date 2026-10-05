@@ -13,6 +13,19 @@ on:
       - ".github/workflows/hfi-radar-runtime.yml"
       - "package.json"
       - "package-lock.json"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "src/core/hfi-radar-*.js"
+      - "src/core/intelligence-*.js"
+      - "src/core/validated-radar-record.js"
+      - "src/core/validated-radar-record-integration.js"
+      - "scripts/hfi-mvp-runtime-verify.js"
+      - "scripts/hfi-radar-operational-runtime-verify.js"
+      - "tests/hfi-radar-*.test.js"
+      - ".github/workflows/hfi-radar-runtime.yml"
+      - "package.json"
+      - "package-lock.json"
 permissions:
   contents: read
 jobs:
