@@ -15,6 +15,10 @@ test('runtime artifact is commit-bound at startup', () => {
   assert.match(runtime, /persist\(initialBase\)/);
 });
 
+test('runtime defines analytical transition chain before replay equivalence assertion', () => {
+  assert.match(runtime, /analyticalTransitions=buildAnalyticalTransitionChain\(\{formation,hypothesis,validation\}\)/);
+});
+
 test('runtime preserves stage heartbeat before expensive acquisition so watchdog failures remain diagnosable', () => {
   assert.match(runtime, /function checkpoint\(base,stage,detail=null\)/);
   assert.match(runtime, /initialBase\.stage='startup'/);
