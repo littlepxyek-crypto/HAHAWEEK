@@ -9,7 +9,7 @@ const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
 test('HFI runtime defaults to the official Robinhood Mainnet RPC', () => {
   assert.match(runtime, /rpc\.mainnet\.chain\.robinhood\.com/);
-      assert.match(workflow, /RPC_URL: https:\/\/rpc\.ordofi\.network/);
+  assert.match(workflow, /RPC_URL: https:\/\/rpc\.mainnet\.chain\.robinhood\.com/);
   assert.doesNotMatch(workflow, /PUBLICNODE|API_KEY|api[_-]?key/i);
 });
 
@@ -36,14 +36,12 @@ test('RPC log acquisition uses bounded adaptive retries and range splitting', ()
   assert.match(runtime, /fetchRange\(mid\+1,e/);
 });
 
-
 test('runtime uses provider-supported bounded outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
-    assert.match(runtime, /TARGET_OUTCOME_CHUNK=10000/);
+  assert.match(runtime, /TARGET_OUTCOME_CHUNK=10000/);
   assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
-
 
 test('formation and outcome acquisition retain explicit bounded windows', () => {
   assert.match(runtime, /formationEnd=Math\.min\(latest,il\.blockNumber\+10000\)/);
@@ -96,7 +94,6 @@ test('parallel acquisition is deterministically ordered before downstream interp
   assert.match(runtime, /x\.index\?\?x\.logIndex/);
 });
 
-
 test('runtime preserves a terminal state when CI cancellation sends SIGTERM', () => {
   assert.match(runtime, /process\.on\('SIGTERM'/);
   assert.match(runtime, /state='CANCELLED'/);
@@ -106,7 +103,6 @@ test('runtime preserves a terminal state when CI cancellation sends SIGTERM', ()
 test('HFI runtime has a bounded completion window suitable for historical E5', () => {
   assert.match(workflow, /timeout-minutes: 45/);
 });
-
 
 test('resource-budget failures retain request and elapsed diagnostics', () => {
   assert.match(runtime, /e\.request_count=requestCount/);
