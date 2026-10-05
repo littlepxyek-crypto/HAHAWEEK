@@ -77,3 +77,14 @@ The lifecycle verifies and records derived rebuild completion, but individual pr
 The durable lifecycle is persisted in schema v9. Legacy database migration paths that converge at schema v8 MUST subsequently execute the v8→v9 lifecycle migration exactly once. This preserves historical evidence while ensuring fresh and migrated databases expose the same lifecycle schema.
 
 The migration is additive: it does not rewrite canonical evidence or derived historical records.
+
+
+## Controlled runtime verification boundary — 2026-10-06
+
+A dedicated CI runtime harness is now implemented at `scripts/analytical-reorg-runtime-verify.js` and exposed as `npm run verify:analytical-reorg`.
+
+The harness executes the actual propagation planner and SQLite durable lifecycle against the frozen F-02 golden scenario, verifies that every affected derived projection reaches `REBUILT`, verifies the failure path records `FAILED` rather than silently treating a projection as valid, and checks that canonical evidence and canonical transition row counts are unchanged.
+
+The corresponding GitHub Actions workflow is `.github/workflows/analytical-reorg-runtime.yml` and preserves a runtime artifact at `docs/runtime/analytical-reorg-runtime-latest.json`.
+
+This is **controlled derived-runtime verification**, not a live RPC chain-reorg experiment. `live_rpc_reorg: false` is intentionally explicit. Therefore this closes the durable analytical lifecycle runtime boundary but does not claim full live-network reorg verification.
