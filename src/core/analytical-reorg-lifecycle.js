@@ -146,6 +146,12 @@ function createAnalyticalReorgLifecycle(database, clock = () => new Date().toISO
     const projections = new Map(
       input.plan.affected_projections.map((projection) => [projection.id, projection])
     );
+    for (const projection of input.plan.affected_projections) {
+      validateProjection(projection);
+      if (!Array.isArray(projection.depends_on)) throw new Error('DEPENDENCIES_REQUIRED');
+      const unknownDependency = projection.depends_on.find((id) => !projections.has(id));
+      if (unknownDependency) throw new Error('UNKNOWN_DEPENDENCY:' + unknownDependency);
+    }
 
     database.db.run('BEGIN');
     let committed = false;
