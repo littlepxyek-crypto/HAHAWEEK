@@ -118,6 +118,24 @@ test('failed rebuild remains FAILED and cannot become silently valid', async () 
   });
 });
 
+test('rejects unknown dependencies fail closed before invalidation', async () => {
+  await withDatabase(async (database) => {
+    const lifecycle = createAnalyticalReorgLifecycle(database);
+    const invalidPlan = plan();
+    invalidPlan.affected_projections[1].depends_on = ['missing-projection'];
+    await assert.rejects(
+      lifecycle.applyPlan({
+        reorg_id: 'reorg-unknown-dependency',
+        invalidated_evidence_digest: 'evidence-digest',
+        plan: invalidPlan,
+      }, async () => ({ rebuilt: true })),
+      /UNKNOWN_DEPENDENCY:missing-projection/
+    );
+    const rows = database.db.exec('SELECT COUNT(*) FROM derived_projection_lifecycle');
+    assert.equal(rows[0].values[0][0], 0);
+  });
+});
+
 test('append-only lifecycle rejects UPDATE and DELETE', async () => {
   await withDatabase(async (database) => {
     const lifecycle = createAnalyticalReorgLifecycle(database, () => '2026-10-03T00:02:00.000Z');
