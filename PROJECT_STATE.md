@@ -1,13 +1,13 @@
 ## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
 
-- Current main commit: `3f84e207bd279ac3ee38339e14747cd56947e8e3` (merge PR #717, source-independence runtime boundary).
-- PR #717 exact-head verification: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
-- The earlier `ea30da0...` HFI post-merge snapshot remains historical evidence below; it is not the current main commit.
-- Current-main HFI-MVP E5 has no commit-associated workflow result exposed by the repository workflow-run API at reconciliation time; therefore no current-main E5 result is asserted here.
-- PR #719 behavioral-intelligence reconciliation remains OPEN and NOT MERGED. Its latest HFI-MVP run #145 produced preserved E5 failure evidence: `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs`, 3,482 requests, 1,200,384 ms; this is not current-main runtime evidence and is not promoted to a HAHAWEEK logic failure without further RCA.
-- PR #720 contract-status reconciliation remains OPEN and NOT MERGED. Its HFI-MVP run #144 terminalized FAILED with preserved E5 failure evidence: `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs`, 3,900 requests, 1,201,707 ms; this is not current-main runtime evidence.
-- V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED pending contract/lifecycle closure.
-- This section is additive reconciliation only; historical project-state entries are preserved unchanged.
+- Current main commit: `00a63f957a89e1754fea69f19dc2ab8985430c08` (merge PR #732, official Robinhood Mainnet RPC for HFI runtime verification).
+- PR #732 exact-head verification: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
+- HFI-MVP E5 artifact: `hfi-mvp-e2e-runtime-evidence-e0af766c52385c01098d87702aeb1eeb06c2f92b`, artifact ID `11326482273`, digest `sha256:4f0ccf6a2d75ac47b82d9b4e85480fdfc72d88135ab99a6d727b24eea1803e96`.
+- HFI-MVP E5: state VERIFIED; chain_id 4663; official RPC `https://rpc.mainnet.chain.robinhood.com`; raw/canonical 8,664/8,664; Formation VALID; Validation CONFIRMED; replay equivalent=true; X publication_ready=true; no_external_publication=true.
+- Graph projection is non-authoritative; V4 authority semantics were not changed by PR #732.
+- PR #731 was stale against the pre-#732 baseline and has been closed unmerged; its documentation changes are intentionally recreated from the actual current-main baseline.
+- V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED pending contract/lifecycle closure and exact merge-head observability gaps.
+- Historical project-state entries are preserved below; this reconciliation corrects only current-state wording.
 
 ## HFI RUNTIME POST-MERGE RECONCILIATION — 2026-10-04 — VERIFIED / RECONCILED
 
