@@ -9,7 +9,7 @@ const { createDatabase } = require('../src/core/database');
 const { createAnalyticalReorgPropagationPlan } = require('../src/core/analytical-reorg-propagation');
 const { createAnalyticalReorgLifecycle } = require('../src/core/analytical-reorg-lifecycle');
 
-const COMMIT = process.env.GITHUB_SHA || 'local';
+const COMMIT = process.env.HAHAWEEK_VERIFY_COMMIT || 'local';
 const ARTIFACT = path.join(process.cwd(), 'docs/runtime/analytical-reorg-runtime-latest.json');
 
 function projectionSet() {
