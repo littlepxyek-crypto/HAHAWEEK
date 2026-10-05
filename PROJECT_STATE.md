@@ -1,6 +1,6 @@
 ## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
 
-- Current main commit: `3f84e207bd279ac3ee38339e14747cd56947e8e3` (merge PR #717, source-independence runtime boundary).
+- Current main commit: `a266d5021a16307aef13b9d66cc973c85834cb83` (merge PR #727, documentation reconciliation after verified HFI fix).
 - PR #717 exact-head verification: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
 - The earlier `ea30da0...` HFI post-merge snapshot remains historical evidence below; it is not the current main commit.
 - Current-main HFI-MVP E5 has no commit-associated workflow result exposed by the repository workflow-run API at reconciliation time; therefore no current-main E5 result is asserted here.
