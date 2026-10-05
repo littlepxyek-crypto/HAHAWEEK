@@ -24,7 +24,7 @@ const ord=(a,b)=>a.blockNumber-b.blockNumber||(a.transactionIndex??0)-(b.transac
 const raw=l=>{const x={chain_id:CHAIN_ID,block_number:l.blockNumber,transaction_hash:l.transactionHash.toLowerCase(),block_hash:l.blockHash?.toLowerCase()??null,transaction_index:l.transactionIndex??null,log_index:l.index??l.logIndex??0,address:l.address.toLowerCase(),topics:l.topics.map(x=>x.toLowerCase()),data:l.data,captured_at:new Date().toISOString()};return {...x,event_id:'raw:v1:'+rawEventDigest(x)}};
 function isRangeLimitError(error){
 const text=String([error?.shortMessage,error?.message,error?.error?.message,error?.info?.error?.message,error?.cause?.message].filter(Boolean).join(' ')).toLowerCase();
-return /eth_getlogs|logs? matched|too many logs|too many results|result[s]? limit|exceeds (?:the )?(?:maximum )?(?:block )?range|block range|query range|max(?:imum)? .*range/.test(text);
+return /logs? matched|too many logs|too many results|result[s]? limit|exceeds (?:the )?(?:maximum )?(?:block )?range|block range|query range|max(?:imum)? .*range/.test(text);
 }
 async function logs(p,f,a,b,s=10000){
 const minChunk=1,maxSplitDepth=14,concurrency=TARGET_LOG_CONCURRENCY;const startedAt=Date.now();let requestCount=0;const budgetCheck=()=>{if(Date.now()-startedAt>MAX_RUNTIME_MS){const e=new Error('HFI_RUNTIME_RESOURCE_TIMEOUT');e.code='HFI_RUNTIME_RESOURCE_TIMEOUT';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}if(requestCount>=MAX_LOG_REQUESTS){const e=new Error('HFI_LOG_REQUEST_BUDGET_EXCEEDED');e.code='HFI_LOG_REQUEST_BUDGET_EXCEEDED';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}};
