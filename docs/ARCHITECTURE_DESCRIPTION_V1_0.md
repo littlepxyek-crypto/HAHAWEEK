@@ -860,285 +860,32 @@ An item is CLOSED only when the architecture contract, repository implementation
 
 ## 13.1 Closure classification
 
-Verified at the executable boundary: R-01, R-02, R-04, R-05, R-08, R-09.
+Verified:
+- R-01
+- R-02 primitive (full end-to-end chain pending PR #738)
+- R-04
+- R-05
+- R-08
+- R-09
 
-Conditionally satisfied: R-10.
+Conditionally satisfied:
+- R-10
 
-Deferred with accepted MVP risk: R-03, R-06, R-11, R-12.
+Deferred with accepted risk:
+- R-03
+- R-06
+- R-11
+- R-12
 
-Active blockers: R-07, R-13, R-14, plus deployment/operational verification required by the Deployment Architecture contract.
+Implemented but verification incomplete:
+- R-13 (PR #738 runtime gate pending)
+- R-14 (full EQC→publication provenance chain incomplete)
+
+Blocked:
+- R-07
 
 Therefore:
 
-R-01…R-14 CLOSED = NO.
-
+R-01…R-14 fully closed = NO
+Architecture Gate = BLOCKED
 Implementation Freeze = BLOCKED.
-
-This table is a reconciliation of the repository state at the current-main inspection boundary. It does not activate V4 authority or change the frozen target architecture.
-
----
-# 14. NEW ARCHITECTURE FINDINGS
-
-A-01 — Container View formalization
-Severity: HIGH
-Logical containers exist but ownership/deployment boundaries need explicit contracts.
-
-A-02 — Deployment View
-Severity: HIGH
-Local, CI, free/low-cost, and production deployment models require formalization.
-
-A-03 — EQC bounded-resource enforcement
-Severity: HIGH
-EQC requires bounded queries. Implementation must enforce result, time, depth, and resource bounds.
-
-A-04 — EQC canonicality completeness
-Severity: MEDIUM/HIGH
-Current query surfaces may return explicit UNKNOWN/limitations where canonicality is unavailable. This is preferable to inventing canonicality, but production Agent semantics need a complete contract.
-
-A-05 — EQC historical/as-of semantics
-Severity: HIGH
-Historical reasoning requires explicit as-of boundaries to prevent future leakage.
-
-A-06 — Authority activation state
-Severity: HIGH
-Implemented, verified, authorized, and active must be distinct state values.
-
-A-07 — Analytical reorg propagation
-Severity: HIGH
-Reorg/canonicality changes must have explicit propagation semantics across formation → validation → radar → research.
-
----
-
-# 15. QUALITY ATTRIBUTE REQUIREMENTS
-
-Q-01 Integrity: authoritative evidence must be tamper-evident and reproducible.
-
-Q-02 Provenance: every material claim must be traceable to evidence.
-
-Q-03 Reliability: acquisition failures must not corrupt cursor/checkpoint authority.
-
-Q-04 Recoverability: restart and replay must preserve deterministic state.
-
-Q-05 Security: Agent and external sources cannot cross authority boundaries.
-
-Q-06 Rebuildability: derived projections must be reconstructible.
-
-Q-07 Temporal correctness: no future evidence leakage.
-
-Q-08 Explainability: analytical outputs expose evidence, rule version, limitations, and uncertainty.
-
-Q-09 Vendor neutrality: no model/vendor runtime becomes an authority dependency.
-
-Q-10 Resource boundedness: Agent query surfaces must resist unbounded reads.
-
----
-
-# 16. ARCHITECTURE DECISIONS
-
-AD-01 — Canonical Blueprint remains the product backbone.
-Decision: retain the 19 Sep architecture.
-
-AD-02 — Agent is outside authority.
-Decision: Agent consumes HAHAWEEK through EQC only.
-
-AD-03 — Graph is a projection.
-Decision: graph cannot become evidence source of truth.
-
-AD-04 — Analytical domains are separate.
-Decision: Formation, Hypothesis, and Validation have distinct state semantics.
-
-AD-05 — MVP is a subset.
-Decision: MVP does not redefine canonical architecture.
-
-AD-06 — Social is staged.
-Decision: social/narrative authority is deferred until acquisition/provenance contracts exist.
-
-AD-07 — V4 production authority is gated.
-Decision: implementation presence does not activate authority.
-
-AD-08 — Vendor-neutral Agent runtime.
-Decision: Agent framework/model may change without changing HAHAWEEK authority.
-
-AD-09 — Implementation freeze blocked.
-Decision: R-01…R-14 closure and executable negative vectors are prerequisites.
-
----
-
-# 17. REQUIRED NEXT CONTRACTS
-
-1. GRAPH_IDENTITY_CONTRACT_V1
-2. ANALYTICAL_TRANSITION_CONTRACT_V1
-3. FORMATION_COMPLETENESS_CONTRACT_V1
-4. IDENTITY_L4_L5_EXECUTABLE_VECTOR_SET_V1
-5. SOURCE_INDEPENDENCE_EXECUTION_CONTRACT_V1
-6. AUTHORITY_ACTIVATION_STATE_MACHINE_V1
-7. ACQUISITION_COMPLETENESS_CONTRACT_V1
-8. VALIDATION_STATE_V2
-9. DESCRIPTIVE_MEASUREMENT_BOUNDARY_V1
-10. SOCIAL_SNAPSHOT_PROVENANCE_CONTRACT_V1
-11. FORMATION_HYPOTHESIS_VALIDATION_STATE_MACHINES_V1
-12. CLAIM_PROMOTION_PROVENANCE_CONTRACT_V1
-13. EQC_RESOURCE_BOUNDARY_V1
-14. EQC_AS_OF_TEMPORAL_CONTRACT_V1
-15. ANALYTICAL_REORG_PROPAGATION_CONTRACT_V1
-16. DEPLOYMENT_ARCHITECTURE_V1
-
----
-
-# 18. ARCHITECTURE GATE CRITERIA
-
-The architecture may move from REVIEW BASELINE to ARCHITECTURE FROZEN only when:
-
-- R-01…R-14 have explicit dispositions;
-- all required blockers are CLOSED or formally deferred with accepted risk;
-- no architecture/code contradiction remains for active MVP scope;
-- negative vectors exist for every authority boundary;
-- EQC bounded-resource behavior is executable;
-- temporal/as-of behavior is tested;
-- acquisition completeness semantics are executable;
-- validation state vocabulary is reconciled;
-- claim provenance is traceable;
-- deployment architecture is documented;
-- failure/recovery views cover both evidence and analytical layers;
-- production V4 activation remains explicitly gated.
-
----
-
-# 19. CURRENT ARCHITECTURE REVIEW RESULT
-
-CONTEXT             = PASS WITH OPEN CONTRACTS
-CONTAINER           = PARTIAL PASS
-COMPONENT           = PARTIAL PASS
-RUNTIME             = PASS FOR MVP VERTICAL SLICE
-DATA / EVIDENCE     = STRONG / OPEN R-01,R-05
-AUTHORITY           = STRONG / OPEN R-02,R-07,R-13
-AGENT               = STRONG BOUNDARY / INCOMPLETE SURFACE
-DEPLOYMENT          = OPEN
-FAILURE / RECOVERY  = STRONG V4 / ANALYTICAL OPEN
-
-R-01…R-14           = NOT CLOSED
-IMPLEMENTATION FREEZE = BLOCKED
-FINAL ARCHITECTURE    = NOT DECLARED
-
----
-
-# 20. FINAL ARCHITECTURE PRINCIPLE
-
-> HAHAWEEK owns the evidence and its authority.
->
-> The Evidence Graph connects it.
->
-> Formation interprets what is forming.
->
-> Hypothesis defines what is being tested.
->
-> Validation tests the hypothesis against its declared outcome boundary.
->
-> Radar and Research consume validated analytical state.
->
-> Report preserves research independently of publication.
->
-> X is an input/publication channel, never the source of truth.
->
-> EQC exposes HAHAWEEK state to Agents.
->
-> Agents reason over declared state but cannot rewrite it.
->
-> No derived layer may silently rewrite a lower authority layer.
-
----
-
-## Review conclusion
-
-This document is an Architecture Description V1.0 review baseline, not a final architecture declaration.
-
-The next gate is contract closure, not feature expansion.
-
-No new broad Agent capability, social ingestion, predictive scoring, autonomous publication, or production V4 activation should be treated as architecturally authorized until the closure conditions above are met.
-
----
-
-# 21. RECONCILIATION OVERLAY — 2026-10-03
-
-This append-only overlay records the current implementation state without rewriting
-the historical architecture review sections above.
-
-## Current verified implementation deltas
-
-- Graph Identity: implemented with dedicated node/edge domains; CI vectors pass.
-- Analytical Transition: implemented with separate Formation/Hypothesis/Validation
-  domains and legal transition checks; CI vectors pass.
-- Validation State v2: authoritative result vocabulary and explicit FORMATION/OUTCOME
-  temporal roles are implemented; current PR CI passes the temporal negative vectors.
-- Acquisition Completeness: standalone contract and executable tests are implemented;
-  runtime integration is still pending.
-- Authority Activation State Machine: standalone activation sequence and negative
-  vectors are implemented; integration into the existing production authority
-  lifecycle is still pending.
-- EQC: six read-only operations are implemented and CI-tested; arbitrary SQL and
-  write surfaces are rejected. Canonicality coverage, as-of semantics, and resource
-  bounds remain incomplete.
-- Descriptive Measurement Boundary: standalone contract, implementation, and
-  negative vectors now exist on the follow-up branch; integration into broader
-  analytical consumers remains pending.
-
-## Current authority state
-
-V4 production authority remains INACTIVE. The presence of an activation-state
-contract does not activate production authority.
-
-## Current verification state
-
-The current PR head `325bf88bade6706042f5388090ea3699eaa21168` has terminal-success
-GitHub Actions for Tests, Security/Regression, and A9 Runtime Verification.
-
-The Tests workflow executed:
-- `npm test`: 841 tests, 840 passed, 1 skipped, 0 failed;
-- `npm run verify:v4`: 1 golden vector verified;
-- `npm run verify:v4:coverage`: 4 fixture sets / 10 vectors verified.
-
-Security/Regression executed the test suite with 840 passed, 1 skipped, 0 failed,
-plus `npm audit --audit-level=high` with 0 vulnerabilities and tracked-secret
-baseline passing.
-
-A9 runtime verification succeeded against its explicitly allowlisted
-`https://example.com` target with external network enabled, external actions
-disabled, and publication not executed. This runtime is acquisition-boundary
-verification; it is not evidence of production V4 activation.
-
-## Remaining architecture blockers
-
-- executable L4/L5 vectors;
-- executable source-independence enforcement;
-- R-08 acquisition-completeness runtime integration;
-- full analytical transition-chain integration;
-- EQC bounded-resource contract;
-- EQC historical/as-of contract;
-- analytical reorg propagation;
-- claim-promotion provenance contract;
-- deployment architecture;
-- full system-wide recovery/replay verification beyond existing V4 and MVP slices.
-
-Architecture Gate remains NOT PASSED and implementation freeze remains BLOCKED.
-
----
-
-## Current-head reconciliation — Social Snapshot Provenance V1
-
-The repository now contains an executable Social Snapshot Provenance V1 boundary at src/core/social-snapshot-provenance.js with negative tests at tests/social-snapshot-provenance.test.js.
-
-This boundary records source identity, acquisition identity, publisher, first-seen/capture timestamps, content identity, snapshot identity, digest, derivation method, temporal scope, parent lineage, and origin kind. HAHAWEEK-generated publication observations are explicitly marked as not automatically independent external sources.
-
-This does not activate social ingestion, modify canonical/V4 authority, or promote social content into authoritative evidence. CI and runtime verification remain required before the contract can be marked VERIFIED.
-
----
-
-## Current-head reconciliation — Claim Promotion Provenance V1
-
-The repository now contains an executable Claim Promotion Provenance V1 boundary at src/core/claim-promotion-provenance.js with negative tests at tests/claim-promotion-provenance.test.js.
-
-Claim promotion produces only a DERIVED_RESEARCH_ONLY artifact. It cannot mutate or become canonical evidence, V4 authority, identity authority, publication authority, or an independent source.
-
-Promotion requires the claim to exist in the research report, claim evidence to exist in the report evidence set and provenance reference, and an allowed validation result. INCONCLUSIVE remains INCONCLUSIVE.
-
-CI/runtime verification remains required before the contract is marked VERIFIED.
