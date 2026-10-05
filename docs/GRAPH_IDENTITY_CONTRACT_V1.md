@@ -1,6 +1,6 @@
 # HAHAWEEK — GRAPH IDENTITY CONTRACT v1
 
-Status: IMPLEMENTED / CI VERIFICATION REQUIRED
+Status: VERIFIED / RECONCILED
 
 ## Purpose
 
@@ -76,10 +76,50 @@ without rewriting historical V4 evidence identifiers.
 - rebuild does not mutate authoritative inputs;
 - invalid rebuild inputs fail closed.
 
-## Verification boundary
+## Verification
 
-Positive, negative, determinism, rebuild, and input-mutation vectors are
-implemented in `tests/graph-identity-contract-v1.test.js`.
+Implementation:
 
-CI/runtime verification remains required before this contract is marked
-VERIFIED / RECONCILED.
+- `src/core/evidence-graph.js` exposes the non-persistent
+  `rebuildEvidenceGraph(...)` projection boundary.
+- `tests/graph-identity-contract-v1.test.js` implements positive, negative,
+  determinism, rebuild, projection-order, and input-mutation vectors.
+
+Verified PR head:
+
+- PR #723
+- head `58c4f4339ea02b1240d64cae2333502af9d180a6`
+- merged to main as `47693f9c30a3c0612a9b3035977a034fec4326b2`
+
+CI/runtime evidence on the exact PR head:
+
+- HAHAWEEK Tests: SUCCESS (run 3060)
+- Security and Regression: SUCCESS (run 5298)
+- A9 Runtime Verification: SUCCESS (run 200)
+- HFI-MVP Runtime Verification: SUCCESS (run 149)
+- HFI E5 artifact: `hfi-mvp-e2e-runtime-evidence-58c4f4339ea02b1240d64cae2333502af9d180a6`
+
+HFI E5 verification:
+
+- state: VERIFIED
+- chain_id: 4663
+- formation completeness: VALID / REQUIRED_SEQUENCE_PRESENT
+- formation: VALID
+- outcome coverage: COMPLETE
+- criterion: PASS
+- validation: CONFIRMED
+- raw/canonical evidence: 8664 / 8664
+- replay: equivalent=true
+- publication executed: false
+- V4 production authority: unchanged / INACTIVE
+
+Therefore Graph Identity V1 satisfies the required verification boundary:
+
+CONTRACT
+→ IMPLEMENTATION
+→ TEST
+→ NEGATIVE TEST
+→ RUNTIME VERIFICATION
+→ RECONCILIATION
+
+Graph remains a rebuildable, non-authoritative projection.
