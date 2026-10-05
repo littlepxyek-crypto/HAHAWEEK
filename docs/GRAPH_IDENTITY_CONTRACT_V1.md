@@ -82,7 +82,7 @@ without rewriting historical V4 evidence identifiers.
 - Graph Identity positive, negative, determinism, rebuild, and input-mutation vectors passed on the PR head (HAHAWEEK Tests run #3062 / current graph implementation tree).
 - HFI-MVP E5 runtime was reproduced on exact implementation-equivalent runtime head 2267fa46418fe7c9874a038bcbf91f72a790eea4; run #165 reached VERIFIED on Robinhood Mainnet chain 4663.
 - Runtime evidence: 8,664 raw / 8,664 canonical evidence; Formation VALID; seven-day outcome complete; Validation CONFIRMED; replay equivalent=true; graph projection 25,337 nodes / 34,410 edges; no external publication executed.
-- Current main contains the same bounded HFI runtime implementation as the verified runtime head, with main commit 610a522b03bf0f6ded08a3c6d34806ac0ef8943c.
+- Current main contains the same bounded HFI runtime implementation as the verified runtime head. Current main was subsequently reconciled by PR #727 at merge commit a266d5021a16307aef13b9d66cc973c85834cb83.
 
 ## Verification boundary
 
