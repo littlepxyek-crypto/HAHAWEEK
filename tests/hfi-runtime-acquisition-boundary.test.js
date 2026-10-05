@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 
 const runtime = fs.readFileSync('scripts/hfi-mvp-runtime-verify.js', 'utf8');
+const helper = fs.readFileSync('src/core/hfi-targeted-formation-acquisition.js', 'utf8');
 const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
 test('HFI runtime defaults to the official Robinhood Mainnet RPC', () => {
@@ -57,11 +58,14 @@ test('runtime supports an explicit candidate hint without treating it as evidenc
   assert.match(workflow, /HFI_POOL_INIT_BLOCK:/);
 });
 
-test('targeted formation acquisition chunks below the public RPC range limit', () => {
+test('targeted formation acquisition chunks below the public RPC range limit and stops after the required sequence', () => {
   assert.match(runtime, /TARGET_FORMATION_CHUNK=500/);
-  assert.match(runtime, /async function targetedFormationLogs/);
-  assert.match(runtime, /n\+=TARGET_FORMATION_CHUNK/);
+  assert.match(runtime, /collectUntilFormationSequence/);
   assert.match(runtime, /TARGET_POOL_ID\?await targetedFormationLogs/);
+  assert.match(helper, /for \(let from = start; from <= end; from \+= chunkSize\)/);
+  assert.match(helper, /topic === liquidity/);
+  assert.match(helper, /topic === swap && liquiditySeen/);
+  assert.match(helper, /return ordered/);
 });
 
 test('runtime transport boundary remains read-only', () => {
@@ -70,7 +74,7 @@ test('runtime transport boundary remains read-only', () => {
 });
 
 test('targeted runtime batches historical block reads without changing event ordering', () => {
-  assert.match(runtime, /TARGET_BATCH_MAX=25/);
+  assert.match(runtime, /TARGET_BATCH_MAX=50/);
   assert.match(runtime, /batchMaxCount:TARGET_POOL_ID\?TARGET_BATCH_MAX:1/);
 });
 
@@ -82,7 +86,7 @@ test('runtime preserves acquisition stage and nested provider diagnostics', () =
 });
 
 test('targeted historical block reads cap in-flight RPC batches', () => {
-  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=8/);
+  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=12/);
   assert.match(runtime, /i\+=TARGET_BLOCK_BATCH_CONCURRENCY/);
   assert.match(runtime, /nums\.slice\(i,i\+TARGET_BLOCK_BATCH_CONCURRENCY\)/);
 });

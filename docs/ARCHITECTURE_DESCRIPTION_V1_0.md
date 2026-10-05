@@ -1155,3 +1155,55 @@ Claim promotion produces only a DERIVED_RESEARCH_ONLY artifact. It cannot mutate
 Promotion requires the claim to exist in the research report, claim evidence to exist in the report evidence set and provenance reference, and an allowed validation result. INCONCLUSIVE remains INCONCLUSIVE.
 
 CI/runtime verification remains required before the contract is marked VERIFIED.
+
+## Current-head reconciliation — HFI runtime timeout and bounded formation acquisition — 2026-10-05
+
+The HFI-MVP runtime verification for commit 8510a5d49500a7034ae677943d7c210597cea05a reached terminal FAILURE after the configured 20-minute global watchdog. The preserved runtime artifact recorded state FAILED, failure code RUNTIME_VERIFICATION_FAILURE, message HFI_RUNTIME_GLOBAL_TIMEOUT, and candidate_results [].
+
+Workflow logs establish that the runtime received an explicit HFI_POOL_ID and HFI_POOL_INIT_BLOCK and entered npm run hfi:runtime. The timeout therefore occurred inside runtime acquisition/processing, before any verified candidate result was produced. This is classified as P1 runtime verification failure with external RPC acquisition as the current leading dependency boundary; it is not evidence of V4 authority corruption or evidence loss.
+
+Corrective implementation on branch feat/r13-analytical-transition-chain-v1:
+- src/core/hfi-targeted-formation-acquisition.js introduces bounded, sequential formation acquisition that stops once POOL_CREATED context plus LIQUIDITY_ADDED followed by SWAP are observed in deterministic order.
+- tests/hfi-targeted-formation-acquisition.test.js covers early-stop behavior, invalid temporal ordering, and invalid bounds.
+- scripts/hfi-mvp-runtime-verify.js now delegates targeted formation acquisition to the bounded helper.
+
+This correction does not change the POOL_BOOTSTRAP formation predicate, V4 identity, canonical evidence, cursor/checkpoint/manifest, authority activation, or validation semantics. The objective is to reduce unnecessary RPC acquisition while preserving the required evidence sequence and fail-closed behavior.
+
+The corrected commit is 2d9c2ac03a9676ca69a7326ab19e8a750f6ee91e. New CI runs are active; runtime verification remains NOT VERIFIED until the corrected HFI run reaches a terminal result with an authoritative runtime artifact.
+
+Problem record:
+ID: HFI-RUNTIME-003
+Severity: P1
+Status: MITIGATED / VERIFICATION PENDING
+Symptom: HFI runtime exceeded 20-minute global deadline with no candidate result.
+Immediate cause: targeted formation acquisition consumed the runtime budget before producing a candidate.
+Root cause: targeted acquisition fetched the full 10,000-block formation window in parallel batches instead of stopping after the first deterministically established required formation sequence.
+Impact: HFI end-to-end runtime could not reach Formation → Validation → Research → Report → X Content replay verification.
+Corrective action: bounded sequential acquisition helper with early termination after required sequence.
+Regression coverage: positive early-stop test, negative ordering test, bounds test; full repository CI pending.
+Residual risk: the Robinhood RPC endpoint may still be slow or unavailable; corrected runtime must distinguish and preserve such external failure rather than invent evidence.
+
+
+## Current-head reconciliation — HFI runtime diagnostic heartbeat — 2026-10-05
+
+The corrected HFI runtime on commit fbf81a51f32d915b7bcbdd683cdbb175721fd336 reached terminal FAILURE after the 20-minute global watchdog. The preserved artifact was commit-bound and recorded state FAILED with message HFI_RUNTIME_GLOBAL_TIMEOUT and candidate_results [].
+
+Workflow logs confirm the runtime entered npm run hfi:runtime with HFI_POOL_ID and HFI_POOL_INIT_BLOCK, but emitted no terminal candidate result or stage evidence before timeout. No RPC error, authority mutation, cursor advance, canonical evidence corruption, or data-loss evidence was observed. Therefore the failure is classified as P1 runtime diagnostic/resource-boundary failure; RPC slowness remains a possible external dependency, not an established root cause.
+
+Corrective implementation on the current branch:
+- scripts/hfi-mvp-runtime-verify.js now persists a stage heartbeat before expensive discovery/formation work and at each targeted formation acquisition chunk.
+- tests/hfi-runtime-artifact-boundary.test.js verifies the heartbeat contract.
+
+This change is observability-only at the runtime boundary. It does not alter the formation predicate, canonical evidence, V4 identity, cursor/checkpoint/manifest, authority activation, validation semantics, or publication authority.
+
+Problem record:
+ID: HFI-RUNTIME-004
+Severity: P1
+Status: IMPLEMENTED / VERIFICATION PENDING
+Symptom: 20-minute watchdog expired with no candidate result and no stage in the artifact.
+Immediate cause: runtime artifact lacked progress checkpointing while an expensive acquisition/processing path was active.
+Root cause: runtime observability was insufficient to localize the long-running stage.
+Impact: runtime performance/resource failure could not previously be classified beyond global timeout.
+Corrective action: persist stage and heartbeat evidence before expensive operations and formation chunks.
+Regression test: tests/hfi-runtime-artifact-boundary.test.js.
+Residual risk: the actual long-running stage is not yet established; the next runtime artifact must provide that evidence.

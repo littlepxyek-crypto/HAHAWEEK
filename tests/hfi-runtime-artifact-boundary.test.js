@@ -15,6 +15,18 @@ test('runtime artifact is commit-bound at startup', () => {
   assert.match(runtime, /persist\(initialBase\)/);
 });
 
+test('runtime defines analytical transition chain before replay equivalence assertion', () => {
+  assert.match(runtime, /analyticalTransitions=buildAnalyticalTransitionChain\(\{formation,hypothesis,validation\}\)/);
+});
+
+test('runtime preserves stage heartbeat before expensive acquisition so watchdog failures remain diagnosable', () => {
+  assert.match(runtime, /function checkpoint\(base,stage,detail=null\)/);
+  assert.match(runtime, /initialBase\.stage='startup'/);
+  assert.match(runtime, /checkpoint\(base,'discovery'\)/);
+  assert.match(runtime, /checkpoint\(base,'formation_logs_chunk'/);
+  assert.match(runtime, /base\.last_heartbeat_at=new Date\(\)\.toISOString\(\)/);
+});
+
 test('runtime log acquisition can adaptively split provider-rejected ranges with a bounded depth', () => {
   assert.match(runtime, /const minChunk=1,maxSplitDepth=14/);
   assert.match(runtime, /if\(!isRangeLimitError\(last\)\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
