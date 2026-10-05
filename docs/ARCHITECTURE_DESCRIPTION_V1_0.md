@@ -1206,4 +1206,12 @@ Root cause: runtime observability was insufficient to localize the long-running 
 Impact: runtime performance/resource failure could not previously be classified beyond global timeout.
 Corrective action: persist stage and heartbeat evidence before expensive operations and formation chunks.
 Regression test: tests/hfi-runtime-artifact-boundary.test.js.
-Residual risk: the actual long-running stage is not yet established; the next runtime artifact must provide that evidence.
+Residual risk: the actual long-running stage is not yet established; the next runtime artifact must provide that evidence. 
+
+## 2026-10-06 — CURRENT MAIN CI TERMINAL RECONCILIATION — VERIFIED / RECONCILED
+
+Current main `3a04abea1c9b925e0635af351efa212de56551c0` now has terminal SUCCESS for Tests, Security/Regression, A9 Runtime, Analytical Reorg Runtime, HFI-MVP Runtime, and Push on main.
+
+The earlier reconciliation text describing HFI-MVP as `running` is historical execution-time state and must not be read as the current main state. The current authoritative repository state is terminal SUCCESS for that workflow.
+
+This closes only the documentation freshness issue. It does not activate V4 authority, alter canonical evidence, or change the frozen architecture. Architecture Gate and Implementation Freeze remain BLOCKED.
