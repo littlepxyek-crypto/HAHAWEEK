@@ -2517,9 +2517,9 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - Domain measurements remain derived, evidence-linked, versioned, fail-closed, and non-authoritative. No raw/canonical mutation, cursor advancement, V4 authority expansion, actor inference, scoring/ranking, or automated action was introduced.
 - **STEP 610 Code final state: VERIFIED / RECONCILED / DOCUMENTED.**
 - **Next STEP: STEP 610 Test — contract/design-grounded test lifecycle.**
-## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
+## HISTORICAL MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
 
-- Current main merge commit: `610a522b03bf0f6ded08a3c6d34806ac0ef8943c` (PR #725, verified HFI outcome-log concurrency/range handling fix).
+- Historical main merge commit: `610a522b03bf0f6ded08a3c6d34806ac0ef8943c` (PR #725, verified HFI outcome-log concurrency/range handling fix).
 - PR #725 exact head: `2267fa46418fe7c9874a038bcbf91f72a790eea4`.
 - PR #725 CI: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
 - HFI-MVP E5 runtime artifact: `hfi-mvp-e2e-runtime-evidence-2267fa46418fe7c9874a038bcbf91f72a790eea4`; artifact ID `11323425807`; artifact digest `sha256:cefc5199a70b149c258a233555132896f14d4e92dc553f0c80448fe3e2f26406`.
