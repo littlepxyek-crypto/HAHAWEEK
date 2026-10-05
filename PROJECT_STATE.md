@@ -2529,3 +2529,31 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - V4 production authority remains INACTIVE. No cursor reset, canonical evidence rewrite/deletion, authority bypass, signing, trading, or external publication was performed.
 - PR #726 is stale against the new main base and is not mergeable. Its documentation-only change must be recreated against current main before merge.
 - Architecture Gate remains BLOCKED pending V4 production lifecycle activation criteria and final repository/documentation reconciliation. This is not a failure of the verified HFI vertical slice.
+
+## 2026-10-06 — ANALYTICAL REORG RUNTIME RECONCILIATION — VERIFIED / RECONCILED
+
+- Baseline main before this change: `8b86b17ec619a9746fa91b805fcc5cbcd2e19df7`.
+- PR #741 was inspected against the frozen analytical projection architecture and merged as `fd1d8cde03be88a6ef60c26e18cf92d05c26ea6d`.
+- The implementation adds the controlled analytical reorg runtime verifier, CI workflow, package script, and contract reconciliation.
+- The runtime explicitly models Graph and Formation as parallel projections from canonical evidence. Formation does not depend on Graph.
+- Downstream dependencies are explicit: Formation → Hypothesis → Validation → Research → Report.
+- Post-merge verification:
+  - HAHAWEEK Tests: SUCCESS; 945 tests, 944 passed, 1 skipped, 0 failed.
+  - HAHAWEEK Security and Regression: SUCCESS; npm audit reported 0 vulnerabilities and tracked-secret baseline passed.
+  - HAHAWEEK A9 Runtime Verification: SUCCESS.
+  - HAHAWEEK Analytical Reorg Runtime Verification: SUCCESS.
+  - HFI-MVP Runtime Verification: running at reconciliation time.
+  - HFI-RADAR Operational Runtime Verification: running at reconciliation time.
+  - Push on main: SUCCESS.
+- Analytical reorg runtime artifact verified at commit `fd1d8cde03be88a6ef60c26e18cf92d05c26ea6d` with `state=VERIFIED`, `live_rpc_reorg=false`, and `graph_formation_parallel=true`.
+- Controlled reorg runtime verified:
+  - all six affected derived layers reached REBUILT;
+  - failure vector reached REBUILD_FAILED with latest affected projection state FAILED;
+  - canonical_evidence and canonical_transitions were unchanged;
+  - V4 authority remained INACTIVE.
+- PR #740 was identified as superseded and unsafe to merge because its runtime fixture encoded Formation → Graph dependency. It was closed after PR #741 merged; historical evidence is preserved.
+- This reconciliation does NOT claim a live RPC chain-reorg experiment. Live-network reorg verification remains a separate limitation.
+- V4 production authority remains INACTIVE / BLOCKED.
+- Architecture Gate remains BLOCKED by the broader system-wide activation criteria and unresolved contracts; this reconciliation closes only the controlled analytical reorg runtime boundary.
+- Implementation Freeze remains BLOCKED.
+
