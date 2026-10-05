@@ -1,12 +1,15 @@
 ## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
 
-- Current main commit: `3f84e207bd279ac3ee38339e14747cd56947e8e3` (merge PR #717, source-independence runtime boundary).
-- PR #717 exact-head verification: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
-- The earlier `ea30da0...` HFI post-merge snapshot remains historical evidence below; it is not the current main commit.
-- Current-main HFI-MVP E5 has no commit-associated workflow result exposed by the repository workflow-run API at reconciliation time; therefore no current-main E5 result is asserted here.
-- PR #719 behavioral-intelligence reconciliation remains OPEN and NOT MERGED. Its latest HFI-MVP run #145 produced preserved E5 failure evidence: `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs`, 3,482 requests, 1,200,384 ms; this is not current-main runtime evidence and is not promoted to a HAHAWEEK logic failure without further RCA.
-- PR #720 contract-status reconciliation remains OPEN and NOT MERGED. Its HFI-MVP run #144 terminalized FAILED with preserved E5 failure evidence: `HFI_RUNTIME_RESOURCE_TIMEOUT` at `outcome_logs`, 3,900 requests, 1,201,707 ms; this is not current-main runtime evidence.
-- V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED pending contract/lifecycle closure.
+- Current main commit: `47693f9c30a3c0612a9b3035977a034fec4326b2` (merge PR #723, Graph Identity v1 rebuild boundary).
+- PR #723 exact-head: `58c4f4339ea02b1240d64cae2333502af9d180a6`.
+- PR #723 CI: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
+- Full Tests exact-head result: 934 tests, 933 passed, 0 failed, 1 skipped; V4 golden vectors and source-independence verifier both succeeded.
+- Exact-head security suite completed successfully, including negative vectors for authority activation, acquisition completeness, formation completeness, L4/L5 identity, EQC resource/as-of boundaries, reorg propagation, and publication/claim provenance.
+- HFI-MVP E5 runtime artifact: `hfi-mvp-e2e-runtime-evidence-58c4f4339ea02b1240d64cae2333502af9d180a6`; artifact ID `11320834467`; artifact ZIP SHA-256 `b55045c98d01ca8d629715b40297b39ff7eea7a4ca4ef2d0b66a5212e1959f9b`.
+- HFI-MVP E5 runtime state: VERIFIED; chain_id 4663; raw/canonical evidence 8,664/8,664; formation completeness VALID; formation VALID; validation CONFIRMED; hypothesis PROPOSED; replay equivalent=true; graph 25,337 nodes / 34,410 edges; X publication readiness=true; external publication=false.
+- The E5 runtime artifact is bound to PR head `58c4f4339ea02b1240d64cae2333502af9d180a6`, not the merge commit. The merged main tree contains that PR head, but no separate exact-merge-head E5 run is asserted here.
+- V4 production authority remains INACTIVE. No cursor reset, canonical evidence rewrite/deletion, authority bypass, signing, trading, or external publication was performed by this reconciliation.
+- Architecture Gate remains BLOCKED pending the remaining V4 checkpoint/cursor/recovery production-lifecycle gate and any contract/documentation closure still marked pending. This is an explicit blocker, not an implied failure of the verified HFI vertical slice.
 - This section is additive reconciliation only; historical project-state entries are preserved unchanged.
 
 ## HFI RUNTIME POST-MERGE RECONCILIATION — 2026-10-04 — VERIFIED / RECONCILED
