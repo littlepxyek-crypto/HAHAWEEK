@@ -2517,3 +2517,14 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - Domain measurements remain derived, evidence-linked, versioned, fail-closed, and non-authoritative. No raw/canonical mutation, cursor advancement, V4 authority expansion, actor inference, scoring/ranking, or automated action was introduced.
 - **STEP 610 Code final state: VERIFIED / RECONCILED / DOCUMENTED.**
 - **Next STEP: STEP 610 Test — contract/design-grounded test lifecycle.**
+## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
+
+- Current main merge commit: `610a522b03bf0f6ded08a3c6d34806ac0ef8943c` (PR #725, verified HFI outcome-log concurrency/range handling fix).
+- PR #725 exact head: `2267fa46418fe7c9874a038bcbf91f72a790eea4`.
+- PR #725 CI: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
+- HFI-MVP E5 runtime artifact: `hfi-mvp-e2e-runtime-evidence-2267fa46418fe7c9874a038bcbf91f72a790eea4`; artifact ID `11323425807`; artifact digest `sha256:cefc5199a70b149c258a233555132896f14d4e92dc553f0c80448fe3e2f26406`.
+- E5 runtime state: VERIFIED; chain_id 4663; formation completeness VALID; formation VALID; validation CONFIRMED; hypothesis PROPOSED; replay equivalent=true. Runtime artifact provenance verification succeeded.
+- PR #725 changed outcome-log concurrency from 16 to 4 and narrowed range-limit classification; no V4 authority semantics, cursor/checkpoint/manifest behavior, analytical predicates, or evidence identity semantics changed.
+- V4 production authority remains INACTIVE. No cursor reset, canonical evidence rewrite/deletion, authority bypass, signing, trading, or external publication was performed.
+- PR #726 is stale against the new main base and is not mergeable. Its documentation-only change must be recreated against current main before merge.
+- Architecture Gate remains BLOCKED pending V4 production lifecycle activation criteria and final repository/documentation reconciliation. This is not a failure of the verified HFI vertical slice.
