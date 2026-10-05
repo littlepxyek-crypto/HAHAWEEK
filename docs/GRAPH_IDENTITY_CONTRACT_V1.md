@@ -1,6 +1,6 @@
 # HAHAWEEK — GRAPH IDENTITY CONTRACT v1
 
-Status: IMPLEMENTED / CI VERIFICATION REQUIRED
+Status: VERIFIED / RECONCILED
 
 ## Purpose
 
@@ -75,6 +75,14 @@ without rewriting historical V4 evidence identifiers.
 - rebuild is independent of projection order;
 - rebuild does not mutate authoritative inputs;
 - invalid rebuild inputs fail closed.
+
+## Verification evidence — 2026-10-05
+
+- Implementation merged in PR #723 as 47693f9c30a3c0612a9b3035977a034fec4326b2 from exact head 58c4f4339ea02b1240d64cae2333502af9d180a6.
+- Graph Identity positive, negative, determinism, rebuild, and input-mutation vectors passed on the PR head (HAHAWEEK Tests run #3062 / current graph implementation tree).
+- HFI-MVP E5 runtime was reproduced on exact implementation-equivalent runtime head 2267fa46418fe7c9874a038bcbf91f72a790eea4; run #165 reached VERIFIED on Robinhood Mainnet chain 4663.
+- Runtime evidence: 8,664 raw / 8,664 canonical evidence; Formation VALID; seven-day outcome complete; Validation CONFIRMED; replay equivalent=true; graph projection 25,337 nodes / 34,410 edges; no external publication executed.
+- Current main contains the same bounded HFI runtime implementation as the verified runtime head, with main commit 610a522b03bf0f6ded08a3c6d34806ac0ef8943c.
 
 ## Verification boundary
 
