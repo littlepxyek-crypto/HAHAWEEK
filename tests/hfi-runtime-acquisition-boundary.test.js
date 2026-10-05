@@ -74,7 +74,7 @@ test('runtime transport boundary remains read-only', () => {
 });
 
 test('targeted runtime batches historical block reads without changing event ordering', () => {
-  assert.match(runtime, /TARGET_BATCH_MAX=25/);
+  assert.match(runtime, /TARGET_BATCH_MAX=50/);
   assert.match(runtime, /batchMaxCount:TARGET_POOL_ID\?TARGET_BATCH_MAX:1/);
 });
 
@@ -86,7 +86,7 @@ test('runtime preserves acquisition stage and nested provider diagnostics', () =
 });
 
 test('targeted historical block reads cap in-flight RPC batches', () => {
-  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=8/);
+  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=12/);
   assert.match(runtime, /i\+=TARGET_BLOCK_BATCH_CONCURRENCY/);
   assert.match(runtime, /nums\.slice\(i,i\+TARGET_BLOCK_BATCH_CONCURRENCY\)/);
 });
