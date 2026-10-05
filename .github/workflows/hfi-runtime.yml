@@ -23,7 +23,7 @@ jobs:
       - id: runtime
         continue-on-error: true
         env:
-          RPC_URL: https://robinhood-rpc.publicnode.com
+          RPC_URL: https://rpc.mainnet.chain.robinhood.com
           GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           RPC_TIMEOUT_MS: 30000
           HFI_POOL_ID: "0xf399bd1544377680d48c62fd85c2105b869e55906c4189cc5ab3b4e83446928c"
