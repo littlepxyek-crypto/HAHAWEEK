@@ -1,6 +1,6 @@
 # HAHAWEEK — GRAPH IDENTITY CONTRACT v1
 
-Status: IMPLEMENTATION IN PROGRESS
+Status: IMPLEMENTED / CI VERIFICATION REQUIRED
 
 ## Purpose
 
@@ -54,6 +54,10 @@ Graph identity:
 - does not advance V4 cursor/checkpoint/manifest;
 - does not establish canonicality.
 
+The executable projection exposes a fresh `rebuildEvidenceGraph(...)` boundary
+which constructs a new graph from supplied authoritative evidence and formation
+inputs without persistence or V4 authority access.
+
 ## Compatibility
 
 Existing semantic graph keys remain stable. The graph identity is an
@@ -65,5 +69,17 @@ without rewriting historical V4 evidence identifiers.
 - deterministic for identical inputs;
 - independent of object key insertion order;
 - node and edge domains are distinct;
+- required identifiers reject invalid input;
 - identity is not treated as V4 evidence identity;
-- rebuild produces identical identities from identical authoritative inputs.
+- rebuild produces identical identities from identical authoritative inputs;
+- rebuild is independent of projection order;
+- rebuild does not mutate authoritative inputs;
+- invalid rebuild inputs fail closed.
+
+## Verification boundary
+
+Positive, negative, determinism, rebuild, and input-mutation vectors are
+implemented in `tests/graph-identity-contract-v1.test.js`.
+
+CI/runtime verification remains required before this contract is marked
+VERIFIED / RECONCILED.
