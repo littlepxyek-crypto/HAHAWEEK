@@ -31,7 +31,7 @@ jobs:
       - id: runtime
         continue-on-error: true
         env:
-          RPC_URL: https://rpc.ordofi.network
+          RPC_URL: https://rpc.mainnet.chain.robinhood.com
           RPC_TIMEOUT_MS: 30000
           HFI_POOL_ID: "0xf399bd1544377680d48c62fd85c2105b869e55906c4189cc5ab3b4e83446928c"
           HFI_POOL_INIT_BLOCK: "59281988"
