@@ -1,6 +1,6 @@
 # HAHAWEEK — GRAPH IDENTITY CONTRACT v1
 
-Status: IMPLEMENTED / CI VERIFICATION REQUIRED
+Status: VERIFIED / RECONCILED
 
 ## Purpose
 
@@ -76,10 +76,15 @@ without rewriting historical V4 evidence identifiers.
 - rebuild does not mutate authoritative inputs;
 - invalid rebuild inputs fail closed.
 
+## Verification evidence — 2026-10-05
+
+- Implementation merged in PR #723 as `47693f9c30a3c0612a9b3035977a034fec4326b2` from exact head `58c4f4339ea02b1240d64cae2333502af9d180a6`.
+- Positive, negative, determinism, rebuild, and input-mutation vectors passed on the PR #723 implementation head.
+- HFI-MVP E5 was reproduced on implementation-equivalent head `2267fa46418fe7c9874a038bcbf91f72a790eea4`; Formation `VALID`, Validation `CONFIRMED`, replay `equivalent=true`, graph projection `25,337` nodes / `34,410` edges, no external publication.
+- Current main is `a266d5021a16307aef13b9d66cc973c85834cb83`; no V4 authority semantics were changed by this reconciliation.
+
 ## Verification boundary
 
 Positive, negative, determinism, rebuild, and input-mutation vectors are
-implemented in `tests/graph-identity-contract-v1.test.js`.
-
-CI/runtime verification remains required before this contract is marked
-VERIFIED / RECONCILED.
+implemented in `tests/graph-identity-contract-v1.test.js`. The graph remains
+projection-only and does not authorize V4 activation.
