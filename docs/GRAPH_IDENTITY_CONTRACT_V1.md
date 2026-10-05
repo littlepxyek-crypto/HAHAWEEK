@@ -123,3 +123,6 @@ CONTRACT
 → RECONCILIATION
 
 Graph remains a rebuildable, non-authoritative projection.
+
+Reconciliation baseline: main `610a522b03bf0f6ded08a3c6d34806ac0ef8943c`.
+The current main HFI acquisition hardening does not change Graph Identity semantics or its verified PR #723 evidence boundary.
