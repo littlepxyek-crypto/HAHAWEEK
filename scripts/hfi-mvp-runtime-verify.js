@@ -45,6 +45,8 @@ async function targetedFormationLogs(p,poolId,start,end){const out=[];for(let n=
 function runtimeBase(state){return {verification_class:'E5_RUNTIME',contract_id:'HFI-MVP-E2E-V0_1',commit:runtimeCommit(),chain_id:CHAIN_ID,rpc_url:RPC,state,started_at:new Date().toISOString()}}
 function fail(base,error){base.state='FAILED';base.completed_at=new Date().toISOString();base.failure={code:'RUNTIME_VERIFICATION_FAILURE',message:String(error?.message||error),candidate_results:base.candidate_results||[]};persist(base)}
 const initialBase=runtimeBase('RUNNING');
+const runtimeWatchdog=setTimeout(()=>{if(initialBase.state==='RUNNING'){const e=new Error('HFI_RUNTIME_GLOBAL_TIMEOUT');e.code='HFI_RUNTIME_GLOBAL_TIMEOUT';e.elapsed_ms=MAX_RUNTIME_MS;fail(initialBase,e);process.exitCode=1;process.exit(1)}},MAX_RUNTIME_MS);
+runtimeWatchdog.unref();
 persist(initialBase);
 process.on('uncaughtException',e=>fail(initialBase,e));
 process.on('unhandledRejection',e=>fail(initialBase,e));
