@@ -1,6 +1,6 @@
 ## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
 
-- Current main commit: `610a522b03bf0f6ded08a3c6d34806ac0ef8943c` (`fix: bound HFI outcome-log concurrency and range error handling`).
+- Current main commit: `a266d5021a16307aef13b9d66cc973c85834cb83` (`docs: reconcile baseline after verified HFI fix`).
 - Current main HFI runtime implementation uses bounded outcome-log chunking, bounded concurrency, bounded retries, and range-error-only recursive splitting; no V4 authority semantics changed.
 - Exact implementation-equivalent runtime head `2267fa46418fe7c9874a038bcbf91f72a790eea4`, HFI-MVP run #165, reached `VERIFIED` on Robinhood Mainnet chain 4663 using `https://rpc.ordofi.network`.
 - Runtime evidence: 8,664 raw / 8,664 canonical evidence; Formation `VALID`; outcome window complete through seven days; liquidity-survival criterion `PASS`; Validation `CONFIRMED`; replay `equivalent=true`; graph 25,337 nodes / 34,410 edges; X publication not executed.
