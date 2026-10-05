@@ -77,3 +77,12 @@ The lifecycle verifies and records derived rebuild completion, but individual pr
 The durable lifecycle is persisted in schema v9. Legacy database migration paths that converge at schema v8 MUST subsequently execute the v8→v9 lifecycle migration exactly once. This preserves historical evidence while ensuring fresh and migrated databases expose the same lifecycle schema.
 
 The migration is additive: it does not rewrite canonical evidence or derived historical records.
+
+
+## Controlled runtime verification correction — 2026-10-06
+
+The controlled runtime harness MUST model Graph and Formation as parallel projections from canonical evidence. The F-02 runtime vector therefore gives both projections direct lineage to the invalidated canonical evidence and declares no Graph→Formation dependency.
+
+Downstream dependencies remain explicit where analytically real: Formation→Hypothesis→Validation→Research→Report. The harness asserts this parallel boundary and records `graph_formation_parallel: true` in the runtime artifact.
+
+This runtime remains controlled derived-runtime verification and explicitly does not claim a live RPC chain-reorg experiment. V4 authority remains INACTIVE.
