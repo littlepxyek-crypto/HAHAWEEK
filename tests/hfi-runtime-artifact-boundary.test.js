@@ -16,11 +16,11 @@ test('runtime artifact is commit-bound at startup', () => {
 });
 
 test('runtime preserves stage heartbeat before expensive acquisition so watchdog failures remain diagnosable', () => {
-  assert.match(runtime, /function checkpoint\\(base,stage,detail=null\\)/);
-  assert.match(runtime, /initialBase\\.stage='startup'/);
-  assert.match(runtime, /checkpoint\\(base,'discovery'\\)/);
-  assert.match(runtime, /checkpoint\\(base,'formation_logs_chunk'/);
-  assert.match(runtime, /base\\.last_heartbeat_at=new Date\\(\\)\\.toISOString\\(\\)/);
+  assert.match(runtime, /function checkpoint\(base,stage,detail=null\)/);
+  assert.match(runtime, /initialBase\.stage='startup'/);
+  assert.match(runtime, /checkpoint\(base,'discovery'\)/);
+  assert.match(runtime, /checkpoint\(base,'formation_logs_chunk'/);
+  assert.match(runtime, /base\.last_heartbeat_at=new Date\(\)\.toISOString\(\)/);
 });
 
 test('runtime log acquisition can adaptively split provider-rejected ranges with a bounded depth', () => {
