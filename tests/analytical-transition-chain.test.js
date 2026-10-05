@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 
 const {
   buildAnalyticalTransitionChain,
-} = require('../src/core/formation-hypothesis-validation');
+} = require('../src/core/analytical-transition-chain');
 
 function fixture(validationResult = 'CONFIRMED') {
   const formation = {
