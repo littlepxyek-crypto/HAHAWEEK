@@ -9,7 +9,7 @@ const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
 test('HFI runtime defaults to the official Robinhood Mainnet RPC', () => {
   assert.match(runtime, /rpc\.mainnet\.chain\.robinhood\.com/);
-    assert.match(workflow, /RPC_URL: https:\/\/robinhood-rpc\.publicnode\.com/);
+    assert.match(workflow, /RPC_URL: https:\/\/rpc\.mainnet\.chain\.robinhood\.com/);
   assert.doesNotMatch(workflow, /PUBLICNODE|API_KEY|api[_-]?key/i);
 });
 
@@ -39,8 +39,8 @@ test('RPC log acquisition uses bounded adaptive retries and range splitting', ()
 
 test('runtime uses provider-supported bounded outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
-  assert.match(runtime, /TARGET_OUTCOME_CHUNK=500/);
-  assert.match(runtime, /TARGET_LOG_CONCURRENCY=16/);
+  assert.match(runtime, /TARGET_OUTCOME_CHUNK=100/);
+  assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
 
