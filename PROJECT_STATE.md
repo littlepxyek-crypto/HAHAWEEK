@@ -1,5 +1,17 @@
 ## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
 
+- Current main commit: `610a522b03bf0f6ded08a3c6d34806ac0ef8943c` (`fix: bound HFI outcome-log concurrency and range error handling`).
+- Current main HFI runtime implementation uses bounded outcome-log chunking, bounded concurrency, bounded retries, and range-error-only recursive splitting; no V4 authority semantics changed.
+- Exact implementation-equivalent runtime head `2267fa46418fe7c9874a038bcbf91f72a790eea4`, HFI-MVP run #165, reached `VERIFIED` on Robinhood Mainnet chain 4663 using `https://rpc.ordofi.network`.
+- Runtime evidence: 8,664 raw / 8,664 canonical evidence; Formation `VALID`; outcome window complete through seven days; liquidity-survival criterion `PASS`; Validation `CONFIRMED`; replay `equivalent=true`; graph 25,337 nodes / 34,410 edges; X publication not executed.
+- Full CI on the verified runtime head: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
+- Graph Identity implementation was merged in PR #723 as `47693f9c30a3c0612a9b3035977a034fec4326b2`. Graph contract documentation is being reconciled on current main without changing authority semantics.
+- PR #724 graph-documentation branch `49183f7f920194c846d3da6775213061de18cc80` is NOT MERGED; its HFI-MVP run #151 failed and is preserved as historical branch-specific runtime evidence. It is not promoted to current-main failure evidence.
+- V4 production authority remains `INACTIVE`. Architecture Gate remains `BLOCKED` pending the remaining contract/lifecycle/deployment closure criteria.
+- This section is additive reconciliation only; historical project-state entries are preserved unchanged.
+
+## CURRENT MAIN RECONCILIATION — 2026-10-05 — VERIFIED / RECONCILED
+
 - Current main commit: `3f84e207bd279ac3ee38339e14747cd56947e8e3` (merge PR #717, source-independence runtime boundary).
 - PR #717 exact-head verification: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; A9 Runtime SUCCESS; HFI-MVP Runtime SUCCESS.
 - The earlier `ea30da0...` HFI post-merge snapshot remains historical evidence below; it is not the current main commit.
