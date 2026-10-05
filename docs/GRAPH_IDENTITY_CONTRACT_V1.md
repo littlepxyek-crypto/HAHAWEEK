@@ -1,6 +1,6 @@
 # HAHAWEEK — GRAPH IDENTITY CONTRACT v1
 
-Status: IMPLEMENTED / CI VERIFICATION REQUIRED
+Status: VERIFIED / RECONCILED
 
 ## Purpose
 
@@ -83,3 +83,12 @@ implemented in `tests/graph-identity-contract-v1.test.js`.
 
 CI/runtime verification remains required before this contract is marked
 VERIFIED / RECONCILED.
+
+## Verification Evidence — Current Main — 2026-10-05
+
+- Current main commit: `00a63f957a89e1754fea69f19dc2ab8985430c08`.
+- Graph Identity implementation was merged by PR #723 and its positive, negative, determinism, rebuild, and input-mutation vectors were previously verified on the exact implementation head.
+- HFI-MVP E5 on PR #732 exact head `e0af766c52385c01098d87702aeb1eeb06c2f92b` completed VERIFIED with raw/canonical evidence 8,664/8,664, Formation VALID, Validation CONFIRMED, replay equivalent=true, and a graph projection.
+- PR #732 changed only the CI RPC endpoint and its corresponding acquisition-boundary test expectation; no V4 authority semantics changed.
+- Graph identity remains deterministic, rebuildable, provenance-preserving, and projection-only. It does not authorize V4 activation.
+- This reconciliation is based on the actual post-merge main commit, not the stale PR #731 baseline.
