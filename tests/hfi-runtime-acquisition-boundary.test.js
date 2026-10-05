@@ -39,7 +39,7 @@ test('RPC log acquisition uses bounded adaptive retries and range splitting', ()
 
 test('runtime uses provider-supported bounded outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
-  assert.match(runtime, /TARGET_OUTCOME_CHUNK=100/);
+  assert.match(runtime, /TARGET_OUTCOME_CHUNK=10000);
   assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
