@@ -1182,3 +1182,28 @@ Impact: HFI end-to-end runtime could not reach Formation → Validation → Rese
 Corrective action: bounded sequential acquisition helper with early termination after required sequence.
 Regression coverage: positive early-stop test, negative ordering test, bounds test; full repository CI pending.
 Residual risk: the Robinhood RPC endpoint may still be slow or unavailable; corrected runtime must distinguish and preserve such external failure rather than invent evidence.
+
+
+## Current-head reconciliation — HFI runtime diagnostic heartbeat — 2026-10-05
+
+The corrected HFI runtime on commit fbf81a51f32d915b7bcbdd683cdbb175721fd336 reached terminal FAILURE after the 20-minute global watchdog. The preserved artifact was commit-bound and recorded state FAILED with message HFI_RUNTIME_GLOBAL_TIMEOUT and candidate_results [].
+
+Workflow logs confirm the runtime entered npm run hfi:runtime with HFI_POOL_ID and HFI_POOL_INIT_BLOCK, but emitted no terminal candidate result or stage evidence before timeout. No RPC error, authority mutation, cursor advance, canonical evidence corruption, or data-loss evidence was observed. Therefore the failure is classified as P1 runtime diagnostic/resource-boundary failure; RPC slowness remains a possible external dependency, not an established root cause.
+
+Corrective implementation on the current branch:
+- scripts/hfi-mvp-runtime-verify.js now persists a stage heartbeat before expensive discovery/formation work and at each targeted formation acquisition chunk.
+- tests/hfi-runtime-artifact-boundary.test.js verifies the heartbeat contract.
+
+This change is observability-only at the runtime boundary. It does not alter the formation predicate, canonical evidence, V4 identity, cursor/checkpoint/manifest, authority activation, validation semantics, or publication authority.
+
+Problem record:
+ID: HFI-RUNTIME-004
+Severity: P1
+Status: IMPLEMENTED / VERIFICATION PENDING
+Symptom: 20-minute watchdog expired with no candidate result and no stage in the artifact.
+Immediate cause: runtime artifact lacked progress checkpointing while an expensive acquisition/processing path was active.
+Root cause: runtime observability was insufficient to localize the long-running stage.
+Impact: runtime performance/resource failure could not previously be classified beyond global timeout.
+Corrective action: persist stage and heartbeat evidence before expensive operations and formation chunks.
+Regression test: tests/hfi-runtime-artifact-boundary.test.js.
+Residual risk: the actual long-running stage is not yet established; the next runtime artifact must provide that evidence.
