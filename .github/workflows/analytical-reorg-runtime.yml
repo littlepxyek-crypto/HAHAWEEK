@@ -1,0 +1,42 @@
+name: HAHAWEEK Analytical Reorg Runtime Verification
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  analytical-reorg-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Run controlled analytical reorg runtime verification
+        env:
+          HAHAWEEK_VERIFY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npm run verify:analytical-reorg
+      - name: Verify runtime artifact provenance
+        env:
+          EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test -f docs/runtime/analytical-reorg-runtime-latest.json
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/analytical-reorg-runtime-latest.json','utf8'));if(x.commit!==process.env.EXPECTED_COMMIT||x.state!=='VERIFIED'||x.live_rpc_reorg!==false||x.graph_formation_parallel!==true){console.error('REORG_RUNTIME_ARTIFACT_INVALID',x);process.exit(1)}"
+      - name: Upload analytical reorg runtime evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: analytical-reorg-runtime-evidence-${{ github.event.pull_request.head.sha || github.sha }}
+          path: docs/runtime/analytical-reorg-runtime-latest.json
+          if-no-files-found: error
+          retention-days: 90
