@@ -209,8 +209,25 @@ function createEvidenceGraph() {
   };
 }
 
+/**
+ * Rebuild the graph projection from authoritative inputs.
+ *
+ * This helper deliberately accepts evidence and formations as inputs and
+ * returns a fresh projection. It has no persistence or V4 authority surface.
+ */
+function rebuildEvidenceGraph({ evidence = [], formations = [] } = {}) {
+  if (!Array.isArray(evidence)) throw new Error('EVIDENCE_ARRAY_REQUIRED');
+  if (!Array.isArray(formations)) throw new Error('FORMATIONS_ARRAY_REQUIRED');
+
+  const graph = createEvidenceGraph();
+  for (const item of evidence) graph.projectEvidence(item);
+  for (const formation of formations) graph.projectFormation(formation);
+  return graph.toJSON();
+}
+
 module.exports = {
   NODE_TYPES,
   EDGE_TYPES,
   createEvidenceGraph,
+  rebuildEvidenceGraph,
 };
