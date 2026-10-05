@@ -841,55 +841,42 @@ I-10 Fail closed: authority-boundary failures fail closed rather than guessing.
 
 An item is CLOSED only when the architecture contract, repository implementation, and executable verification agree.
 
-| ID | Finding | Architecture disposition | Repository status | Closure |
-|---|---|---|---|---|
-| R-01 | Graph identity must not collide with V4 semantics | Dedicated Graph Identity domain required | Graph projection exists; dedicated identity contract absent | OPEN |
-| R-02 | Analytical transitions must not become V4 transitions | Separate transition domains required | Formation/outcome/validation IDs exist; transition contract incomplete | OPEN |
-| R-03 | DISSOLVED semantics too broad | Explicit predicate/terminal semantics required | Current MVP states are OBSERVED/PARTIAL/CANDIDATE/VALID | OPEN — DEFERRED FROM MVP |
-| R-04 | L4/L5 ambiguity | L4 corroboration; L5 direct relation proof | Contract exists; executable social/crypto verification incomplete | OPEN |
-| R-05 | Source independence under-specified | source_lineage + independence classification required | Contract documented; executable enforcement incomplete | OPEN |
-| R-06 | One RPC cannot prove omission resistance | Explicit MVP limitation | MVP is one RPC | OPEN — ACCEPTED LIMITATION |
-| R-07 | MVP must not claim V4 production authority | IMPLEMENTED/VERIFIED/AUTHORIZED/ACTIVE states required | Production authority remains inactive | OPEN |
-| R-08 | Formation expiry vs incomplete acquisition | Completeness must gate negative result | Runtime distinguishes incomplete candidate but acquisition completeness contract incomplete | OPEN |
-| R-09 | Validation vocabulary | Criterion status must be separate from terminal validation state | Current code uses CONFIRMED/REJECTED/INCONCLUSIVE and PASS/FAIL/INCONCLUSIVE | OPEN — CODE/ARCHITECTURE DRIFT |
-| R-10 | Descriptive metrics must not become hidden score | Descriptive measurements remain non-predictive | Current MVP has descriptive measurements; overall score excluded | CONDITIONALLY SATISFIED |
-| R-11 | Token/narrative thresholds need versioning | Versioned/effective evaluation required | Social/narrative threshold layer not active in MVP | OPEN — DEFERRED |
-| R-12 | Social snapshot provenance | Acquisition/snapshot/lineage/replay contract required | Social target exists; MVP excludes authoritative social input | OPEN — DEFERRED |
-| R-13 | Formation/Hypothesis/Validation chains separate | Distinct state machines required | Objects are separated; complete transition-chain contract absent | OPEN |
-| R-14 | Claim promotion/provenance | Explicit claim promotion + provenance contract required | Research claims have evidence_ids; full claim provenance query/promotion contract absent | OPEN |
+| ID | Finding | Current repository evidence | Current status |
+|---|---|---|---|
+| R-01 | Graph identity must not collide with V4 semantics | Dedicated graph identity domain + deterministic rebuild tests are present; graph remains non-authoritative. | VERIFIED |
+| R-02 | Analytical transitions must not become V4 transitions | Separate Formation/Hypothesis/Validation domains and transition validation are implemented and tested. | VERIFIED |
+| R-03 | DISSOLVED semantics too broad | MVP intentionally excludes DISSOLVED; no false terminal predicate is introduced. | DEFERRED_WITH_ACCEPTED_RISK |
+| R-04 | L4/L5 ambiguity | Executable L4/L5 implementation and negative vectors exist; relation-specific direct-proof boundary is enforced. | VERIFIED |
+| R-05 | Source independence under-specified | Source-lineage/I0-I4 enforcement and runtime boundary were merged; exact-head CI passed. | VERIFIED |
+| R-06 | One RPC cannot prove omission resistance | Robinhood Mainnet remains a single-RPC MVP observation boundary; omission resistance is explicitly limited. | DEFERRED_WITH_ACCEPTED_RISK |
+| R-07 | MVP must not claim V4 production authority | Authority lifecycle exists, but production V4 remains INACTIVE and activation prerequisites are not all proven. | BLOCKED |
+| R-08 | Formation expiry vs incomplete acquisition | Acquisition completeness vocabulary and negative-evidence guard are implemented and covered by tests. | VERIFIED |
+| R-09 | Validation vocabulary | Validation v2 separates terminal result from criterion status and rejects future formation evidence; exact-head CI passed. | VERIFIED |
+| R-10 | Descriptive metrics must not become hidden score | Descriptive measurement boundary is implemented; no predictive/trading score authority is granted. | CONDITIONALLY_SATISFIED |
+| R-11 | Token/narrative thresholds need versioning | Social/narrative threshold layer is outside the current MVP authority surface. | DEFERRED_WITH_ACCEPTED_RISK |
+| R-12 | Social snapshot provenance | Snapshot provenance and publication-origin separation are implemented/tested, but authoritative social input is outside current MVP. | DEFERRED_WITH_ACCEPTED_RISK |
+| R-13 | Formation/Hypothesis/Validation chains separate | State machines are separate, but full end-to-end analytical transition-chain integration remains incomplete. | NOT_VERIFIED |
+| R-14 | Claim promotion/provenance | Claim-promotion artifact boundary exists, but full EQC/query-to-publication provenance integration remains incomplete. | NOT_VERIFIED |
 
 ## 13.1 Closure classification
 
-Fully CLOSED: none.
+Verified at the executable boundary: R-01, R-02, R-04, R-05, R-08, R-09.
 
-Conditionally satisfied:
-- R-10
+Conditionally satisfied: R-10.
 
-Accepted limitation but contract still required:
-- R-06
+Deferred with accepted MVP risk: R-03, R-06, R-11, R-12.
 
-Deferred by MVP scope:
-- R-03
-- R-11
-- R-12
-
-Active blockers:
-- R-01
-- R-02
-- R-04
-- R-05
-- R-07
-- R-08
-- R-09
-- R-13
-- R-14
+Active blockers: R-07, R-13, R-14, plus deployment/operational verification required by the Deployment Architecture contract.
 
 Therefore:
 
-R-01…R-14 CLOSED = NO
+R-01…R-14 CLOSED = NO.
+
+Implementation Freeze = BLOCKED.
+
+This table is a reconciliation of the repository state at the current-main inspection boundary. It does not activate V4 authority or change the frozen target architecture.
 
 ---
-
 # 14. NEW ARCHITECTURE FINDINGS
 
 A-01 — Container View formalization
