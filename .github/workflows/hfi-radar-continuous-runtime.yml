@@ -45,6 +45,7 @@ jobs:
           HFI_RADAR_RUNTIME_STATE: docs/runtime/hfi-radar-continuous-state.json
           HFI_RADAR_RUNTIME_OUTPUT: docs/runtime/hfi-radar-live-latest.json
         run: |
+          mkdir -p data docs/runtime
           rm -f docs/runtime/hfi-radar-continuous-state.json docs/runtime/hfi-radar-live-latest.json data/hahaweek.sqlite
           node scripts/hfi-radar-continuous-runtime.js
           node - <<'NODE'
