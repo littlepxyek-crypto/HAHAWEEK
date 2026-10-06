@@ -36,9 +36,22 @@ function atomicWrite(file, value) {
 
 function normalizeState(value) {
   const state = value && typeof value === 'object' ? value : {};
+  const pools = {};
+  for (const [rawPoolId, rawPool] of Object.entries(state.pools && typeof state.pools === 'object' ? state.pools : {})) {
+    const poolId = String(rawPoolId).toLowerCase();
+    const seen = new Set();
+    const events = [];
+    for (const item of Array.isArray(rawPool?.events) ? rawPool.events : []) {
+      if (!item || item.evidence_id == null || seen.has(item.evidence_id)) continue;
+      seen.add(item.evidence_id);
+      events.push(item);
+    }
+    events.sort(sortEvent);
+    pools[poolId] = { events };
+  }
   return {
     schema_version: 'hfi-radar-continuous-runtime-v1',
-    pools: state.pools && typeof state.pools === 'object' ? state.pools : {},
+    pools,
     emitted: state.emitted && typeof state.emitted === 'object' ? state.emitted : {},
     cycles_completed: Number.isInteger(state.cycles_completed) ? state.cycles_completed : 0,
     updated_at: state.updated_at || null,
@@ -151,10 +164,11 @@ function removeReorgedState(state, fromBlock, toBlock) {
 function applyEvents(state, events) {
   const emitted = [];
   for (const item of events) {
-    const pool = state.pools[item.pool_id] || { events: [] };
+    const poolId = String(item.pool_id).toLowerCase();
+    const pool = state.pools[poolId] || { events: [] };
     if (!pool.events.some(e => e.evidence_id === item.evidence_id)) pool.events.push(item.event);
     pool.events.sort(sortEvent);
-    state.pools[item.pool_id] = pool;
+    state.pools[poolId] = pool;
 
     const candidateEvents = pool.events.filter(e => e.event_type === 'POOL_CREATED' || e.event_type === 'LIQUIDITY_ADDED');
     if (candidateEvents.some(e => e.event_type === 'POOL_CREATED') && candidateEvents.some(e => e.event_type === 'LIQUIDITY_ADDED')) {
