@@ -1,6 +1,8 @@
 # HAHAWEEK — AUTHORITY ACTIVATION STATE MACHINE v1
 
-Status: IMPLEMENTED / VERIFIED — CI HEAD 3f88ed877ab1f45924b4383f2867c6c6412e8529
+Status: IMPLEMENTED / VERIFIED — exact main CI HEAD 3456647fa28a96c4ab327eb40d905138e302e370
+
+Verification basis: post-merge main runtime/security/test gates completed successfully on this exact HEAD; V4 production authority remains INACTIVE.
 
 ## Purpose
 

@@ -19,7 +19,9 @@
     "hfi:radar:runtime": "node scripts/hfi-radar-operational-runtime-verify.js",
     "hfi:radar:live": "node scripts/hfi-radar-continuous-runtime.js",
     "verify:source-independence": "node scripts/source-independence-runtime-verify.js",
-    "verify:analytical-reorg": "node scripts/analytical-reorg-runtime-verify.js"
+    "verify:analytical-reorg": "node scripts/analytical-reorg-runtime-verify.js",
+    "verify:descriptive-measurement": "node scripts/descriptive-measurement-runtime-verify.js",
+    "verify:social-snapshot": "node scripts/social-snapshot-provenance-runtime-verify.js"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 # HAHAWEEK — DEPLOYMENT ARCHITECTURE V1
 
-Status: IMPLEMENTED / CI VERIFICATION REQUIRED
+Status: IMPLEMENTED / VERIFIED — exact main CI/runtime verification completed
 Contract ID: DEPLOYMENT_ARCHITECTURE_V1
 Network: Robinhood Mainnet
 Chain ID: 4663
@@ -20,7 +20,7 @@ Define the executable deployment boundary for HAHAWEEK without activating produc
 
 ### CI
 GitHub Actions is the repository CI execution environment.
-Required controls currently include HAHAWEEK Tests, HAHAWEEK Security and Regression, bounded A9 runtime verification, HFI-MVP runtime verification, and HFI-RADAR operational runtime verification.
+Required controls currently include HAHAWEEK Tests, HAHAWEEK Security and Regression, bounded A9 runtime verification, HFI-MVP runtime verification, HFI-RADAR Continuous Runtime Verification, HFI-RADAR operational runtime verification, and Analytical Reorg Runtime Verification. These controls completed successfully on the current merge commit `3456647fa28a96c4ab327eb40d905138e302e370`.
 CI workflows use read-only repository permissions. Runtime workflows preserve runtime artifacts when verification commands fail so failure remains observable rather than converted to absence.
 
 ### Free-first infrastructure

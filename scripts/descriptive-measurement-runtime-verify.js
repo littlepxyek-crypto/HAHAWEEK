@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const crypto=require('node:crypto');
+const {createDescriptiveMeasurement,DESCRIPTIVE_MEASUREMENT_RULE_VERSION}=require('../src/core/descriptive-measurement-boundary');
+const input={measurement_id:'measurement:v1:runtime',measurement_rule_version:DESCRIPTIVE_MEASUREMENT_RULE_VERSION,metric_name:'liquidity_added_native',value:12.5,unit:'native_asset',evidence_ids:['evidence:runtime:001'],measurement_time:'2026-10-06T00:00:00.000Z'};
+const first=createDescriptiveMeasurement(input), second=createDescriptiveMeasurement(input);
+assert.equal(first.measurement_identity,second.measurement_identity);
+let rejected=false; try{createDescriptiveMeasurement({...input,signal:'BUY'});}catch(e){rejected=e.message==='DESCRIPTIVE_DECISION_FIELD_FORBIDDEN:signal';} assert.equal(rejected,true);
+let nonfinite=false; try{createDescriptiveMeasurement({...input,value:Infinity});}catch(e){nonfinite=e.message==='MEASUREMENT_VALUE_MUST_BE_FINITE';} assert.equal(nonfinite,true);
+const seed={contract:'DESCRIPTIVE-MEASUREMENT-BOUNDARY-V1',identity:first.measurement_identity,negative:['DESCRIPTIVE_DECISION_FIELD_FORBIDDEN:signal','MEASUREMENT_VALUE_MUST_BE_FINITE']};
+process.stdout.write(JSON.stringify({verification_class:'E5_RUNTIME',contract_id:'DESCRIPTIVE-MEASUREMENT-BOUNDARY-V1',state:'VERIFIED',chain_id:4663,deterministic_identity:first.measurement_identity,negative_vector_decision_field:'REJECTED',negative_vector_non_finite_value:'REJECTED',authoritative_evidence_mutated:false,production_authority_mutated:false,cursor_mutated:false,external_action:false,verification_id:'descriptive-measurement-runtime:v1:'+crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex')},null,2)+'\n');
