@@ -257,4 +257,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { canonicalEventsForResult, applyEvents, removeReorgedState, runCycle, runContinuous };
+module.exports = { canonicalEventsForResult, applyEvents, removeReorgedState, normalizeState, runCycle, runContinuous };

@@ -6,6 +6,7 @@ const test = require('node:test');
 const {
   applyEvents,
   removeReorgedState,
+  normalizeState,
 } = require('../scripts/hfi-radar-continuous-runtime');
 
 function event(type, id, block, pool='0x' + '11'.repeat(32)) {
@@ -96,4 +97,28 @@ test('continuous radar has no parallel raw RPC acquisition path', () => {
   assert.doesNotMatch(source, /new ethers\./);
   assert.match(source, /canonical_evidence/);
   assert.match(source, /createEngine/);
+});
+
+
+test('continuous radar restart recovers durable derived state without duplicate emission', () => {
+  const pool = '0x' + '11'.repeat(32);
+  const state = { pools: {}, emitted: {}, cycles_completed: 1 };
+  const first = applyEvents(state, [
+    { event: event('POOL_CREATED', 'ei:create', 100, pool), pool_id: pool },
+    { event: event('LIQUIDITY_ADDED', 'ei:liquidity', 101, pool), pool_id: pool },
+  ]);
+  assert.equal(first.length, 1);
+  const persisted = JSON.parse(JSON.stringify({
+    ...state,
+    schema_version: 'hfi-radar-continuous-runtime-v1',
+    updated_at: new Date().toISOString(),
+  }));
+  const recovered = normalizeState(persisted);
+  const replay = applyEvents(recovered, [
+    { event: event('POOL_CREATED', 'ei:create', 100, pool), pool_id: pool },
+    { event: event('LIQUIDITY_ADDED', 'ei:liquidity', 101, pool), pool_id: pool },
+  ]);
+  assert.equal(replay.length, 0);
+  assert.equal(recovered.cycles_completed, 1);
+  assert.deepEqual(recovered.pools[pool].events.map(x => x.evidence_id), ['ei:create', 'ei:liquidity']);
 });
