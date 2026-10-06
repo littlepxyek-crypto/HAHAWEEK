@@ -43,7 +43,7 @@ test('F-03 boundary recovery reuses deterministic authority and advances once',a
     authorityValidator:record=>{
       attempts++;
       if(attempts===1) throw new Error('AUTHORITY_TRANSIENT_FAILURE');
-      return record;
+      return {...record,status:'AUTHORIZED'};
     }
   });
   await assert.rejects(()=>engine.runOnce(),/AUTHORITY_TRANSIENT_FAILURE/);
