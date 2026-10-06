@@ -1,0 +1,55 @@
+name: HAHAWEEK HFI-RADAR Continuous Runtime Verification
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "scripts/hfi-radar-continuous-runtime.js"
+      - "src/core/**"
+      - "tests/hfi-radar-continuous-runtime.test.js"
+      - ".github/workflows/hfi-radar-continuous-runtime.yml"
+      - "package.json"
+      - "package-lock.json"
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/hfi-radar-continuous-runtime.js"
+      - "src/core/**"
+      - "tests/hfi-radar-continuous-runtime.test.js"
+      - ".github/workflows/hfi-radar-continuous-runtime.yml"
+      - "package.json"
+      - "package-lock.json"
+permissions:
+  contents: read
+jobs:
+  continuous-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Run continuous radar unit and negative tests
+        run: node --test tests/hfi-radar-continuous-runtime.test.js
+      - name: Run bounded Mainnet continuous radar
+        env:
+          RPC_URL: https://rpc.mainnet.chain.robinhood.com
+          RPC_TIMEOUT_MS: 30000
+          HFI_RADAR_MAX_CYCLES: 2
+          HFI_RADAR_INTERVAL_MS: 2000
+          HFI_RADAR_MAX_CONSECUTIVE_FAILURES: 2
+          HFI_RADAR_RUNTIME_STATE: docs/runtime/hfi-radar-continuous-state.json
+          HFI_RADAR_RUNTIME_OUTPUT: docs/runtime/hfi-radar-live-latest.json
+        run: |
+          rm -f docs/runtime/hfi-radar-continuous-state.json docs/runtime/hfi-radar-live-latest.json data/hahaweek.sqlite
+          node scripts/hfi-radar-continuous-runtime.js
+          node - <<'NODE'
+          const fs = require('fs');
+          const x = JSON.parse(fs.readFileSync('docs/runtime/hfi-radar-continuous-state.json', 'utf8'));
+          if (x.schema_version !== 'hfi-radar-continuous-runtime-v1') throw new Error('CONTINUOUS_RUNTIME_SCHEMA_INVALID');
+          if (x.cycles_completed !== 2) throw new Error('CONTINUOUS_RUNTIME_CYCLE_COUNT_INVALID');
+          NODE
