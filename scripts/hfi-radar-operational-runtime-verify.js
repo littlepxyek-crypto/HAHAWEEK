@@ -18,7 +18,14 @@ const { createRadarReconciliation } = require('../src/core/hfi-radar-reconciliat
 const OUT = 'docs/runtime/hfi-radar-operational-latest.json';
 const HFI_OUT = 'docs/runtime/hfi-mvp-e2e-latest.json';
 const RPC = process.env.RPC_URL || 'https://rpc.ordofi.network';
-const COMMIT = process.env.GITHUB_SHA || 'UNKNOWN';
+function runtimeCommit() {
+  try {
+    return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  } catch {
+    return process.env.GITHUB_SHA || 'UNKNOWN';
+  }
+}
+const COMMIT = runtimeCommit();
 
 function digest(value) {
   return crypto.createHash('sha256').update(JSON.stringify(value), 'utf8').digest('hex');
