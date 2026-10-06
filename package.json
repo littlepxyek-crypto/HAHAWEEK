@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "description": "Early Formation Intelligence.",
   "main": "src/index.js",
-  "directories": {
-    "doc": "docs",
-    "test": "tests"
-  },
+  "directories": {"doc": "docs", "test": "tests"},
   "scripts": {
     "test": "node --test --test-concurrency=1 --test-timeout=60000",
     "start": "node src/index.js",
@@ -17,26 +14,17 @@
     "verify:v4:coverage": "node scripts/verify-golden-vector-coverage.js",
     "hfi:runtime": "node scripts/hfi-mvp-runtime-verify.js",
     "hfi:radar:runtime": "node scripts/hfi-radar-operational-runtime-verify.js",
+    "hfi:radar:live": "node scripts/hfi-radar-continuous-runtime.js",
     "verify:source-independence": "node scripts/source-independence-runtime-verify.js",
     "verify:analytical-reorg": "node scripts/analytical-reorg-runtime-verify.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/littlepxyek-crypto/HAHAWEEK.git"
-  },
+  "repository": {"type": "git", "url": "git+https://github.com/littlepxyek-crypto/HAHAWEEK.git"},
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/littlepxyek-crypto/HAHAWEEK/issues"
-  },
+  "bugs": {"url": "https://github.com/littlepxyek-crypto/HAHAWEEK/issues"},
   "homepage": "https://github.com/littlepxyek-crypto/HAHAWEEK#readme",
-  "dependencies": {
-    "ethers": "^6.17.0",
-    "sql.js": "^1.14.2"
-  },
-  "bin": {
-    "hahaweek": "./bin/hahaweek"
-  }
+  "dependencies": {"ethers": "^6.17.0", "sql.js": "^1.14.2"},
+  "bin": {"hahaweek": "./bin/hahaweek"}
 }
