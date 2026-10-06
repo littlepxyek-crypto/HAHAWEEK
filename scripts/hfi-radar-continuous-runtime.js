@@ -110,13 +110,11 @@ async function canonicalEventsForResult({ database, provider, processingContext 
     });
   }
 
-  const pools = new Map(out.map(x => [x.pool_id, x]));
   for (const record of records) {
     const c = record.canonical_json;
     if (c.contract_address?.toLowerCase() !== POOL_MANAGER.toLowerCase()) continue;
     if (c.topics?.[0]?.toLowerCase() !== MODIFY_LIQUIDITY_TOPIC.toLowerCase()) continue;
     const poolId = String(c.topics[1]).toLowerCase();
-    if (!pools.has(poolId)) continue;
     out.push({
       type: 'LIQUIDITY_ADDED',
       evidence_id: record.evidence_id,
@@ -127,12 +125,27 @@ async function canonicalEventsForResult({ database, provider, processingContext 
   return out.sort((a, b) => sortEvent(a.event, b.event));
 }
 
+function reconcileEmittedCandidates(state) {
+  const valid = {};
+  for (const pool of Object.values(state.pools)) {
+    const candidateEvents = (pool.events || []).filter(e =>
+      e.event_type === 'POOL_CREATED' || e.event_type === 'LIQUIDITY_ADDED'
+    );
+    if (!candidateEvents.some(e => e.event_type === 'POOL_CREATED')) continue;
+    if (!candidateEvents.some(e => e.event_type === 'LIQUIDITY_ADDED')) continue;
+    const candidate = createCandidateRadarRecord({ events: candidateEvents });
+    if (state.emitted[candidate.radar_id]) valid[candidate.radar_id] = true;
+  }
+  state.emitted = valid;
+}
+
 function removeReorgedState(state, fromBlock, toBlock) {
   for (const [poolId, pool] of Object.entries(state.pools)) {
     const events = [...(pool.events || [])].filter(e => e.block_number < fromBlock || e.block_number > toBlock);
     if (!events.length) delete state.pools[poolId];
     else state.pools[poolId] = { events };
   }
+  reconcileEmittedCandidates(state);
 }
 
 function applyEvents(state, events) {

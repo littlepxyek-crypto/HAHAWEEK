@@ -34,6 +34,16 @@ test('continuous radar emits a candidate only after canonical create + liquidity
   assert.deepEqual(emitted[0].evidence_ids.sort(), ['ei:create', 'ei:liquidity']);
 });
 
+test('continuous radar correlates formation evidence across separate ingestion cycles', () => {
+  const state = { pools: {}, emitted: {}, cycles_completed: 0 };
+  assert.equal(applyEvents(state, [
+    { event: event('POOL_CREATED', 'ei:create', 100), pool_id: '0x' + '11'.repeat(32) },
+  ]).length, 0);
+  assert.equal(applyEvents(state, [
+    { event: event('LIQUIDITY_ADDED', 'ei:liquidity', 101), pool_id: '0x' + '11'.repeat(32) },
+  ]).length, 1);
+});
+
 test('continuous radar is idempotent for duplicate evidence', () => {
   const state = { pools: {}, emitted: {}, cycles_completed: 0 };
   const items = [
@@ -42,6 +52,20 @@ test('continuous radar is idempotent for duplicate evidence', () => {
   ];
   assert.equal(applyEvents(state, items).length, 1);
   assert.equal(applyEvents(state, items).length, 0);
+});
+
+test('reorg replacement revokes stale emitted candidate state', () => {
+  const pool = '0x' + '11'.repeat(32);
+  const state = { pools: {}, emitted: {}, cycles_completed: 1 };
+  const items = [
+    { event: event('POOL_CREATED', 'ei:create', 100, pool), pool_id: pool },
+    { event: event('LIQUIDITY_ADDED', 'ei:liquidity-old', 101, pool), pool_id: pool },
+  ];
+  const emitted = applyEvents(state, items);
+  assert.equal(emitted.length, 1);
+  assert.equal(Object.keys(state.emitted).length, 1);
+  removeReorgedState(state, 101, 101);
+  assert.equal(Object.keys(state.emitted).length, 0);
 });
 
 test('reorg replacement removes derived radar evidence only in replaced block range', () => {

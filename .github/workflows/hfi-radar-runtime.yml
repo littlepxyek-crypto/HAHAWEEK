@@ -13,6 +13,8 @@ on:
       - "docs/HFI_RADAR_CONTINUOUS_RUNTIME_V1.md"
       - "tests/hfi-radar-*.test.js"
       - ".github/workflows/hfi-radar-runtime.yml"
+      - "scripts/hfi-radar-continuous-runtime.js"
+      - "docs/HFI_RADAR_CONTINUOUS_RUNTIME_V1.md"
       - "package.json"
       - "package-lock.json"
   pull_request:
@@ -26,6 +28,8 @@ on:
       - "scripts/hfi-radar-operational-runtime-verify.js"
       - "tests/hfi-radar-*.test.js"
       - ".github/workflows/hfi-radar-runtime.yml"
+      - "scripts/hfi-radar-continuous-runtime.js"
+      - "docs/HFI_RADAR_CONTINUOUS_RUNTIME_V1.md"
       - "package.json"
       - "package-lock.json"
 permissions:
