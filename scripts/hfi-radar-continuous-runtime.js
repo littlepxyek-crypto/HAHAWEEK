@@ -165,8 +165,10 @@ function applyEvents(state, events) {
   const emitted = [];
   for (const item of events) {
     const poolId = String(item.pool_id).toLowerCase();
+    const evidenceId = item.evidence_id ?? item.event?.evidence_id;
+    if (evidenceId == null) throw new Error('RADAR_EVENT_EVIDENCE_ID_REQUIRED');
     const pool = state.pools[poolId] || { events: [] };
-    if (!pool.events.some(e => e.evidence_id === item.evidence_id)) pool.events.push(item.event);
+    if (!pool.events.some(e => e.evidence_id === evidenceId)) pool.events.push(item.event);
     pool.events.sort(sortEvent);
     state.pools[poolId] = pool;
 
