@@ -11,6 +11,7 @@ const { POOL_MANAGER, CHAIN_ID } = require('../src/core/pool-discovery');
 const INTERVAL_MS = Number(process.env.HFI_RADAR_INTERVAL_MS || 5000);
 const MAX_BACKOFF_MS = Number(process.env.HFI_RADAR_MAX_BACKOFF_MS || 60000);
 const MAX_CYCLES = process.env.HFI_RADAR_MAX_CYCLES == null ? Infinity : Number(process.env.HFI_RADAR_MAX_CYCLES);
+const MAX_CONSECUTIVE_FAILURES = Number(process.env.HFI_RADAR_MAX_CONSECUTIVE_FAILURES || 3);
 const STATE_FILE = process.env.HFI_RADAR_RUNTIME_STATE || path.join(process.cwd(), 'docs/runtime/hfi-radar-continuous-state.json');
 const OUTPUT_FILE = process.env.HFI_RADAR_RUNTIME_OUTPUT || path.join(process.cwd(), 'docs/runtime/hfi-radar-live-latest.json');
 
@@ -18,6 +19,7 @@ function assertConfig() {
   if (!Number.isInteger(INTERVAL_MS) || INTERVAL_MS < 0) throw new Error('INVALID_HFI_RADAR_INTERVAL_MS');
   if (!Number.isInteger(MAX_BACKOFF_MS) || MAX_BACKOFF_MS < INTERVAL_MS) throw new Error('INVALID_HFI_RADAR_MAX_BACKOFF_MS');
   if (!(MAX_CYCLES === Infinity || (Number.isInteger(MAX_CYCLES) && MAX_CYCLES > 0))) throw new Error('INVALID_HFI_RADAR_MAX_CYCLES');
+  if (!Number.isInteger(MAX_CONSECUTIVE_FAILURES) || MAX_CONSECUTIVE_FAILURES <= 0) throw new Error('INVALID_HFI_RADAR_MAX_CONSECUTIVE_FAILURES');
 }
 
 function readJson(file, fallback) {
@@ -199,6 +201,7 @@ async function runContinuous({
   let stopping = false;
   let cycles = 0;
   let backoff = intervalMs;
+  let consecutiveFailures = 0;
   const stop = () => { stopping = true; };
   process.once('SIGINT', stop);
   process.once('SIGTERM', stop);
@@ -208,11 +211,16 @@ async function runContinuous({
         output(`HFI-RADAR LIVE: cycle ${cycles + 1}`);
         await runCycle({ engine, state });
         cycles += 1;
+        consecutiveFailures = 0;
         backoff = intervalMs;
         if (stopping || cycles >= maxCycles) break;
         await new Promise(resolve => setTimeout(resolve, intervalMs));
       } catch (error) {
+        consecutiveFailures += 1;
         output(`HFI-RADAR LIVE: cycle failed: ${error.message}`);
+        if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+          throw new Error('HFI_RADAR_CONSECUTIVE_FAILURE_LIMIT');
+        }
         if (stopping) break;
         await new Promise(resolve => setTimeout(resolve, backoff));
         backoff = Math.min(Math.max(intervalMs, backoff * 2), maxBackoffMs);
