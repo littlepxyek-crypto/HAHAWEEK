@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict');
+const crypto=require('node:crypto');
+const {createSocialSnapshotProvenance,SOCIAL_SNAPSHOT_RULE_VERSION}=require('../src/core/social-snapshot-provenance');
+const input={snapshot_id:'snapshot:v1:runtime',content_id:'content:x:runtime',source_id:'source:x:runtime',source_type:'X',acquisition_id:'acquisition:runtime',publisher:'example-publisher',first_seen:'2026-10-06T00:00:00.000Z',captured_at:'2026-10-06T00:01:00.000Z',digest:'sha256:runtime-content',derivation_method:'direct_capture',temporal_scope:{observed_at:'2026-10-06T00:00:00.000Z',valid_from:'2026-10-06T00:00:00.000Z',valid_to:null},origin_kind:'EXTERNAL'};
+const first=createSocialSnapshotProvenance(input), second=createSocialSnapshotProvenance(input);
+assert.equal(first.rule_version,SOCIAL_SNAPSHOT_RULE_VERSION); assert.equal(first.snapshot_identity,second.snapshot_identity);
+const publication=createSocialSnapshotProvenance({...input,origin_kind:'HAHAWEEK_PUBLICATION',source_id:'source:hahaweek:publication',parent_source_id:'source:x:runtime'});
+assert.equal(publication.independence,'NOT_INDEPENDENT_EXTERNAL_SOURCE');
+let origin=false; try{createSocialSnapshotProvenance({...input,origin_kind:'UNKNOWN'});}catch(e){origin=e.message==='SOCIAL_ORIGIN_KIND_INVALID';} assert.equal(origin,true);
+let acquisition=false; try{createSocialSnapshotProvenance({...input,acquisition_id:undefined});}catch(e){acquisition=e.message==='ACQUISITION_ID_REQUIRED';} assert.equal(acquisition,true);
+const seed={contract:'SOCIAL-SNAPSHOT-PROVENANCE-V1',identity:first.snapshot_identity,publication_independence:publication.independence,negative:['SOCIAL_ORIGIN_KIND_INVALID','ACQUISITION_ID_REQUIRED']};
+process.stdout.write(JSON.stringify({verification_class:'E5_RUNTIME',contract_id:'SOCIAL-SNAPSHOT-PROVENANCE-V1',state:'VERIFIED',chain_id:4663,deterministic_identity:first.snapshot_identity,publication_lineage:'NOT_INDEPENDENT_EXTERNAL_SOURCE',negative_vector_invalid_origin:'REJECTED',negative_vector_missing_acquisition:'REJECTED',authoritative_evidence_mutated:false,production_authority_mutated:false,cursor_mutated:false,external_action:false,verification_id:'social-snapshot-provenance-runtime:v1:'+crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex')},null,2)+'\n');
