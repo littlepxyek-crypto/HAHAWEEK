@@ -86,7 +86,7 @@ test('runtime preserves acquisition stage and nested provider diagnostics', () =
 });
 
 test('targeted historical block reads cap in-flight RPC batches', () => {
-  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=12/);
+  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=TARGET_BATCH_MAX/);
   assert.match(runtime, /i\+=TARGET_BLOCK_BATCH_CONCURRENCY/);
   assert.match(runtime, /nums\.slice\(i,i\+TARGET_BLOCK_BATCH_CONCURRENCY\)/);
 });
