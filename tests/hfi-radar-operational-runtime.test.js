@@ -11,6 +11,7 @@ test('A7 operational runtime is bound to real-mainnet upstream evidence', () => 
   );
 
   assert.match(script, /scripts\/hfi-mvp-runtime-verify\.js/);
+  assert.match(script, /git.*rev-parse.*HEAD/);
   assert.match(script, /Robinhood Mainnet JSON-RPC/);
   assert.match(script, /external_network: true/);
   assert.match(script, /external_actions: false/);
