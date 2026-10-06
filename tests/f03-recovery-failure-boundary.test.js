@@ -24,7 +24,7 @@ test('F-03 recovery can retry the same block after authority failure',async()=>{
     provider:{getBlockNumber:async()=>101},
     cursor,confirmations:0,processor:async()=>{},processorRange:async()=>{},
     batchSize:1,maxBatchesPerRun:1,
-    authorityGate:({toBlock})=>{seen.push(toBlock);if(reject)throw new Error('AUTHORITY_REJECTED');}
+    authorityGate:({toBlock})=>{seen.push(toBlock);if(reject)throw new Error('AUTHORITY_REJECTED');return {status:'AUTHORIZED'};}
   });
   await assert.rejects(()=>engine.runOnce(),/AUTHORITY_REJECTED/);
   reject=false;
