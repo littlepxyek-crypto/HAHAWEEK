@@ -24,3 +24,5 @@ jobs:
       - run: npm run verify:v4
       - run: npm run verify:v4:coverage
       - run: npm run verify:source-independence
+      - run: npm run verify:descriptive-measurement
+      - run: npm run verify:social-snapshot
