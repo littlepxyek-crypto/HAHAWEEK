@@ -56,6 +56,7 @@ function parseState(filename) {
 
 function withFileLock(filename, fn) {
   const lockFile = filename + LOCK_SUFFIX;
+  fs.mkdirSync(path.dirname(lockFile), { recursive: true });
   let handle;
   try {
     handle = fs.openSync(lockFile, 'wx');

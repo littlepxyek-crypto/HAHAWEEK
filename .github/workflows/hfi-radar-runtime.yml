@@ -9,6 +9,8 @@ on:
       - "src/core/validated-radar-record-integration.js"
       - "scripts/hfi-mvp-runtime-verify.js"
       - "scripts/hfi-radar-operational-runtime-verify.js"
+      - "scripts/hfi-radar-continuous-runtime.js"
+      - "docs/HFI_RADAR_CONTINUOUS_RUNTIME_V1.md"
       - "tests/hfi-radar-*.test.js"
       - ".github/workflows/hfi-radar-runtime.yml"
       - "package.json"
@@ -24,6 +26,8 @@ on:
       - "scripts/hfi-radar-operational-runtime-verify.js"
       - "tests/hfi-radar-*.test.js"
       - ".github/workflows/hfi-radar-runtime.yml"
+      - "scripts/hfi-radar-continuous-runtime.js"
+      - "docs/HFI_RADAR_CONTINUOUS_RUNTIME_V1.md"
       - "package.json"
       - "package-lock.json"
 permissions:
@@ -63,6 +67,20 @@ jobs:
         run: |
           test -f docs/runtime/hfi-radar-operational-latest.json
           node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-radar-operational-latest.json','utf8'));if(x.commit!==process.env.GITHUB_SHA||x.state!=='VERIFIED'||x.verification_class!=='E5_RUNTIME'||x.contract_id!=='HAHAWEEK-HFI-RADAR-OPERATIONALIZATION-V0_2'||x.chain_id!==4663||x.source?.external_network!==true||x.source?.external_actions!==false){console.error('A7_RUNTIME_PROVENANCE_INVALID',x);process.exit(1)}"
+      - name: Verify bounded continuous Mainnet radar runtime
+        env:
+          RPC_URL: https://rpc.mainnet.chain.robinhood.com
+          RPC_TIMEOUT_MS: 30000
+          HFI_RADAR_MAX_CYCLES: 2
+          HFI_RADAR_INTERVAL_MS: 2000
+          HFI_RADAR_MAX_CONSECUTIVE_FAILURES: 2
+          HFI_RADAR_RUNTIME_STATE: docs/runtime/hfi-radar-continuous-state.json
+          HFI_RADAR_RUNTIME_OUTPUT: docs/runtime/hfi-radar-live-latest.json
+        run: |
+          rm -f docs/runtime/hfi-radar-continuous-state.json docs/runtime/hfi-radar-live-latest.json data/hahaweek.sqlite
+          node scripts/hfi-radar-continuous-runtime.js
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-radar-continuous-state.json','utf8'));if(x.schema_version!=='hfi-radar-continuous-runtime-v1'||x.cycles_completed!==2){console.error('CONTINUOUS_RUNTIME_INVALID',x);process.exit(1)}"
+        
       - name: Upload operational runtime evidence
         if: always()
         uses: actions/upload-artifact@v4

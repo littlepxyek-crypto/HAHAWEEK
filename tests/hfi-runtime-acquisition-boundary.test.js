@@ -126,3 +126,10 @@ test('range splitting is reserved for explicit eth_getLogs range/result-limit fa
   assert.match(runtime, /logs\? matched\|too many logs\|too many results\|result\[s\]\? limit/);
   assert.match(runtime, /exceeds \(\?:the \)\?\(\?:maximum \)\?\(\?:block \)\?range/);
 });
+
+
+test('HFI formation runtime integrates acquisition completeness', () => {
+  assert.ok(runtime.includes('evaluateAcquisitionCompleteness'));
+  assert.ok(runtime.includes('acquisitionCompleteness.status'));
+  assert.ok(runtime.includes('acquisition_completeness:acquisitionCompleteness'));
+});
