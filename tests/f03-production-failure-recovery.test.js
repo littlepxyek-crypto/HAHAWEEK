@@ -78,3 +78,56 @@ test('F-03 production boundary can retry the same authority range after rejectio
   assert.equal(cursorValue, 101);
   assert.deepEqual(seen, [[101, 101], [101, 101]]);
 });
+
+test('F-03 lifecycle committer is not reached when final authority validation rejects', () => {
+  let commits = 0;
+
+  const authority = {
+    fromBlock: 101,
+    toBlock: 101,
+    segmentId: 'seg-101',
+    manifestDigest: 'm101',
+    checkpointDigest: 'c101',
+    generation: 'g1',
+    cursorBlock: 101,
+  };
+
+  const expected = {
+    fromBlock: 101,
+    toBlock: 101,
+    segmentId: 'seg-101',
+    manifestDigest: 'm101',
+    checkpointDigest: 'c101',
+    generation: 'g1',
+    cursorBlock: 101,
+  };
+
+  const gate = createAuthorityGate({
+    authorityFactory: () => authority,
+    expectedAuthorityFactory: () => expected,
+    authorityValidator: () => {
+      throw new Error('FINAL_AUTHORITY_VALIDATION_REJECTED');
+    },
+    authorityBindingValidator: () => ({ status: 'BOUND' }),
+    authorityCommitter: () => {
+      commits += 1;
+    },
+  });
+
+  assert.throws(
+    () => gate({
+      checkpointCommitted: true,
+      fromBlock: 101,
+      toBlock: 101,
+      processingContext: {
+        status: 'VERIFIED',
+        fromBlock: 101,
+        toBlock: 101,
+        generation: 'g1',
+      },
+    }),
+    /FINAL_AUTHORITY_VALIDATION_REJECTED/
+  );
+
+  assert.equal(commits, 0);
+});
