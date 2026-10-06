@@ -64,3 +64,12 @@ test('reorg replacement removes derived radar evidence only in replaced block ra
     'ei:liquidity-later',
   ]);
 });
+
+test('continuous radar has no parallel raw RPC acquisition path', () => {
+  const fs = require('node:fs');
+  const source = fs.readFileSync(require.resolve('../scripts/hfi-radar-continuous-runtime'), 'utf8');
+  assert.doesNotMatch(source, /getLogs/);
+  assert.doesNotMatch(source, /new ethers\./);
+  assert.match(source, /canonical_evidence/);
+  assert.match(source, /createEngine/);
+});
