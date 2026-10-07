@@ -80,3 +80,8 @@ Automatic multi-provider RPC failover is intentionally NOT implemented. Producti
 A live persistent-host restart/recovery, backup/restore, RPC degradation, and writer-fence contention drill remain unverified.
 
 Therefore this problem is resolved for the bounded CI/HFI runtime path, but it does not by itself authorize production V4 activation.
+
+
+## Batch-size experiment reconciliation — 2026-10-07
+
+The exact-head experiment `74486bd75235bc53ecebbe1ff30daf0f2365ad36` reached VERIFIED with replay equivalence, but runtime was 1,115.420 seconds versus 957.694 seconds on the preceding hardening head. Therefore the 12→50 batching change is not accepted as a proven performance fix. Evidence counts, graph output, manifest, and replay remained equivalent. The experiment is retained as evidence and P2-HFI-RUNTIME-PERF-002 tracks the unresolved performance root cause.
