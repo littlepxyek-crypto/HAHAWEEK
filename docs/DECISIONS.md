@@ -72,3 +72,9 @@ Decision: V4 specification is substantially defined, but Gate 2 remains open unt
 ## D-015 — Codex Limit
 Status: OPERATIONAL
 Decision: While Codex usage is unavailable, continue read-only audit/design and preserve durable specifications; do not perform risky production changes through workaround methods.
+
+
+## D-016 — Reference Intelligence Boundary
+Status: LOCKED FOR IMPLEMENTATION
+Decision: Third-party intelligence is isolated behind Reference Provider → Adapter → Gateway → Reference Observation boundaries. Provider output is non-authoritative, provenance-preserving, temporally explicit, and resource-bounded. Provider count does not establish source independence.
+Reason: Add investigation capability without contaminating V4 authority, canonical evidence, cursor/checkpoint/manifest, or standalone project boundaries.
