@@ -1,7 +1,7 @@
 'use strict';
 
 const { getSafeHead } = require('./confirmation');
-const { rpcCall } = require('./rpc-call');
+const { createRuntimeBudget, rpcCall } = require('./rpc-call');
 
 class IngestionEngine {
   constructor({
@@ -79,6 +79,10 @@ class IngestionEngine {
         : null
     );
     this.running = false;
+    this.runtimeBudgetOptions = {
+      maxRuntimeMs: arguments[0]?.maxRuntimeMs,
+      maxCalls: arguments[0]?.maxRpcCalls,
+    };
   }
 
   async runOnce() {
@@ -87,6 +91,8 @@ class IngestionEngine {
     }
 
     this.running = true;
+
+    const budget = createRuntimeBudget(this.runtimeBudgetOptions);
 
     let heartbeat = null;
     let watchdogStarted = false;
@@ -113,7 +119,8 @@ class IngestionEngine {
         startWriterFenceHeartbeat();
       }
       const latestBlock = await rpcCall(
-        () => this.provider.getBlockNumber()
+        () => this.provider.getBlockNumber(),
+        { budget }
       );
 
       const safeHead = getSafeHead(
@@ -213,7 +220,8 @@ class IngestionEngine {
            */
           const processingContext = await this.processorRange(
             fromBlock,
-            toBlock
+            toBlock,
+            budget
           );
           assertWriterFenceHeartbeat();
 
@@ -274,7 +282,7 @@ class IngestionEngine {
         block <= safeHead;
         block += 1
       ) {
-        await this.processor(block);
+        await this.processor(block, budget);
         assertWriterFenceHeartbeat();
 
         /*
