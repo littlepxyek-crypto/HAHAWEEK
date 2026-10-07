@@ -93,3 +93,11 @@ This is an application-side efficiency defect, not evidence corruption and not p
 Corrective action on branch `fix/hfi-mvp-historical-block-batching-2026-10-07`: align historical block-read concurrency with the configured provider batch capacity (50) and persist batch progress in the runtime heartbeat. Event ordering and evidence semantics remain unchanged because block responses are still memoized and downstream events are deterministically ordered.
 
 Acceptance requires CI regression tests plus an exact-head HFI-MVP runtime artifact proving VERIFIED, replay equivalence, and materially reduced historical-block-read duration. No production V4 authority activation is implied.
+
+
+## Batch-size experiment reconciliation — 2026-10-07
+
+The proposed historical-block scheduling optimization was executed at exact head `74486bd75235bc53ecebbe1ff30daf0f2365ad36`. The runtime reached VERIFIED and replay equivalence, but the artifact runtime was 1,115.420 seconds versus 957.694 seconds on the preceding hardening head. Therefore the 12→50 batching change is not accepted as a proven performance fix.
+
+The experiment is retained as evidence because it preserved raw/canonical counts, graph counts, manifest, and replay equivalence. It is not promoted to the production hardening baseline. The unresolved performance question is recorded separately as P2-HFI-RUNTIME-PERF-002.
+
