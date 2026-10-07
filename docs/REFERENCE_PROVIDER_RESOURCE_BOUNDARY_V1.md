@@ -29,4 +29,4 @@ Provider SDKs and vendor assumptions stay behind adapters. Core ingestion must n
 
 The first provider implementation is a controlled adapter test, not an architectural commitment to a vendor.
 
-Acceptance evidence: executable negative vectors, provider timeout/budget/concurrency/pagination boundary tests, and CI execution are verified on the current PR head.
+Acceptance evidence is IMPLEMENTED in the current PR head; CI execution remains pending.
