@@ -1,6 +1,8 @@
 # HAHAWEEK — REFERENCE PROVIDER RESOURCE BOUNDARY v1
 
-Status: IMPLEMENTED / VERIFIED
+Status: IMPLEMENTED / VERIFICATION PENDING
+
+Verification gate: CI/runtime evidence for the latest correction commit must pass before this status may be promoted to VERIFIED.
 Contract ID: REFERENCE_PROVIDER_RESOURCE_BOUNDARY_V1
 
 Every provider execution has explicit:
