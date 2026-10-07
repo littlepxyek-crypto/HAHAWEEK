@@ -114,3 +114,82 @@ test('corroboration requires provenance and known independence', () => {
   const c = transitionReferenceObservation(p, 'CORROBORATED', { reason: 'independent corroboration' });
   assert.equal(c.status, 'CORROBORATED');
 });
+
+
+test('gateway enforces concurrency and bounded retry budget', async () => {
+  let attempts = 0;
+  const gateway = createReferenceGateway({
+    providers: {
+      retryable: {
+        type: 'TEST',
+        async observe() {
+          attempts += 1;
+          if (attempts === 1) {
+            const error = new Error('temporary');
+            error.retryable = true;
+            throw error;
+          }
+          return { ok: true };
+        }
+      },
+      slow: {
+        type: 'TEST',
+        async observe() {
+          await new Promise(resolve => setTimeout(resolve, 30));
+          return { ok: true };
+        }
+      }
+    },
+    limits: { request_budget: 2, timeout_ms: 1000, response_bytes: 1024, pagination_limit: 2, concurrency: 1, retry_limit: 1 }
+  });
+
+  const retryObservation = await gateway.observe({
+    provider_id: 'retryable',
+    request: { subject: 's' },
+    request_id: 'r-retry',
+    acquisition_id: 'a-retry'
+  });
+  assert.equal(retryObservation.status, 'OBSERVED');
+  assert.equal(attempts, 2);
+
+  const pending = gateway.observe({
+    provider_id: 'slow',
+    request: { subject: 's1' },
+    request_id: 'r1',
+    acquisition_id: 'a1'
+  });
+  await assert.rejects(
+    () => gateway.observe({
+      provider_id: 'slow',
+      request: { subject: 's2' },
+      request_id: 'r2',
+      acquisition_id: 'a2'
+    }),
+    /REFERENCE_CONCURRENCY_LIMIT_EXCEEDED/
+  );
+  await pending;
+});
+
+test('gateway enforces pagination limit for bounded collection responses', async () => {
+  const gateway = createReferenceGateway({
+    providers: {
+      paged: {
+        type: 'TEST',
+        async observe() {
+          return { items: [1, 2, 3] };
+        }
+      }
+    },
+    limits: { request_budget: 1, timeout_ms: 1000, response_bytes: 1024, pagination_limit: 2, concurrency: 1, retry_limit: 0 }
+  });
+
+  await assert.rejects(
+    () => gateway.observe({
+      provider_id: 'paged',
+      request: { subject: 's' },
+      request_id: 'r',
+      acquisition_id: 'a'
+    }),
+    /REFERENCE_PAGINATION_LIMIT_EXCEEDED/
+  );
+});
