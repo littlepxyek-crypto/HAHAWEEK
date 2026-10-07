@@ -86,7 +86,8 @@ test('identity label cannot self-promote to validated', async () => {
 test('validated state requires explicit analytical transitions', async () => {
   const gateway = new ReferenceGateway({ providers: { fixture: new ControlledFixtureProvider() } });
   const observed = await gateway.observe(request());
-  const relevant = transitionReferenceObservation(observed, 'ANALYTICALLY_RELEVANT');
+  const provenanceRecorded = transitionReferenceObservation(observed, 'PROVENANCE_RECORDED');
+  const relevant = transitionReferenceObservation(provenanceRecorded, 'ANALYTICALLY_RELEVANT');
   const validated = transitionReferenceObservation(relevant, 'VALIDATED');
   assert.equal(validated.status, 'VALIDATED');
   assert.equal(observed.status, 'OBSERVED');
@@ -102,4 +103,13 @@ test('provider failure exposes no authority or database handles', async () => {
   assert.equal(typeof gateway.checkpoint, 'undefined');
   assert.equal(typeof gateway.manifest, 'undefined');
   assert.equal(typeof gateway.database, 'undefined');
+});
+
+
+test('provenance must be explicitly recorded before analytical promotion', async () => {
+  const gateway = new ReferenceGateway({ providers: { fixture: new ControlledFixtureProvider() } });
+  const observed = await gateway.observe(request());
+  assert.throws(() => transitionReferenceObservation(observed, 'ANALYTICALLY_RELEVANT'), /ILLEGAL_TRANSITION/);
+  const recorded = transitionReferenceObservation(observed, 'PROVENANCE_RECORDED');
+  assert.equal(recorded.status, 'PROVENANCE_RECORDED');
 });
