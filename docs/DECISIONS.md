@@ -110,3 +110,9 @@ Resolution:
 Verification: full repository npm test passed after correction; Security/Regression, A9, and Analytical Reorg runtime gates passed on the corrected head. HFI-MVP runtime remained independently in progress at the time of this entry and does not determine Reference Intelligence contract correctness.
 
 Residual risk: live external-provider integration, provider-specific schema mappings, and production deployment/recovery remain unverified/deferred.
+
+
+## D-020 — Reference Provider Independence Authority
+Status: IMPLEMENTED / VERIFICATION PENDING
+Decision: A Reference provider may report its own independence metadata, but that metadata is never the HAHAWEEK independence authority. The gateway derives `independence_class` only from the registered adapter classification; absent an explicit adapter classification, the observation is I0 UNKNOWN. Provider-declared classification is retained only as provenance metadata.
+Reason: Preserve source-independence safety and prevent provider self-promotion into corroboration eligibility.
