@@ -26,7 +26,7 @@ class RawLogIngestion {
     this.chunkSize = chunkSize;
   }
 
-  async ingestRange(fromBlock, toBlock, filter = {}) {
+  async ingestRange(fromBlock, toBlock, filter = {}, budget = undefined) {
     if (!Number.isInteger(fromBlock) || fromBlock < 0) {
       throw new Error('INVALID_FROM_BLOCK');
     }
@@ -54,7 +54,8 @@ class RawLogIngestion {
           ...filter,
           fromBlock: start,
           toBlock: end,
-        })
+        }),
+        { budget }
       );
 
       for (const log of logs) {
