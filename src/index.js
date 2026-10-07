@@ -151,11 +151,12 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     chunkSize: 10,
   });
 
-  const processor = async (block) => {
+  const processor = async (block, budget) => {
     const result = await rawLogs.ingestRange(
       block,
       block,
-      createRelevantLogFilter()
+      createRelevantLogFilter(),
+      budget
     );
 
     /*
@@ -173,7 +174,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     return result;
   };
 
-  const processorRange = async (fromBlock, toBlock) => {
+  const processorRange = async (fromBlock, toBlock, budget) => {
     const context = await createVerifiedProcessingContext({
       database,
       provider,
@@ -190,7 +191,8 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
         const result = await rawLogs.ingestRange(
           rangeFrom,
           rangeTo,
-          createRelevantLogFilter()
+          createRelevantLogFilter(),
+          budget
         );
 
         console.log(
