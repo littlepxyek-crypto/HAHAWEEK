@@ -140,7 +140,7 @@ test('gateway enforces concurrency and bounded retry budget', async () => {
         }
       }
     },
-    limits: { request_budget: 2, timeout_ms: 1000, response_bytes: 1024, pagination_limit: 2, concurrency: 1, retry_limit: 1 }
+    limits: { request_budget: 4, timeout_ms: 1000, response_bytes: 1024, pagination_limit: 2, concurrency: 1, retry_limit: 1 }
   });
 
   const retryObservation = await gateway.observe({
