@@ -1,8 +1,7 @@
 # HAHAWEEK — REFERENCE OBSERVATION PROVENANCE CONTRACT v1
 
-Status: IMPLEMENTED / VERIFICATION PENDING
+Status: VERIFIED / RECONCILED
 
-Verification gate: CI/runtime evidence for the latest correction commit must pass before this status may be promoted to VERIFIED.
 Contract ID: REFERENCE_OBSERVATION_PROVENANCE_CONTRACT_V1
 
 Each Reference Observation preserves:
@@ -25,4 +24,4 @@ Temporal semantics keep provider observation time, retrieval time, requested as-
 
 Provider provenance is mandatory at the adapter envelope. Gateway provenance records the boundary without discarding provider provenance.
 
-Acceptance evidence is IMPLEMENTED in the current PR head; CI/runtime verification remains pending.
+Acceptance evidence: exact PR #760 head `00b41118744376a498d0d09c748be46cc7834db2` passed HAHAWEEK Tests, Security and Regression, A9 Runtime, Analytical Reorg Runtime, and HFI-MVP Runtime. PR #760 was merged to main as `0c999b6941fad1cd3de7ae8328819b6ca2a1da5e`. The implementation remains non-authoritative and live external-provider integration remains deferred.
