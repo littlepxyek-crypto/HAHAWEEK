@@ -8,6 +8,10 @@ const blueprint = fs.readFileSync(
   'docs/MASTER_ARCHITECTURE_BLUEPRINT_V1_0.md',
   'utf8'
 );
+const architectureDescription = fs.readFileSync(
+  'docs/ARCHITECTURE_DESCRIPTION_V1_0.md',
+  'utf8'
+);
 
 test('master architecture current-state section does not regress to historical MVP-only status', () => {
   const current = blueprint.slice(
@@ -36,4 +40,13 @@ test('master architecture contains no stale current-state gate wording outside h
   assert.doesNotMatch(blueprint, /The Cross-Spec Reconciliation Audit remains the governing blocker for implementation freeze while R-01\.\.R-14 remain open\./);
   assert.doesNotMatch(blueprint, /MVP remains DESIGN-ONLY\./);
   assert.doesNotMatch(blueprint, /R-01 through R-14 remain open until reconciled and covered by executable vectors\./);
+});
+
+
+test('architecture description has a current-main reconciliation overlay', () => {
+  assert.match(architectureDescription, /CURRENT-MAIN RECONCILIATION OVERLAY — 2026-10-08/);
+  assert.match(architectureDescription, /Current main HEAD at reconciliation time: `d4f338475858690c251dd75ae049bccf0b23a87f`/);
+  assert.match(architectureDescription, /Reference Intelligence is implemented as a bounded, non-authoritative investigation boundary/);
+  assert.match(architectureDescription, /V4 production authority remains INACTIVE/);
+  assert.match(architectureDescription, /IMPLEMENTED` ≠ `VERIFIED` ≠ `AUTHORIZED` ≠ `ACTIVE`/);
 });
