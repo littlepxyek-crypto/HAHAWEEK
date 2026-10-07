@@ -90,3 +90,23 @@ Reason: Reconcile the historical design decision with the current executable imp
 Status: VERIFIED ON PARENT COMMIT; CURRENT HEAD RE-VERIFICATION REQUIRED
 Decision: HFI-MVP end-to-end runtime verification on commit 0a52162aa3157aecc99db934f60c042a73b561d3 completed successfully. The preserved runtime artifact reports VERIFIED on Robinhood Mainnet chain 4663, complete acquisition, VALID formation, COMPLETE seven-day outcome coverage, PASS liquidity-survival criterion, deterministic replay equivalence, and 8664 raw / 8664 canonical evidence records. The CI artifact SHA-256 digest was independently checked against the downloaded artifact.
 Reason: Preserve the verified parent-commit runtime evidence without mislabeling it as current-head verification. Current HEAD requires its own HFI runtime gate. This does not activate production V4 authority.
+
+
+## D-019 — Reference Intelligence Provenance/Retry Reconciliation
+Status: VERIFIED ON CURRENT PR CI
+
+Problem: the initial Reference Intelligence implementation allowed corroboration from I1/I2 lineage, did not preserve the complete provider result envelope through the gateway, allowed VALIDATED without explicit validation context, and rejected retry_limit=0 even though zero is the valid no-retry policy.
+
+Root cause: the first implementation encoded only part of the V1.1 boundary and used a generic positive-integer resource guard.
+
+Resolution:
+- require an explicit provider result envelope with payload and provenance;
+- preserve provider provenance, source reference, temporal metadata, completeness, derivation, and lineage;
+- require I3/I4 for corroboration/analytical relevance/validation;
+- require explicit validation_ref and validation_rule_version for VALIDATED;
+- represent unverified historical/as-of responses as UNKNOWN with AS_OF_UNVERIFIED;
+- permit retry_limit=0 as an explicit bounded no-retry policy.
+
+Verification: full repository npm test passed after correction; Security/Regression, A9, and Analytical Reorg runtime gates passed on the corrected head. HFI-MVP runtime remained independently in progress at the time of this entry and does not determine Reference Intelligence contract correctness.
+
+Residual risk: live external-provider integration, provider-specific schema mappings, and production deployment/recovery remain unverified/deferred.
