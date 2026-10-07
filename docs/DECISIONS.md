@@ -78,3 +78,9 @@ Decision: While Codex usage is unavailable, continue read-only audit/design and 
 Status: LOCKED FOR IMPLEMENTATION
 Decision: Third-party intelligence is isolated behind Reference Provider → Adapter → Gateway → Reference Observation boundaries. Provider output is non-authoritative, provenance-preserving, temporally explicit, and resource-bounded. Provider count does not establish source independence.
 Reason: Add investigation capability without contaminating V4 authority, canonical evidence, cursor/checkpoint/manifest, or standalone project boundaries.
+
+
+## D-017 — Current Verification Reconciliation
+Status: VERIFIED ON CURRENT PR HEAD
+Decision: The Reference Intelligence boundary is implemented and verified through controlled fixture-provider tests, including provenance, independence, timeout, request-budget, concurrency, retry, and pagination resource-boundary vectors. Live external-provider integration remains deferred and is not required for canonical V4 authority.
+Reason: Reconcile the historical design decision with the current executable implementation without rewriting the historical D-014 record.
