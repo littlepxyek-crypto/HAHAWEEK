@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     init: true
     environment:
-      RPC_URL: ""
+      RPC_URL: ${RPC_URL:?RPC_URL must be set to an approved production RPC}
       CHAIN_ID: "4663"
       CONFIRMATIONS: "3"
       POLL_INTERVAL_MS: "5000"
