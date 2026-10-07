@@ -269,3 +269,53 @@ test('gateway enforces pagination limit for bounded collection responses', async
     /REFERENCE_PAGINATION_LIMIT_EXCEEDED/
   );
 });
+
+
+test('provider cannot self-promote source independence beyond adapter classification', async () => {
+  const gateway = createReferenceGateway({
+    providers: {
+      untrusted: {
+        type: 'TEST',
+        async observe() {
+          return {
+            payload: { ok: true, provider_claim: 'I4' },
+            provenance: { source: 'provider-self-asserted' },
+            independence_class: 'I4',
+            completeness_status: 'COMPLETE'
+          };
+        }
+      },
+      explicitly_classified: {
+        type: 'TEST',
+        independence_class: 'I3',
+        async observe() {
+          return {
+            payload: { ok: true },
+            provenance: { source: 'adapter-classified' },
+            independence_class: 'I0',
+            completeness_status: 'COMPLETE'
+          };
+        }
+      }
+    },
+    limits: { request_budget: 2, timeout_ms: 1000, response_bytes: 1024, pagination_limit: 2, concurrency: 1, retry_limit: 0 }
+  });
+
+  const unknown = await gateway.observe({
+    provider_id: 'untrusted',
+    request: { subject: 's1' },
+    request_id: 'r1',
+    acquisition_id: 'a1'
+  });
+  assert.equal(unknown.independence_class, 'I0');
+  assert.equal(unknown.provenance.provider_declared_independence_class, 'I4');
+
+  const classified = await gateway.observe({
+    provider_id: 'explicitly_classified',
+    request: { subject: 's2' },
+    request_id: 'r2',
+    acquisition_id: 'a2'
+  });
+  assert.equal(classified.independence_class, 'I3');
+  assert.equal(classified.provenance.provider_declared_independence_class, 'I0');
+});
