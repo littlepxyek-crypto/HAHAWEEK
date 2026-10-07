@@ -3,7 +3,7 @@
 Status: IMPLEMENTED / VERIFICATION REQUIRED
 
 State model:
-REQUESTED -> OBSERVED -> CORROBORATED -> ANALYTICALLY_RELEVANT -> VALIDATED
+REQUESTED -> OBSERVED -> PROVENANCE_RECORDED -> CORROBORATED -> ANALYTICALLY_RELEVANT -> VALIDATED
 
 Alternative terminal states:
 PARTIAL / UNKNOWN / FAILED / EXPIRED / CONTRADICTED
@@ -17,3 +17,6 @@ Provider labels and confidence values remain Reference Observations until an app
 Investigation is bounded by timeout, retry, concurrency, request budget, and response-size limits.
 
 The controlled fixture provider verifies only the abstraction; no external provider is a V4 dependency.
+
+
+The provenance-recording transition is explicit; provider output cannot enter analytical promotion before provenance is recorded.
