@@ -86,9 +86,10 @@ test('runtime preserves acquisition stage and nested provider diagnostics', () =
 });
 
 test('targeted historical block reads cap in-flight RPC batches', () => {
-  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=12/);
+  assert.match(runtime, /TARGET_BLOCK_BATCH_CONCURRENCY=50/);
   assert.match(runtime, /i\+=TARGET_BLOCK_BATCH_CONCURRENCY/);
   assert.match(runtime, /nums\.slice\(i,i\+TARGET_BLOCK_BATCH_CONCURRENCY\)/);
+  assert.match(runtime, /checkpoint\(base,stage,\{block_count:nums\.length,batch_size:TARGET_BLOCK_BATCH_CONCURRENCY\}\)/);
 });
 
 test('parallel acquisition is deterministically ordered before downstream interpretation', () => {
