@@ -1,6 +1,8 @@
 # HAHAWEEK — INVESTIGATION EXECUTION STATE MACHINE v1
 
-Status: DESIGNED / IMPLEMENTED / VERIFIED
+Status: DESIGNED / IMPLEMENTED / VERIFICATION PENDING
+
+Verification gate: CI/runtime evidence for the latest correction commit must pass before this status may be promoted to VERIFIED.
 Contract ID: INVESTIGATION_EXECUTION_STATE_MACHINE_V1
 
 Execution path:
