@@ -1,0 +1,39 @@
+'use strict';
+
+const CONTRACT_VERSION = 'REFERENCE_INTELLIGENCE_CONTRACT_V1';
+const OBSERVATION_VERSION = 'REFERENCE_OBSERVATION_V1';
+const INDEPENDENCE = Object.freeze(['I0', 'I1', 'I2', 'I3', 'I4']);
+const STATUS = Object.freeze([
+  'REQUESTED', 'OBSERVED', 'PROVENANCE_RECORDED', 'CORROBORATED',
+  'ANALYTICALLY_RELEVANT', 'VALIDATED', 'PARTIAL', 'UNKNOWN',
+  'FAILED', 'EXPIRED', 'CONTRADICTED'
+]);
+
+const TRANSITIONS = Object.freeze({
+  REQUESTED: ['OBSERVED', 'PARTIAL', 'UNKNOWN', 'FAILED', 'EXPIRED'],
+  OBSERVED: ['PROVENANCE_RECORDED', 'PARTIAL', 'UNKNOWN', 'FAILED', 'EXPIRED', 'CONTRADICTED'],
+  PROVENANCE_RECORDED: ['CORROBORATED', 'ANALYTICALLY_RELEVANT', 'PARTIAL', 'UNKNOWN', 'FAILED', 'EXPIRED', 'CONTRADICTED'],
+  CORROBORATED: ['ANALYTICALLY_RELEVANT', 'VALIDATED', 'CONTRADICTED', 'EXPIRED'],
+  ANALYTICALLY_RELEVANT: ['VALIDATED', 'CONTRADICTED', 'EXPIRED'],
+  VALIDATED: ['CONTRADICTED', 'EXPIRED'],
+  PARTIAL: ['PROVENANCE_RECORDED', 'OBSERVED', 'EXPIRED'],
+  UNKNOWN: ['OBSERVED', 'PROVENANCE_RECORDED', 'EXPIRED'],
+  FAILED: ['REQUESTED', 'EXPIRED'],
+  EXPIRED: [],
+  CONTRADICTED: []
+});
+
+function assertString(value, code) {
+  if (typeof value !== 'string' || value.length === 0) throw new Error(code);
+}
+
+function assertIndependence(value) {
+  if (!INDEPENDENCE.includes(value)) throw new Error('REFERENCE_INDEPENDENCE_INVALID');
+}
+
+function assertStatusTransition(previous, next) {
+  if (!STATUS.includes(previous) || !STATUS.includes(next)) throw new Error('REFERENCE_STATUS_INVALID');
+  if (!TRANSITIONS[previous].includes(next)) throw new Error('REFERENCE_STATUS_TRANSITION_INVALID');
+}
+
+module.exports = { CONTRACT_VERSION, OBSERVATION_VERSION, INDEPENDENCE, STATUS, TRANSITIONS, assertString, assertIndependence, assertStatusTransition };
