@@ -97,6 +97,11 @@ function createReferenceGateway(options) {
 
       const requestedAsOf = input.as_of_time || null;
       const providerAsOf = result.as_of_time || null;
+      // Independence is a HAHAWEEK boundary classification. A provider
+      // cannot self-promote its result by returning I3/I4. Only the
+      // registered adapter classification is eligible; unknown defaults to I0.
+      const adapterIndependence = providers[providerId].independence_class || 'I0';
+      const providerDeclaredIndependence = result.independence_class || null;
       const asOfMismatch = Boolean(requestedAsOf && providerAsOf !== requestedAsOf);
       const completeness = asOfMismatch
         ? 'UNKNOWN'
@@ -122,13 +127,14 @@ function createReferenceGateway(options) {
         provenance: Object.freeze({
           gateway_contract: 'REFERENCE_INTELLIGENCE_CONTRACT_V1',
           provider: result.provenance,
-          provider_id: providerId
+          provider_id: providerId,
+          provider_declared_independence_class: providerDeclaredIndependence
         }),
         limitations,
         completeness_status: completeness,
         error_status: result.error_status || null,
         derivation_status: result.derivation_status || 'OBSERVED',
-        independence_class: result.independence_class || providers[providerId].independence_class || 'I0',
+        independence_class: adapterIndependence,
         lineage: result.lineage || null,
         status
       });
