@@ -1,6 +1,8 @@
 # HAHAWEEK — REFERENCE INTELLIGENCE CONTRACT v1
 
-Status: IMPLEMENTED / VERIFIED
+Status: IMPLEMENTED / VERIFICATION PENDING
+
+Verification gate: CI/runtime evidence for the latest correction commit must pass before this status may be promoted to VERIFIED.
 Contract ID: REFERENCE_INTELLIGENCE_CONTRACT_V1
 
 Reference Intelligence is a non-authoritative investigation boundary.
