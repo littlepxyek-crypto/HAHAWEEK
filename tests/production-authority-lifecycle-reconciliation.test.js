@@ -96,13 +96,12 @@ test('STEP 606 reconciles a durable lifecycle ahead of the cursor by exact forwa
 });
 
 test('STEP 606 fails closed when cursor has no durable lifecycle authority', async () => {
-  const state = await setup();
+  const database = await createDatabase(':memory:');
   try {
-    state.database.db.run('DELETE FROM production_authority_lifecycle');
     let cursor = 111;
     assert.throws(
       () => reconcileProductionAuthorityLifecycleCursor({
-        database: state.database,
+        database,
         cursor: { get: () => cursor, advance: block => { cursor = block; } },
         expectedAuthorityFactory: () => expected(),
       }),
@@ -110,7 +109,7 @@ test('STEP 606 fails closed when cursor has no durable lifecycle authority', asy
     );
     assert.equal(cursor, 111);
   } finally {
-    cleanup(state);
+    database.close();
   }
 });
 
