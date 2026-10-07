@@ -8,6 +8,8 @@ const STATUS = Object.freeze([
   'ANALYTICALLY_RELEVANT', 'VALIDATED', 'PARTIAL', 'UNKNOWN',
   'FAILED', 'EXPIRED', 'CONTRADICTED'
 ]);
+const COMPLETENESS = Object.freeze(['COMPLETE', 'PARTIAL', 'UNKNOWN', 'FAILED', 'EXPIRED']);
+const DERIVATION = Object.freeze(['OBSERVED', 'DERIVED', 'INFERRED']);
 
 const TRANSITIONS = Object.freeze({
   REQUESTED: ['OBSERVED', 'PARTIAL', 'UNKNOWN', 'FAILED', 'EXPIRED'],
@@ -31,9 +33,26 @@ function assertIndependence(value) {
   if (!INDEPENDENCE.includes(value)) throw new Error('REFERENCE_INDEPENDENCE_INVALID');
 }
 
+function assertCompleteness(value) {
+  if (!COMPLETENESS.includes(value)) throw new Error('REFERENCE_COMPLETENESS_INVALID');
+}
+
+function assertDerivation(value) {
+  if (!DERIVATION.includes(value)) throw new Error('REFERENCE_DERIVATION_INVALID');
+}
+
+function assertStatus(value) {
+  if (!STATUS.includes(value)) throw new Error('REFERENCE_STATUS_INVALID');
+}
+
 function assertStatusTransition(previous, next) {
-  if (!STATUS.includes(previous) || !STATUS.includes(next)) throw new Error('REFERENCE_STATUS_INVALID');
+  assertStatus(previous);
+  assertStatus(next);
   if (!TRANSITIONS[previous].includes(next)) throw new Error('REFERENCE_STATUS_TRANSITION_INVALID');
 }
 
-module.exports = { CONTRACT_VERSION, OBSERVATION_VERSION, INDEPENDENCE, STATUS, TRANSITIONS, assertString, assertIndependence, assertStatusTransition };
+module.exports = {
+  CONTRACT_VERSION, OBSERVATION_VERSION, INDEPENDENCE, STATUS, COMPLETENESS, DERIVATION,
+  TRANSITIONS, assertString, assertIndependence, assertCompleteness, assertDerivation,
+  assertStatus, assertStatusTransition
+};
