@@ -1,6 +1,6 @@
 # HAHAWEEK — CLAIM PROMOTION PROVENANCE CONTRACT V1
 
-Status: IMPLEMENTED / CI VERIFICATION REQUIRED
+Status: VERIFIED / RECONCILED — HFI-MVP E2E runtime
 
 ## Purpose
 
@@ -54,6 +54,12 @@ A claim may be promoted only when the linked research report contains an allowed
 
 Identical claim, report, evidence set, provenance, and rule version MUST produce identical promotion identity.
 
+## Verification
+
+The HFI-MVP E2E runtime produced and verified a derived RESEARCH_CLAIM artifact with explicit report and evidence provenance, and its deterministic replay reproduced the claim-promotion identity. The runtime did not promote the claim into canonical evidence or V4 authority.
+
 ## Acceptance
 
 CONTRACT → IMPLEMENTATION → POSITIVE TEST → NEGATIVE TEST → RUNTIME VERIFICATION → DOCUMENTATION → RECONCILIATION
+
+Status: VERIFIED / RECONCILED.
