@@ -1224,3 +1224,53 @@ Deployment artifacts now define a persistent worker baseline using Docker and sy
 RPC production limitation remains explicit: public Robinhood RPC is rate-limited and not recommended for production. Production requires a production-grade primary provider with historical/archive capability and an independently operated secondary source. HAHAWEEK intentionally does not silently switch providers mid-batch; alternate-source use requires a new processing context and explicit reconciliation.
 
 Current architecture gate remains BLOCKED because live deployment/recovery verification and remaining R-01…R-14 closure are not complete. V4 production authority remains INACTIVE and implementation freeze remains BLOCKED.
+
+
+---
+
+# CURRENT-MAIN RECONCILIATION OVERLAY — 2026-10-08
+
+This append-only overlay is the current-state authority for this architecture description. Earlier review sections and dated overlays remain historical evidence and are not rewritten.
+
+## Current repository state
+
+- Current main HEAD at reconciliation time: `d4f338475858690c251dd75ae049bccf0b23a87f`.
+- HAHAWEEK remains standalone; ORACLE X and ASTRA are not architecture components.
+- The HFI-MVP/E2E vertical slice is implemented and has reached verified runtime acceptance on prior exact merge heads. The completion artifact explicitly does not authorize HFI-RADAR, production V4 cutover, or external action.
+- A8/A9 acquisition boundaries and analytical reorg propagation have executable/runtime verification on exact prior merge heads.
+- Reference Intelligence is implemented as a bounded, non-authoritative investigation boundary. The verified implementation uses controlled provider fixtures; live external-provider integration remains deferred.
+- EQC remains a bounded read-only consumer boundary; it cannot mutate canonical evidence, V4 authority, cursor, checkpoint, manifest, formation, validation, or publication state.
+- V4 production authority remains INACTIVE.
+- Architecture Gate remains BLOCKED by remaining system-wide production activation, live deployment/recovery, durability, and reconciliation criteria.
+
+## Current contract interpretation
+
+The R-01..R-14 findings recorded in earlier architecture-review tables are historical audit findings. Current status must be derived from current-main contracts, executable tests, runtime evidence, and reconciliation. They must not be treated as a single uniformly-open gate.
+
+Current implementation therefore follows:
+
+```
+PRIMARY EVIDENCE / ACQUISITION
+        |
+        v
+RAW → CANONICAL → V4 AUTHORITY BOUNDARY
+        |
+        +----> GRAPH / FORMATION / HYPOTHESIS / VALIDATION
+        |
+        +----> REFERENCE INTELLIGENCE (NON-AUTHORITATIVE)
+        |
+        v
+RADAR / RESEARCH / REPORT / X PROJECTION
+        |
+        v
+EQC / AGENT READ CONSUMPTION
+```
+
+Reference Intelligence is parallel and bounded; it is not inserted between canonical evidence and V4 authority and does not rewrite historical evidence.
+
+## Production interpretation
+
+`IMPLEMENTED` ≠ `VERIFIED` ≠ `AUTHORIZED` ≠ `ACTIVE`.
+
+The current repository must not declare production V4 ACTIVE merely because a contract or bounded runtime slice is verified. Live provider integration, production deployment, restart/recovery drills, and final system-wide activation gates remain separate acceptance boundaries.
+

@@ -53,6 +53,16 @@ test('authority mismatch is blocked and non-retryable', () => {
 });
 
 
+test('cursor ahead of durable authority is blocked and non-retryable', () => {
+  const failure = classifyFailure(new Error('LIFECYCLE_RECONCILIATION_AUTHORITY_BEHIND_CURSOR'));
+
+  assert.equal(failure.failure_class, 'AUTHORITY_MISMATCH');
+  assert.equal(failure.operational_state, 'BLOCKED');
+  assert.equal(failure.recoverability, 'STOP');
+  assert.equal(isRetryableFailure(failure), false);
+  assert.equal(failure.authority_impact, 'NO_ADVANCE');
+});
+
 test('watchdog renewal failure is blocked and non-retryable', () => {
   const failure = classifyFailure(new Error('WRITER_FENCE_WATCHDOG_RENEWAL_FAILED'));
 
