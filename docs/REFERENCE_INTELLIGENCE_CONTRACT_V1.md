@@ -1,6 +1,6 @@
 # HAHAWEEK — REFERENCE INTELLIGENCE CONTRACT v1
 
-Status: IMPLEMENTED / VERIFICATION PENDING
+Status: IMPLEMENTED / VERIFIED
 Contract ID: REFERENCE_INTELLIGENCE_CONTRACT_V1
 
 Reference Intelligence is a non-authoritative investigation boundary.
@@ -29,4 +29,4 @@ REQUESTED → OBSERVED → PROVENANCE_RECORDED → CORROBORATED → ANALYTICALLY
 
 Exception states: PARTIAL, UNKNOWN, FAILED, EXPIRED, CONTRADICTED.
 
-Acceptance requires implementation, positive tests, negative tests, runtime verification, documentation, and reconciliation. This contract does not authorize production V4 activation or any specific paid provider.
+Acceptance evidence: implementation, positive/negative tests, CI runtime execution of the reference test suite, documentation, and reconciliation are verified on the current PR head. This contract does not authorize production V4 activation or any specific paid provider. This contract does not authorize production V4 activation or any specific paid provider.
