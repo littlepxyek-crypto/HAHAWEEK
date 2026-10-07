@@ -1,6 +1,8 @@
 # HAHAWEEK — REFERENCE OBSERVATION PROVENANCE CONTRACT v1
 
-Status: IMPLEMENTED / VERIFIED
+Status: IMPLEMENTED / VERIFICATION PENDING
+
+Verification gate: CI/runtime evidence for the latest correction commit must pass before this status may be promoted to VERIFIED.
 Contract ID: REFERENCE_OBSERVATION_PROVENANCE_CONTRACT_V1
 
 Each Reference Observation preserves:
