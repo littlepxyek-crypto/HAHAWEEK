@@ -78,6 +78,16 @@ test('targeted runtime batches historical block reads without changing event ord
   assert.match(runtime, /batchMaxCount:TARGET_POOL_ID\?TARGET_BATCH_MAX:1/);
 });
 
+test('runtime persists stage timing and RPC telemetry without changing evidence semantics', () => {
+  assert.match(runtime, /stage_timing_ms/);
+  assert.match(runtime, /rpc_metrics/);
+  assert.match(runtime, /telemetry\.rpc\.getLogs\+\+/);
+  assert.match(runtime, /telemetry\.rpc\.getBlock\+\+/);
+  assert.match(runtime, /telemetry\.rpc\.retries\+\+/);
+  assert.match(runtime, /telemetry\.rpc\.splits\+\+/);
+  assert.match(runtime, /finalizeTelemetry\(base\)/);
+});
+
 test('runtime preserves acquisition stage and nested provider diagnostics', () => {
   assert.match(runtime, /stage='formation_logs'/);
   assert.match(runtime, /stage,error:errorText\(e\)/);
