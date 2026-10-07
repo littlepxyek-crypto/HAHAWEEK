@@ -180,7 +180,7 @@ test('gateway enforces pagination limit for bounded collection responses', async
         }
       }
     },
-    limits: { request_budget: 1, timeout_ms: 1000, response_bytes: 1024, pagination_limit: 2, concurrency: 1, retry_limit: 0 }
+    limits: { request_budget: 1, timeout_ms: 1000, response_bytes: 1024, pagination_limit: 2, concurrency: 1, retry_limit: 1 }
   });
 
   await assert.rejects(
