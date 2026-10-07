@@ -1,3 +1,14 @@
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-07 — VERIFIED / RECONCILED
+
+- Current main HEAD verified: `c2dc8e9e26be05331b8a3b1db53b3e787b012f18` (merge PR #764, `test(hfi): lock official radar RPC default`).
+- PR #764 is CLOSED / MERGED; merge commit is the current main HEAD. The change is test-only: `tests/hfi-radar-operational-runtime-boundary.test.js` adds a regression assertion that the HFI-RADAR operational verifier defaults to the official Robinhood Mainnet RPC and contains no `rpc.ordofi.network` reference.
+- Exact current-main SHA CI is terminal SUCCESS for: Push on main, HAHAWEEK Tests, HAHAWEEK Security and Regression, HAHAWEEK A9 Runtime Verification, HAHAWEEK Analytical Reorg Runtime Verification, HAHAWEEK HFI-MVP Runtime Verification, and HAHAWEEK HFI-RADAR Operational Runtime Verification.
+- Current-main HFI-MVP and HFI-RADAR runtime verification therefore have terminal SUCCESS on the exact merge SHA; no PR-head inference is being used.
+- V4 production authority remains INACTIVE. No production authority activation is inferred from the HFI runtime successes.
+- Architecture Gate remains BLOCKED pending the broader system-wide activation/contract/lifecycle criteria; this reconciliation does not authorize V4 production activation or a new architectural phase.
+- Local repository execution remains unavailable in this environment because github.com resolution/clone was not available; GitHub repository state and Actions are the execution evidence for this reconciliation.
+- Historical snapshots below are preserved additively and are not rewritten.
+
 ## MAIN RECONCILIATION SNAPSHOT — 2026-10-05 — VERIFIED / RECONCILED
 
 - Main HEAD verified at reconciliation time: `1ec4c1222c4780a58212a8987b2b59a9a9b48160` (merge PR #734). This is a historical verification snapshot, not a self-referential claim that remains current after subsequent merges.
