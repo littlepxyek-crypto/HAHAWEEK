@@ -17,7 +17,7 @@ const { createRadarReconciliation } = require('../src/core/hfi-radar-reconciliat
 
 const OUT = 'docs/runtime/hfi-radar-operational-latest.json';
 const HFI_OUT = 'docs/runtime/hfi-mvp-e2e-latest.json';
-const RPC = process.env.RPC_URL || 'https://rpc.ordofi.network';
+const RPC = process.env.RPC_URL || 'https://rpc.mainnet.chain.robinhood.com';
 const COMMIT = process.env.GITHUB_SHA || 'UNKNOWN';
 
 function digest(value) {
