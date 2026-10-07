@@ -774,78 +774,65 @@ Agent sits outside this hierarchy as a read-only consumer.
 
 # 21. Design Gate Reconciliation
 
-Design Gate 2 = PASS means:
+Design Gate 2 = PASS remains valid for the evidence-integrity foundation.
 
-- evidence/integrity/provenance foundation acceptance is satisfied;
-- F-01..F-05 and H-01..H-05 are evidenced under the declared boundary.
+The historical R-01..R-14 cross-spec audit is preserved as audit evidence, but it is no longer an accurate description of current implementation state. Current main now contains dedicated contracts and executable boundaries for the previously open areas, including:
 
-It does NOT mean:
+- Graph Identity;
+- analytical transition separation;
+- formation completeness;
+- L4/L5 executable vectors;
+- source independence;
+- authority activation;
+- acquisition completeness;
+- validation state;
+- descriptive measurement;
+- social snapshot provenance;
+- Formation/Hypothesis/Validation state separation;
+- claim promotion provenance.
 
-- all cross-spec contracts are frozen;
-- MVP implementation is automatically authorized;
-- production V4 authority is active;
-- social ingestion is ready;
-- Agent is production-ready.
+Reference Intelligence has also been added as a separate non-authoritative boundary with its own provenance, temporal, independence, resource, and investigation contracts.
 
-The Cross-Spec Reconciliation Audit remains the governing blocker for implementation freeze while R-01..R-14 remain open.
+This does NOT mean production V4 authority is active.
 
-This distinction is mandatory.
+This does NOT mean every external provider is production-integrated.
+
+This does NOT mean live deployment/recovery or every production activation criterion is complete.
 
 ---
 
-# 22. Open Architecture Contracts Before Implementation Freeze
+# 22. Current Contract Closure Position
 
-The following remain required:
+R-01..R-14 are now represented by explicit current-main contracts and executable tests/runtime evidence where applicable. They must no longer be described as uniformly OPEN.
 
-R-01 Graph identity domain
-R-02 Analytical transition domain separation
-R-03 Formation dissolved semantics
-R-04 Identity L4/L5 final verification semantics
-R-05 Source independence executable model
-R-06 Single-RPC limitation semantics
-R-07 MVP/V4 production authority boundary
-R-08 Formation completeness vs acquisition gap
-R-09 Validation result vocabulary
-R-10 Descriptive measurement vs score
-R-11 Versioned token/narrative thresholds
-R-12 Social snapshot/provenance contract
-R-13 Formation/Hypothesis/Validation transition chains
-R-14 Claim promotion/provenance contract
+The current position is:
 
-Priority:
+- contract/implementation boundary: IMPLEMENTED / VERIFIED where the corresponding contract states this;
+- Reference Intelligence live-provider integration: DEFERRED;
+- production V4 activation: INACTIVE;
+- Architecture Gate: BLOCKED until the remaining system-wide activation, deployment, recovery, and reconciliation criteria are satisfied.
 
-```
-R-01 → R-08
-      ↓
-R-09 → R-14
-      ↓
-Executable negative vectors
-      ↓
-Implementation freeze
-```
+Historical audit documents that recorded R-01..R-14 as OPEN remain immutable historical records. They are not current-state authority.
 
 ---
 
 # 23. Current Repository Reality
 
-On main:
+At current main reconciliation:
 
-- Canonical Blueprint exists and remains unchanged.
-- Design Gate 2 is PASS.
-- Cross-Spec Reconciliation remains Draft and says NOT READY FOR MVP IMPLEMENTATION.
-- MVP remains DESIGN-ONLY.
-- Production V4 remains BLOCKED/INACTIVE.
+- HAHAWEEK remains standalone.
+- The canonical 19 September product architecture remains the target architecture.
+- The verified MVP/HFI vertical slice is implemented and has reached successful runtime verification on prior exact merge heads.
+- Analytical reorg propagation is implemented and runtime-verified.
+- A8/A9 acquisition boundaries are implemented and runtime-verified.
+- EQC is implemented as a bounded read-only interface.
+- Reference Intelligence is implemented behind a bounded gateway using controlled provider fixtures; live external provider adapters are not yet production-integrated.
+- Reference observations preserve provenance, temporal/as-of state, completeness, derivation, independence, and provider-specific payload.
+- V4 production authority remains INACTIVE.
+- Architecture Gate remains BLOCKED by remaining production activation/lifecycle/deployment/recovery criteria, not by an obsolete assumption that R-01..R-14 have never been addressed.
+- Current repository state must always be reconciled against the actual main ref; historical snapshots must retain their original commit references.
 
-On Agent branch:
-
-- EQC V1 documentation exists.
-- Agent Read Boundary V1 exists.
-- Six read operations are implemented.
-- Negative read-only boundary tests exist.
-- PR #707 remains unmerged.
-- No Agent runtime has been added.
-- No V4 authority has been activated.
-- No ingestion authority has been modified.
+The MVP is therefore no longer "DESIGN-ONLY". It is a verified bounded vertical slice, while the complete HAHAWEEK product remains broader than the MVP.
 
 ---
 
@@ -1001,9 +988,9 @@ RPC → RAW EVIDENCE → V4 reference/integrity boundary → GRAPH
 15. Agent memory is non-authoritative.
 16. Multi-agent is optional and downstream.
 17. MVP remains smaller than the canonical architecture.
-18. Social integration remains outside the current MVP.
-19. Production V4 authority remains inactive until explicitly authorized.
-20. Open cross-spec contracts must be frozen and executable before broad implementation.
+18. Social integration remains outside the current MVP's authoritative path until its acquisition/provenance contracts are activated.
+19. Production V4 authority remains inactive until explicitly authorized and all activation criteria pass.
+20. Historical cross-spec audits remain preserved; current contract status is determined from current-main implementation, tests, runtime evidence, and reconciliation.
 
 ---
 
@@ -1041,9 +1028,9 @@ V4 production authority remains blocked until the applicable production-boundary
 
 Multi-agent orchestration until the single-agent EQC boundary and evaluation are proven.
 
-**AD-MASTER-09 — BLOCK IMPLEMENTATION FREEZE**
+**AD-MASTER-09 — BLOCK PRODUCTION / IMPLEMENTATION FREEZE ONLY ON CURRENT GATES**
 
-R-01 through R-14 remain open until reconciled and covered by executable vectors.
+R-01 through R-14 must be evaluated from current-main contracts and executable evidence. Historical OPEN findings are not themselves current blockers. Implementation freeze and production activation remain blocked until the remaining lifecycle, deployment, recovery, authority, and reconciliation gates pass.
 
 ---
 
