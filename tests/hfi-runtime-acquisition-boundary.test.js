@@ -31,8 +31,8 @@ test('RPC log acquisition has a global runtime and request budget', () => {
 
 test('RPC log acquisition uses bounded adaptive retries and range splitting', () => {
   assert.match(runtime, /while\(attempt<3\)/);
-  assert.match(runtime, /const minChunk=1,maxSplitDepth=14/);
-  assert.match(runtime, /if\(!isRangeLimitError\(last\)\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
+  assert.match(runtime, /const minChunk=Number\(process\.env\.HFI_LOG_MIN_CHUNK \|\| 250\),maxSplitDepth=14/);
+  assert.match(runtime, /const shouldSplit=isRangeLimitError\(last\)\|\|isRetryableRpcError\(last\);if\(!shouldSplit\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
   assert.match(runtime, /fetchRange\(n,mid/);
   assert.match(runtime, /fetchRange\(mid\+1,e/);
 });
@@ -115,10 +115,10 @@ test('resource-budget failures retain request and elapsed diagnostics', () => {
   assert.match(runtime, /elapsed_ms=\$\{e\.elapsed_ms\}/);
 });
 
-test('RPC transport failures do not trigger recursive range splitting', () => {
-  assert.match(runtime, /function isRangeLimitError\(error\)/);
-  assert.match(runtime, /if\(!isRangeLimitError\(x\)&&attempt>=3\)throw last/);
-  assert.match(runtime, /if\(!isRangeLimitError\(last\)\|\|depth>=maxSplitDepth/);
+test('RPC transport failures use bounded retry then adaptive recursive splitting', () => {
+  assert.match(runtime, /function isRetryableRpcError\(error\)/);
+  assert.match(runtime, /isRangeLimitError\(x\)\|\|isRetryableRpcError\(x\)/);
+  assert.match(runtime, /const shouldSplit=isRangeLimitError\(last\)\|\|isRetryableRpcError\(last\)/);
 });
 
 test('range splitting is reserved for explicit eth_getLogs range/result-limit failures', () => {
