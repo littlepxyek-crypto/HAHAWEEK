@@ -1,6 +1,6 @@
 # HAHAWEEK — REFERENCE PROVIDER RESOURCE BOUNDARY v1
 
-Status: IMPLEMENTED / VERIFICATION PENDING
+Status: IMPLEMENTED / VERIFIED
 Contract ID: REFERENCE_PROVIDER_RESOURCE_BOUNDARY_V1
 
 Every provider execution has explicit:
@@ -26,4 +26,4 @@ Provider SDKs and vendor assumptions stay behind adapters. Core ingestion must n
 
 The first provider implementation is a controlled adapter test, not an architectural commitment to a vendor.
 
-Acceptance requires executable negative vectors and runtime verification.
+Acceptance evidence: executable negative vectors, provider timeout/budget/concurrency/pagination boundary tests, and CI execution are verified on the current PR head.
