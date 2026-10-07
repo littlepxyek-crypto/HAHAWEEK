@@ -1,0 +1,36 @@
+services:
+  hahaweek:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    init: true
+    environment:
+      RPC_URL: ""
+      CHAIN_ID: "4663"
+      CONFIRMATIONS: "3"
+      POLL_INTERVAL_MS: "5000"
+      CHUNK_SIZE: "10"
+      MAX_BATCHES_PER_RUN: "10"
+      MAX_RUNTIME_MS: "900000"
+      MAX_RPC_CALLS_PER_RUN: "4096"
+      RPC_TIMEOUT_MS: "15000"
+      HAHAWEEK_DATA_DIR: /app/data
+      HAHAWEEK_STATE_FILE: /app/data/state.json
+    volumes:
+      - hahaweek-data:/app/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "node", "src/health.js"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 20s
+volumes:
+  hahaweek-data:
