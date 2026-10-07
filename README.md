@@ -45,15 +45,23 @@ INTERNET / RPC
       ↓
  RAW EVIDENCE
       ↓
- EVIDENCE GRAPH
+ CANONICAL EVIDENCE
       ↓
-   FORMATION
-      ↓
-  VALIDATION
-      ↓
- INTELLIGENCE
-      ↓
-RADAR / RESEARCH / REPORT
+ V4 AUTHORITY
+      │
+      ├──────────────→ EVIDENCE GRAPH (rebuildable projection)
+      │
+      └──────────────→ FORMATION
+                              ↓
+                         HYPOTHESIS
+                              ↓
+                         VALIDATION
+                              ↓
+                         INTELLIGENCE
+                         /          \\
+                      RADAR       RESEARCH
+                                      ↓
+                                   REPORT
 ```
 
 ---
@@ -433,10 +441,12 @@ Current status is intentionally conservative:
 
 ```text
 Architecture                 DEFINED
-V4 Integrity                 IN DEVELOPMENT
+V4 Integrity                 VERIFIED ENGINEERING BASELINE
 Design Gate 2                PASS
+HFI-MVP Runtime              VERIFIED
+Reference Intelligence      IMPLEMENTED / VERIFIED (fixture boundary)
 Production V4                BLOCKED / INACTIVE
-MVP                          DESIGN / VALIDATION
+MVP                          CONTROLLED VALIDATION
 Automated Trading            NOT PART OF THE FOUNDATION
 ```
 
