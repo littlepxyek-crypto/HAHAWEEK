@@ -16,7 +16,7 @@ test('deployment baseline is persistent and fail-closed', () => {
   assert.match(dockerfile, /VOLUME \["\/app\/data"\]/);
   assert.match(dockerfile, /HEALTHCHECK/);
 
-  assert.match(compose, /RPC_URL:\s*\$\{RPC_URL:\?\?\?/);
+  assert.match(compose, /RPC_URL:\s*\$\{RPC_URL:\?/);
   assert.match(compose, /hahaweek-data:\s*\/app\/data/);
   assert.match(compose, /read_only:\s*true/);
   assert.match(compose, /no-new-privileges:true/);
