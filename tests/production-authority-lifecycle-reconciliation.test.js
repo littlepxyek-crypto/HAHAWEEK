@@ -95,6 +95,24 @@ test('STEP 606 reconciles a durable lifecycle ahead of the cursor by exact forwa
   }
 });
 
+test('STEP 606 fails closed when cursor is ahead of durable lifecycle authority', async () => {
+  const state = await setup();
+  try {
+    let cursor = 111;
+    assert.throws(
+      () => reconcileProductionAuthorityLifecycleCursor({
+        database: state.database,
+        cursor: { get: () => cursor, advance: block => { cursor = block; } },
+        expectedAuthorityFactory: () => expected(),
+      }),
+      /LIFECYCLE_RECONCILIATION_AUTHORITY_BEHIND_CURSOR/
+    );
+    assert.equal(cursor, 111);
+  } finally {
+    cleanup(state);
+  }
+});
+
 test('STEP 606 fails closed on a lifecycle range gap', async () => {
   const state = await setup();
   try {
