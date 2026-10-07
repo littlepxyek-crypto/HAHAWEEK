@@ -12,6 +12,8 @@ const INTERVAL_MS = Number(process.env.HFI_RADAR_INTERVAL_MS || 5000);
 const MAX_BACKOFF_MS = Number(process.env.HFI_RADAR_MAX_BACKOFF_MS || 60000);
 const MAX_CYCLES = process.env.HFI_RADAR_MAX_CYCLES == null ? Infinity : Number(process.env.HFI_RADAR_MAX_CYCLES);
 const MAX_CONSECUTIVE_FAILURES = Number(process.env.HFI_RADAR_MAX_CONSECUTIVE_FAILURES || 3);
+const MAX_STATE_EVENTS = Number(process.env.HFI_RADAR_MAX_STATE_EVENTS || 10000);
+const MAX_STATE_BYTES = Number(process.env.HFI_RADAR_MAX_STATE_BYTES || 5 * 1024 * 1024);
 const STATE_FILE = process.env.HFI_RADAR_RUNTIME_STATE || path.join(process.cwd(), 'docs/runtime/hfi-radar-continuous-state.json');
 const OUTPUT_FILE = process.env.HFI_RADAR_RUNTIME_OUTPUT || path.join(process.cwd(), 'docs/runtime/hfi-radar-live-latest.json');
 
@@ -20,6 +22,8 @@ function assertConfig() {
   if (!Number.isInteger(MAX_BACKOFF_MS) || MAX_BACKOFF_MS < INTERVAL_MS) throw new Error('INVALID_HFI_RADAR_MAX_BACKOFF_MS');
   if (!(MAX_CYCLES === Infinity || (Number.isInteger(MAX_CYCLES) && MAX_CYCLES > 0))) throw new Error('INVALID_HFI_RADAR_MAX_CYCLES');
   if (!Number.isInteger(MAX_CONSECUTIVE_FAILURES) || MAX_CONSECUTIVE_FAILURES <= 0) throw new Error('INVALID_HFI_RADAR_MAX_CONSECUTIVE_FAILURES');
+  if (!Number.isInteger(MAX_STATE_EVENTS) || MAX_STATE_EVENTS <= 0) throw new Error('INVALID_HFI_RADAR_MAX_STATE_EVENTS');
+  if (!Number.isInteger(MAX_STATE_BYTES) || MAX_STATE_BYTES <= 0) throw new Error('INVALID_HFI_RADAR_MAX_STATE_BYTES');
 }
 
 function readJson(file, fallback) {
@@ -138,6 +142,25 @@ async function canonicalEventsForResult({ database, provider, processingContext 
   return out.sort((a, b) => sortEvent(a.event, b.event));
 }
 
+function assertStateBudget(state) {
+  const eventCount = Object.values(state.pools).reduce((sum, pool) => sum + (pool.events || []).length, 0);
+  if (eventCount > MAX_STATE_EVENTS) {
+    const error = new Error('HFI_RADAR_STATE_EVENT_LIMIT_EXCEEDED');
+    error.code = 'HFI_RADAR_STATE_EVENT_LIMIT_EXCEEDED';
+    error.event_count = eventCount;
+    error.max_events = MAX_STATE_EVENTS;
+    throw error;
+  }
+  const bytes = Buffer.byteLength(JSON.stringify(state), 'utf8');
+  if (bytes > MAX_STATE_BYTES) {
+    const error = new Error('HFI_RADAR_STATE_BYTE_LIMIT_EXCEEDED');
+    error.code = 'HFI_RADAR_STATE_BYTE_LIMIT_EXCEEDED';
+    error.state_bytes = bytes;
+    error.max_bytes = MAX_STATE_BYTES;
+    throw error;
+  }
+}
+
 function reconcileEmittedCandidates(state) {
   const valid = {};
   for (const pool of Object.values(state.pools)) {
@@ -195,6 +218,7 @@ async function runCycle({ engine, state }) {
     processingContext: result.processingContext,
   });
   const candidates = applyEvents(state, events);
+  assertStateBudget(state);
   state.cycles_completed += 1;
   state.updated_at = new Date().toISOString();
   atomicWrite(STATE_FILE, state);
@@ -273,4 +297,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { canonicalEventsForResult, applyEvents, removeReorgedState, normalizeState, runCycle, runContinuous };
+module.exports = { canonicalEventsForResult, applyEvents, removeReorgedState, normalizeState, assertStateBudget, runCycle, runContinuous };

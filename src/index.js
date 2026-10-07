@@ -32,6 +32,8 @@ const {
   CONFIRMATIONS,
   CHUNK_SIZE,
   MAX_BATCHES_PER_RUN,
+  MAX_RUNTIME_MS,
+  MAX_RPC_CALLS_PER_RUN,
 } = require('./core/config');
 
 const { BlockCursor } = require('./core/block-cursor');
@@ -151,11 +153,12 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     chunkSize: 10,
   });
 
-  const processor = async (block) => {
+  const processor = async (block, budget) => {
     const result = await rawLogs.ingestRange(
       block,
       block,
-      createRelevantLogFilter()
+      createRelevantLogFilter(),
+      budget
     );
 
     /*
@@ -173,7 +176,7 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     return result;
   };
 
-  const processorRange = async (fromBlock, toBlock) => {
+  const processorRange = async (fromBlock, toBlock, budget) => {
     const context = await createVerifiedProcessingContext({
       database,
       provider,
@@ -190,7 +193,8 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
         const result = await rawLogs.ingestRange(
           rangeFrom,
           rangeTo,
-          createRelevantLogFilter()
+          createRelevantLogFilter(),
+          budget
         );
 
         console.log(
@@ -254,6 +258,8 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     processorRange,
     batchSize: CHUNK_SIZE,
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
+    maxRuntimeMs: MAX_RUNTIME_MS,
+    maxRpcCalls: MAX_RPC_CALLS_PER_RUN,
     writerFence,
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,

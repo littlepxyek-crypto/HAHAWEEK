@@ -75,3 +75,31 @@ External dependency failure MUST remain distinguishable from application failure
 ## Acceptance
 This contract is satisfied only when CONTRACT → IMPLEMENTATION → TEST → NEGATIVE TEST → RUNTIME VERIFICATION → RECONCILIATION agree.
 This contract does not authorize production V4 activation, external publication, trading, signing, or autonomous action.
+
+
+## Reconciliation Overlay — 2026-10-07
+
+### Persistent worker baseline
+
+The repository now contains a concrete persistent-worker deployment baseline:
+- root Dockerfile with non-root runtime user, read-only root filesystem, writable durable data volume, and healthcheck;
+- deploy/docker-compose.yml with one worker instance, durable volume, resource configuration, dropped Linux capabilities, and no-new-privileges;
+- deploy/systemd/hahaweek.service with persistent WorkingDirectory, explicit writable data path, restart policy, and hardened systemd filesystem protections.
+
+These artifacts are deployment IMPLEMENTATION, not proof of a live production deployment.
+
+### Runtime/resource reconciliation
+
+The current hardening head has executable bounds for MAX_RUNTIME_MS and MAX_RPC_CALLS_PER_RUN in the ingestion path, bounded RPC retry/backoff, and adaptive eth_getLogs splitting for retryable transport/rate-limit/range pressure. HFI-RADAR derived state is bounded by event count and serialized byte size. Limits fail closed and do not delete raw/canonical evidence.
+
+HFI-MVP runtime verification for hardening head 34d867ffd4602ebc0909b0f712f5c372890dd572 reached VERIFIED. Its preserved artifact records acquisition COMPLETE, formation VALID, validation CONFIRMED, replay equivalent=true, 8,664 raw evidence items, 8,664 canonical evidence items, and manifest 653bef88df94ee30998d491788d99465b64ac0962abc8c8d9eb56082aeb61239. Artifact digest: sha256:386a67d03ac0b86f39fabaef1e8ab813360e7727a1206f22dfbe6b7587ac261e.
+
+HFI-RADAR operational runtime also reached VERIFIED with provenance and replay checks passing. Its artifact digest is sha256:b4b875ff7366a2f08b8bd0eeef5d3fba151c57dd8d84755303cc3693054818ad.
+
+### RPC limitation
+
+The hardening does NOT implement automatic multi-provider failover. This is intentional: silent mid-batch provider switching would risk mixed-source provenance. Production requires a pinned source per processing context and explicit reconciliation when a different source is used. A production-grade primary archive-capable provider plus independent secondary source remains an operational prerequisite.
+
+### Live deployment status
+
+A real production host, persistent-volume restart drill, backup/restore drill, writer-fence contention drill, RPC degradation drill, and live recovery/replay drill have NOT been executed in this repository session. Therefore the deployment contract remains IMPLEMENTED / VERIFICATION PENDING, V4 authority remains INACTIVE, and production readiness remains NOT READY.

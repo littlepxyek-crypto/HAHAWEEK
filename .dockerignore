@@ -1,0 +1,10 @@
+node_modules
+data
+docs/runtime
+.git
+.github
+*.sqlite
+*.sqlite.tmp
+.env
+.env.*
+!.env.example

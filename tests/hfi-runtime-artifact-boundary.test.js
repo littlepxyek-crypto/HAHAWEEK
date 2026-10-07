@@ -28,8 +28,8 @@ test('runtime preserves stage heartbeat before expensive acquisition so watchdog
 });
 
 test('runtime log acquisition can adaptively split provider-rejected ranges with a bounded depth', () => {
-  assert.match(runtime, /const minChunk=1,maxSplitDepth=14/);
-  assert.match(runtime, /if\(!isRangeLimitError\(last\)\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
+  assert.match(runtime, /const minChunk=Number\(process\.env\.HFI_LOG_MIN_CHUNK \|\| 250\),maxSplitDepth=14/);
+  assert.match(runtime, /const shouldSplit=isRangeLimitError\(last\)\|\|isRetryableRpcError\(last\);if\(!shouldSplit\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
 });
 
 test('workflow removes stale artifact before runtime execution', () => {

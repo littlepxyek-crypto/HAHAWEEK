@@ -122,3 +122,12 @@ test('continuous radar restart recovers durable derived state without duplicate 
   assert.equal(recovered.cycles_completed, 1);
   assert.deepEqual(recovered.pools[pool].events.map(x => x.evidence_id), ['ei:create', 'ei:liquidity']);
 });
+
+
+test('continuous radar fails closed when derived state exceeds its resource ceiling', () => {
+  const { assertStateBudget } = require('../scripts/hfi-radar-continuous-runtime');
+  const pool = '0x' + '11'.repeat(32);
+  const state = { schema_version: 'hfi-radar-continuous-runtime-v1', pools: { [pool]: { events: [] } }, emitted: {}, cycles_completed: 0 };
+  for (let i = 0; i < 10001; i += 1) state.pools[pool].events.push(event('LIQUIDITY_ADDED', 'ei:' + i, i + 1, pool));
+  assert.throws(() => assertStateBudget(state), /HFI_RADAR_STATE_EVENT_LIMIT_EXCEEDED/);
+});

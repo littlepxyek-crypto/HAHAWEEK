@@ -66,3 +66,13 @@ test('rpcCall preserves final RPC failure', async () => {
 
   assert.equal(attempts, 3);
 });
+
+
+test('rpcCall enforces a shared runtime call budget', async () => {
+  const { createRuntimeBudget } = require('../src/core/rpc-call');
+  const budget = createRuntimeBudget({ maxRuntimeMs: 10000, maxCalls: 2, startedAt: Date.now() });
+  await rpcCall(async () => 1, { budget });
+  await rpcCall(async () => 2, { budget });
+  await assert.rejects(() => rpcCall(async () => 3, { budget }), /RPC_CALL_BUDGET_EXCEEDED/);
+  assert.equal(budget.calls(), 2);
+});
