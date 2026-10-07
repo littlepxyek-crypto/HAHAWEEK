@@ -29,4 +29,4 @@ REQUESTED → OBSERVED → PROVENANCE_RECORDED → CORROBORATED → ANALYTICALLY
 
 Exception states: PARTIAL, UNKNOWN, FAILED, EXPIRED, CONTRADICTED.
 
-Acceptance evidence: implementation, positive/negative tests, CI runtime execution of the reference test suite, documentation, and reconciliation are verified on the current PR head. This contract does not authorize production V4 activation or any specific paid provider. This contract does not authorize production V4 activation or any specific paid provider.
+Acceptance evidence: implementation, positive/negative tests, CI runtime execution of the reference test suite, documentation, and reconciliation are verified on the current PR head. This contract does not authorize production V4 activation or any specific paid provider.

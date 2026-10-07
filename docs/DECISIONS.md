@@ -86,7 +86,7 @@ Decision: The Reference Intelligence boundary is implemented and verified throug
 Reason: Reconcile the historical design decision with the current executable implementation without rewriting the historical D-014 record.
 
 
-## D-018 — HFI Current-Head Runtime Reconciliation
-Status: VERIFIED ON CURRENT PR HEAD
+## D-018 — HFI Parent-Commit Runtime Reconciliation
+Status: VERIFIED ON PARENT COMMIT; CURRENT HEAD RE-VERIFICATION REQUIRED
 Decision: HFI-MVP end-to-end runtime verification on commit 0a52162aa3157aecc99db934f60c042a73b561d3 completed successfully. The preserved runtime artifact reports VERIFIED on Robinhood Mainnet chain 4663, complete acquisition, VALID formation, COMPLETE seven-day outcome coverage, PASS liquidity-survival criterion, deterministic replay equivalence, and 8664 raw / 8664 canonical evidence records. The CI artifact SHA-256 digest was independently checked against the downloaded artifact.
-Reason: Establish current-head runtime evidence and reconcile the README architecture projection semantics after the runtime reached terminal success. This does not activate production V4 authority.
+Reason: Preserve the verified parent-commit runtime evidence without mislabeling it as current-head verification. Current HEAD requires its own HFI runtime gate. This does not activate production V4 authority.
