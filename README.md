@@ -353,6 +353,15 @@ X can be an input and publication channel.
 - [Cross-Spec L4 Validation](docs/CROSS_SPEC_L4_VALIDATION_CONTRACT_V0.1.md)
 - [Cross-Spec Reconciliation Audit](docs/CROSS_SPEC_RECONCILIATION_AUDIT_V0_1.md)
 
+### Reference Intelligence
+
+- [Reference Intelligence Contract](docs/REFERENCE_INTELLIGENCE_CONTRACT_V1.md)
+- [Reference Observation Provenance](docs/REFERENCE_OBSERVATION_PROVENANCE_CONTRACT_V1.md)
+- [Reference Provider Resource Boundary](docs/REFERENCE_PROVIDER_RESOURCE_BOUNDARY_V1.md)
+- [Investigation Execution State Machine](docs/INVESTIGATION_EXECUTION_STATE_MACHINE_V1.md)
+
+Reference Intelligence is a non-authoritative, bounded investigation layer. It cannot mutate V4 authority or become canonical evidence automatically.
+
 ### Engineering & Continuity
 
 - [Design Gate 2 State](docs/DESIGN_GATE_2_STATE.md)
