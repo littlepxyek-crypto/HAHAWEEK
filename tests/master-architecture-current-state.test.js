@@ -28,5 +28,5 @@ test('historical R-01..R-14 findings are not presented as uniformly open current
   );
 
   assert.match(closure, /R-01\.\.R-14 are now represented by explicit current-main contracts/);
-  assert.doesNotMatch(closure, /must no longer be described as uniformly OPEN/);
+  assert.doesNotMatch(closure, /R-01\.\.R-14.*uniformly OPEN/);
 });
