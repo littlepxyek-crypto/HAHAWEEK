@@ -85,9 +85,9 @@ WALLET ACTIVITY
       ↓
 FORMATION WINDOW
       ↓
-EVIDENCE GRAPH
-      ↓
-VALIDATION
+FORMATION / VALIDATION
+      │
+      └──→ EVIDENCE GRAPH (parallel rebuildable projection)
 ```
 
 Every downstream conclusion should remain traceable to the evidence that supports it.
@@ -153,17 +153,23 @@ HAHAWEEK explicitly distinguishes:
                        ↓
                   RAW EVIDENCE
                        ↓
-                 EVIDENCE GRAPH
+               CANONICAL EVIDENCE
                        ↓
-                 FORMATION ENGINE
-                       ↓
-                    VALIDATION
-                       ↓
-                 INTELLIGENCE
-                  /          \
-               RADAR       RESEARCH
-                              ↓
-                           REPORT
+                  V4 AUTHORITY
+                    /       \
+                   /         \
+                  ↓           ↓
+       EVIDENCE GRAPH      FORMATION
+       (rebuildable)           ↓
+                           HYPOTHESIS
+                               ↓
+                           VALIDATION
+                               ↓
+                          INTELLIGENCE
+                           /       \
+                        RADAR     RESEARCH
+                                    ↓
+                                  REPORT
 ```
 
 The Evidence Graph is a projection and must remain rebuildable from authoritative evidence.
