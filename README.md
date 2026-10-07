@@ -45,15 +45,23 @@ INTERNET / RPC
       ↓
  RAW EVIDENCE
       ↓
- EVIDENCE GRAPH
+ CANONICAL EVIDENCE
       ↓
-   FORMATION
-      ↓
-  VALIDATION
-      ↓
- INTELLIGENCE
-      ↓
-RADAR / RESEARCH / REPORT
+ V4 AUTHORITY
+      │
+      ├──────────────→ EVIDENCE GRAPH (rebuildable projection)
+      │
+      └──────────────→ FORMATION
+                              ↓
+                         HYPOTHESIS
+                              ↓
+                         VALIDATION
+                              ↓
+                         INTELLIGENCE
+                         /          \\
+                      RADAR       RESEARCH
+                                      ↓
+                                   REPORT
 ```
 
 ---
@@ -77,9 +85,9 @@ WALLET ACTIVITY
       ↓
 FORMATION WINDOW
       ↓
-EVIDENCE GRAPH
-      ↓
-VALIDATION
+FORMATION / VALIDATION
+      │
+      └──→ EVIDENCE GRAPH (parallel rebuildable projection)
 ```
 
 Every downstream conclusion should remain traceable to the evidence that supports it.
@@ -145,17 +153,23 @@ HAHAWEEK explicitly distinguishes:
                        ↓
                   RAW EVIDENCE
                        ↓
-                 EVIDENCE GRAPH
+               CANONICAL EVIDENCE
                        ↓
-                 FORMATION ENGINE
-                       ↓
-                    VALIDATION
-                       ↓
-                 INTELLIGENCE
-                  /          \
-               RADAR       RESEARCH
-                              ↓
-                           REPORT
+                  V4 AUTHORITY
+                    /       \
+                   /         \
+                  ↓           ↓
+       EVIDENCE GRAPH      FORMATION
+       (rebuildable)           ↓
+                           HYPOTHESIS
+                               ↓
+                           VALIDATION
+                               ↓
+                          INTELLIGENCE
+                           /       \
+                        RADAR     RESEARCH
+                                    ↓
+                                  REPORT
 ```
 
 The Evidence Graph is a projection and must remain rebuildable from authoritative evidence.
@@ -353,6 +367,15 @@ X can be an input and publication channel.
 - [Cross-Spec L4 Validation](docs/CROSS_SPEC_L4_VALIDATION_CONTRACT_V0.1.md)
 - [Cross-Spec Reconciliation Audit](docs/CROSS_SPEC_RECONCILIATION_AUDIT_V0_1.md)
 
+### Reference Intelligence
+
+- [Reference Intelligence Contract](docs/REFERENCE_INTELLIGENCE_CONTRACT_V1.md)
+- [Reference Observation Provenance](docs/REFERENCE_OBSERVATION_PROVENANCE_CONTRACT_V1.md)
+- [Reference Provider Resource Boundary](docs/REFERENCE_PROVIDER_RESOURCE_BOUNDARY_V1.md)
+- [Investigation Execution State Machine](docs/INVESTIGATION_EXECUTION_STATE_MACHINE_V1.md)
+
+Reference Intelligence is non-authoritative, provenance-preserving, temporally explicit, and resource-bounded. It cannot mutate V4 authority or become canonical evidence automatically.
+
 ### Engineering & Continuity
 
 - [Design Gate 2 State](docs/DESIGN_GATE_2_STATE.md)
@@ -424,10 +447,12 @@ Current status is intentionally conservative:
 
 ```text
 Architecture                 DEFINED
-V4 Integrity                 IN DEVELOPMENT
+V4 Integrity                 VERIFIED ENGINEERING BASELINE
 Design Gate 2                PASS
+HFI-MVP Runtime              VERIFIED
+Reference Intelligence      IMPLEMENTED / VERIFIED (fixture boundary)
 Production V4                BLOCKED / INACTIVE
-MVP                          DESIGN / VALIDATION
+MVP                          CONTROLLED VALIDATION
 Automated Trading            NOT PART OF THE FOUNDATION
 ```
 
