@@ -14,7 +14,8 @@ const DEFAULT_LIMITS = Object.freeze({
 function mergeLimits(limits) {
   const out = Object.assign({}, DEFAULT_LIMITS, limits || {});
   for (const key of Object.keys(DEFAULT_LIMITS)) {
-    if (!Number.isSafeInteger(out[key]) || out[key] <= 0) {
+    const minimum = key === 'retry_limit' ? 0 : 1;
+    if (!Number.isSafeInteger(out[key]) || out[key] < minimum) {
       throw new Error('INVALID_REFERENCE_LIMIT_' + key.toUpperCase());
     }
   }
