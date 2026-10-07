@@ -25,4 +25,4 @@ Temporal semantics keep provider observation time, retrieval time, requested as-
 
 Provider provenance is mandatory at the adapter envelope. Gateway provenance records the boundary without discarding provider provenance.
 
-Acceptance evidence: implementation, positive/negative tests, CI execution, and reconciliation are verified on the current PR head.
+Acceptance evidence is IMPLEMENTED in the current PR head; CI/runtime verification remains pending.
