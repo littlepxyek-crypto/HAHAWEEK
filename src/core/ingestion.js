@@ -15,6 +15,8 @@ class IngestionEngine {
     authorityGate,
     writerFence,
     writerFenceRenewalIntervalMs,
+    maxRuntimeMs,
+    maxRpcCalls,
   }) {
     if (!provider) {
       throw new Error('PROVIDER_REQUIRED');
@@ -79,10 +81,7 @@ class IngestionEngine {
         : null
     );
     this.running = false;
-    this.runtimeBudgetOptions = {
-      maxRuntimeMs: arguments[0]?.maxRuntimeMs,
-      maxCalls: arguments[0]?.maxRpcCalls,
-    };
+    this.runtimeBudgetOptions = { maxRuntimeMs, maxCalls: maxRpcCalls };
   }
 
   async runOnce() {
