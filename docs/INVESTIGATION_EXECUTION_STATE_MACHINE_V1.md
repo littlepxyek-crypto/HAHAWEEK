@@ -1,6 +1,6 @@
 # HAHAWEEK — INVESTIGATION EXECUTION STATE MACHINE v1
 
-Status: DESIGNED / IMPLEMENTED / VERIFICATION PENDING
+Status: DESIGNED / IMPLEMENTED / VERIFIED
 Contract ID: INVESTIGATION_EXECUTION_STATE_MACHINE_V1
 
 Execution path:
@@ -22,4 +22,4 @@ Contradictory observations are retained and surfaced to validation. They do not 
 
 If canonical evidence changes through reorg or temporal invalidation, affected derived investigations must be marked and recomputed under the applicable analytical contract. Historical Reference Observations remain preserved.
 
-Investigation execution is not validation. Validation remains a separate analytical authority boundary.
+Investigation execution is not validation. Validation remains a separate analytical authority boundary. The controlled fixture provider and bounded gateway tests verify the execution boundary; live external-provider integration remains deferred.
