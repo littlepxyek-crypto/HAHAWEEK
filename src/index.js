@@ -32,6 +32,8 @@ const {
   CONFIRMATIONS,
   CHUNK_SIZE,
   MAX_BATCHES_PER_RUN,
+  MAX_RUNTIME_MS,
+  MAX_RPC_CALLS_PER_RUN,
 } = require('./core/config');
 
 const { BlockCursor } = require('./core/block-cursor');
@@ -256,6 +258,8 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     processorRange,
     batchSize: CHUNK_SIZE,
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
+    maxRuntimeMs: MAX_RUNTIME_MS,
+    maxRpcCalls: MAX_RPC_CALLS_PER_RUN,
     writerFence,
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,
