@@ -12,6 +12,14 @@ const architectureDescription = fs.readFileSync(
   'docs/ARCHITECTURE_DESCRIPTION_V1_0.md',
   'utf8'
 );
+const projectState = fs.readFileSync('PROJECT_STATE.md', 'utf8');
+
+test('PROJECT_STATE current snapshot is newer than the preserved historical 96b2606 snapshot', () => {
+  const currentSection = projectState.split(/^## /m)[1] || '';
+  assert.match(currentSection, /CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08/);
+  assert.match(currentSection, /d4f338475858690c251dd75ae049bccf0b23a87f/);
+  assert.doesNotMatch(currentSection, /96b26068765da2736c9d9c397b2ad292a4e7425f/);
+});
 
 test('master architecture current-state section does not regress to historical MVP-only status', () => {
   const current = blueprint.slice(
