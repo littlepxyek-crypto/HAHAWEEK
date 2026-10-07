@@ -74,8 +74,15 @@ function reconcileProductionAuthorityLifecycleCursor({
    * corresponding authoritative lifecycle. Fail closed instead of silently
    * accepting that divergence.
    */
+  if (rows.length === 0 && currentCursor > 0) {
+    throw new Error('LIFECYCLE_RECONCILIATION_AUTHORITY_BEHIND_CURSOR');
+  }
+
   if (rows.length > 0) {
-    const highestDurableAuthorityBlock = Math.max(...rows.map(record => record.toBlock));
+    const highestDurableAuthorityBlock = rows.reduce(
+      (highest, record) => Math.max(highest, record.toBlock),
+      rows[0].toBlock
+    );
     if (currentCursor > highestDurableAuthorityBlock) {
       throw new Error('LIFECYCLE_RECONCILIATION_AUTHORITY_BEHIND_CURSOR');
     }
