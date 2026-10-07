@@ -35,4 +35,4 @@ Exception states: PARTIAL, UNKNOWN, FAILED, EXPIRED, CONTRADICTED.
 
 VALIDATED is not self-authorized by the provider or observation. Promotion requires explicit validation_ref and validation_rule_version from the separate validation authority boundary.
 
-Acceptance evidence: implementation, positive/negative tests, CI runtime execution of the reference test suite, documentation, and reconciliation are verified on the current PR head. This contract does not authorize production V4 activation or any specific paid provider.
+Acceptance evidence is IMPLEMENTED in the current PR head; CI/runtime verification remains pending. This contract does not authorize production V4 activation or any specific paid provider.
