@@ -66,6 +66,21 @@ function reconcileProductionAuthorityLifecycleCursor({
   let current = currentCursor;
   let reconciled = 0;
 
+  /*
+   * A durable lifecycle may legitimately be ahead of the cursor after a
+   * crash, so the normal path reconciles forward. The inverse state is not
+   * recoverable by replaying lifecycle rows: a cursor above the highest
+   * durable authority means the cursor may claim progress that has no
+   * corresponding authoritative lifecycle. Fail closed instead of silently
+   * accepting that divergence.
+   */
+  if (rows.length > 0) {
+    const highestDurableAuthorityBlock = Math.max(...rows.map(record => record.toBlock));
+    if (currentCursor > highestDurableAuthorityBlock) {
+      throw new Error('LIFECYCLE_RECONCILIATION_AUTHORITY_BEHIND_CURSOR');
+    }
+  }
+
   for (const record of rows) {
     if (record.toBlock <= current) continue;
 
