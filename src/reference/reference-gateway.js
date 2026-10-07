@@ -20,7 +20,7 @@ function withTimeout(promise, timeoutMs) {
       const timer = setTimeout(() => {
         clearTimeout(timer);
         reject(Object.assign(new Error('REFERENCE_PROVIDER_TIMEOUT'), { code: 'TIMEOUT' }));
-      }, timeoutMs),
+      }, timeoutMs)
     }),
   ]);
 }
