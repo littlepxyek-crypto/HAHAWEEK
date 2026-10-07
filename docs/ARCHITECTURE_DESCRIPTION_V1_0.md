@@ -1207,3 +1207,49 @@ Impact: runtime performance/resource failure could not previously be classified 
 Corrective action: persist stage and heartbeat evidence before expensive operations and formation chunks.
 Regression test: tests/hfi-runtime-artifact-boundary.test.js.
 Residual risk: the actual long-running stage is not yet established; the next runtime artifact must provide that evidence.
+
+
+## Current-head reconciliation — PR #738 merged / R-13 analytical transition closure — 2026-10-05
+
+This append-only reconciliation records the post-verification state after PR #738 was merged into main as commit `8b86b17ec619a9746fa91b805fcc5cbcd2e19df7`. Historical review sections and prior findings are intentionally preserved.
+
+### R-13 — Formation / Hypothesis / Validation transition chain
+
+Status: VERIFIED / RECONCILED for the implemented HFI vertical slice.
+
+Evidence:
+- `docs/ANALYTICAL_TRANSITION_CONTRACT_V1.md` is marked VERIFIED.
+- HFI runtime `37314276864` completed SUCCESS at CI level and produced runtime artifact `11347823996`.
+- Artifact digest: `sha256:2646d8e276372b03cdca06f1f8523827e0d675fb9966ee896ba13f6669d7b89`.
+- Runtime artifact state: VERIFIED; terminal stage: replay; replay equivalence: true.
+- Runtime commit: `a7c3f7c1e48e649e85f15b8c90800f98f3731d99`, subsequently merged into main as `8b86b17ec619a9746fa91b805fcc5cbcd2e19df7`.
+- Replay explicitly compares the analytical transition chain, including Formation transitions and Hypothesis `PROPOSED → SUPPORTED`.
+
+Authority boundary remains unchanged: analytical transitions are derived state and do not mutate raw/canonical evidence, V4 identity, cursor, checkpoint, manifest, canonicality, or authority activation.
+
+### Current contract disposition
+
+- R-02: VERIFIED / RECONCILED for the implemented analytical transition path.
+- R-13: VERIFIED / RECONCILED for the implemented HFI vertical slice.
+- R-14: VERIFIED for the current HFI runtime claim-promotion path; broader EQC claim-provenance query surface remains unimplemented.
+- R-03: DEFERRED_WITH_ACCEPTED_RISK — no DISSOLVED predicate has been invented.
+- R-06: DEFERRED_WITH_ACCEPTED_RISK — single-RPC omission/censorship limitation remains explicit.
+- R-11: DEFERRED_WITH_ACCEPTED_RISK — broader threshold/effective-version semantics remain outside the current MVP.
+- R-12: DEFERRED_WITH_ACCEPTED_RISK — social snapshot provenance boundary exists, but social acquisition is not authoritative in this MVP.
+- R-01, R-04, R-05, R-08, R-09: remain NOT CLOSED system-wide and must not be overstated as fully closed.
+
+### Current authority state
+
+V4 production authority remains INACTIVE. This merge does not authorize or activate production authority.
+
+### Architecture Gate
+
+ARCHITECTURE GATE: NOT PASSED.
+
+Remaining system-wide work includes the full EQC operation/temporal surface, required L4/L5 and source-independence scope, acquisition-completeness integration, live analytical reorg runtime verification, deployment/recovery reconciliation, and corresponding negative/runtime vectors.
+
+### Implementation Freeze
+
+IMPLEMENTATION FREEZE: BLOCKED.
+
+The HFI analytical-transition slice is merged and reconciled, but project-wide freeze criteria are not yet satisfied.
