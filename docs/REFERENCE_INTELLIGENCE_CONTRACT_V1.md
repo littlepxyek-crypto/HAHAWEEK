@@ -1,8 +1,7 @@
 # HAHAWEEK — REFERENCE INTELLIGENCE CONTRACT v1
 
-Status: IMPLEMENTED / VERIFICATION PENDING
+Status: VERIFIED / RECONCILED
 
-Verification gate: CI/runtime evidence for the latest correction commit must pass before this status may be promoted to VERIFIED.
 Contract ID: REFERENCE_INTELLIGENCE_CONTRACT_V1
 
 Reference Intelligence is a non-authoritative investigation boundary.
@@ -35,4 +34,4 @@ Exception states: PARTIAL, UNKNOWN, FAILED, EXPIRED, CONTRADICTED.
 
 VALIDATED is not self-authorized by the provider or observation. Promotion requires explicit validation_ref and validation_rule_version from the separate validation authority boundary.
 
-Acceptance evidence is IMPLEMENTED in the current PR head; CI/runtime verification remains pending. This contract does not authorize production V4 activation or any specific paid provider.
+Acceptance evidence: exact PR #760 head `00b41118744376a498d0d09c748be46cc7834db2` passed HAHAWEEK Tests, Security and Regression, A9 Runtime, Analytical Reorg Runtime, and HFI-MVP Runtime. PR #760 was merged to main as `0c999b6941fad1cd3de7ae8328819b6ca2a1da5e`. The implementation remains non-authoritative and live external-provider integration remains deferred. This contract does not authorize production V4 activation or any specific paid provider.
