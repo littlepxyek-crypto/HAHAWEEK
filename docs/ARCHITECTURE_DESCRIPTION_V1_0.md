@@ -1207,3 +1207,20 @@ Impact: runtime performance/resource failure could not previously be classified 
 Corrective action: persist stage and heartbeat evidence before expensive operations and formation chunks.
 Regression test: tests/hfi-runtime-artifact-boundary.test.js.
 Residual risk: the actual long-running stage is not yet established; the next runtime artifact must provide that evidence.
+
+
+## Current-head reconciliation — Runtime/Resource/Deployment Hardening — 2026-10-07
+
+The current hardening path preserves the frozen target architecture and does not introduce a new authority layer.
+
+Verified hardening head: 34d867ffd4602ebc0909b0f712f5c372890dd572.
+
+The HFI-MVP runtime at that exact head reached VERIFIED with acquisition COMPLETE, formation VALID, validation CONFIRMED, replay equivalent=true, raw/canonical evidence counts both 8,664, and manifest 653bef88df94ee30998d491788d99465b64ac0962abc8c8d9eb56082aeb61239.
+
+Runtime hardening now bounds wall-clock execution and RPC calls, uses bounded retry/backoff, adaptively splits retryable or provider-limited eth_getLogs ranges, persists stage heartbeat evidence, and bounds continuous-radar derived state by event count and bytes. Limits fail closed and do not delete raw/canonical evidence.
+
+Deployment artifacts now define a persistent worker baseline using Docker and systemd, with durable data, a single active writer per data volume, non-root execution, read-only container root filesystem, and explicit health checks. This is implementation only; no live production host has been verified in this session.
+
+RPC production limitation remains explicit: public Robinhood RPC is rate-limited and not recommended for production. Production requires a production-grade primary provider with historical/archive capability and an independently operated secondary source. HAHAWEEK intentionally does not silently switch providers mid-batch; alternate-source use requires a new processing context and explicit reconciliation.
+
+Current architecture gate remains BLOCKED because live deployment/recovery verification and remaining R-01…R-14 closure are not complete. V4 production authority remains INACTIVE and implementation freeze remains BLOCKED.
