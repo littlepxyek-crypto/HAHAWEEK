@@ -21,6 +21,16 @@ function mergeLimits(limits) {
   return Object.freeze(out);
 }
 
+function assertProviderResult(result) {
+  if (!result || typeof result !== 'object' || Array.isArray(result) ||
+      !Object.prototype.hasOwnProperty.call(result, 'payload')) {
+    throw new Error('REFERENCE_PROVIDER_RESULT_SCHEMA_INVALID');
+  }
+  if (!result.provenance || typeof result.provenance !== 'object') {
+    throw new Error('REFERENCE_PROVIDER_PROVENANCE_REQUIRED');
+  }
+}
+
 function createReferenceGateway(options) {
   options = options || {};
   const providers = options.providers || {};
@@ -75,10 +85,24 @@ function createReferenceGateway(options) {
         }
       }
 
-      const bytes = Buffer.byteLength(JSON.stringify(result === undefined ? null : result), 'utf8');
+      assertProviderResult(result);
+
+      const bytes = Buffer.byteLength(JSON.stringify(result.payload === undefined ? null : result.payload), 'utf8');
       if (bytes > bounded.response_bytes) throw new Error('REFERENCE_RESPONSE_SIZE_LIMIT_EXCEEDED');
-      if (Array.isArray(result) && result.length > paginationLimit) throw new Error('REFERENCE_PAGINATION_LIMIT_EXCEEDED');
-      if (result && Array.isArray(result.items) && result.items.length > paginationLimit) throw new Error('REFERENCE_PAGINATION_LIMIT_EXCEEDED');
+      if (Array.isArray(result.payload) && result.payload.length > paginationLimit) throw new Error('REFERENCE_PAGINATION_LIMIT_EXCEEDED');
+      if (result.payload && Array.isArray(result.payload.items) && result.payload.items.length > paginationLimit) {
+        throw new Error('REFERENCE_PAGINATION_LIMIT_EXCEEDED');
+      }
+
+      const requestedAsOf = input.as_of_time || null;
+      const providerAsOf = result.as_of_time || null;
+      const asOfMismatch = Boolean(requestedAsOf && providerAsOf !== requestedAsOf);
+      const completeness = asOfMismatch
+        ? 'UNKNOWN'
+        : (result.completeness_status || 'UNKNOWN');
+      const status = asOfMismatch ? 'UNKNOWN' : 'OBSERVED';
+      const limitations = Array.isArray(result.limitations) ? result.limitations.slice() : [];
+      if (asOfMismatch) limitations.push('AS_OF_UNVERIFIED');
 
       return createReferenceObservation({
         provider_id: providerId,
@@ -87,11 +111,25 @@ function createReferenceGateway(options) {
         request_id: input.request_id,
         acquisition_id: input.acquisition_id,
         subject: input.request && input.request.subject ? input.request.subject : 'UNKNOWN',
-        as_of_time: input.as_of_time || null,
+        observation_time: result.observation_time || null,
         retrieval_time: new Date().toISOString(),
-        payload: result,
-        provenance: { gateway_contract: 'REFERENCE_INTELLIGENCE_CONTRACT_V1', provider_id: providerId },
-        independence_class: providers[providerId].independence_class || 'I0'
+        processing_time: new Date().toISOString(),
+        as_of_time: requestedAsOf,
+        source_reference: result.source_reference || null,
+        payload_digest: result.payload_digest || null,
+        payload: result.payload,
+        provenance: Object.freeze({
+          gateway_contract: 'REFERENCE_INTELLIGENCE_CONTRACT_V1',
+          provider: result.provenance,
+          provider_id: providerId
+        }),
+        limitations,
+        completeness_status: completeness,
+        error_status: result.error_status || null,
+        derivation_status: result.derivation_status || 'OBSERVED',
+        independence_class: result.independence_class || providers[providerId].independence_class || 'I0',
+        lineage: result.lineage || null,
+        status
       });
     } finally {
       active -= 1;
