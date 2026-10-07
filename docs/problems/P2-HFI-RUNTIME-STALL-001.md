@@ -80,3 +80,16 @@ Automatic multi-provider RPC failover is intentionally NOT implemented. Producti
 A live persistent-host restart/recovery, backup/restore, RPC degradation, and writer-fence contention drill remain unverified.
 
 Therefore this problem is resolved for the bounded CI/HFI runtime path, but it does not by itself authorize production V4 activation.
+
+
+## Root-cause refinement — HFI-MVP VERIFIED runtime — 2026-10-07
+
+The exact hardening-head HFI-MVP artifact (commit daec14d7c4c0fbcb6ccbc3c2d8e52604139cff6d) completed VERIFIED after 957.694 seconds. It processed 8,662 unique outcome observations and produced 8,664 raw/canonical evidence items.
+
+Code-path inspection identifies a deterministic amplification point in the historical timestamp stage: one unique `getBlock()` lookup is required per observed block, and the previous implementation scheduled those lookups in groups of 12 even though the targeted provider is configured with `batchMaxCount=50`. For 8,662 unique blocks this creates roughly 722 scheduling batches instead of at most 174 provider-sized batches. The second timestamp pass is cache-only and is not the source of additional RPC traffic.
+
+This is an application-side efficiency defect, not evidence corruption and not proof of a Robinhood RPC outage. Robinhood explicitly states that its public RPC is rate-limited and not recommended for production, and recommends an archive-capable provider for historical reads/indexing. Therefore the runtime must optimize request batching while production must move to a production-grade archive-capable RPC.
+
+Corrective action on branch `fix/hfi-mvp-historical-block-batching-2026-10-07`: align historical block-read concurrency with the configured provider batch capacity (50) and persist batch progress in the runtime heartbeat. Event ordering and evidence semantics remain unchanged because block responses are still memoized and downstream events are deterministically ordered.
+
+Acceptance requires CI regression tests plus an exact-head HFI-MVP runtime artifact proving VERIFIED, replay equivalence, and materially reduced historical-block-read duration. No production V4 authority activation is implied.
