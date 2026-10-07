@@ -28,5 +28,12 @@ test('historical R-01..R-14 findings are not presented as uniformly open current
   );
 
   assert.match(closure, /R-01\.\.R-14 are now represented by explicit current-main contracts/);
-  assert.doesNotMatch(closure, /R-01\.\.R-14.*uniformly OPEN/);
+  assert.doesNotMatch(closure, /^R-01\.\.R-14 are now represented.*OPEN$/m);
+});
+
+
+test('master architecture contains no stale current-state gate wording outside historical audit references', () => {
+  assert.doesNotMatch(blueprint, /The Cross-Spec Reconciliation Audit remains the governing blocker for implementation freeze while R-01\.\.R-14 remain open\./);
+  assert.doesNotMatch(blueprint, /MVP remains DESIGN-ONLY\./);
+  assert.doesNotMatch(blueprint, /R-01 through R-14 remain open until reconciled and covered by executable vectors\./);
 });
