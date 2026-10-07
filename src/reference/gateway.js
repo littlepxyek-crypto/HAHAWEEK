@@ -27,6 +27,7 @@ function createReferenceGateway(options) {
   const bounded = mergeLimits(options.limits);
   const names = Object.freeze(Object.keys(providers));
   let calls = 0;
+  let active = 0;
 
   async function observe(input) {
     input = input || {};
@@ -37,31 +38,47 @@ function createReferenceGateway(options) {
       throw new Error('REFERENCE_PROVIDER_NOT_REGISTERED');
     }
     if (calls >= bounded.request_budget) throw new Error('REFERENCE_REQUEST_BUDGET_EXCEEDED');
-
-    calls += 1;
+    if (active >= bounded.concurrency) throw new Error('REFERENCE_CONCURRENCY_LIMIT_EXCEEDED');
 
     const limit = Math.min(input.timeout_ms || bounded.timeout_ms, bounded.timeout_ms);
+    const paginationLimit = bounded.pagination_limit;
+
+    active += 1;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), limit);
 
     try {
-      const result = await Promise.race([
-        providers[providerId].observe(Object.freeze({
-          request: input.request,
-          request_id: input.request_id,
-          acquisition_id: input.acquisition_id,
-          as_of_time: input.as_of_time || null,
-          signal: controller.signal
-        })),
-        new Promise((resolve, reject) => {
-          controller.signal.addEventListener('abort', function () {
-            reject(new Error('REFERENCE_PROVIDER_TIMEOUT'));
-          }, { once: true });
-        })
-      ]);
+      let result;
+      let attempt = 0;
+      while (true) {
+        calls += 1;
+        try {
+          result = await Promise.race([
+            providers[providerId].observe(Object.freeze({
+              request: input.request,
+              request_id: input.request_id,
+              acquisition_id: input.acquisition_id,
+              as_of_time: input.as_of_time || null,
+              pagination_limit: paginationLimit,
+              signal: controller.signal
+            })),
+            new Promise((resolve, reject) => {
+              controller.signal.addEventListener('abort', function () {
+                reject(new Error('REFERENCE_PROVIDER_TIMEOUT'));
+              }, { once: true });
+            })
+          ]);
+          break;
+        } catch (error) {
+          if (!error || error.retryable !== true || attempt >= bounded.retry_limit || calls >= bounded.request_budget) throw error;
+          attempt += 1;
+        }
+      }
 
       const bytes = Buffer.byteLength(JSON.stringify(result === undefined ? null : result), 'utf8');
       if (bytes > bounded.response_bytes) throw new Error('REFERENCE_RESPONSE_SIZE_LIMIT_EXCEEDED');
+      if (Array.isArray(result) && result.length > paginationLimit) throw new Error('REFERENCE_PAGINATION_LIMIT_EXCEEDED');
+      if (result && Array.isArray(result.items) && result.items.length > paginationLimit) throw new Error('REFERENCE_PAGINATION_LIMIT_EXCEEDED');
 
       return createReferenceObservation({
         provider_id: providerId,
@@ -77,6 +94,7 @@ function createReferenceGateway(options) {
         independence_class: providers[providerId].independence_class || 'I0'
       });
     } finally {
+      active -= 1;
       clearTimeout(timer);
     }
   }
