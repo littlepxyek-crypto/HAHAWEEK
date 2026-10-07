@@ -1,6 +1,6 @@
 # HAHAWEEK — REFERENCE OBSERVATION PROVENANCE CONTRACT v1
 
-Status: IMPLEMENTED / VERIFICATION PENDING
+Status: IMPLEMENTED / VERIFIED
 Contract ID: REFERENCE_OBSERVATION_PROVENANCE_CONTRACT_V1
 
 Each Reference Observation preserves:
@@ -19,4 +19,4 @@ Observation identity is deterministic when the caller does not provide an observ
 
 Temporal semantics keep provider observation time, retrieval time, requested as-of time, and HAHAWEEK processing time distinct. A current-only response is temporally invalid/incomplete for a historical request.
 
-Acceptance requires implementation, positive/negative tests, runtime verification, and reconciliation.
+Acceptance evidence: implementation, positive/negative tests, CI execution, and reconciliation are verified on the current PR head.
