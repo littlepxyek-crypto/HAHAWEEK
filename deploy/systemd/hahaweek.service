@@ -1,0 +1,24 @@
+[Unit]
+Description=HAHAWEEK evidence ingestion worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hahaweek
+Group=hahaweek
+WorkingDirectory=/opt/hahaweek/current
+EnvironmentFile=/etc/hahaweek/hahaweek.env
+ExecStart=/usr/bin/node /opt/hahaweek/current/src/index.js
+Restart=always
+RestartSec=10
+TimeoutStartSec=30
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/hahaweek/data
+
+[Install]
+WantedBy=multi-user.target
