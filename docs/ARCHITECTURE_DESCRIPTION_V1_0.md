@@ -1356,3 +1356,20 @@ This overlay supersedes only the prior current-state overlay for HEAD resolution
 - V4 production authority remains INACTIVE.
 - Reference Intelligence remains bounded and non-authoritative; live providers remain deferred.
 - Architecture Gate remains BLOCKED by remaining deployment, live recovery/durability, lifecycle/activation, and current-head verification criteria.
+
+
+---
+
+# CURRENT-MAIN RECONCILIATION OVERLAY — 2026-10-08 — POST-PR-780
+
+This append-only overlay supersedes only the prior current-state overlay for HEAD resolution; earlier overlays remain historical evidence and are not rewritten.
+
+## Current repository state
+
+- Current main HEAD at reconciliation time: `7ad98cb6b6a683876232a39bd9efe5f2ce118182` (merge PR #780).
+- PR #780 is documentation-only and reconciles the current-main state after PR #779; no V4 authority, canonical evidence, cursor, checkpoint, manifest, or frozen architecture semantics changed.
+- PR #780 exact-head CI was terminal SUCCESS for Tests, Security/Regression, A9 Runtime, Analytical Reorg Runtime, and HFI-MVP Runtime; HFI-MVP E5 artifact provenance verification succeeded on the PR head.
+- The merge commit `7ad98cb6b6a683876232a39bd9efe5f2ce118182` currently has **NO ASSOCIATED WORKFLOW RUNS** through the available GitHub workflow-run association endpoint; merge-head CI is therefore **NOT VERIFIED**.
+- V4 production authority remains INACTIVE.
+- Reference Intelligence remains bounded and non-authoritative; live providers remain deferred.
+- Architecture Gate remains BLOCKED by current merge-head verification, deployment, live recovery/durability, and lifecycle/activation criteria.
