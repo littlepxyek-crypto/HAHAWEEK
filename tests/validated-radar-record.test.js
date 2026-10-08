@@ -1,4 +1,5 @@
 'use strict';
+const test = require('node:test');
 
 const assert = require('node:assert/strict');
 const { createValidatedRadarRecord } = require('../src/core/validated-radar-record');
@@ -8,6 +9,9 @@ function base() { return { summary: { summary_id: 'intelligence-summary:v1:abc',
   assert.match(result.radar_id, /^radar:v1:[a-f0-9]{64}$/);
   assert.equal(result.radar_type, 'EARLY_FORMATION');
   assert.equal(result.state, 'VERIFIED');
+  assert.equal(result.epistemic_status, 'VALIDATED_ANALYTICAL_OUTPUT');
+  assert.equal(result.authority_domain, 'DERIVED_OUTPUT');
+  assert.equal(result.verification_scope, 'VALIDATION_RESULT_AND_EVIDENCE_LINKAGE');
 }
 {
   assert.deepEqual(createValidatedRadarRecord(base()), createValidatedRadarRecord(base()));
@@ -27,3 +31,5 @@ function base() { return { summary: { summary_id: 'intelligence-summary:v1:abc',
   assert.throws(() => createValidatedRadarRecord(input), /EVIDENCE_IDS_DUPLICATE/);
 }
 console.log('5 validated radar record tests passed');
+
+test('radar verification state is explicitly scoped and is not V4 truth authority',()=>{ const result=createValidatedRadarRecord(base()); assert.notEqual(result.authority_domain,'V4_INTEGRITY'); assert.equal(result.epistemic_status,'VALIDATED_ANALYTICAL_OUTPUT'); });
