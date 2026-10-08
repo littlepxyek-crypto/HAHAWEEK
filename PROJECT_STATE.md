@@ -1,3 +1,17 @@
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST PR #770 — VERIFIED / RECONCILED
+
+- Current main HEAD verified after PR #770 merge: `109eca011ce76ec2fa8100143f67c3c265bd508d`.
+- Preserved historical snapshot baseline remains `9305090bdec0c0195008a302bb15aa6bcb04de15`; historical snapshots below are not rewritten.
+- PR #770 (`test: close F-03 final authority validation atomicity gap`) was squash-merged with exact head `76d4c35fa6db3130d833ac95c6edc60bb4c112f2`.
+- Exact PR-head CI was terminal SUCCESS for HAHAWEEK Tests, Security and Regression, A9 Runtime Verification, Analytical Reorg Runtime Verification, and HFI-MVP Runtime Verification.
+- The merged change is test-only: it adds a negative F-03 vector proving the lifecycle committer is not reached when final authority validation rejects.
+- No V4 authority, canonical evidence, cursor, checkpoint, manifest, formation, validation, provider semantics, trading, signing, or external publication behavior changed.
+- Post-merge workflows for merge commit `109eca011ce76ec2fa8100143f67c3c265bd508d` had not started at reconciliation time; therefore post-merge runtime verification is NOT YET VERIFIED and no success is inferred from the PR-head evidence.
+- V4 production authority remains INACTIVE.
+- Architecture Gate remains BLOCKED pending the remaining activation, deployment, recovery, lifecycle, and reconciliation criteria.
+- The frozen target architecture remains unchanged.
+- No external publication, signing, trading, or autonomous action is authorized by this reconciliation snapshot.
+
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — VERIFIED / RECONCILED
 
 - Current main HEAD verified at reconciliation time: `9305090bdec0c0195008a302bb15aa6bcb04de15`.
