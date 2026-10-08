@@ -1,3 +1,18 @@
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-785 — E6 VERIFIED / RECONCILED
+
+- Current protected `main` HEAD verified at reconciliation time: `c3eb38b39f91cde04b6ad334ea034cde5835fe16`.
+- PR #785 was merged at this SHA; it closes the executable Identity L4/L5 vector-set boundary without changing V4 authority semantics.
+- Exact current-head GitHub Actions are terminal SUCCESS for: Push on main, HAHAWEEK Tests, HAHAWEEK Security and Regression, HAHAWEEK A9 Runtime Verification, HAHAWEEK Analytical Reorg Runtime Verification, and HAHAWEEK HFI-MVP Runtime Verification.
+- Current-head HFI-MVP runtime run: `37778211405`; runtime job `113314375812`; artifact `hfi-mvp-e2e-runtime-evidence-c3eb38b39f91cde04b6ad334ea034cde5835fe16`; artifact ID `11551685857`; digest `sha256:eed7b6e788ba4f43f8108319c30268d3ed4ff2958f1485cbf4a289229d2986b3`.
+- HFI-MVP runtime job completed successfully, including npm install, runtime artifact provenance verification, and artifact upload. The failure guard was skipped because the verification path completed successfully.
+- PR #785 adds executable negative vectors for L4/L5: insufficient evidence lines, same-lineage/correlated evidence, missing falsifier, temporal incompatibility, behavioral/same-token/profile similarity, relation-scope mismatch, incomplete provenance, cross-chain address matching, transitive composition, and replayed-signature semantics.
+- Identity L4/L5 executable vector-set contract is now `IMPLEMENTED / VERIFIED`; the parent Identity Resolution v0.1 contract remains `OPEN` and is not silently promoted by the executable vector set.
+- V4 production authority remains `INACTIVE`; current-head CI/runtime success does not authorize production activation.
+- Architecture Gate remains `BLOCKED` pending broader system-wide activation, deployment, lifecycle, recovery/durability, and remaining contract-closure criteria.
+- Reference Intelligence remains bounded and non-authoritative; live provider activation remains deferred. No Reference Intelligence provider is required for the current HFI-MVP runtime path.
+- Local repository execution remains unavailable in this environment because `github.com` DNS/clone resolution is unavailable; current GitHub repository state and exact-head GitHub Actions are the execution evidence for this reconciliation.
+- This snapshot is additive; all historical snapshots below remain unchanged and are not rewritten.
+
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-782 — E5 VERIFIED / RECONCILED
 
 - Current main HEAD verified at reconciliation time: `4f2f367b9a24e780173a7e2c633146aa15dafa54`.
