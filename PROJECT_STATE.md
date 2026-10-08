@@ -1,3 +1,24 @@
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-782 — E5 VERIFIED / RECONCILED
+
+- Current main HEAD verified at reconciliation time: `4f2f367b9a24e780173a7e2c633146aa15dafa54`.
+- PR #782 was merged as `4f2f367b9a24e780173a7e2c633146aa15dafa54`; its change was documentation-only and did not mutate V4 authority, canonical evidence, cursor, checkpoint, manifest, or frozen architecture semantics.
+- Exact merge-head CI is terminal SUCCESS for HAHAWEEK Tests, Security/Regression, A9 Runtime, Analytical Reorg Runtime, and Push on main.
+- Exact merge-head HFI-MVP Runtime Verification run `37760972250` is terminal SUCCESS. Job `113257011439` completed successfully, including runtime artifact provenance verification and artifact upload.
+- Current-head HFI-MVP E5 artifact: `hfi-mvp-e2e-runtime-evidence-4f2f367b9a24e780173a7e2c633146aa15dafa54`, artifact ID `11542563969`, GitHub artifact digest `sha256:61cf2da54a5445921978d7210ce1e803aebf6deb11876aba33b87326f7422e20`.
+- Runtime artifact state: `VERIFIED`; contract `HFI-MVP-E2E-V0_1`; chain_id `4663`; RPC `https://rpc.mainnet.chain.robinhood.com`.
+- Acquisition completeness: `COMPLETE`, terminal=true, failed=false, expired=false; negative absence was permitted only under the completed acquisition semantics.
+- Formation: `POOL_BOOTSTRAP`, rule `pool-bootstrap-v1`, state `VALID`, required sequence present.
+- Validation: `validation-v2`, result `CONFIRMED`; formation cutoff `2026-09-10T09:04:36.000Z`; validation window ends `2026-09-17T09:04:36.000Z`.
+- Integrity: 8,664 raw evidence / 8,664 canonical evidence; manifest `653bef88df94ee30998d491788d99465b64ac0962abc8c8d9eb56082aeb61239`.
+- Replay: `equivalent=true`; Formation/Outcome/Validation/Report IDs reproduced.
+- Report, claim-promotion provenance, and X projection were produced; X publication readiness is `true`, while `no_external_publication=true` remains recorded.
+- Graph projection was produced as a non-authoritative projection; it does not become V4 authority.
+- V4 production authority remains `INACTIVE`. Current HFI-MVP E5 success does not authorize V4 production activation.
+- Reference Intelligence remains bounded and non-authoritative; live providers remain deferred. No Reference Intelligence provider was required for this HFI-MVP runtime path.
+- Architecture Gate remains `BLOCKED` pending broader system-wide activation, deployment, recovery/durability, lifecycle, and other contract/reconciliation criteria not established solely by this HFI-MVP runtime.
+- Local repository execution remains unavailable in this environment because github.com DNS/clone resolution is unavailable; GitHub repository state and GitHub Actions are the execution evidence for this reconciliation.
+- This snapshot is additive; all historical snapshots below remain unchanged and are not rewritten.
+
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-781 — VERIFIED / RECONCILED
 
 - Current main HEAD verified at reconciliation time: `af61c163b07e10026685cb93a28f8c3ec88cceaa`.
