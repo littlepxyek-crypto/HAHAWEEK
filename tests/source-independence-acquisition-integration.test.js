@@ -15,7 +15,7 @@ function source(id, lineage, independence_class = 'I3') {
     source_type: 'WEB',
     backend: 'HTTP',
     enabled: true,
-    provenance: { source_lineage_id: lineage, independence_class },
+    provenance: { source_lineage_id: lineage, independence_class, independence_assessed: independence_class === 'I3', independence_basis: independence_class === 'I3' ? 'test-lineage-review' : undefined, independence_rule_version: independence_class === 'I3' ? 'SOURCE-INDEPENDENCE-EXECUTION-V1.1' : undefined },
   });
 }
 
