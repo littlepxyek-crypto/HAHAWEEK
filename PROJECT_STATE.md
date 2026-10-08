@@ -1,6 +1,6 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-779 — RECONCILED
 
-- Current main HEAD verified at reconciliation time: `e858af516f8da0fc5ce4861a7552786580b7f989` (merge PR #779).
+- Current main HEAD verified at reconciliation time: `e858af516f8da0fc5ce4861a7552786580b7f989`.
 - PR #779 merged documentation-only current-state reconciliation against main `5deb8d81aa931eec8e98720a18c5d1f8e01d2509`; no V4 authority, canonical evidence, cursor, checkpoint, manifest, or frozen architecture semantics changed.
 - PR #779 exact-head CI was terminal SUCCESS for Tests, Security/Regression, A9 Runtime, Analytical Reorg Runtime, and HFI-MVP Runtime; HFI-MVP E5 artifact provenance verification also succeeded. This PR-head evidence is not inherited as merge-head CI.
 - Current merge-head CI for `e858af516f8da0fc5ce4861a7552786580b7f989` is **NOT VERIFIED** through the available workflow-run association endpoint.
