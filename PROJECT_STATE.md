@@ -1,6 +1,6 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — VERIFIED / RECONCILED
 
-- Current main HEAD verified at reconciliation time: `78d9d41e43e1bad80f7e52b36347488bb9b0859a`.
+- Current main HEAD verified at reconciliation time: `73b07f088502233470f3bae7c2bcbd6fbeecebcc`.
 - This snapshot is the current-state entry for this revision; earlier snapshots below remain historical evidence and are not rewritten.
 - The current main ref must remain the authoritative source for resolving future HEAD changes; this document is a point-in-time reconciliation record, not a live ref.
 - V4 production authority remains INACTIVE.
