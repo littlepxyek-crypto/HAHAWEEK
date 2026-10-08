@@ -1322,3 +1322,20 @@ Reference Intelligence is parallel and bounded; it is not inserted between canon
 
 The current repository must not declare production V4 ACTIVE merely because a contract or bounded runtime slice is verified. Live provider integration, production deployment, restart/recovery drills, and final system-wide activation gates remain separate acceptance boundaries.
 
+
+
+---
+
+# CURRENT-MAIN RECONCILIATION OVERLAY — 2026-10-08 — POST-PR-778
+
+This overlay supersedes only the prior current-state overlay for HEAD resolution; earlier overlays remain historical evidence and are not rewritten.
+
+## Current repository state
+
+- Current main HEAD at reconciliation time: `5deb8d81aa931eec8e98720a18c5d1f8e01d2509` (merge PR #778).
+- PR #778 reconciled stale current-head documentation and a hard-coded historical SHA assertion; no V4 authority, canonical evidence, cursor, checkpoint, manifest, or frozen target architecture semantics changed.
+- Exact PR-head CI was terminal SUCCESS for HAHAWEEK Tests, Security/Regression, A9 Runtime, Analytical Reorg Runtime, and HFI-MVP Runtime acceptance as observed during reconciliation; this PR-head evidence is not inherited as merge-head CI.
+- Current merge-head CI is **NOT VERIFIED** through the available workflow-run association endpoint.
+- V4 production authority remains INACTIVE.
+- Reference Intelligence remains bounded and non-authoritative; live providers remain deferred.
+- Architecture Gate remains BLOCKED by remaining deployment, live recovery/durability, lifecycle/activation, and current-head verification criteria.
