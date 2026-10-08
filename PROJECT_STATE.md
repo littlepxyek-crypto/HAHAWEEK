@@ -1,3 +1,15 @@
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-783 — CURRENT HEAD RECONCILIATION
+
+- Current protected `main` ref resolves to `3fc04c43b14251abc05bd8686d230f7232547af6` at inspection time.
+- PR #783 is merged; its merge commit is the current main HEAD. PR #783 was documentation-only and preserved the verified code tree from its parent reconciliation; it did not mutate V4 authority, canonical evidence, cursor, checkpoint, manifest, Reference Intelligence authority, or frozen architecture semantics.
+- Exact current-head GitHub Actions workflow association for `3fc04c43b14251abc05bd8686d230f7232547af6` is not present through the available workflow-run endpoint. Therefore current-head CI/runtime is **NOT VERIFIED** solely from the merge commit ref.
+- The immediately preceding verified HFI-MVP E5 evidence recorded below remains historical evidence and is not silently re-attributed to the new merge SHA.
+- V4 production authority remains `INACTIVE`; no production activation is inferred.
+- Reference Intelligence remains bounded and non-authoritative; live providers remain deferred.
+- Architecture Gate remains `BLOCKED` pending broader system-wide activation, deployment, recovery/durability, lifecycle, and remaining contract/reconciliation criteria.
+- Local repository execution is unavailable in this environment; GitHub repository state and GitHub Actions are the available execution evidence.
+- This entry is additive. Historical snapshots below remain unchanged.
+
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-782 — E5 VERIFIED / RECONCILED
 
 - Current main HEAD verified at reconciliation time: `4f2f367b9a24e780173a7e2c633146aa15dafa54`.
