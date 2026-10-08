@@ -6,6 +6,9 @@ const RADAR_SCHEMA_VERSION = '1';
 const RADAR_RULE_VERSION = 'validated-radar-record-v1';
 const RADAR_TYPE = 'EARLY_FORMATION';
 const RADAR_STATE = 'VERIFIED';
+const RADAR_EPISTEMIC_STATUS = 'VALIDATED_ANALYTICAL_OUTPUT';
+const RADAR_AUTHORITY_DOMAIN = 'DERIVED_OUTPUT';
+const RADAR_VERIFICATION_SCOPE = 'VALIDATION_RESULT_AND_EVIDENCE_LINKAGE';
 
 function requireObject(value, name) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new TypeError(name.toUpperCase() + '_REQUIRED');
@@ -38,6 +41,9 @@ function createValidatedRadarRecord(input) {
     rule_version: input.radar_rule_version ?? RADAR_RULE_VERSION,
     radar_type: RADAR_TYPE,
     state: RADAR_STATE,
+    epistemic_status: RADAR_EPISTEMIC_STATUS,
+    authority_domain: RADAR_AUTHORITY_DOMAIN,
+    verification_scope: RADAR_VERIFICATION_SCOPE,
     summary_id: input.summary.summary_id,
     intelligence_id: input.summary.intelligence_id,
     formation_id: input.summary.formation_id,
@@ -53,6 +59,9 @@ function createValidatedRadarRecord(input) {
     radar_rule_version: identityPayload.rule_version,
     radar_type: RADAR_TYPE,
     state: RADAR_STATE,
+    epistemic_status: RADAR_EPISTEMIC_STATUS,
+    authority_domain: RADAR_AUTHORITY_DOMAIN,
+    verification_scope: RADAR_VERIFICATION_SCOPE,
     summary_id: input.summary.summary_id,
     intelligence_id: input.summary.intelligence_id,
     formation_id: input.summary.formation_id,
@@ -62,4 +71,4 @@ function createValidatedRadarRecord(input) {
     evidence_ids: evidenceIds,
   });
 }
-module.exports = { RADAR_SCHEMA_VERSION, RADAR_RULE_VERSION, RADAR_TYPE, RADAR_STATE, createValidatedRadarRecord };
+module.exports = { RADAR_SCHEMA_VERSION, RADAR_RULE_VERSION, RADAR_TYPE, RADAR_STATE, RADAR_EPISTEMIC_STATUS, RADAR_AUTHORITY_DOMAIN, RADAR_VERIFICATION_SCOPE, createValidatedRadarRecord };
