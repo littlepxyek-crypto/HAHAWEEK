@@ -1,6 +1,6 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-778 — RECONCILED
 
-- Current main HEAD verified at reconciliation time: `5deb8d81aa931eec8e98720a18c5d1f8e01d2509` (merge PR #778).
+- Current main HEAD verified at reconciliation time: `5deb8d81aa931eec8e98720a18c5d1f8e01d2509`.
 - PR #778 was merged after exact-head CI passed on its PR head; current merge-head workflow association is not exposed by the available GitHub workflow-run endpoint, so merge-head CI remains NOT VERIFIED.
 - PR #778 reconciled stale current-head documentation and removed a hard-coded historical SHA assertion from the architecture-current-state test; no V4 authority, canonical evidence, cursor, checkpoint, manifest, or frozen architecture semantics changed.
 - V4 production authority remains INACTIVE.
