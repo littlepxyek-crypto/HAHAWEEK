@@ -58,3 +58,12 @@ test('architecture description has a current-main reconciliation overlay', () =>
   assert.match(architectureDescription, /V4 production authority remains INACTIVE/);
   assert.match(architectureDescription, /IMPLEMENTED` ≠ `VERIFIED` ≠ `AUTHORIZED` ≠ `ACTIVE`/);
 });
+
+
+test('master architecture explicitly separates integrity authority from external truth and keeps graph parallel to formation', () => {
+  assert.match(blueprint, /V4 authority MUST NOT be described as an oracle of external truth/);
+  assert.match(blueprint, /Graph MUST NOT be a prerequisite for Formation/);
+  assert.match(blueprint, /historically verified/);
+  assert.match(architectureDescription, /V4 is the integrity\/record authority.*not a truth oracle/);
+  assert.match(architectureDescription, /Graph is not a prerequisite for Formation/);
+});

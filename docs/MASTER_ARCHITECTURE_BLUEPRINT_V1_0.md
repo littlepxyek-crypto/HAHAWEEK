@@ -31,6 +31,96 @@ The Agent is an external consumer/reasoner that queries HAHAWEEK through EQC.
 
 ---
 
+# 0A. ROOT SEMANTIC CORRECTION — EPISTEMIC / AUTHORITY BOUNDARY
+
+The architecture MUST distinguish **record integrity** from **truth about the world**.
+
+### Normative semantic ladder
+
+1. **Observation** — what a source/acquisition process returned or captured.
+2. **Evidence Record** — a preserved HAHAWEEK record of that observation plus provenance and temporal context.
+3. **Canonical Representation** — the deterministic HAHAWEEK representation used for identity/integrity.
+4. **V4 Integrity Authority** — authority over the integrity, identity, ordering, commitment, cursor, checkpoint, and canonicality state of HAHAWEEK records.
+5. **Analytical Evaluation** — a versioned interpretation/evaluation over declared evidence and temporal boundaries.
+6. **Output** — a derived projection for radar/research/report/publication.
+7. **External Truth** — a claim about reality beyond what HAHAWEEK can establish merely by preserving or hashing an observation.
+
+**V4 authority MUST NOT be described as an oracle of external truth.**
+
+Accordingly:
+
+- `canonical` means canonical **within the HAHAWEEK evidence/integrity model**, not "proven true in reality";
+- `authoritative` means authoritative **for the specified HAHAWEEK state/record boundary**, not universally true;
+- `verified` MUST identify what was verified (for example: schema, lineage, deterministic derivation, integrity, or validation rule), never imply universal truth;
+- `validated` means evaluated under a declared validation rule and outcome boundary; it does not mean permanently true;
+- `VALID`, `CONFIRMED`, `VERIFIED`, and `CORROBORATED` are typed states and MUST NOT be presented without their domain and rule version.
+
+This distinction is architectural, not merely documentation. Any API, schema, projection, or UI that can cause a consumer to read integrity status as truth status is a boundary defect.
+
+### Authority taxonomy
+
+HAHAWEEK uses separate authority domains:
+
+| Domain | Authority over | NOT authority over |
+|---|---|---|
+| V4 Integrity | canonical bytes, identity, transitions, commitments, cursor/checkpoint, canonicality | external truth |
+| Evidence Record | preserved observation + provenance record | correctness of the observed world |
+| Analytical | formation/hypothesis/validation evaluation under rules | V4 evidence integrity |
+| Derived Output | projection/report/publication artifact | upstream truth/evidence |
+| Operational | deployment/runtime lifecycle | epistemic truth |
+
+No generic `authority` label is sufficient without naming its domain.
+
+### Dependency rule
+
+The architecture is a **dependency DAG**, not a single vertical authority ladder:
+
+```text
+                         V4 INTEGRITY AUTHORITY
+                                   |
+                 +-----------------+------------------+
+                 |                                    |
+                 v                                    v
+        GRAPH PROJECTION                     FORMATION PROJECTION
+        (rebuildable)                              |
+                 |                                  v
+                 |                              HYPOTHESIS
+                 |                                  |
+                 |                                  v
+                 |                              VALIDATION
+                 |                                  |
+                 +--------------------+-------------+
+                                      |
+                                      v
+                         RESEARCH / RADAR / REPORT
+                                      |
+                                      v
+                                  PUBLICATION
+
+REFERENCE INTELLIGENCE = bounded sidecar / investigation path
+AGENT = external read-only consumer
+```
+
+**Graph MUST NOT be a prerequisite for Formation.**
+
+Reference Intelligence MUST NOT be a prerequisite for V4, Formation, or Validation authority. It may enrich investigation/corroboration only through explicit analytical contracts.
+
+### Verification freshness rule
+
+`VERIFIED` is incomplete without verification scope and evidence freshness.
+
+Every current-state claim of verification MUST be attributable to:
+
+- exact commit/ref;
+- verification artifact or workflow;
+- verification timestamp;
+- scope of what was verified;
+- whether the evidence is current-head or historical.
+
+A contract whose acceptance evidence points to an older commit is **historically verified**, not automatically **current-head verified**.
+
+---
+
 # 1. Canonical Identity
 
 HAHAWEEK remains:
@@ -737,38 +827,55 @@ Rules:
 
 # 20. Authority Boundary
 
-The complete authority hierarchy is:
+The authority model is not a single hierarchy. It is a set of scoped authority boundaries plus explicit analytical dependencies.
 
-```
+```text
 SOURCE / ACQUISITION
         |
         v
-RAW EVIDENCE
+OBSERVATION / RAW RECORD
         |
         v
-V4 IDENTITY / INTEGRITY
+CANONICAL EVIDENCE RECORD
         |
         v
-EVIDENCE GRAPH PROJECTION
+V4 INTEGRITY AUTHORITY
         |
-        v
-FORMATION / HYPOTHESIS / VALIDATION
-        |
-        v
-RADAR / RESEARCH / REPORT
-        |
-        v
-PUBLICATION
+        +------------------------------+
+        |                              |
+        v                              v
+GRAPH PROJECTION                 FORMATION
+(rebuildable)                         |
+                                      v
+                                  HYPOTHESIS
+                                      |
+                                      v
+                                  VALIDATION
+                                      |
+                         +------------+------------+
+                         v                         v
+                       RADAR                    RESEARCH
+                                                   |
+                                                   v
+                                                 REPORT
+                                                   |
+                                                   v
+                                              PUBLICATION
 ```
 
-With the following principle:
+Graph and Formation are parallel projections from canonical evidence. Their dependency on each other is prohibited unless a future architecture-change procedure explicitly demonstrates a genuine domain dependency.
 
-```
-Higher-level layers may reference lower-level evidence.
-Lower-level authority is never rewritten by higher-level interpretation.
+Reference Intelligence is a bounded investigation sidecar and is never inserted into the canonical authority path.
+
+The governing principle is:
+
+```text
+Derived layers may interpret lower-layer records.
+No derived interpretation rewrites the lower-layer record.
+Integrity authority proves record integrity, not external truth.
 ```
 
-Agent sits outside this hierarchy as a read-only consumer.
+Agent sits outside the authority domains as a read-only consumer.
 
 ---
 

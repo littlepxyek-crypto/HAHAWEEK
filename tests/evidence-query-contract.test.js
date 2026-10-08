@@ -122,6 +122,33 @@ test('EQC resource boundary rejects oversized block ranges', () => {
   }), /BLOCK_RANGE_TOO_LARGE/);
 });
 
+test('EQC rejects as-of on operations without historical semantics instead of ignoring it', () => {
+  const service = createReadOnlyQueryService(fakeDatabase());
+  assert.throws(() => service.execute(QUERY_OPERATIONS.GET_BLOCK_CONTEXT, {
+    chain_id: 4663, block_number: 10, temporal: { as_of: '2026-10-03T00:00:00.000Z' }
+  }), /QUERY_TEMPORAL_NOT_SUPPORTED/);
+});
+
+test('EQC evidence references expose reconstructed as-of canonicality', () => {
+  const db = {
+    prepare(sql) {
+      if (sql.includes('FROM canonical_evidence')) return fakeStatement({
+        evidence_id: 'e1', identity_schema_version: '1', identity_hash: 'ih1', raw_event_id: 'r1',
+        raw_hash: 'rh1', canonical_hash: 'ch1', canonical_json: JSON.stringify({ evidence_type: 'RAW_LOG', event_time: '2026-10-03T00:00:00.000Z' }),
+        interpretation_status: 'OBSERVED', provenance_json: JSON.stringify({ acquisition_id: 'a1', source_id: 'rpc-1', source_lineage_id: 'lineage-1' }),
+        stored_at: '2026-10-03T00:01:00.000Z', chain_id: 4663, block_number: 10, transaction_hash: '0xtx', block_hash: '0xb',
+        transaction_index: 0, log_index: 0, address: '0xpool', captured_at: '2026-10-03T00:00:01.000Z'
+      });
+      if (sql.includes('FROM canonical_transitions')) return fakeStatement({ to_state: 'CANONICAL', committed_at: '2026-10-03T00:02:00.000Z', sequence: '1', transition_hash: 'h1' });
+      return fakeStatement(null, []);
+    }
+  };
+  const service = createReadOnlyQueryService({ db });
+  const result = service.execute(QUERY_OPERATIONS.GET_EVIDENCE, { evidence_id: 'e1', temporal: { as_of: '2026-10-03T00:03:00.000Z' } });
+  assert.equal(result.consistency.canonicality, 'CANONICAL');
+  assert.equal(result.evidence_refs[0].canonicality, 'CANONICAL');
+});
+
 test('EQC transaction query is bounded and reports PARTIAL when limit is exceeded', () => {
   const calls = [];
   const rows = Array.from({ length: 1001 }, (_, i) => ({ event_id: 'e' + i, chain_id: 4663, block_number: 1, transaction_hash: '0xtx', block_hash: '0xb', transaction_index: 0, log_index: i, address: '0xa', topics_json: '[]', data: '0x', captured_at: '2026-10-03T00:00:00.000Z', evidence_id: 'ev' + i, identity_hash: 'ih' + i, canonical_hash: 'ch' + i }));

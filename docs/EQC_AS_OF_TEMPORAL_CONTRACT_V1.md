@@ -54,6 +54,13 @@ Given the same immutable evidence and transition history, the same `as_of` query
 
 ## Explicit limitation
 
+This contract closes **only the evidence-item canonicality-as-of slice**. It does not mean that the returned evidence payload itself is a complete historical snapshot of what existed at the requested time. Current implementation does not establish historical existence/content semantics for evidence records that may have been stored after the requested time.
+
+Block, transaction, wallet, pool, graph, formation, hypothesis, validation, radar, research, and claim queries do not currently have historical semantics. Supplying an `as_of` value to an operation without an activated temporal contract MUST fail closed with `QUERY_TEMPORAL_NOT_SUPPORTED`; it MUST NOT be silently ignored.
+
+Consumers therefore MUST NOT infer "full as-of system state" from the evidence-item as-of slice alone.
+
+
 This contract closes the evidence-item as-of slice only. It does NOT claim that every EQC operation has historical semantics. Block, transaction, wallet, pool, graph, formation, hypothesis, validation, radar, research, and claim queries remain outside this temporal closure until separately specified.
 
 ## Acceptance
