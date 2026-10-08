@@ -21,6 +21,7 @@ const {createHypothesis,linkValidationToHypothesis}=require('../src/core/formati
 const {buildAnalyticalTransitionChain}=require('../src/core/analytical-transition-chain');
 const {collectUntilFormationSequence}=require('../src/core/hfi-targeted-formation-acquisition');
 const {domainSeparatedHash}=require('../src/reference/v4/hash');
+const {getBlockWithRetry}=require('../src/core/rpc-retry');
 const OUT='docs/runtime/hfi-mvp-e2e-latest.json',RPC=process.env.RPC_URL||'https://rpc.mainnet.chain.robinhood.com',MAXC=8,MAXS=10000,DISCOVERY_AGE_DAYS=10,DISCOVERY_LOOKBACK_DAYS=30,TARGET_POOL_ID=(process.env.HFI_POOL_ID||'').toLowerCase(),TARGET_POOL_INIT_BLOCK=process.env.HFI_POOL_INIT_BLOCK?Number(process.env.HFI_POOL_INIT_BLOCK):null,TARGET_FORMATION_CHUNK=500,TARGET_OUTCOME_CHUNK=10000,TARGET_BATCH_MAX=50,TARGET_BLOCK_BATCH_CONCURRENCY=12,TARGET_LOG_CONCURRENCY=4,MAX_LOG_REQUESTS=4096,MAX_RUNTIME_MS=20*60*1000;
 const runtimeCommit=()=>{try{return require('node:child_process').execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()}catch{return process.env.GITHUB_SHA||'UNKNOWN'}};
 const makeProvider=()=>{const r=new ethers.FetchRequest(RPC);r.timeout=30000;return new ethers.JsonRpcProvider(r,ethers.Network.from({name:'robinhood-mainnet',chainId:CHAIN_ID}),{batchMaxCount:TARGET_POOL_ID?TARGET_BATCH_MAX:1})};
@@ -58,7 +59,7 @@ persist(initialBase);
 process.on('uncaughtException',e=>fail(initialBase,e));
 process.on('unhandledRejection',e=>fail(initialBase,e));
 process.on('SIGTERM',()=>{initialBase.state='CANCELLED';initialBase.completed_at=new Date().toISOString();initialBase.failure={code:'RUNTIME_CANCELLED',message:'Runtime process received SIGTERM before terminal verification.'};persist(initialBase);process.exit(143)});
-async function main(){const p=makeProvider(),bc=new Map(),B=async n=>{if(!bc.has(n))bc.set(n,p.getBlock(n));return await bc.get(n)},base=initialBase;let c=[];base.candidate_results=c;
+async function main(){const p=makeProvider(),bc=new Map(),B=async n=>{if(!bc.has(n))bc.set(n,getBlockWithRetry(p,n,{maxAttempts:Number(process.env.HFI_BLOCK_MAX_ATTEMPTS||3),baseDelayMs:Number(process.env.HFI_BLOCK_RETRY_BASE_MS||250),maxDelayMs:Number(process.env.HFI_BLOCK_RETRY_MAX_MS||5000),jitterRatio:Number(process.env.HFI_BLOCK_RETRY_JITTER||0.25),onRetry:event=>{initialBase.rpc_block_retries=(initialBase.rpc_block_retries||0)+1;initialBase.last_block_retry=event;persist(initialBase)}}));return (await bc.get(n)).block},base=initialBase;let c=[];base.candidate_results=c;
 try{if(Number((await p.getNetwork()).chainId)!==CHAIN_ID)throw Error('CHAIN_ID_MISMATCH');const latest=await p.getBlockNumber(),lb=await B(latest),sb=await B(Math.max(0,latest-5000)),bps=(lb.timestamp-sb.timestamp)/5000,bpd=86400/bps,from=Math.max(0,latest-Math.ceil(bpd*DISCOVERY_LOOKBACK_DAYS)),to=latest-Math.floor(bpd*DISCOVERY_AGE_DAYS);
 checkpoint(base,'discovery');const inits=TARGET_POOL_ID&&Number.isSafeInteger(TARGET_POOL_INIT_BLOCK)?await logs(p,{address:POOL_MANAGER,topics:[INIT,TARGET_POOL_ID]},TARGET_POOL_INIT_BLOCK,TARGET_POOL_INIT_BLOCK,1): (await logs(p,{address:POOL_MANAGER,topics:[INIT]},from,to)).sort((a,b)=>b.blockNumber-a.blockNumber).slice(0,MAXC);
 if(TARGET_POOL_ID&&Number.isSafeInteger(TARGET_POOL_INIT_BLOCK)&&inits.length!==1)throw Error('TARGET_POOL_INITIALIZE_NOT_FOUND');
