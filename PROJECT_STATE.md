@@ -1,3 +1,14 @@
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-789 — CURRENT HEAD RECONCILIATION
+
+- Current main HEAD at inspection time: `99400b73c669c5e115ccf056b554c4ef909b5c8d` (merge PR #789).
+- PR #789 is documentation-only and preserves the prior verified HFI runtime evidence; it does not mutate V4 authority, canonical evidence, cursor, checkpoint, manifest, or frozen architecture semantics.
+- The available GitHub commit-status and commit-associated workflow-run endpoints currently expose no CI runs for this exact merge HEAD; therefore current-HEAD CI is **NOT VERIFIED** and no current-HEAD CI success is claimed.
+- The immediately preceding verified runtime evidence remains bound to commit `26d4d0e665c9022882979a8397609224ce9c053b`; it must not be relabeled as execution evidence for `99400b73c669c5e115ccf056b554c4ef909b5c8d`.
+- HFI-MVP runtime evidence preserved on `26d4d0e…`: state `VERIFIED`, acquisition `COMPLETE`, raw/canonical counts `8664/8664`, formation `VALID`, replay `equivalent=true`.
+- Production V4 authority remains `INACTIVE`.
+- Architecture Gate remains `BLOCKED` pending current-head verification plus the explicitly identified production activation, deployment/recovery, and remaining contract/documentation gates.
+- This snapshot is additive; the prior 2026-10-09 POST-PR-788 snapshot remains historical evidence and is not rewritten.
+
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-788 — HFI E5 VERIFIED / RECONCILED
 
 - Current main HEAD at snapshot creation: `26d4d0e665c9022882979a8397609224ce9c053b`.
