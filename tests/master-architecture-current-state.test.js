@@ -16,8 +16,9 @@ const projectState = fs.readFileSync('PROJECT_STATE.md', 'utf8');
 
 test('PROJECT_STATE current snapshot is newer than the preserved historical snapshot', () => {
   const currentSection = projectState.split(/^## /m)[1] || '';
-  assert.match(currentSection, /CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09/);
-  assert.match(currentSection, /Current main HEAD (?:verified at reconciliation time|at snapshot creation): `[0-9a-f]{40}`\./);
+  assert.match(currentSection, /CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-789 — CURRENT HEAD RECONCILIATION/);
+  assert.match(currentSection, /Current main HEAD at inspection time: `99400b73c669c5e115ccf056b554c4ef909b5c8d` \(merge PR #789\)\./);
+  assert.match(currentSection, /current-HEAD CI is \*\*NOT VERIFIED\*\*/);
   assert.doesNotMatch(currentSection, /96b26068765da2736c9d9c397b2ad292a4e7425f/);
 });
 
