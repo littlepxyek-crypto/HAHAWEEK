@@ -1,7 +1,9 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — VERIFIED / RECONCILED
 
-- Current main HEAD verified at reconciliation time: `9305090bdec0c0195008a302bb15aa6bcb04de15`.
+- Current main HEAD verified at reconciliation time: `8f2d671bc4a6cc7f24b8cff79b56b9c7a616598e` (merge PR #772, `fix: correct root architecture semantics and temporal boundaries`).
 - This snapshot is the current-state entry for this revision; earlier snapshots below remain historical evidence and are not rewritten.
+- PR #774 (`fix: harden epistemic status and source independence on current main`) remains OPEN and UNMERGED against this HEAD; its CI is green but its source-independence semantic hardening is not yet part of current main.
+- Therefore R-05 Source Independence is not yet reconciled on current main; no current-main claim of full Architecture Gate closure is made.
 - The current main ref must remain the authoritative source for resolving future HEAD changes; this document is a point-in-time reconciliation record, not a live ref.
 - V4 production authority remains INACTIVE.
 - Architecture Gate remains BLOCKED pending the remaining activation, deployment, recovery, lifecycle, and reconciliation criteria.
