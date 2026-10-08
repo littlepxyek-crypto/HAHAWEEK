@@ -29,7 +29,7 @@ function plan() {
         layer: 'FORMATION',
         action: 'INVALIDATE_AND_REBUILD',
         reason: 'DOWNSTREAM_DEPENDENCY_INVALIDATED',
-        depends_on: ['g1'],
+        depends_on: [],
       },
     ],
   };
@@ -54,7 +54,7 @@ test('schema 9 creates append-only derived projection lifecycle storage', async 
   });
 });
 
-test('reorg lifecycle durably records invalidation then deterministic rebuild', async () => {
+test('reorg lifecycle durably records parallel graph and formation invalidation then deterministic rebuild', async () => {
   await withDatabase(async (database) => {
     let tick = 0;
     const lifecycle = createAnalyticalReorgLifecycle(
@@ -75,6 +75,7 @@ test('reorg lifecycle durably records invalidation then deterministic rebuild', 
     assert.equal(result.status, 'REBUILT');
     assert.equal(result.all_affected_projections_rebuilt, true);
     assert.equal(result.rebuilt.length, 2);
+    assert.deepEqual(result.rebuilt.map((item) => item.projection_id), ['g1', 'f1']);
     assert.equal(result.rebuilt[0].rebuilt_projection_digest, digest({
       projection_id: 'g1',
       source: 'canonical-evidence-rebuild',
