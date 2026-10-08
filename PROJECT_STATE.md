@@ -1,6 +1,6 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-781 — VERIFIED / RECONCILED
 
-- Current protected `main` HEAD verified at reconciliation time: `af61c163b07e10026685cb93a28f8c3ec88cceaa`.
+- Current main HEAD verified at reconciliation time: `af61c163b07e10026685cb93a28f8c3ec88cceaa`.
 - PR #781 was merged as `af61c163b07e10026685cb93a28f8c3ec88cceaa`; its change is documentation-only and did not mutate V4 authority, canonical evidence, cursor, checkpoint, manifest, or frozen architecture semantics.
 - Exact merge-head CI is terminal SUCCESS for HAHAWEEK Tests, Security/Regression, A9 Runtime, Analytical Reorg Runtime, HFI-MVP Runtime, Analytical Reorg Runtime, and Push on main.
 - PR #773 was reconciled against this main: its implementation/test changes are already present byte-for-byte in current main; the PR was closed as superseded rather than force-merged.
