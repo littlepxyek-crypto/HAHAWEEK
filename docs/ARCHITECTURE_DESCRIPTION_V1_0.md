@@ -9,8 +9,56 @@ Review Scope: Context → Container → Component → Runtime → Data/Evidence 
 
 ---
 
-## 0. Architecture Status
+## 0A. ROOT SEMANTIC CORRECTION — WHAT HAHAWEEK CAN AND CANNOT CLAIM
 
+The architecture distinguishes **integrity of a preserved record** from **truth about the external world**.
+
+- V4 is the integrity/record authority for HAHAWEEK state; it is not a truth oracle.
+- A canonical evidence record is canonical within the HAHAWEEK model, not automatically true in reality.
+- Provenance establishes how a record was acquired/derived; it does not by itself prove the underlying proposition.
+- Formation is a bounded historical reconstruction; it is not a prediction.
+- Hypothesis is a proposition under test; it is not evidence.
+- Validation is an evaluation under a declared rule and outcome window; it is not universal or permanent truth.
+- `VERIFIED` MUST state its verification scope; it must not be read as "truth verified".
+- `VALID`, `CONFIRMED`, `CORROBORATED`, and `VALIDATED` are domain-specific states and require their rule/version context.
+
+### Correct dependency topology
+
+```text
+CANONICAL EVIDENCE / V4 INTEGRITY
+          |
+          +--------------------+--------------------+
+          |                                         |
+          v                                         v
+   GRAPH PROJECTION                         FORMATION PROJECTION
+   rebuildable                              historical interpretation
+                                                    |
+                                                    v
+                                               HYPOTHESIS
+                                                    |
+                                                    v
+                                               VALIDATION
+                                                    |
+                              +---------------------+-------------------+
+                              v                                         v
+                            RADAR                                   RESEARCH
+                                                                        |
+                                                                        v
+                                                                      REPORT
+
+REFERENCE INTELLIGENCE = bounded investigation sidecar
+AGENT = external read-only consumer
+```
+
+**Graph is not a prerequisite for Formation. Reference Intelligence is not a prerequisite for canonical ingestion or analytical authority.**
+
+### Verification freshness
+
+A `VERIFIED` statement is current only when its exact commit/ref, workflow/artifact, timestamp, and verification scope are identified. A contract carrying evidence from an older commit is historical verification until current-head reconciliation re-establishes it.
+
+---
+
+## 0. Architecture Status
 This document is the formal Architecture Description baseline for HAHAWEEK. It does not declare the architecture final.
 
 The architecture is considered:
