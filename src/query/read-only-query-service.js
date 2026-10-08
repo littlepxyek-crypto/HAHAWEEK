@@ -55,6 +55,10 @@ function response(queryId, status, data, extras = {}) {
   };
 }
 
+function rejectUnsupportedTemporal(temporal) {
+  if (temporal && temporal.as_of !== undefined) throw new Error('QUERY_TEMPORAL_NOT_SUPPORTED');
+}
+
 function parseJson(value, fallback = null) {
   if (value === null || value === undefined || value === '') return fallback;
   try { return JSON.parse(value); } catch { return fallback; }
@@ -91,7 +95,7 @@ function createReadOnlyQueryService(database) {
     }, {
       consistency: temporalConsistency,
       limitations: asOf === null ? ['CURRENT_SCHEMA_DOES_NOT_EXPOSE_A_CANONICALITY_JOIN_FOR_EACH_EVIDENCE_ID'] : ['AS_OF_STATE_RECONSTRUCTED_FROM_APPEND_ONLY_CANONICAL_TRANSITIONS'],
-      evidence_refs: [{ evidence_id: row.evidence_id, evidence_type: canonical.evidence_type || null, chain_id: row.chain_id, event_time: canonical.event_time || null, observation_time: row.captured_at, processing_time: row.stored_at, canonicality: 'UNKNOWN', acquisition_ref: provenance.acquisition_id || null, source_lineage_ref: provenance.source_lineage_id || null }],
+      evidence_refs: [{ evidence_id: row.evidence_id, evidence_type: canonical.evidence_type || null, chain_id: row.chain_id, event_time: canonical.event_time || null, observation_time: row.captured_at, processing_time: row.stored_at, canonicality: temporalState ? temporalState.canonicality : 'UNKNOWN', acquisition_ref: provenance.acquisition_id || null, source_lineage_ref: provenance.source_lineage_id || null }],
       provenance_refs: [provenance],
     });
   }
@@ -169,10 +173,10 @@ function createReadOnlyQueryService(database) {
     switch (operation) {
       case QUERY_OPERATIONS.GET_EVIDENCE: return getEvidence(requiredString(input.evidence_id, 'evidence_id'), input.temporal || {});
       case QUERY_OPERATIONS.GET_EVIDENCE_LINEAGE: return getEvidenceLineage(requiredString(input.evidence_id, 'evidence_id'), input.temporal || {});
-      case QUERY_OPERATIONS.GET_BLOCK_CONTEXT: return getBlockContext(input.chain_id, input.block_number, input.resource || {});
-      case QUERY_OPERATIONS.GET_TRANSACTION_CONTEXT: return getTransactionContext(input.chain_id, input.transaction_hash, input.resource || {});
-      case QUERY_OPERATIONS.GET_WALLET_ACTIVITY: return getWalletActivity(input.chain_id, input.address, input.start_block, input.end_block, input.resource || {});
-      case QUERY_OPERATIONS.GET_POOL_CONTEXT: return getPoolContext(input.chain_id, input.pool_id, input.resource || {});
+      case QUERY_OPERATIONS.GET_BLOCK_CONTEXT: rejectUnsupportedTemporal(input.temporal); return getBlockContext(input.chain_id, input.block_number, input.resource || {});
+      case QUERY_OPERATIONS.GET_TRANSACTION_CONTEXT: rejectUnsupportedTemporal(input.temporal); return getTransactionContext(input.chain_id, input.transaction_hash, input.resource || {});
+      case QUERY_OPERATIONS.GET_WALLET_ACTIVITY: rejectUnsupportedTemporal(input.temporal); return getWalletActivity(input.chain_id, input.address, input.start_block, input.end_block, input.resource || {});
+      case QUERY_OPERATIONS.GET_POOL_CONTEXT: rejectUnsupportedTemporal(input.temporal); return getPoolContext(input.chain_id, input.pool_id, input.resource || {});
       default: throw new Error('QUERY_OPERATION_NOT_IMPLEMENTED');
     }
   }
