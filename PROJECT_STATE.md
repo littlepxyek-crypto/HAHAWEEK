@@ -1,6 +1,6 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-785 — E6 VERIFIED / RECONCILED
 
-- Current protected `main` HEAD verified at reconciliation time: `c3eb38b39f91cde04b6ad334ea034cde5835fe16`.
+- Current main HEAD verified at reconciliation time: `c3eb38b39f91cde04b6ad334ea034cde5835fe16`.
 - PR #785 was merged at this SHA; it closes the executable Identity L4/L5 vector-set boundary without changing V4 authority semantics.
 - Exact current-head GitHub Actions are terminal SUCCESS for: Push on main, HAHAWEEK Tests, HAHAWEEK Security and Regression, HAHAWEEK A9 Runtime Verification, HAHAWEEK Analytical Reorg Runtime Verification, and HAHAWEEK HFI-MVP Runtime Verification.
 - Current-head HFI-MVP runtime run: `37778211405`; runtime job `113314375812`; artifact `hfi-mvp-e2e-runtime-evidence-c3eb38b39f91cde04b6ad334ea034cde5835fe16`; artifact ID `11551685857`; digest `sha256:eed7b6e788ba4f43f8108319c30268d3ed4ff2958f1485cbf4a289229d2986b3`.
