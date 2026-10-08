@@ -5,7 +5,7 @@ const { CONTRACT_VERSION, assertL4, assertL5, evaluate } = require('../src/core/
 
 test('requires materially independent lineages for L4', () => {
   assert.throws(() => assertL4({relation:'controls_wallet',evidence_lines:[
-    {source_id:'a',source_lineage_id:'lineage-a',acquisition_id:'acq-a',independence_class:'I3',relation:'controls_wallet',temporally_compatible:true},
+    {source_id:'a',source_lineage_id:'lineage-a',acquisition_id:'acq-a',independence_class:'I3',independence_assessed:true,independence_basis:'test-lineage-review',independence_rule_version:'SOURCE-INDEPENDENCE-EXECUTION-V1.1',relation:'controls_wallet',temporally_compatible:true},
     {source_id:'b',source_lineage_id:'lineage-a',acquisition_id:'acq-b',independence_class:'I3',relation:'controls_wallet',temporally_compatible:true}
   ],falsifier:{type:'contradiction'}}), /L4_INDEPENDENT_LINEAGES_REQUIRED/);
 });
