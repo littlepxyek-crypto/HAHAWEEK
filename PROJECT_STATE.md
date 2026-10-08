@@ -1,6 +1,7 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST PR #770 — VERIFIED / RECONCILED
 
 - Current main HEAD verified after PR #770 merge: `109eca011ce76ec2fa8100143f67c3c265bd508d`.
+- Preserved historical snapshot baseline remains `9305090bdec0c0195008a302bb15aa6bcb04de15`; historical snapshots below are not rewritten.
 - PR #770 (`test: close F-03 final authority validation atomicity gap`) was squash-merged with exact head `76d4c35fa6db3130d833ac95c6edc60bb4c112f2`.
 - Exact PR-head CI was terminal SUCCESS for HAHAWEEK Tests, Security and Regression, A9 Runtime Verification, Analytical Reorg Runtime Verification, and HFI-MVP Runtime Verification.
 - The merged change is test-only: it adds a negative F-03 vector proving the lifecycle committer is not reached when final authority validation rejects.
