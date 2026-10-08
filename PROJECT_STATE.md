@@ -1,3 +1,14 @@
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-788 — HFI E5 VERIFIED / RECONCILED
+
+- Current main HEAD at snapshot creation: `26d4d0e665c9022882979a8397609224ce9c053b`.
+- PR #788 was merged after bounded historical block-read retry plus reduced historical block-read concurrency (default 4). No V4 authority semantics were changed.
+- Exact-head GitHub Actions are terminal SUCCESS for Push on main, Tests, Security and Regression, A9 Runtime, Analytical Reorg Runtime, HFI-MVP Runtime, HFI-RADAR Continuous Runtime, and HFI-RADAR Operational Runtime.
+- HFI-MVP runtime job: `113555003179`; artifact: `hfi-mvp-e2e-runtime-evidence-26d4d0e665c9022882979a8397609224ce9c053b`; artifact ID `11580808548`; digest `sha256:20dcdc9cde1f59739e7a85eb06769993eec12e2b0c5a524f4479560a031c7239`.
+- HFI runtime artifact state is `VERIFIED`; acquisition completeness is `COMPLETE`; raw and canonical counts are both 8664; formation state is `VALID`; replay reports `equivalent=true`.
+- Historical block-read resource boundary is `4` concurrent reads by default, with bounded transient-RPC retry.
+- Production V4 authority remains `INACTIVE`. HFI verification does not authorize production activation.
+- Architecture Gate remains `BLOCKED` pending the explicitly identified production activation, deployment/recovery drill, and remaining contract/documentation gates.
+
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — POST-PR-785 — E6 VERIFIED / RECONCILED
 
 - Current main HEAD verified at reconciliation time: `c3eb38b39f91cde04b6ad334ea034cde5835fe16`.
