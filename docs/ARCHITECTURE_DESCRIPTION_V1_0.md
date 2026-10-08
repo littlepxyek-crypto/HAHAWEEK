@@ -1282,7 +1282,7 @@ This append-only overlay is the current-state authority for this architecture de
 
 ## Current repository state
 
-- Current main HEAD at reconciliation time: `73b07f088502233470f3bae7c2bcbd6fbeecebcc`.
+- Current main HEAD at reconciliation time: `63ae3324d8d3a9b3688e92aaff453da042e9dc4a`.
 - HAHAWEEK remains standalone; ORACLE X and ASTRA are not architecture components.
 - The HFI-MVP/E2E vertical slice is implemented and has reached verified runtime acceptance on prior exact merge heads. The completion artifact explicitly does not authorize HFI-RADAR, production V4 cutover, or external action.
 - A8/A9 acquisition boundaries and analytical reorg propagation have executable/runtime verification on exact prior merge heads.
