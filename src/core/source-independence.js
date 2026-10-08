@@ -1,6 +1,6 @@
 'use strict';
 
-const CONTRACT_VERSION = 'SOURCE-INDEPENDENCE-EXECUTION-V1';
+const CONTRACT_VERSION = 'SOURCE-INDEPENDENCE-EXECUTION-V1.1';
 const CLASSES = Object.freeze(['I0','I1','I2','I3','I4']);
 
 function object(value, field) {
@@ -13,14 +13,23 @@ function source(line, index) {
     if (typeof line[key] !== 'string' || !line[key]) throw new Error(key.toUpperCase() + '_REQUIRED');
   }
 }
+function independenceAssessment(line, index) {
+  const basis = line.independence_basis;
+  const ruleVersion = line.independence_rule_version;
+  const assessed = line.independence_assessed === true;
+  if (typeof basis !== 'string' || !basis || typeof ruleVersion !== 'string' || !ruleVersion || !assessed) {
+    return false;
+  }
+  return true;
+}
 function classifySourceRelationship(a,b) {
   source(a,0); source(b,1);
   if (a.source_lineage_id === b.source_lineage_id) return 'I1';
   if (a.independence_class === 'I2' || b.independence_class === 'I2') return 'I2';
   if (a.independence_class === 'I4' && b.independence_class === 'I4' &&
       a.direct_independence_proof === true && b.direct_independence_proof === true) return 'I4';
-  if (a.independence_class === 'I3' && b.independence_class === 'I3') return 'I3';
-  if (a.independence_class === 'I4' && b.independence_class === 'I4') return 'I3';
+  if (a.independence_class === 'I3' && b.independence_class === 'I3' && independenceAssessment(a,0) && independenceAssessment(b,1)) return 'I3';
+  if (a.independence_class === 'I4' && b.independence_class === 'I4' && independenceAssessment(a,0) && independenceAssessment(b,1)) return 'I3';
   return 'I0';
 }
 function assertIndependentEvidence(lines, minimumClass='I3') {
@@ -52,6 +61,9 @@ function createAcquisitionEvidenceLine({ acquisitionResult, source: sourceDefini
     source_lineage_id: provenance.source_lineage_id,
     acquisition_id: acquisitionResult.acquisition_id,
     independence_class: provenance.independence_class,
+    independence_basis: provenance.independence_basis || null,
+    independence_rule_version: provenance.independence_rule_version || null,
+    independence_assessed: provenance.independence_assessed === true,
     direct_independence_proof: provenance.direct_independence_proof === true,
   };
   source(line, 0);
