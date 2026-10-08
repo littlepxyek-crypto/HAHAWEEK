@@ -355,3 +355,29 @@ Neither means:
 "I know who the human is."
 
 Identity resolution must remain relation-specific, temporal, evidence-backed, falsifiable, and reversible through immutable analytical history.
+
+
+## 20. EXECUTABLE VECTOR SET V1
+
+The executable implementation is `src/core/identity-l4-l5.js` and the regression boundary is `tests/identity-l4-l5.test.js`.
+
+The vector set explicitly rejects:
+- L4 with fewer than two evidence lines;
+- same-lineage observations presented as independent;
+- unknown or correlated source independence;
+- missing falsifier;
+- temporal incompatibility;
+- direct contradiction;
+- L5 from behavioral similarity;
+- L5 from same-token purchase;
+- L5 from username/profile similarity;
+- relation-generalized proof;
+- incomplete provenance;
+- temporal incompatibility;
+- cross-chain same-address string matching alone;
+- transitive identity composition;
+- replayed signature semantics without accepted direct proof.
+
+The vector set explicitly accepts only relation-specific L5 direct cryptographic/direct-control proof with complete provenance and temporal compatibility, and L4 corroboration only with assessed materially independent lineages.
+
+This vector set is an executable boundary, not a declaration of real-world identity. Parent-contract open dependencies remain open and are not silently promoted to VERIFIED.
