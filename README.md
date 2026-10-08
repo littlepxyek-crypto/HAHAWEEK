@@ -43,21 +43,22 @@ INTERNET / RPC
       ↓
   ACQUISITION
       ↓
- RAW EVIDENCE
+ RAW EVIDENCE RECORD
       ↓
- CANONICAL EVIDENCE
+ CANONICAL EVIDENCE RECORD
       ↓
- V4 AUTHORITY
+ V4 INTEGRITY AUTHORITY
       │
-      ├──────────────→ EVIDENCE GRAPH (rebuildable projection)
-      │
-      └──────────────→ FORMATION
-                              ↓
-                         HYPOTHESIS
-                              ↓
-                         VALIDATION
-                              ↓
-                         INTELLIGENCE
+      +-----------------------+------------------------+
+      │                                                │
+      v                                                v
+ EVIDENCE GRAPH                                 FORMATION
+ (parallel, rebuildable)                              ↓
+                                                HYPOTHESIS
+                                                     ↓
+                                                VALIDATION
+                                                     ↓
+                                                INTELLIGENCE
                          /          \\
                       RADAR       RESEARCH
                                       ↓
@@ -173,6 +174,11 @@ HAHAWEEK explicitly distinguishes:
 ```
 
 The Evidence Graph is a projection and must remain rebuildable from authoritative evidence.
+
+**V4 integrity authority protects the identity, ordering, and integrity of HAHAWEEK records; it does not by itself establish external truth.**
+
+**Graph is a parallel projection, not a prerequisite for Formation.**
+
 
 ---
 
