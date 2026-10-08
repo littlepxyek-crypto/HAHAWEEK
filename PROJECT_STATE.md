@@ -1,12 +1,12 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08 — VERIFIED / RECONCILED
 
-- Current main HEAD verified at reconciliation time: `9305090bdec0c0195008a302bb15aa6bcb04de15`.
+- Current main HEAD verified at reconciliation time: `78d9d41e43e1bad80f7e52b36347488bb9b0859a`.
 - This snapshot is the current-state entry for this revision; earlier snapshots below remain historical evidence and are not rewritten.
 - The current main ref must remain the authoritative source for resolving future HEAD changes; this document is a point-in-time reconciliation record, not a live ref.
 - V4 production authority remains INACTIVE.
 - Architecture Gate remains BLOCKED pending the remaining activation, deployment, recovery, lifecycle, and reconciliation criteria.
 - The frozen target architecture remains unchanged.
-- The architecture/current-state reconciliation in PR #768 and the authority cursor/lifecycle fail-closed correction are evaluated against this main baseline.
+- The architecture/current-state reconciliation in PR #768, the authority cursor/lifecycle fail-closed correction, and the source-independence/epistemic hardening merged in PR #774 are evaluated against this main baseline.
 - No external publication, signing, trading, or autonomous action is authorized by this documentation snapshot.
 
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-07 — VERIFIED / RECONCILED
