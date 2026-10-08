@@ -17,7 +17,7 @@ const projectState = fs.readFileSync('PROJECT_STATE.md', 'utf8');
 test('PROJECT_STATE current snapshot is newer than the preserved historical snapshot', () => {
   const currentSection = projectState.split(/^## /m)[1] || '';
   assert.match(currentSection, /CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-08/);
-  assert.match(currentSection, /9305090bdec0c0195008a302bb15aa6bcb04de15/);
+  assert.match(currentSection, /8f2d671bc4a6cc7f24b8cff79b56b9c7a616598e/);
   assert.doesNotMatch(currentSection, /96b26068765da2736c9d9c397b2ad292a4e7425f/);
 });
 
@@ -53,7 +53,7 @@ test('master architecture contains no stale current-state gate wording outside h
 
 test('architecture description has a current-main reconciliation overlay', () => {
   assert.match(architectureDescription, /CURRENT-MAIN RECONCILIATION OVERLAY — 2026-10-08/);
-  assert.match(architectureDescription, /Current main HEAD at reconciliation time: `9305090bdec0c0195008a302bb15aa6bcb04de15`/);
+  assert.match(architectureDescription, /Current main HEAD at reconciliation time: `8f2d671bc4a6cc7f24b8cff79b56b9c7a616598e`/);
   assert.match(architectureDescription, /Reference Intelligence is implemented as a bounded, non-authoritative investigation boundary/);
   assert.match(architectureDescription, /V4 production authority remains INACTIVE/);
   assert.match(architectureDescription, /IMPLEMENTED` ≠ `VERIFIED` ≠ `AUTHORIZED` ≠ `ACTIVE`/);
