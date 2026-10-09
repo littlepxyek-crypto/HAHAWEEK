@@ -1,12 +1,17 @@
-## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-789 — HFI RUNTIME SUCCESS / ARCHITECTURE GATE BLOCKED
+## MOST RECENT VERIFIED HFI-MVP RUNTIME SNAPSHOT — 2026-10-09 — COMMIT-BOUND E5 RUNTIME / PRODUCTION GATE BLOCKED
 
-- Current main HEAD verified at reconciliation time: `99400b73c669c5e115ccf056b554c4ef909b5c8d`.
-- PR #789 is merged. It reconciles the current PROJECT_STATE snapshot wording and date assertion; no production authority or architecture semantics were changed.
-- Exact-main checks terminal SUCCESS: Tests (`37855819755`), Security and Regression (`37856735494`; also `37855819768`), A9 Runtime (`37855819753`), Analytical Reorg Runtime (`37855819783`), HFI-MVP Runtime (`37855819789`), and Push on main / CodeQL (`37855819701`).
-- HFI-MVP job `113579608486` completed SUCCESS. Preserved artifact: `hfi-mvp-e2e-runtime-evidence-99400b73c669c5e115ccf056b554c4ef909b5c8d`, artifact ID `11584711930`, digest `sha256:2696a37d1e34b3d1727870d30754db8e217231bb345530654fba9c823f0c0e86`.
-- Artifact provenance verification and upload both passed. Workflow success does not by itself imply production activation.
-- P2-HFI-RUNTIME-STALL-001 is closed after terminal successful HFI runtime on current main. Historical slow acquisition remains an operational characteristic; retry/concurrency bounds remain in place.
-- V4 production authority remains `INACTIVE`; Architecture Gate remains `BLOCKED` pending production activation criteria and deployment/recovery drills. No production activation was attempted.
+- Runtime evidence is bound to commit `a9abae93e622e48530e5aec8053eb89b17b906c2`; this is the exact `main` HEAD used by HFI-MVP run `37868854372`, not a claim that any later documentation commit has already been runtime-verified.
+- GitHub Actions run `37868854372` completed `success`; job `113621977156` completed successfully. The runtime artifact provenance step and artifact upload both passed.
+- Preserved artifact: `hfi-mvp-e2e-runtime-evidence-a9abae93e622e48530e5aec8053eb89b17b906c2`, artifact ID `11589773336`, ZIP digest `sha256:cf6266d2a9a4a3e58d58114791792fbdd79cc5858928a2d8a6faab29dd0b35ef`.
+- Downloaded artifact was inspected. Runtime payload reports `state=VERIFIED`, `verification_class=E5_RUNTIME`, contract `HFI-MVP-E2E-V0_1`, chain ID `4663`, and exact commit match.
+- Artifact consistency checks passed: acquisition completeness `COMPLETE`; formation `VALID` with `POOL_CREATED → LIQUIDITY_ADDED → SWAP`; seven-day outcome coverage `COMPLETE`; liquidity-survival criterion `PASS`; validation `CONFIRMED`; deterministic replay `equivalent=true`.
+- Raw evidence count `8664`; canonical evidence count `8664`; both counts match the artifact integrity fields. Manifest: `653bef88df94ee30998d491788d99465b64ac0962abc8c8d9eb56082aeb61239`.
+- Runtime window: `2026-10-09T01:15:13.897Z` to `2026-10-09T01:29:11.223Z`; recorded latest block `83763457`; historical RPC block-batch concurrency `4`.
+- Report and X-content projection were produced as artifacts only. Runtime source record states `no_external_publication=true`; no external X publication is claimed.
+- Exact-head GitHub Actions on this commit completed SUCCESS: Tests (`37868853857`), Security and Regression (`37868853852`), A9 Runtime (`37868853874`), Analytical Reorg Runtime (`37868854006`), HFI-MVP Runtime (`37868854372`), and Push on main / CodeQL (`37868854218`).
+- The previous snapshot incorrectly labelled `99400b73c669c5e115ccf056b554c4ef909b5c8d` as the then-current HEAD. That SHA and its historical runtime artifact remain valid for their own commit, but must not be substituted for the exact runtime evidence above.
+- These results establish the HFI-MVP E5 runtime slice only. They do NOT prove integrated lifecycle/cursor crash atomicity, production-host deployment, persistent-volume restart, backup/restore, writer-fence contention, RPC degradation, or live recovery/replay drills.
+- V4 production authority remains `INACTIVE`; Architecture Gate remains `BLOCKED`; production readiness remains `NOT READY`. No production activation was attempted.
 
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-788 — HFI E5 VERIFIED / RECONCILED
 
