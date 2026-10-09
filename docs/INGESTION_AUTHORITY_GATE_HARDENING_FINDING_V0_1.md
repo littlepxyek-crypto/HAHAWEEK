@@ -100,3 +100,36 @@ The existing normative V4 cursor/checkpoint contracts require cursor state to re
 - Production V4 authority remains INACTIVE. Architecture Gate remains BLOCKED. Production readiness remains NOT READY.
 
 This update records evidence and disposition only. It does not change runtime code, authority semantics, cursor state, canonical evidence, or activation state.
+
+
+## Follow-up implementation candidate — process initial safe-head block through V4
+
+Date: 2026-10-09
+
+### Evidence prompting this change
+
+The exact PR merge-ref runtime for commit `2c99fe5b846e7946e7418c2571987699e4c9fcc2` (synthetic merge commit `da1ac85e6418104cba9ac5461ab611a6837c911c`) again passed the eight HFI-RADAR unit/negative tests and failed the bounded Mainnet runtime with `CHECKPOINT_NOT_COMMITTED` on both cycles. The failure occurs at the explicit `CURSOR_BOOTSTRAP` gate, before processing the first block.
+
+### Minimal implementation candidate
+
+The ingestion engine no longer persists a cursor by calling a bootstrap-only authority decision. When the cursor is null, it treats `safeHead` as the first block in the acquisition window and runs it through the existing processing path. The cursor remains null until the normal processor has returned and the authority gate has returned `AUTHORIZED`; only then does `cursor.advance(safeHead)` persist the position.
+
+This preserves the no-backfill boundary: blocks below `safeHead` are not acquired and their absence is not interpreted as negative evidence. It changes the previous behavior by processing the single initial safe-head block rather than skipping that block.
+
+### Changes made; verification pending
+
+- `src/core/ingestion.js`: removed direct uncommitted `CURSOR_BOOTSTRAP` authority request; the null-cursor path now enters the normal block/range processing loop with an ephemeral starting position of `safeHead - 1`. No negative position is persisted.
+- `tests/ingestion.test.js`: first-run test now requires the single safe-head range to be processed and authority accepted before cursor advancement.
+- `tests/authority-acceptance-cursor-barrier.test.js`: negative test now requires a rejected first safe-head authority decision to leave the cursor null.
+
+The three files were re-fetched after their respective GitHub contents commits and their contents matched the intended updates. No local tests were run from this connector session. Exact-head CI, Mainnet runtime, restart/recovery, and replay verification remain pending.
+
+### Safety boundary and acceptance criteria
+
+- This is an implementation candidate, not a verified or authorized production change.
+- The ordinary production processing-context and authority-chain checks remain in place; no checkpoint is fabricated and no authority gate is bypassed.
+- If processing, checkpoint establishment, or authority acceptance fails, the persisted cursor must remain null. Any already durable processing evidence must be safe to replay idempotently.
+- The exact resulting head must pass the complete test/security suites and bounded Mainnet runtime, then restart/recovery and replay checks.
+- If the new runtime exposes a missing initial-range invariant (for example, processing-context creation or lifecycle reconciliation cannot establish the first range), preserve the failure and resolve the underlying contract/implementation defect; do not weaken the gate.
+
+Current disposition: `HW-P1-001` remains BLOCKED pending exact-head verification. V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
