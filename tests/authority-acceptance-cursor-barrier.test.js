@@ -64,6 +64,26 @@ test('legacy cursor does not advance when explicit authority acceptance is absen
 });
 
 
+test('bootstrap cursor remains null when authority does not explicitly accept', async () => {
+  const cursor = makeCursor(null);
+  let gateInput = null;
+  const engine = new IngestionEngine({
+    provider: { getBlockNumber: async () => 101 },
+    cursor,
+    confirmations: 0,
+    processor: async () => {},
+    authorityGate: input => {
+      gateInput = input;
+      return { status: 'REJECTED' };
+    },
+  });
+
+  await assert.rejects(() => engine.runOnce(), /AUTHORITY_ACCEPTANCE_REQUIRED/);
+  assert.equal(gateInput?.operation, 'CURSOR_BOOTSTRAP');
+  assert.equal(cursor.get(), null);
+});
+
+
 test('ingestion engine rejects missing authority gate before runtime', () => {
   assert.throws(() => new IngestionEngine({
     provider: { getBlockNumber: async () => 101 },
