@@ -118,3 +118,15 @@ The initial strict-gate patch was too broad for legacy unit fixtures and caused 
 - The earlier failure and pre-merge pending statements are preserved as historical evidence. The successful follow-up and merge are recorded as a later state, not by rewriting the historical record.
 - Current disposition: authority-context and persistence-path patch MERGED; PR-head CI/runtime suite SUCCESS; merge-commit status UNKNOWN/NOT VERIFIED; V4 production authority INACTIVE; Architecture Gate BLOCKED; production readiness NOT READY.
 - Remaining production blockers include deployment-relevant durability and power-loss tests, persistent-volume recovery, backup/restore, full lifecycle/authority activation verification, and live-provider integration verification where claimed as a capability.
+
+## POST-MERGE RECONCILIATION — PR #801 — 2026-10-10
+
+- PR #801 is MERGED at `fdb8c935be8362bb3e0f9a77214ac831a9b8ec9b`.
+- Exact PR-head SHA: `299e1c4d32967dd6b395d793c98b8250c30b162f`.
+- The available PR-triggered workflow runs for that exact head are terminal SUCCESS: HAHAWEEK Tests, Security and Regression, A9 Runtime Verification, Analytical Reorg Runtime Verification, and HFI-MVP Runtime Verification.
+- No HFI-RADAR workflow run was returned for this PR head by the available commit-workflow association endpoint; this is not reported as a pass.
+- The available commit-workflow association and combined-status endpoints returned no runs/statuses for merge commit `fdb8c935be8362bb3e0f9a77214ac831a9b8ec9b`. Therefore merge-commit CI and post-merge runtime remain NOT VERIFIED by these endpoints.
+- Earlier text saying PR #801 had no associated workflow runs describes an earlier observation and is superseded by this dated reconciliation; historical snapshots remain preserved.
+- This is a documentation-only merge. It does not change V4 authority, canonical evidence, cursor, checkpoint, manifest, deployment, or frozen architecture semantics.
+- V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
+
