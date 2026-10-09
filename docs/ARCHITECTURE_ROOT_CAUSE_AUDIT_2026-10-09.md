@@ -153,3 +153,18 @@ Do not infer project completion from this authority-gate merge. Continue exact-h
 ### Additive persistence-path clarification — 2026-10-09
 
 Inspection of the current `main` versions of `src/core/state.js` and `src/core/database.js` confirms the durability finding applies to both persisted cursor/operational state and the SQL.js database export. Both use temporary-file replacement without explicit file and parent-directory sync in the inspected save path. This does **not** establish that data loss occurred, nor does it prove a defect on every filesystem; it establishes that power-loss durability is not demonstrated by the source or existing process-level recovery tests. No persistence code was changed because the deployment storage target and required durability guarantees have not been specified/verified, and a change must be tested against those assumptions rather than treated as universally portable.
+
+
+---
+
+## Additive terminal runtime reconciliation — 2026-10-09
+
+This update records terminal job metadata for exact `main` commit `45685af686ae29500601d55ac77540b41b3b7a07`. It supersedes only the prior statement that HFI-MVP was still in progress; it does not rewrite historical failure evidence.
+
+- HAHAWEEK Tests `37911412462`, Security and Regression `37911412442`, A9 Runtime `37911412429`, Analytical Reorg Runtime `37911412444`, HFI-RADAR Continuous Runtime `37911412484`, and Push on main `37911412428` have completed with SUCCESS on the exact main commit.
+- HFI-MVP run `37911412461` completed at the job level with SUCCESS. However, its conditional step named `HFI-MVP runtime verification did not reach VERIFIED; preserved runtime evidence is authoritative.` was SKIPPED. Therefore this job conclusion is not sufficient to claim the HFI-MVP runtime payload reached `VERIFIED`.
+- Artifact metadata: ID `11606718451`; name `hfi-mvp-e2e-runtime-evidence-45685af686ae29500601d55ac77540b41b3b7a07`; digest `sha256:18e66b9f8d894d858dd8d621983c168c1a42a31cf7c6e80cd6fee219b7b01813`. The provenance-verification and upload steps passed. Artifact contents were not independently retrieved/inspected in this session.
+- Disposition: HFI-MVP exact-head runtime is `NOT VERIFIED / INCONCLUSIVE`, not FAILED solely from the skipped marker, and not VERIFIED from the job conclusion. Preserve the artifact and inspect its runtime payload before making a stronger claim.
+- The previously documented persistence durability gap and incomplete production-host/persistent-volume recovery evidence remain unresolved. This metadata reconciliation does not change source code, authority, cursor, checkpoint, manifest, canonical evidence, or runtime state.
+- V4 production authority remains `INACTIVE`; Architecture Gate and Implementation Freeze remain `BLOCKED`; production readiness remains `NOT READY`.
+
