@@ -171,3 +171,26 @@ This update records terminal job metadata and independently inspected the exact-
 - V4 production authority remains `INACTIVE`; Architecture Gate and Implementation Freeze remain `BLOCKED`; production readiness remains `NOT READY`.
 
 
+
+
+### Exact-head audit-branch CI reconciliation — 2026-10-09
+
+Audit branch head: `035a50eed0196a99d8978b9438a31d89bd6d9e25`.
+
+The exact-head GitHub Actions collection was rechecked after the prior audit update. These runs all reached terminal `completed / success` for this SHA:
+
+- HAHAWEEK Tests: [37919382748](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/37919382748)
+- Security and Regression: [37919382754](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/37919382754)
+- A9 Runtime Verification: [37919382725](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/37919382725)
+- Analytical Reorg Runtime Verification: [37919382731](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/37919382731)
+- HFI-MVP Runtime Verification: [37919382717](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/37919382717)
+- PR #798 aggregate check: [37919378680](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/37919378680)
+- Security and Regression push check: [37919376404](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/37919376404)
+
+For HFI-MVP, the job log confirms it checked out the exact audit SHA, ran `npm run hfi:runtime`, checked that the generated runtime JSON commit matched the expected SHA, and uploaded artifact ID `11612105797` with SHA-256 `4c3c2833d19a5ebe7f1f315d9dc3f2a40390a291fb1f72b76e2f286693880f26`. The captured runtime exit code was zero (the conditional failure-marker step was skipped). The artifact payload itself has not been independently downloaded/inspected in this audit step; therefore this entry records a successful exact-head runtime job and provenance check, not an independently inspected E5 payload claim for the audit SHA.
+
+The HFI-MVP artifact is available at [artifact 11612105797](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/37919382717/artifacts/11612105797). Its payload should be inspected before promoting detailed per-field claims from the audit branch.
+
+No production storage crash/power-loss test was run. Existing `tests/h04-durability-recovery.test.js` demonstrates process-level crash/restart and idempotent replay, and a failure path preserving the cursor; it does not simulate OS power loss, storage cache loss, or deployment-volume restoration. The production durability finding remains BLOCKED pending a specified deployment filesystem/storage contract and corresponding verification.
+
+This CI update does not alter the current `main` head (`45685af686ae29500601d55ac77540b41b3b7a07`), production authority, or activation gate.
