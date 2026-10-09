@@ -62,6 +62,7 @@ test('H-04: evidence committed before cursor; restart replays idempotently', asy
 
   let injectedCrash = true;
   const firstEngine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: provider(101),
     cursor: firstCursor,
     confirmations: 0,
@@ -106,6 +107,7 @@ test('H-04: evidence committed before cursor; restart replays idempotently', asy
 
   let replayStatus = null;
   const secondEngine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: provider(101),
     cursor: restartCursor,
     confirmations: 0,
@@ -140,6 +142,7 @@ test('H-04: evidence persistence failure prevents cursor advancement', async () 
   });
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: provider(101),
     cursor,
     confirmations: 0,
