@@ -12,7 +12,7 @@ function makeEngine(authorityFactory, expectedAuthorityFactory, cursor) {
     cursor,
     confirmations: 0,
     processor: async () => {},
-    processorRange: async () => {},
+    processorRange: async (fromBlock, toBlock) => ({ status: 'VERIFIED', fromBlock, toBlock, generation: 'g1' }),
     batchSize: 1,
     maxBatchesPerRun: 1,
     authorityGate: createAuthorityGate({
@@ -20,6 +20,8 @@ function makeEngine(authorityFactory, expectedAuthorityFactory, cursor) {
       expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...expectedAuthorityFactory({fromBlock,toBlock}),fromBlock,toBlock}),
       authorityValidator: assertProductionAuthority,
       authorityBindingValidator: () => ({status:'BOUND'}),
+      writerFence: { assertOwned() {} },
+      requireProcessingContext: true,
     }),
   });
 }
@@ -110,6 +112,8 @@ test('F-03 lifecycle committer is not reached when final authority validation re
       throw new Error('FINAL_AUTHORITY_VALIDATION_REJECTED');
     },
     authorityBindingValidator: () => ({ status: 'BOUND' }),
+    writerFence: { assertOwned() {} },
+    requireProcessingContext: true,
     authorityCommitter: () => {
       commits += 1;
     },
