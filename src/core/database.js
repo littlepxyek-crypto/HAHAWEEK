@@ -5,8 +5,8 @@ const path = require('path');
 const initSqlJs = require('sql.js');
 const { createLegacyWriteBarrier } = require('./legacy-write-freeze');
 
-const DB_DIR = path.join(process.cwd(), 'data');
-const DB_FILE = path.join(DB_DIR, 'hahaweek.sqlite');
+const DB_DIR = process.env.HAHAWEEK_DATA_DIR || path.join(process.cwd(), 'data');
+const DB_FILE = process.env.HAHAWEEK_DB_FILE || path.join(DB_DIR, 'hahaweek.sqlite');
 const SCHEMA_VERSION = 9;
 
 const DERIVED_PROJECTION_LIFECYCLE_DDL = [

@@ -2687,3 +2687,30 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - Reference Intelligence remains bounded and non-authoritative; live providers remain deferred.
 - Architecture Gate remains BLOCKED by current merge-head verification, deployment, live recovery/durability, and lifecycle/activation criteria.
 - This is an additive current-state reconciliation; prior snapshots remain historical evidence and are not rewritten.
+
+
+---
+
+## WHOLE-PATH ARCHITECTURE AUDIT SNAPSHOT — 2026-10-10 — PATCH PROPOSED / VERIFICATION PENDING
+
+- Audit baseline main HEAD: `45685af686ae29500601d55ac77540b41b3b7a07`.
+- Audit branch: `audit/fix-authority-context-and-persistence-paths`.
+- Detailed report: [Whole-Path Architecture Audit 2026-10-10](docs/WHOLE_PATH_ARCHITECTURE_AUDIT_2026-10-10.md).
+- Finding HW-AUD-001: the production F-03 authority adapter previously allowed absent processing context, and the legacy ingestion path can call the gate without context. Patch now requires a VERIFIED processing context, exact range/generation binding, and writer fence. New negative test is added; exact-head CI remains pending.
+- Finding HW-AUD-002: database default path did not honor `HAHAWEEK_DATA_DIR`, unlike state JSON. Patch aligns the default database directory and adds `HAHAWEEK_DB_FILE`; state writes create the configured file's parent directory. Subprocess regression tests are added; exact-head CI remains pending. No existing data was moved.
+- Finding HW-AUD-003: canonical blueprint previously showed Graph as a prerequisite for Formation, contradicting the parallel-projection contract. Diagram and explanatory text are corrected on the audit branch.
+- Finding HW-AUD-004: this file's earlier leading snapshot was stale as a current-head claim; it is preserved as historical evidence. This additive snapshot binds the audit to the exact inspected baseline.
+- Finding HW-AUD-005: explicit file/directory sync, production-volume durability, power-loss recovery, and backup/restore remain BLOCKED for production activation. No persistence durability semantics were changed without a specified storage contract.
+- Finding HW-AUD-006: HFI-MVP E5 remains a bounded vertical-slice verification, not proof of all lifecycle, deployment, recovery, or live-provider contracts.
+- Local test execution is NOT CLAIMED. CI/runtime verification for the audit PR head is PENDING.
+- V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED. Production readiness remains NOT READY.
+- No cursor reset, checkpoint/manifest mutation, canonical/raw evidence rewrite, migration, deployment, external publication, or production activation was performed.
+
+
+## WHOLE-PATH AUDIT ADDENDUM — 2026-10-10 — CI REGRESSION RECONCILIATION
+
+- The first PR #800 Security and Regression run failed after the initial strict-context change. Failure evidence showed existing generic adapter fixtures and production-boundary fixtures were not reconciled with the changed call contract; no test was suppressed.
+- The implementation was corrected to make strict processing-context enforcement explicit and enabled in `src/index.js` production wiring, while preserving generic adapter compatibility for non-production/test callers.
+- Production-boundary tests now provide verified context and writer-fence fixtures. The failed run remains historical evidence.
+- The follow-up exact-head CI/runtime result is pending. PR #800 MUST NOT merge until the new head's full test/security/runtime checks terminate successfully and the failures are reconciled.
+- Production V4 authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.

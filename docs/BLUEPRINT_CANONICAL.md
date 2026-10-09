@@ -13,41 +13,39 @@ HAHAWEEK is a standalone Early Formation Intelligence Engine. It observes Intern
 ## Canonical Architecture
 
 ```
-INTERNET / X
-      │
-      ├───────────────┐
-      │               │
-      ▼               ▼
-   SOCIAL          NARRATIVE
-      │               │
-      └───────┬───────┘
-              │
-              ▼
-       HAHAWEEK ENGINE
-              │
-    ┌─────────┼─────────┐
-    ▼         ▼         ▼
-ON-CHAIN    WALLET     SOCIAL
-    │         │         │
-    └─────────┼─────────┘
-              ▼
-        EVIDENCE GRAPH
-              │
-              ▼
-       FORMATION ENGINE
-              │
-              ▼
-          VALIDATION
-              │
-       ┌──────┴──────┐
-       ▼             ▼
-     RADAR        RESEARCH
-       │             │
-       ▼             ▼
-  Dashboard        REPORT
-                     │
+INTERNET / X ───────┐
+                    ▼
+             SOCIAL / NARRATIVE
+                    │
+                    ▼
+             ACQUISITION / RAW
+                    │
+                    ▼
+            CANONICAL EVIDENCE
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+   EVIDENCE GRAPH         FORMATION ENGINE
+   (rebuildable)                │
+          │                     ▼
+          │                 HYPOTHESIS
+          │                     │
+          └──────────┬──────────┘
                      ▼
-                 X CONTENT
+                 VALIDATION
+                     │
+              ┌──────┴──────┐
+              ▼             ▼
+            RADAR         RESEARCH
+                            │
+                            ▼
+                          REPORT
+                            │
+                            ▼
+                         X CONTENT
+
+REFERENCE INTELLIGENCE ──→ CORROBORATION / RESEARCH
+(non-authoritative; never a V4 authority prerequisite)
 ```
 
 ## Signal Domains
@@ -69,7 +67,7 @@ ON-CHAIN    WALLET     SOCIAL
 
 ## Evidence Model
 
-The Evidence Graph is the correlation and provenance layer. It connects independent observations across on-chain, wallet, and social domains.
+The Evidence Graph is a non-authoritative, rebuildable projection of canonical evidence. Formation is a parallel projection from canonical evidence, not a downstream stage that requires the graph to run first. The graph connects observations across on-chain, wallet, and social domains, while preserving source-lineage and independence uncertainty.
 
 HAHAWEEK must distinguish:
 - observed fact

@@ -11,11 +11,13 @@ test('F-03 production boundary consumes complete authority record before cursor'
     authorityFactory:({fromBlock,toBlock})=>({segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:toBlock,fromBlock,toBlock}),
     expectedAuthorityFactory:({fromBlock,toBlock})=>({segmentId:'seg-101',manifestDigest:'m101',checkpointDigest:'c101',generation:'g1',cursorBlock:toBlock,fromBlock,toBlock}),
     authorityValidator:record=>{events.push(['authority',record.cursorBlock]); return assertProductionAuthority(record);},
-    authorityBindingValidator:()=>({status:'BOUND'})
+    authorityBindingValidator:()=>({status:'BOUND'}),
+    writerFence: { assertOwned() {} },
+    requireProcessingContext: true,
   });
   const engine=new IngestionEngine({
     provider:{getBlockNumber:async()=>101},cursor,confirmations:0,
-    processor:async()=>{},processorRange:async()=>{},
+    processor:async()=>{},processorRange:async(fromBlock,toBlock)=>({status:'VERIFIED',fromBlock,toBlock,generation:'g1'}),
     batchSize:1,maxBatchesPerRun:1,authorityGate
   });
   const result=await engine.runOnce();
@@ -32,11 +34,13 @@ test('F-03 production boundary rejects incomplete authority before cursor',async
     authorityFactory:()=>({segmentId:'seg-101',cursorBlock:101,fromBlock:101,toBlock:101}),
     expectedAuthorityFactory:()=>({segmentId:'seg-101',cursorBlock:101,fromBlock:101,toBlock:101}),
     authorityValidator:assertProductionAuthority,
-    authorityBindingValidator:()=>({status:'BOUND'})
+    authorityBindingValidator:()=>({status:'BOUND'}),
+    writerFence: { assertOwned() {} },
+    requireProcessingContext: true,
   });
   const engine=new IngestionEngine({
     provider:{getBlockNumber:async()=>101},cursor,confirmations:0,
-    processor:async()=>{},processorRange:async()=>{},
+    processor:async()=>{},processorRange:async(fromBlock,toBlock)=>({status:'VERIFIED',fromBlock,toBlock,generation:'g1'}),
     batchSize:1,maxBatchesPerRun:1,authorityGate
   });
   await assert.rejects(()=>engine.runOnce(),/AUTHORITY_MANIFESTDIGEST_MISSING/);

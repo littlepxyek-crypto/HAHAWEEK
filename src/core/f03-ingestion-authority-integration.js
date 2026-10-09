@@ -15,6 +15,7 @@ function createAuthorityGate({
   authorityBindingValidator,
   authorityCommitter,
   writerFence,
+  requireProcessingContext = false,
 }) {
   if (typeof authorityFactory !== 'function') throw new Error('AUTHORITY_FACTORY_REQUIRED');
   if (typeof expectedAuthorityFactory !== 'function') {
@@ -28,11 +29,15 @@ function createAuthorityGate({
     throw new Error('AUTHORITY_BINDING_VALIDATOR_REQUIRED');
   }
   return ({ fromBlock, toBlock, checkpointCommitted, processingContext }) => {
+    if (requireProcessingContext && (!processingContext || typeof processingContext !== 'object')) {
+      throw new Error('PROCESSING_CONTEXT_REQUIRED');
+    }
+    if (requireProcessingContext && !writerFence) throw new Error('AUTHORITY_WRITER_FENCE_REQUIRED');
     if (writerFence) writerFence.assertOwned();
     if (checkpointCommitted !== true) throw new Error('CHECKPOINT_NOT_COMMITTED');
     if (processingContext !== undefined) {
       if (!processingContext || typeof processingContext !== 'object') {
-        throw new Error('PROCESSING_CONTEXT_MISSING');
+        throw new Error('PROCESSING_CONTEXT_INVALID');
       }
       if (processingContext.status !== 'VERIFIED') {
         throw new Error('PROCESSING_CONTEXT_NOT_VERIFIED');
@@ -79,7 +84,6 @@ function createAuthorityGate({
       if (validated.cursorBlock !== processingContext.toBlock) {
         throw new Error('AUTHORITY_CURSOR_CONTEXT_MISMATCH');
       }
-      if (!writerFence) throw new Error('AUTHORITY_WRITER_FENCE_REQUIRED');
     }
     if (writerFence) writerFence.assertOwned();
     if (typeof authorityCommitter === 'function') {
