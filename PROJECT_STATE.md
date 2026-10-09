@@ -1,4 +1,4 @@
-## MOST RECENT VERIFIED HFI-MVP RUNTIME SNAPSHOT — 2026-10-09 — COMMIT-BOUND E5 RUNTIME / PRODUCTION GATE BLOCKED
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — MOST RECENT VERIFIED HFI-MVP E5 RUNTIME / PRODUCTION GATE BLOCKED
 
 - Runtime evidence is bound to commit `a9abae93e622e48530e5aec8053eb89b17b906c2`; this is the exact `main` HEAD used by HFI-MVP run `37868854372`, not a claim that any later documentation commit has already been runtime-verified.
 - GitHub Actions run `37868854372` completed `success`; job `113621977156` completed successfully. The runtime artifact provenance step and artifact upload both passed.
