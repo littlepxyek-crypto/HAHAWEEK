@@ -64,7 +64,7 @@ test('F-03 adapter fails closed when authority is incomplete', () => {
 
   const gate = makeGate(() => source.authority);
   assert.throws(
-    () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
+    () => gate(validInput()),
     /AUTHORITY_MANIFESTDIGEST_MISSING/
   );
 });
