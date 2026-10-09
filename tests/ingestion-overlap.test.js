@@ -44,6 +44,7 @@ test('concurrent runOnce calls are rejected', async () => {
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider,
     cursor,
     confirmations: 0,
