@@ -23,7 +23,7 @@ function handleSIGINT() {
 function handleSIGTERM() {
   requestShutdown('SIGTERM');
 }
-\n
+
 
 const { createProvider } = require('./core/rpc');
 const {
@@ -278,16 +278,19 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
       writerFence,
     };
   } catch (error) {
-    if (database) {
-      database.close();
+    const cleanupFailures = await cleanupResources([
+      ...(database ? [['database.close', () => database.close()]] : []),
+      ['writerFence.stopWatchdog', () => writerFence.stopWatchdog()],
+      ['writerFence.release', () => writerFence.release()],
+      ['provider.destroy', () => provider.destroy()],
+    ], (label, cleanupError) => {
+      console.error(`HAHAWEEK INITIALIZATION CLEANUP FAILED (${label}): ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`);
+    });
+
+    // Preserve the initialization error as the primary failure.
+    if (cleanupFailures.length > 0) {
+      console.error(`HAHAWEEK INITIALIZATION CLEANUP: ${cleanupFailures.length} cleanup action(s) failed`);
     }
-    try {
-      await writerFence.stopWatchdog();
-    } catch {
-      // Preserve the original initialization failure.
-    }
-    writerFence.release();
-    provider.destroy();
     throw error;
   }
 }
