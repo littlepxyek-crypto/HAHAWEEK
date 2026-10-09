@@ -1,5 +1,6 @@
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — MOST RECENT VERIFIED HFI-MVP E5 RUNTIME / PRODUCTION GATE BLOCKED
 
+- Current main HEAD verified at reconciliation time: `a9abae93e622e48530e5aec8053eb89b17b906c2`.
 - Runtime evidence is bound to commit `a9abae93e622e48530e5aec8053eb89b17b906c2`; this is the exact `main` HEAD used by HFI-MVP run `37868854372`, not a claim that any later documentation commit has already been runtime-verified.
 - GitHub Actions run `37868854372` completed `success`; job `113621977156` completed successfully. The runtime artifact provenance step and artifact upload both passed.
 - Preserved artifact: `hfi-mvp-e2e-runtime-evidence-a9abae93e622e48530e5aec8053eb89b17b906c2`, artifact ID `11589773336`, ZIP digest `sha256:cf6266d2a9a4a3e58d58114791792fbdd79cc5858928a2d8a6faab29dd0b35ef`.
