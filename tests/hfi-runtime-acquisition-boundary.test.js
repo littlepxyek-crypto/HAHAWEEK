@@ -118,7 +118,8 @@ test('resource-budget failures retain request and elapsed diagnostics', () => {
 
 test('RPC transport failures use bounded retry without triggering adaptive recursive splitting', () => {
   assert.match(policy, /function isRetryableRpcError\(error\)/);
-  assert.match(runtime, /!isRangeLimitError\(x\)&&!isRetryableRpcError\(x\)/);
+  assert.match(runtime, /if\(isRangeLimitError\(x\)\)break;if\(!isRetryableRpcError\(x\)\)throw last/);
+  assert.match(runtime, /const jitter=0\.75\+Math\.random\(\)\*0\.5/);
   assert.match(runtime, /const shouldSplit=shouldSplitLogRange\(last\)/);
   assert.match(policy, /function shouldSplitLogRange\(error\) \{\s*return isRangeLimitError\(error\)/);
 });
