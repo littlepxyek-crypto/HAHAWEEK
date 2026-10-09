@@ -113,3 +113,8 @@ The runtime cleanup implementation is being hardened so one failed cleanup actio
 
 Signal handlers are installed for the duration of `main()` and removed in its `finally` path, including when engine initialization fails. This behavior change is proposed in PR review and remains NOT VERIFIED until exact-head tests, negative tests, and runtime CI terminate successfully. It does not change canonical evidence, V4 authority, cursor/checkpoint/manifest semantics, or production activation.
 
+
+
+## HFI-MVP RPC range retry boundary — 2026-10-10
+
+HFI-MVP adaptive log-range splitting is permitted only when the RPC explicitly rejects a queried block range or result size. Transient transport failures (including timeout, connection reset, gateway errors, and rate limits) receive bounded retries and then fail the acquisition stage; they must not trigger recursive range splitting, which can multiply request volume during an endpoint outage. Non-retryable errors fail immediately. The runtime artifact must preserve the failure stage and remain non-VERIFIED when acquisition is incomplete. This policy does not change canonical authority, cursor, checkpoint, manifest, or V4 activation semantics.
