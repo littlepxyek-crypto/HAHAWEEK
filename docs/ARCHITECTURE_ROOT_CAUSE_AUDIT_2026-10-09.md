@@ -125,3 +125,26 @@ PR #793 (`fix/mandatory-authority-gate`) is an existing corrective candidate. It
 4. Plan deployment-specific durability/recovery verification for HW-RCA-003.
 5. Append an exact-head reconciliation after every accepted change.
 6. Do not merge a candidate with a failing applicable runtime gate; do not activate production V4 authority.
+
+
+## Additive execution update — authority-gate fix merged; post-merge gates pending
+
+Date: 2026-10-09
+
+This update supersedes the earlier statement that PR #793 was only a candidate. It does not erase the historical failure evidence above.
+
+- PR #793 was merged into `main` with merge commit `45685af686ae29500601d55ac77540b41b3b7a07`.
+- The merged source requires an explicit `authorityGate`; non-`AUTHORIZED` outcomes stop before cursor advancement.
+- With a null cursor, the engine now processes the safe-head block through the normal range-processing and authority path. It does not persist a bootstrap-only cursor position.
+- Exact PR-head `ccc98370680b340dacb0d00799301dc38d9f3765` had SUCCESS for HAHAWEEK Tests, Security and Regression, A9 Runtime, Analytical Reorg Runtime, HFI-MVP Runtime, and HFI-RADAR Continuous Runtime. The HFI-RADAR live log records two completed cycles on Robinhood Mainnet after eight unit/negative tests passed.
+- On exact merge commit `45685af686ae29500601d55ac77540b41b3b7a07`, post-merge HAHAWEEK Tests, Security and Regression, A9 Runtime, Analytical Reorg Runtime, and HFI-RADAR Continuous Runtime have reached SUCCESS. HFI-MVP Runtime and Push on main were still IN_PROGRESS at the latest inspection; therefore exact-head full CI/runtime reconciliation remains PENDING.
+- The prior `CHECKPOINT_NOT_COMMITTED` failures are preserved as historical evidence for earlier PR heads. The newer exact PR head succeeded; that does not prove production deployment durability, persistent-volume power-loss behavior, backup/restore, or full lifecycle/cursor crash atomicity.
+- Finding `HW-RCA-001` is **IMPLEMENTED / MERGED**; exact merge-head verification is **PARTIAL / PENDING** until all current-head workflows terminate.
+- Finding `HW-RCA-002` is **MITIGATED for the unguarded initial cursor path** by processing the safe-head block through normal processing. Historical coverage below safeHead remains intentionally outside the acquisition window; no backfill is implied. The broader coverage semantics still require contract-level reconciliation.
+- Finding `HW-RCA-003` remains **BLOCKED for production activation** pending deployment-specific durability and recovery evidence.
+- Finding `HW-RCA-004` remains a **REVIEW ITEM**: the inspected production entry point uses `processorRange` and requires a verified processing context in its production authority factory. The generic legacy path still lacks that context at the engine API boundary; no claim is made that all callers have been exhaustively verified.
+- V4 production authority remains **INACTIVE**; Architecture Gate remains **BLOCKED**; production readiness remains **NOT READY**.
+
+### Current disposition
+
+Do not infer project completion from this authority-gate merge. Continue exact-head verification, then address the lifecycle/cursor durability proof gap and complete the contract/code/test/runtime reconciliation. No source semantics, historical evidence, cursor, checkpoint, manifest, or activation state were changed by this documentation addendum.
