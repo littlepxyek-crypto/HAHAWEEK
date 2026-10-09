@@ -29,7 +29,7 @@ for (const match of readme.matchAll(/!?\[[^\]]*\]\(([^)]+)\)/g)) {
 
   if (/^https?:\/\//i.test(target)) {
     const repoUrl = target.match(/^https:\/\/github\.com\/littlepxyek-crypto\/([^/]+)(?:\/blob\/main\/|\/actions\/workflows\/)(.+)$/i);
-    if (/^https:\/\/github\.com\/littlepxyek-crypto\/HAHAWEEK(?:\/|$)/i.test(target)) {
+    if (/^https:\/\/github\.com\/littlepxyek-crypto\/HAHAWEEK(?:\/|$)/.test(target)) {
       failures.push('Repository URL must use lowercase repo slug: ' + target);
     }
     if (repoUrl && repoUrl[1].toLowerCase() === 'hahaweek') {
