@@ -31,13 +31,29 @@ function makeGate(factory) {
     expectedAuthorityFactory: ({fromBlock,toBlock}) => ({...makeSource(toBlock).expected,fromBlock,toBlock}),
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
+    writerFence: { assertOwned() {} },
   });
+}
+
+function validInput(overrides = {}) {
+  return {
+    fromBlock: 101,
+    toBlock: 110,
+    checkpointCommitted: true,
+    processingContext: {
+      status: 'VERIFIED',
+      fromBlock: 101,
+      toBlock: 110,
+      generation: 'g1',
+    },
+    ...overrides,
+  };
 }
 
 test('F-03 production boundary adapter validates complete cryptographically bound authority before cursor', () => {
   const gate = makeGate(() => makeSource(110).authority);
   assert.equal(
-    gate({fromBlock:101,toBlock:110,checkpointCommitted:true}).status,
+    gate(validInput()).status,
     'AUTHORIZED'
   );
 });
@@ -59,9 +75,10 @@ test('F-03 adapter fails closed when expected source is missing', () => {
     expectedAuthorityFactory: () => undefined,
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
+    writerFence: { assertOwned() {} },
   });
   assert.throws(
-    () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
+    () => gate(validInput()),
     /AUTHORITY_EXPECTED_SOURCE_INVALID/
   );
 });
@@ -71,7 +88,7 @@ test('F-03 adapter rejects checkpoint before authority construction', () => {
     throw new Error('MUST_NOT_BE_CALLED');
   });
   assert.throws(
-    () => gate({fromBlock:101,toBlock:110,checkpointCommitted:false}),
+    () => gate(validInput({checkpointCommitted:false})),
     /CHECKPOINT_NOT_COMMITTED/
   );
 });
@@ -85,4 +102,15 @@ test('F-03 adapter rejects a valid structural authority with a tampered binding'
     () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
     /AUTHORITY_BINDING_CONFLICT/
   );
+});
+
+
+test('F-03 production boundary rejects missing processing context before authority lookup', () => {
+  let called = false;
+  const gate = makeGate(() => { called = true; return makeSource(110).authority; });
+  assert.throws(
+    () => gate({ fromBlock: 101, toBlock: 110, checkpointCommitted: true }),
+    /PROCESSING_CONTEXT_REQUIRED/
+  );
+  assert.equal(called, false);
 });
