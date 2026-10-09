@@ -109,14 +109,24 @@ function createDurableExpectedAuthorityFactory(database) {
     readF03AuthorityChain({ database, fromBlock, toBlock });
 }
 
-async function createEngine({ authorityFactory, expectedAuthorityFactory } = {}) {
-  const provider = createProvider();
-  const writerFence = createWriterFence();
-  writerFence.acquire();
-  const legacyWriteBarrier = createLegacyWriteBarrier({ writerFence });
+async function createEngine({
+  authorityFactory,
+  expectedAuthorityFactory,
+  providerFactory = createProvider,
+  writerFenceFactory = createWriterFence,
+} = {}) {
+  let provider = null;
+  let writerFence = null;
+  let legacyWriteBarrier = null;
   let database = null;
 
   try {
+    // Resource construction and acquisition belong inside the guarded lifecycle:
+    // a busy/invalid writer fence must not leak the already-created RPC provider.
+    provider = providerFactory();
+    writerFence = writerFenceFactory();
+    writerFence.acquire();
+    legacyWriteBarrier = createLegacyWriteBarrier({ writerFence });
     /*
      * Start the existing watchdog immediately after acquiring the fence.
      * Engine initialization and authority reconciliation may perform
@@ -278,10 +288,10 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
     };
   } catch (error) {
     const cleanupFailures = await cleanupResources([
+      ...(writerFence ? [['writerFence.stopWatchdog', () => writerFence.stopWatchdog()]] : []),
       ...(database ? [['database.close', () => database.close()]] : []),
-      ['writerFence.stopWatchdog', () => writerFence.stopWatchdog()],
-      ['writerFence.release', () => writerFence.release()],
-      ['provider.destroy', () => provider.destroy()],
+      ...(writerFence ? [['writerFence.release', () => writerFence.release()]] : []),
+      ...(provider ? [['provider.destroy', () => provider.destroy()]] : []),
     ], (label, cleanupError) => {
       console.error(`HAHAWEEK INITIALIZATION CLEANUP FAILED (${label}): ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`);
     });
