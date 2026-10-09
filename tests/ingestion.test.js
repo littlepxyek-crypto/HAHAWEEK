@@ -33,18 +33,27 @@ function makeProvider(head) {
   };
 }
 
-test('initial run starts at safe head without processing history', async () => {
+test('initial run processes only the safe-head block before cursor advancement', async () => {
   const cursor = makeCursor();
-  const processed = [];
+  const processedRanges = [];
+  const authorityInputs = [];
 
   const engine = new IngestionEngine({
-    authorityGate: () => ({ status: 'AUTHORIZED' }),
+    authorityGate: input => {
+      authorityInputs.push(input);
+      return { status: 'AUTHORIZED' };
+    },
     provider: makeProvider(100),
     cursor,
     confirmations: 3,
-    processor: async (block) => {
-      processed.push(block);
+    processor: async () => {
+      throw new Error('SINGLE_BLOCK_PROCESSOR_SHOULD_NOT_RUN');
     },
+    processorRange: async (fromBlock, toBlock) => {
+      processedRanges.push([fromBlock, toBlock]);
+      return { status: 'VERIFIED', fromBlock, toBlock, generation: '1' };
+    },
+    batchSize: 10,
   });
 
   const result = await engine.runOnce();
@@ -52,8 +61,13 @@ test('initial run starts at safe head without processing history', async () => {
   assert.equal(result.latestBlock, 100);
   assert.equal(result.safeHead, 97);
   assert.equal(result.cursor, 97);
-  assert.equal(result.processed, 0);
-  assert.deepEqual(processed, []);
+  assert.equal(result.processed, 1);
+  assert.deepEqual(processedRanges, [[97, 97]]);
+  assert.equal(authorityInputs.length, 1);
+  assert.equal(authorityInputs[0].checkpointCommitted, true);
+  assert.equal(authorityInputs[0].fromBlock, 97);
+  assert.equal(authorityInputs[0].toBlock, 97);
+  assert.equal(cursor.get(), 97);
 });
 
 test('blocks are processed sequentially', async () => {
