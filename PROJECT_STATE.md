@@ -2687,3 +2687,29 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - Reference Intelligence remains bounded and non-authoritative; live providers remain deferred.
 - Architecture Gate remains BLOCKED by current merge-head verification, deployment, live recovery/durability, and lifecycle/activation criteria.
 - This is an additive current-state reconciliation; prior snapshots remain historical evidence and are not rewritten.
+
+
+---
+
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-793 — AUTHORITY GATE MERGED / HFI-MVP RUNTIME PENDING
+
+- Current `main` HEAD verified from GitHub: `45685af686ae29500601d55ac77540b41b3b7a07` (merge of PR #793, mandatory ingestion authority gate).
+- Commit: https://github.com/littlepxyek-crypto/HAHAWEEK/commit/45685af686ae29500601d55ac77540b41b3b7a07
+- PR #793: https://github.com/littlepxyek-crypto/HAHAWEEK/pull/793 — MERGED.
+- Merged ingestion implementation rejects a missing `authorityGate`; any gate result other than exact `AUTHORIZED` prevents cursor advancement. A null cursor is not directly initialized to safe head; the safe-head block enters the normal processing and authority path.
+- Exact merge-head GitHub Actions terminal SUCCESS:
+  - HAHAWEEK Tests: run `37911412462`.
+  - Security and Regression: run `37911412442`.
+  - A9 Runtime Verification: run `37911412429`.
+  - Analytical Reorg Runtime Verification: run `37911412444`.
+  - HFI-RADAR Continuous Runtime Verification: run `37911412484`.
+  - Push on main: run `37911412428`.
+- Exact merge-head HFI-MVP Runtime Verification run `37911412461` was `IN_PROGRESS` at the latest inspection; its runtime step was still running and no artifact was yet listed. Do not infer success from the older E5 artifact at commit `a9abae93e622e48530e5aec8053eb89b17b906c2`.
+- HFI-MVP workflow uses Robinhood Mainnet RPC, bounded internal runtime (20 minutes), and workflow timeout (45 minutes). The live runtime is allowed to finish; do not launch redundant concurrent scans solely to force a faster status.
+- Production lifecycle/cursor crash-recovery contract STEP 607 covers simulated crash/restart and reconciliation. It does not establish physical atomicity or power-loss durability on a target persistent volume.
+- Current inspection of both `src/core/state.js` and `src/core/database.js` found temporary-file replacement via `renameSync` without explicit file and containing-directory `fsync` in the inspected save paths. This is a durability-proof gap, not evidence of observed data loss. Deployment storage target and durability guarantees still need to be specified and tested before deciding on a portable source correction.
+- Generic legacy ingestion mode remains present. The production entry point inspected configures `processorRange`; its default production authority factory requires the exact verified processing context. Complete caller inventory and negative-vector reconciliation remain open; no bypass is claimed proven in the production path.
+- Root-cause audit is tracked in draft PR #798: https://github.com/littlepxyek-crypto/HAHAWEEK/pull/798. It is documentation-only and remains unmerged. Its report was updated additively to preserve historical findings and include the database persistence-path clarification.
+- V4 production authority: `INACTIVE`. Architecture Gate: `BLOCKED`. Implementation Freeze: `BLOCKED`. Production readiness: `NOT READY`.
+- No production activation, cursor reset, canonical evidence rewrite/deletion, or external X publication was performed by this reconciliation.
+- This snapshot is additive; earlier project-state snapshots remain historical evidence and are not rewritten.
