@@ -2687,3 +2687,20 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - Reference Intelligence remains bounded and non-authoritative; live providers remain deferred.
 - Architecture Gate remains BLOCKED by current merge-head verification, deployment, live recovery/durability, and lifecycle/activation criteria.
 - This is an additive current-state reconciliation; prior snapshots remain historical evidence and are not rewritten.
+
+
+---
+
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-793 — AUTHORITY GATE / EXACT-HEAD CI RECONCILED
+
+- Exact current `main` HEAD verified from GitHub: `45685af686ae29500601d55ac77540b41b3b7a07`; signed commit title: `fix: require explicit authority gate before cursor advancement`.
+- PR #793 is merged. The commit requires an explicit authority gate and preserves fail-closed cursor advancement; production V4 authority remains INACTIVE.
+- Exact-head GitHub check-runs on `45685af686ae29500601d55ac77540b41b3b7a07` are terminal SUCCESS for HAHAWEEK Tests (run `37911412462`), Security and Regression (run `37911412442`), A9 Runtime (run `37911412429`), Analytical Reorg Runtime (run `37911412444`), HFI-RADAR Continuous Runtime (run `37911412484`), and HFI-MVP Runtime (run `37911412461`). Push-on-main / CodeQL checks are also SUCCESS (run `37911412428`). These results apply to this exact commit and their recorded scopes.
+- HFI-MVP runtime run `37911412461` is terminal SUCCESS. The broader HFI-MVP E5 result is limited to its tested vertical slice; it does not establish production-host deployment, persistent-volume restart, physical power-loss durability, full lifecycle/cursor crash atomicity, backup/restore, or all contract closure.
+- Current-main `PROJECT_STATE.md` previously led with a snapshot naming `a9abae93e622e48530e5aec8053eb89b17b906c2` as current main. That snapshot remains historical evidence but is stale as a current-head statement after PR #793; this additive entry records the newer exact head without rewriting older history.
+- PR #794 remains OPEN. Its head is `b521733faede8af7cdeea8ec02e48700687fc850`; the GitHub Actions check-run named `test-and-security` on that head is SUCCESS, but the legacy commit-status endpoint reports no status entries and overall `pending`. Merge attempt was rejected because required status check `test-and-security` is expected. Branch-protection required-check configuration could not be inspected through the available integration (HTTP 403). Root cause is therefore **NOT YET PROVEN**; do not weaken branch protection or force-merge.
+- PR #798 is an additive documentation-only root-cause audit; PR #795 proposes a runtime-harness adoption contract; PR #797 proposes read-only observability. Their proposals do not constitute implementation or authorization by themselves. Reconcile each against current main and exact-head checks before merging.
+- Persistence durability gap remains open: the audit reports temporary-file rename save paths without explicit file and containing-directory `fsync` in inspected state/database paths. This is a proof gap, not evidence of observed data loss. Do not change persistence semantics until target durability requirements, compatibility, and failure-injection tests are specified.
+- Local repository execution is unavailable in this environment; verification evidence here is GitHub repository metadata and exact-head Actions results. No local test execution is claimed.
+- V4 production authority: `INACTIVE`. Architecture Gate: `BLOCKED`. Implementation Freeze: `BLOCKED`. Production readiness: `NOT READY`.
+- This snapshot is additive. No production activation, cursor reset, canonical evidence rewrite/deletion, or external publication was performed.
