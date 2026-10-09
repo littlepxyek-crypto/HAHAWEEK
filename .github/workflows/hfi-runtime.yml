@@ -35,6 +35,11 @@ jobs:
           timeout --verbose --signal=TERM --kill-after=15s 25m npm run hfi:runtime
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          if [ -f docs/runtime/hfi-mvp-e2e-latest.json ]; then
+            node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-mvp-e2e-latest.json','utf8'));console.log('HFI_RUNTIME_RESULT '+JSON.stringify({state:x.state,stage:x.stage,started_at:x.started_at,completed_at:x.completed_at,latest_block:x.latest_block,failure:x.failure||null,candidate_results:x.candidate_results||[]}))"
+          else
+            echo "HFI_RUNTIME_RESULT {\"state\":\"MISSING_ARTIFACT\",\"exit_code\":$code}"
+          fi
           exit 0
       - name: Verify runtime artifact provenance
         if: always()
