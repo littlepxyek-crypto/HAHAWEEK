@@ -2705,3 +2705,12 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - Local test execution is NOT CLAIMED. CI/runtime verification for the audit PR head is PENDING.
 - V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED. Production readiness remains NOT READY.
 - No cursor reset, checkpoint/manifest mutation, canonical/raw evidence rewrite, migration, deployment, external publication, or production activation was performed.
+
+
+## WHOLE-PATH AUDIT ADDENDUM — 2026-10-10 — CI REGRESSION RECONCILIATION
+
+- The first PR #800 Security and Regression run failed after the initial strict-context change. Failure evidence showed existing generic adapter fixtures and production-boundary fixtures were not reconciled with the changed call contract; no test was suppressed.
+- The implementation was corrected to make strict processing-context enforcement explicit and enabled in `src/index.js` production wiring, while preserving generic adapter compatibility for non-production/test callers.
+- Production-boundary tests now provide verified context and writer-fence fixtures. The failed run remains historical evidence.
+- The follow-up exact-head CI/runtime result is pending. PR #800 MUST NOT merge until the new head's full test/security/runtime checks terminate successfully and the failures are reconciled.
+- Production V4 authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
