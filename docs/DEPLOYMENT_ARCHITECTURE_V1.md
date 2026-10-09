@@ -106,3 +106,10 @@ A real production host, persistent-volume restart drill, backup/restore drill, w
 
 
 Current-head verification evidence (2026-10-07): commit 0659876e682657afacbc080a78bc8ce3a1f44f0a ran HAHAWEEK Tests successfully. The test workflow executes npm test, verify:v4, verify:v4:coverage, and verify:source-independence. The exact-head Security and Regression workflow also completed successfully.
+
+## Runtime cleanup failure isolation — 2026-10-10
+
+The runtime cleanup implementation is being hardened so one failed cleanup action does not prevent later cleanup actions from running. Initialization cleanup and normal shutdown attempt database close, writer-watchdog stop, writer-fence release, and provider destruction independently, and preserve the primary runtime error when cleanup also fails. Cleanup failures are logged; if the runtime otherwise succeeded, cleanup failure is surfaced as an aggregate error.
+
+Signal handlers are installed for the duration of `main()` and removed in its `finally` path, including when engine initialization fails. This behavior change is proposed in PR review and remains NOT VERIFIED until exact-head tests, negative tests, and runtime CI terminate successfully. It does not change canonical evidence, V4 authority, cursor/checkpoint/manifest semantics, or production activation.
+
