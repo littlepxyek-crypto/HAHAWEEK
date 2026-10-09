@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 
 const runtime = fs.readFileSync('scripts/hfi-mvp-runtime-verify.js', 'utf8');
+const policy = fs.readFileSync('src/core/hfi-log-range-policy.js', 'utf8');
 const helper = fs.readFileSync('src/core/hfi-targeted-formation-acquisition.js', 'utf8');
 const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
@@ -32,7 +33,7 @@ test('RPC log acquisition has a global runtime and request budget', () => {
 test('RPC log acquisition uses bounded adaptive retries and range splitting', () => {
   assert.match(runtime, /while\(attempt<3\)/);
   assert.match(runtime, /const minChunk=Number\(process\.env\.HFI_LOG_MIN_CHUNK \|\| 250\),maxSplitDepth=14/);
-  assert.match(runtime, /const shouldSplit=isRangeLimitError\(last\)\|\|isRetryableRpcError\(last\);if\(!shouldSplit\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
+  assert.match(runtime, /const shouldSplit=shouldSplitLogRange\(last\);if\(!shouldSplit\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
   assert.match(runtime, /fetchRange\(n,mid/);
   assert.match(runtime, /fetchRange\(mid\+1,e/);
 });
@@ -115,16 +116,18 @@ test('resource-budget failures retain request and elapsed diagnostics', () => {
   assert.match(runtime, /elapsed_ms=\$\{e\.elapsed_ms\}/);
 });
 
-test('RPC transport failures use bounded retry then adaptive recursive splitting', () => {
-  assert.match(runtime, /function isRetryableRpcError\(error\)/);
+test('RPC transport failures use bounded retry without triggering adaptive recursive splitting', () => {
+  assert.match(policy, /function isRetryableRpcError\(error\)/);
   assert.match(runtime, /!isRangeLimitError\(x\)&&!isRetryableRpcError\(x\)/);
-  assert.match(runtime, /const shouldSplit=isRangeLimitError\(last\)\|\|isRetryableRpcError\(last\)/);
+  assert.match(runtime, /const shouldSplit=shouldSplitLogRange\(last\)/);
+  assert.match(policy, /function shouldSplitLogRange\(error\) \{\s*return isRangeLimitError\(error\)/);
 });
 
 test('range splitting is reserved for explicit eth_getLogs range/result-limit failures', () => {
   assert.doesNotMatch(runtime, /eth_getlogs\|logs\? matched/);
-  assert.match(runtime, /logs\? matched\|too many logs\|too many results\|result\[s\]\? limit/);
-  assert.match(runtime, /exceeds \(\?:the \)\?\(\?:maximum \)\?\(\?:block \)\?range/);
+  assert.match(policy, /logs\? matched\|too many logs\|too many results\|result\[s\]\? limit/);
+  assert.match(policy, /exceeds \(\?:the \)\?\(\?:maximum \)\?\(\?:block \)\?range/);
+  assert.match(runtime, /require\('\.\.\/src\/core\/hfi-log-range-policy'\)/);
 });
 
 
