@@ -62,3 +62,13 @@ test('legacy cursor does not advance when explicit authority acceptance is absen
   await assert.rejects(() => engine.runOnce(), /AUTHORITY_ACCEPTANCE_REQUIRED/);
   assert.equal(cursor.get(), 100);
 });
+
+
+test('ingestion engine rejects missing authority gate before runtime', () => {
+  assert.throws(() => new IngestionEngine({
+    provider: { getBlockNumber: async () => 101 },
+    cursor: makeCursor(100),
+    confirmations: 0,
+    processor: async () => {},
+  }), /AUTHORITY_GATE_REQUIRED/);
+});
