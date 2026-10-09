@@ -108,3 +108,13 @@ No production deployment, database migration, cursor reset, checkpoint/manifest 
 ## Additive verification correction — 2026-10-10
 
 The initial strict-gate patch was too broad for legacy unit fixtures and caused Security/Regression failures because multiple tests invoked the generic adapter without a processing context. The implementation was narrowed to an explicit `requireProcessingContext` mode enabled by the production `createEngine` wiring; compatibility tests remain generic, while production-boundary tests now supply verified processing contexts and writer fences. The failed CI run is preserved as evidence; the follow-up run on the newer PR head must be checked before closure. This correction does not weaken the production gate or convert the earlier failure to success.
+
+
+## Post-merge verification reconciliation — 2026-10-10
+
+- PR #800 is MERGED at `e0e6feecb4036e20ec5f0766ef563e7d745d05c0`.
+- The tested PR head was `20d710b82b7d79a60e05898dcc6a655e7428eaa0`. Six associated workflows completed successfully: HAHAWEEK Tests; Security and Regression; A9 Runtime Verification; Analytical Reorg Runtime Verification; HFI-RADAR Continuous Runtime Verification; HFI-MVP Runtime Verification.
+- These are exact PR-head results. Available workflow association and combined-status endpoints returned no run/status records for the merge commit itself. Consequently, merge-commit CI and post-merge runtime are NOT VERIFIED by this evidence. Do not extend the PR-head results into claims about production deployment or live persistence durability.
+- The earlier failure and pre-merge pending statements are preserved as historical evidence. The successful follow-up and merge are recorded as a later state, not by rewriting the historical record.
+- Current disposition: authority-context and persistence-path patch MERGED; PR-head CI/runtime suite SUCCESS; merge-commit status UNKNOWN/NOT VERIFIED; V4 production authority INACTIVE; Architecture Gate BLOCKED; production readiness NOT READY.
+- Remaining production blockers include deployment-relevant durability and power-loss tests, persistent-volume recovery, backup/restore, full lifecycle/authority activation verification, and live-provider integration verification where claimed as a capability.
