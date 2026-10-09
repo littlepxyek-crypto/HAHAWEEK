@@ -21,9 +21,9 @@ No production deployment, database migration, cursor reset, checkpoint/manifest 
 
 **Impact:** The generic production-boundary adapter could accept an invocation that did not bind the authority decision to a verified processing result/context. The boolean alone is not proof that the actual checkpoint/manifest/segment linkage is committed.
 
-**Proposed correction:** Require a verified processing context and writer fence at the F-03 production authority adapter; require exact range and generation/cursor binding unconditionally. Add a negative vector proving missing context fails before authority factories are called.
+**Correction:** The gate now supports an explicit `requireProcessingContext` mode, and the production `src/index.js` wiring enables it. In that mode, a verified processing context and writer fence are mandatory, with exact range and generation/cursor binding. The generic adapter's compatibility mode remains available for existing non-production callers; it must not be used for production authority.
 
-**Verification:** Test change added. Exact-head CI/runtime must still run. The ingestion engine's legacy path remains present for compatibility, but it cannot pass this production-boundary adapter without a valid context.
+**Verification:** Regression tests were updated to distinguish strict production wiring from generic adapter compatibility. The first CI run exposed stale fixtures and test expectations; those failures were treated as real regressions and the fixtures were corrected on the branch. The latest exact-head CI run must still terminate successfully before this finding is marked VERIFIED.
 
 **Residual risk:** All production callers and checkpoint commitment linkage still require full call-graph and runtime reconciliation. Do not infer that a boolean parameter itself establishes durable checkpoint commitment.
 
@@ -103,3 +103,8 @@ No production deployment, database migration, cursor reset, checkpoint/manifest 
 4. Specify storage durability requirements before implementing fsync/backup/restore behavior.
 5. Reconcile all contract/code/test/runtime/documentation statuses after exact-head workflows complete.
 6. Keep V4 production authority INACTIVE until the explicit activation gate passes.
+
+
+## Additive verification correction — 2026-10-10
+
+The initial strict-gate patch was too broad for legacy unit fixtures and caused Security/Regression failures because multiple tests invoked the generic adapter without a processing context. The implementation was narrowed to an explicit `requireProcessingContext` mode enabled by the production `createEngine` wiring; compatibility tests remain generic, while production-boundary tests now supply verified processing contexts and writer fences. The failed CI run is preserved as evidence; the follow-up run on the newer PR head must be checked before closure. This correction does not weaken the production gate or convert the earlier failure to success.
