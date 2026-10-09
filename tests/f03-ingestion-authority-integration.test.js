@@ -32,6 +32,7 @@ function makeGate(factory) {
     authorityValidator: assertProductionAuthority,
     authorityBindingValidator: assertAuthorityBinding,
     writerFence: { assertOwned() {} },
+    requireProcessingContext: true,
   });
 }
 
@@ -99,7 +100,7 @@ test('F-03 adapter rejects a valid structural authority with a tampered binding'
 
   const gate = makeGate(() => source.authority);
   assert.throws(
-    () => gate({fromBlock:101,toBlock:110,checkpointCommitted:true}),
+    () => gate(validInput()),
     /AUTHORITY_BINDING_CONFLICT/
   );
 });
