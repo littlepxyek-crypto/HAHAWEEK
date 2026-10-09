@@ -21,6 +21,7 @@ jobs:
           cache: npm
       - run: npm install
       - run: npm test
+      - run: npm run verify:readme-links
       - run: npm run verify:v4
       - run: npm run verify:v4:coverage
       - run: npm run verify:source-independence
