@@ -15,6 +15,7 @@ function createAuthorityGate({
   authorityBindingValidator,
   authorityCommitter,
   writerFence,
+  requireProcessingContext = false,
 }) {
   if (typeof authorityFactory !== 'function') throw new Error('AUTHORITY_FACTORY_REQUIRED');
   if (typeof expectedAuthorityFactory !== 'function') {
@@ -28,20 +29,25 @@ function createAuthorityGate({
     throw new Error('AUTHORITY_BINDING_VALIDATOR_REQUIRED');
   }
   return ({ fromBlock, toBlock, checkpointCommitted, processingContext }) => {
-    if (!processingContext || typeof processingContext !== 'object') {
+    if (requireProcessingContext && (!processingContext || typeof processingContext !== 'object')) {
       throw new Error('PROCESSING_CONTEXT_REQUIRED');
     }
-    if (!writerFence) throw new Error('AUTHORITY_WRITER_FENCE_REQUIRED');
-    writerFence.assertOwned();
+    if (requireProcessingContext && !writerFence) throw new Error('AUTHORITY_WRITER_FENCE_REQUIRED');
+    if (writerFence) writerFence.assertOwned();
     if (checkpointCommitted !== true) throw new Error('CHECKPOINT_NOT_COMMITTED');
-    if (processingContext.status !== 'VERIFIED') {
-      throw new Error('PROCESSING_CONTEXT_NOT_VERIFIED');
-    }
-    if (processingContext.fromBlock !== fromBlock || processingContext.toBlock !== toBlock) {
-      throw new Error('PROCESSING_CONTEXT_RANGE_MISMATCH');
-    }
-    if (typeof processingContext.generation !== 'string' || processingContext.generation.length === 0) {
-      throw new Error('PROCESSING_CONTEXT_GENERATION_MISSING');
+    if (processingContext !== undefined) {
+      if (!processingContext || typeof processingContext !== 'object') {
+        throw new Error('PROCESSING_CONTEXT_INVALID');
+      }
+      if (processingContext.status !== 'VERIFIED') {
+        throw new Error('PROCESSING_CONTEXT_NOT_VERIFIED');
+      }
+      if (processingContext.fromBlock !== fromBlock || processingContext.toBlock !== toBlock) {
+        throw new Error('PROCESSING_CONTEXT_RANGE_MISMATCH');
+      }
+      if (typeof processingContext.generation !== 'string' || processingContext.generation.length === 0) {
+        throw new Error('PROCESSING_CONTEXT_GENERATION_MISSING');
+      }
     }
 
     const expected = expectedAuthorityFactory({ fromBlock, toBlock, processingContext });
@@ -71,11 +77,13 @@ function createAuthorityGate({
     const validated = authorityValidator(authority);
     authorityBindingValidator(authority, expected);
 
-    if (validated.generation !== processingContext.generation) {
-      throw new Error('AUTHORITY_GENERATION_CONTEXT_MISMATCH');
-    }
-    if (validated.cursorBlock !== processingContext.toBlock) {
-      throw new Error('AUTHORITY_CURSOR_CONTEXT_MISMATCH');
+    if (processingContext !== undefined) {
+      if (validated.generation !== processingContext.generation) {
+        throw new Error('AUTHORITY_GENERATION_CONTEXT_MISMATCH');
+      }
+      if (validated.cursorBlock !== processingContext.toBlock) {
+        throw new Error('AUTHORITY_CURSOR_CONTEXT_MISMATCH');
+      }
     }
     if (writerFence) writerFence.assertOwned();
     if (typeof authorityCommitter === 'function') {
