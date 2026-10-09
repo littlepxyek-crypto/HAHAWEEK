@@ -8,6 +8,7 @@ const readmePath = path.join(root, 'README.md');
 const readme = fs.readFileSync(readmePath, 'utf8');
 const failures = [];
 const seen = new Set();
+let checked = 0;
 
 function assertFileExists(target, label) {
   const normalized = decodeURIComponent(target).replace(/^\.\//, '');
@@ -55,5 +56,5 @@ if (failures.length) {
   for (const failure of failures) console.error(`- ${failure}`);
   process.exitCode = 1;
 } else {
-  console.log(`README internal-link verification PASSED (${seen.size} relative links checked; canonical GitHub links validated)`);
+  console.log(`README internal-link verification PASSED (${checked} links checked; ${seen.size} relative targets; canonical GitHub paths validated)`);
 }
