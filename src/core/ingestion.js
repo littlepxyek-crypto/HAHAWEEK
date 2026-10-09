@@ -133,38 +133,14 @@ class IngestionEngine {
 
       /*
        * First run:
-       * establish a safe starting point without
-       * processing historical blocks.
+       * do not persist an unverified cursor boundary. Treat the safe head as
+       * the first block to acquire, process, and authorize. The cursor remains
+       * null until the ordinary PROCESS -> AUTHORITY ACCEPT -> CURSOR ADVANCE
+       * path succeeds. Blocks before safeHead remain outside this acquisition
+       * window and are not interpreted as absent evidence.
        */
       if (current === null) {
-        current = safeHead;
-
-        /*
-         * Bootstrap is a cursor mutation too. It must not silently establish
-         * a historical coverage boundary without an explicit authority
-         * decision. The production authority adapter currently requires a
-         * committed checkpoint and verified processing context, so it fails
-         * closed here until a dedicated bootstrap contract is implemented.
-         */
-        const bootstrapOutcome = this.authorityGate({
-          operation: 'CURSOR_BOOTSTRAP',
-          checkpointCommitted: false,
-          fromBlock: current,
-          toBlock: current,
-          blockNumber: current,
-        });
-        if (bootstrapOutcome?.status !== 'AUTHORIZED') {
-          throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
-        }
-
-        this.cursor.initialize(current);
-
-        return {
-          processed: 0,
-          latestBlock,
-          safeHead,
-          cursor: current,
-        };
+        current = safeHead - 1;
       }
 
       /*
