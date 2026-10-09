@@ -44,10 +44,20 @@ The existing first-run behavior—starting at safe head without processing prior
 
 - This change does not activate V4 production authority.
 - It does not reset an existing cursor, rewrite evidence, change canonicality, or modify manifest/checkpoint formats.
-- Unit-test gates are test fixtures only and are not production authorization.
+- Unit-test gates are test fixtures only; they do not authorize production V4 authority.
 - Production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
 
 ## Verification record
 
 - PR: https://github.com/littlepxyek-crypto/HAHAWEEK/pull/793
-- Exact-head tests, runtime verification, and post-merge verification must be recorded only after GitHub reports terminal results for the relevant commit.
+- PR head inspected: `6a70d086cbff6834ffb8f82dd352283c755e26c9`.
+- HAHAWEEK Tests run `37872356083`: SUCCESS on that PR head.
+- HAHAWEEK Security and Regression run `37872356097`: SUCCESS on that PR head.
+- Analytical Reorg Runtime run `37872356091`: SUCCESS on that PR head.
+- A9 Runtime run `37872356282`: SUCCESS on that PR head.
+- HFI-MVP Runtime run `37872356152`: SUCCESS on that PR head.
+- HFI-RADAR Continuous Runtime run `37872356084`: FAILED on that PR head with `CHECKPOINT_NOT_COMMITTED`, followed by `HFI_RADAR_CONSECUTIVE_FAILURE_LIMIT`.
+- The failure is consistent with the documented missing bootstrap authorization contract: bootstrap submits `checkpointCommitted: false`, while the production gate requires a committed checkpoint.
+- These results are exact-head historical evidence for `6a70d086cbff6834ffb8f82dd352283c755e26c9`; they are not verification of a subsequent commit.
+- The next implementation decision is BLOCKED on defining a versioned bootstrap/acquisition-coverage contract that does not weaken checkpoint, expected-authority, processing-context, or cursor invariants.
+- Do not merge or activate production authority based on the partial successes above.
