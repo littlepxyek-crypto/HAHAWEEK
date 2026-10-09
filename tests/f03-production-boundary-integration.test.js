@@ -40,7 +40,7 @@ test('F-03 production boundary rejects incomplete authority before cursor',async
   });
   const engine=new IngestionEngine({
     provider:{getBlockNumber:async()=>101},cursor,confirmations:0,
-    processor:async()=>{},processorRange:async()=>{},
+    processor:async()=>{},processorRange:async(fromBlock,toBlock)=>({status:'VERIFIED',fromBlock,toBlock,generation:'g1'}),
     batchSize:1,maxBatchesPerRun:1,authorityGate
   });
   await assert.rejects(()=>engine.runOnce(),/AUTHORITY_MANIFESTDIGEST_MISSING/);
