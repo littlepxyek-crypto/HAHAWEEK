@@ -27,20 +27,13 @@ const runtimeCommit=()=>{try{return require('node:child_process').execFileSync('
 const makeProvider=()=>{const r=new ethers.FetchRequest(RPC);r.timeout=30000;return new ethers.JsonRpcProvider(r,ethers.Network.from({name:'robinhood-mainnet',chainId:CHAIN_ID}),{batchMaxCount:TARGET_POOL_ID?TARGET_BATCH_MAX:1})};
 const ord=(a,b)=>a.blockNumber-b.blockNumber||(a.transactionIndex??0)-(b.transactionIndex??0)||(a.logIndex??a.index??0)-(b.logIndex??b.index??0);
 const raw=l=>{const x={chain_id:CHAIN_ID,block_number:l.blockNumber,transaction_hash:l.transactionHash.toLowerCase(),block_hash:l.blockHash?.toLowerCase()??null,transaction_index:l.transactionIndex??null,log_index:l.index??l.logIndex??0,address:l.address.toLowerCase(),topics:l.topics.map(x=>x.toLowerCase()),data:l.data,captured_at:new Date().toISOString()};return {...x,event_id:'raw:v1:'+rawEventDigest(x)}};
-function isRetryableRpcError(error){
-const text=String([error?.shortMessage,error?.message,error?.error?.message,error?.info?.error?.message,error?.cause?.message].filter(Boolean).join(' ')).toLowerCase();
-return /timeout|timed out|rate limit|too many requests|429|502|503|504|temporarily unavailable|service unavailable|gateway timeout|network error|socket hang up|econnreset|econnrefused/.test(text);
-}
-function isRangeLimitError(error){
-const text=String([error?.shortMessage,error?.message,error?.error?.message,error?.info?.error?.message,error?.cause?.message].filter(Boolean).join(' ')).toLowerCase();
-return /logs? matched|too many logs|too many results|result[s]? limit|exceeds (?:the )?(?:maximum )?(?:block )?range|block range|query range|max(?:imum)? .*range/.test(text);
-}
+const {isRetryableRpcError,isRangeLimitError,shouldSplitLogRange}=require('../src/core/hfi-log-range-policy');
 async function logs(p,f,a,b,s=10000){
 const minChunk=Number(process.env.HFI_LOG_MIN_CHUNK || 250),maxSplitDepth=14,concurrency=TARGET_LOG_CONCURRENCY;const startedAt=Date.now();let requestCount=0;const budgetCheck=()=>{if(Date.now()-startedAt>MAX_RUNTIME_MS){const e=new Error('HFI_RUNTIME_RESOURCE_TIMEOUT');e.code='HFI_RUNTIME_RESOURCE_TIMEOUT';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}if(requestCount>=MAX_LOG_REQUESTS){const e=new Error('HFI_LOG_REQUEST_BUDGET_EXCEEDED');e.code='HFI_LOG_REQUEST_BUDGET_EXCEEDED';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}};
 const ranges=[];for(let n=a;n<=b;n+=s)ranges.push([n,Math.min(b,n+s-1)]);
 async function fetchRange(n,e,depth=0){let attempt=0,last;
-while(attempt<3){budgetCheck();requestCount++;try{return await p.getLogs({...f,fromBlock:n,toBlock:e})}catch(x){last=x;attempt++;if(!isRangeLimitError(x)&&!isRetryableRpcError(x)&&attempt>=3)throw last;await new Promise(r=>setTimeout(r,Math.min(10000,250*2**(attempt-1))))}}
-const shouldSplit=isRangeLimitError(last)||isRetryableRpcError(last);if(!shouldSplit||depth>=maxSplitDepth||e-n+1<=minChunk)throw last;
+while(attempt<3){budgetCheck();requestCount++;try{return await p.getLogs({...f,fromBlock:n,toBlock:e})}catch(x){last=x;attempt++;if(!isRangeLimitError(x)&&!isRetryableRpcError(x))throw last;if(attempt>=3)break;await new Promise(r=>setTimeout(r,Math.min(10000,250*2**(attempt-1))))}}
+const shouldSplit=shouldSplitLogRange(last);if(!shouldSplit||depth>=maxSplitDepth||e-n+1<=minChunk)throw last;
 const mid=Math.floor((n+e)/2);return (await Promise.all([fetchRange(n,mid,depth+1),fetchRange(mid+1,e,depth+1)])).flat();}
 const out=[];let cursor=0;
 async function worker(){while(true){const i=cursor++;if(i>=ranges.length)return;const [n,e]=ranges[i];out.push(...await fetchRange(n,e));}}
