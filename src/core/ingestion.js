@@ -139,6 +139,24 @@ class IngestionEngine {
       if (current === null) {
         current = safeHead;
 
+        /*
+         * Bootstrap is a cursor mutation too. It must not silently establish
+         * a historical coverage boundary without an explicit authority
+         * decision. The production authority adapter currently requires a
+         * committed checkpoint and verified processing context, so it fails
+         * closed here until a dedicated bootstrap contract is implemented.
+         */
+        const bootstrapOutcome = this.authorityGate({
+          operation: 'CURSOR_BOOTSTRAP',
+          checkpointCommitted: false,
+          fromBlock: current,
+          toBlock: current,
+          blockNumber: current,
+        });
+        if (bootstrapOutcome?.status !== 'AUTHORIZED') {
+          throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
+        }
+
         this.cursor.initialize(current);
 
         return {
