@@ -61,3 +61,42 @@ The existing first-run behavior—starting at safe head without processing prior
 - These results are exact-head historical evidence for `6a70d086cbff6834ffb8f82dd352283c755e26c9`; they are not verification of a subsequent commit.
 - The next implementation decision is BLOCKED on defining a versioned bootstrap/acquisition-coverage contract that does not weaken checkpoint, expected-authority, processing-context, or cursor invariants.
 - Do not merge or activate production authority based on the partial successes above.
+
+
+## Verification update — exact PR head `4961c13bdd360ce3887e93baa26fe780f0a8cc88`
+
+Date: 2026-10-09
+
+### Runtime evidence
+
+The following GitHub Actions results were retrieved for this exact head:
+
+- HAHAWEEK Tests run `37875857337`: SUCCESS.
+- HAHAWEEK Security and Regression run `37875857391`: SUCCESS.
+- Analytical Reorg Runtime run `37875857352`: SUCCESS.
+- A9 Runtime run `37875857373`: SUCCESS.
+- HFI-RADAR Continuous Runtime run `37875857366`: FAILED.
+- HFI-MVP Runtime run `37875857333`: IN PROGRESS at the time of inspection.
+- The commit combined-status endpoint returned no status entries; this is not evidence of a passing combined status.
+
+The HFI-RADAR job's unit/negative-test step passed (8 tests, 0 failures), but the bounded Mainnet continuous runtime failed on both attempts with `CHECKPOINT_NOT_COMMITTED`, then terminated with `HFI_RADAR_CONSECUTIVE_FAILURE_LIMIT`. This separates a passing unit/negative-test step from a failing live runtime; it does not justify suppressing or weakening either result.
+
+### Contract reconciliation
+
+The existing `docs/ACQUISITION_COMPLETENESS_CONTRACT_V1.md` states that completeness is acquisition/analytical metadata and does not mutate V4 authority or advance the V4 cursor. It therefore cannot itself authorize bootstrap cursor initialization.
+
+The existing normative V4 cursor/checkpoint contracts require cursor state to remain subordinate to a verified segment → manifest → checkpoint chain. The current production authority adapter additionally requires `checkpointCommitted === true` and, when supplied, a VERIFIED processing context bound to the exact range and generation. The current `CURSOR_BOOTSTRAP` request supplies `checkpointCommitted: false` and no processing context, so the observed rejection is consistent with the current code/contracts.
+
+### Disposition
+
+- Problem ID: `HW-P1-001`
+- Severity: P1 — production-blocking authority/bootstrap contract gap.
+- Status: BLOCKED.
+- Root cause: no reconciled contract defines how a fresh acquisition establishes a truthful coverage boundary and a valid V4 authority chain before the first cursor position is persisted.
+- Corrective action now: preserve fail-closed behavior; record exact-head runtime evidence; do not fabricate a checkpoint, skip the authority gate, or reinterpret acquisition completeness as authority.
+- Next safe boundary: define and reconcile a versioned bootstrap/initial-coverage contract against the normative segment, manifest, checkpoint, cursor, acquisition-completeness, and production-activation contracts before implementing a production bootstrap path.
+- Regression acceptance: missing/rejected bootstrap authority leaves the cursor unchanged; invalid/missing checkpoint or chain remains rejected; exact-head runtime and restart/replay verification must pass before merge consideration.
+- Residual risk: fresh production acquisition remains blocked; HFI-RADAR continuous Mainnet runtime is not verified.
+- Production V4 authority remains INACTIVE. Architecture Gate remains BLOCKED. Production readiness remains NOT READY.
+
+This update records evidence and disposition only. It does not change runtime code, authority semantics, cursor state, canonical evidence, or activation state.
