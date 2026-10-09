@@ -2727,10 +2727,12 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
   - Analytical Reorg Runtime Verification run `37911412444`: SUCCESS.
   - HFI-RADAR Continuous Runtime Verification run `37911412484`: SUCCESS.
   - Push on main run `37911412428`: SUCCESS.
-- HFI-MVP Runtime Verification run `37911412461` is now terminal: job `runtime` completed with CI conclusion `success`, but the workflow step named `HFI-MVP runtime verification did not reach VERIFIED; preserved runtime evidence is authoritative.` was **SKIPPED**. This is not evidence of `VERIFIED` HFI-MVP runtime.
-- Preserved HFI-MVP artifact: `hfi-mvp-e2e-runtime-evidence-45685af686ae29500601d55ac77540b41b3b7a07`, artifact ID `11606718451`, SHA-256 `18e66b9f8d894d858dd8d621983c168c1a42a31cf7c6e80cd6fee219b7b01813`. Artifact provenance verification and upload succeeded; artifact payload has not been independently inspected in this session.
-- CI job success and artifact provenance are not substituted for runtime verification. Exact-head HFI-MVP status is **NOT VERIFIED / INCONCLUSIVE** until the artifact's runtime payload is inspected or a workflow produces an explicit verified result.
+  - HFI-MVP Runtime Verification run `37911412461`: job SUCCESS; the conditional failure-marker step was skipped because the runtime step's captured exit code was zero.
+- HFI-MVP runtime artifact was downloaded and inspected: artifact ID `11606718451`, name `hfi-mvp-e2e-runtime-evidence-45685af686ae29500601d55ac77540b41b3b7a07`, SHA-256 `18e66b9f8d894d858dd8d621983c168c1a42a31cf7c6e80cd6fee219b7b01813`. The downloaded ZIP hash matches GitHub's artifact digest.
+- The artifact payload reports `state=VERIFIED`, `verification_class=E5_RUNTIME`, commit `45685af686ae29500601d55ac77540b41b3b7a07`, and chain ID `4663`.
+- Runtime evidence reports 8,664 raw events and 8,664 canonical evidence records; Formation `VALID`; seven-day outcome coverage `COMPLETE`; liquidity-survival criterion `PASS`; validation result `CONFIRMED`; and replay `equivalent=true`. The observed window is 2026-09-10T09:04:36Z through 2026-09-17T09:04:36Z. This is one verified E5 vertical slice, not proof of all production gates.
+- The runtime report records no external publication. Reference Intelligence provider integration remains deferred/non-authoritative.
 - Source inspection of `src/core/state.js` and `src/core/database.js` still shows temporary-file replacement with `renameSync` and no explicit file/containing-directory `fsync` in the inspected save paths. This is an unproven power-loss durability boundary, not evidence of observed data loss.
-- Production persistent-volume recovery, backup/restore, power-loss durability, complete legacy caller inventory, and full activation-gate reconciliation remain **NOT VERIFIED**.
-- V4 production authority: **INACTIVE**. Architecture Gate: **BLOCKED**. Implementation Freeze: **BLOCKED**. Production readiness: **NOT READY**.
-- This is an additive status correction. Earlier pending snapshots and historical runtime failures remain preserved and are not rewritten.
+- Production persistent-volume recovery, backup/restore, power-loss durability, complete legacy caller inventory, and full activation-gate reconciliation remain NOT VERIFIED.
+- V4 production authority: `INACTIVE`. Architecture Gate: `BLOCKED`. Implementation Freeze: `BLOCKED`. Production readiness: `NOT READY`.
+- This is a current-state correction to the immediately preceding audit update. It does not rewrite earlier historical snapshots or earlier runtime failure records.
