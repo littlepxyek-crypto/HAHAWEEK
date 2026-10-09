@@ -1,3 +1,13 @@
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-789 — HFI RUNTIME SUCCESS / ARCHITECTURE GATE BLOCKED
+
+- Current main HEAD verified at reconciliation time: `99400b73c669c5e115ccf056b554c4ef909b5c8d`.
+- PR #789 is merged. It reconciles the current PROJECT_STATE snapshot wording and date assertion; no production authority or architecture semantics were changed.
+- Exact-main checks terminal SUCCESS: Tests (`37855819755`), Security and Regression (`37856735494`; also `37855819768`), A9 Runtime (`37855819753`), Analytical Reorg Runtime (`37855819783`), HFI-MVP Runtime (`37855819789`), and Push on main / CodeQL (`37855819701`).
+- HFI-MVP job `113579608486` completed SUCCESS. Preserved artifact: `hfi-mvp-e2e-runtime-evidence-99400b73c669c5e115ccf056b554c4ef909b5c8d`, artifact ID `11584711930`, digest `sha256:2696a37d1e34b3d1727870d30754db8e217231bb345530654fba9c823f0c0e86`.
+- Artifact provenance verification and upload both passed. Workflow success does not by itself imply production activation.
+- P2-HFI-RUNTIME-STALL-001 is closed after terminal successful HFI runtime on current main. Historical slow acquisition remains an operational characteristic; retry/concurrency bounds remain in place.
+- V4 production authority remains `INACTIVE`; Architecture Gate remains `BLOCKED` pending production activation criteria and deployment/recovery drills. No production activation was attempted.
+
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-788 — HFI E5 VERIFIED / RECONCILED
 
 - Current main HEAD at snapshot creation: `26d4d0e665c9022882979a8397609224ce9c053b`.
