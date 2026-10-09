@@ -72,8 +72,10 @@ class IngestionEngine {
     this.processorRange = processorRange;
     this.batchSize = batchSize;
     this.maxBatchesPerRun = maxBatchesPerRun ?? Infinity;
-    this.authorityGate = authorityGate || (() => ({ status: 'UNGUARDED' }));
-    this.authorityGateProvided = typeof authorityGate === 'function';
+    if (typeof authorityGate !== 'function') {
+      throw new Error('AUTHORITY_GATE_REQUIRED');
+    }
+    this.authorityGate = authorityGate;
     this.writerFence = writerFence;
     this.writerFenceRenewalIntervalMs = writerFenceRenewalIntervalMs ?? (
       writerFence && typeof writerFence.getLeaseMs === 'function'
@@ -248,7 +250,7 @@ class IngestionEngine {
             authorityInput.processingContext = processingContext;
           }
           lastAuthorityOutcome = this.authorityGate(authorityInput);
-          if (this.authorityGateProvided && lastAuthorityOutcome?.status !== 'AUTHORIZED') {
+          if (lastAuthorityOutcome?.status !== 'AUTHORIZED') {
             throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
           }
           this.cursor.advance(toBlock);
@@ -288,7 +290,7 @@ class IngestionEngine {
          * Cursor advances ONLY after successful processing.
          */
         const authorityOutcome = this.authorityGate({ checkpointCommitted: true, fromBlock: block, toBlock: block, blockNumber: block });
-        if (this.authorityGateProvided && authorityOutcome?.status !== 'AUTHORIZED') {
+        if (authorityOutcome?.status !== 'AUTHORIZED') {
           throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
         }
         this.cursor.advance(block);
