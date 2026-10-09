@@ -159,12 +159,15 @@ Inspection of the current `main` versions of `src/core/state.js` and `src/core/d
 
 ## Additive terminal runtime reconciliation — 2026-10-09
 
-This update records terminal job metadata for exact `main` commit `45685af686ae29500601d55ac77540b41b3b7a07`. It supersedes only the prior statement that HFI-MVP was still in progress; it does not rewrite historical failure evidence.
+This update records terminal job metadata and independently inspected the exact-head HFI-MVP artifact for `main` commit `45685af686ae29500601d55ac77540b41b3b7a07`. It corrects the initial interpretation of the skipped conditional failure-marker step in the preceding draft update.
 
-- HAHAWEEK Tests `37911412462`, Security and Regression `37911412442`, A9 Runtime `37911412429`, Analytical Reorg Runtime `37911412444`, HFI-RADAR Continuous Runtime `37911412484`, and Push on main `37911412428` have completed with SUCCESS on the exact main commit.
-- HFI-MVP run `37911412461` completed at the job level with SUCCESS. However, its conditional step named `HFI-MVP runtime verification did not reach VERIFIED; preserved runtime evidence is authoritative.` was SKIPPED. Therefore this job conclusion is not sufficient to claim the HFI-MVP runtime payload reached `VERIFIED`.
-- Artifact metadata: ID `11606718451`; name `hfi-mvp-e2e-runtime-evidence-45685af686ae29500601d55ac77540b41b3b7a07`; digest `sha256:18e66b9f8d894d858dd8d621983c168c1a42a31cf7c6e80cd6fee219b7b01813`. The provenance-verification and upload steps passed. Artifact contents were not independently retrieved/inspected in this session.
-- Disposition: HFI-MVP exact-head runtime is `NOT VERIFIED / INCONCLUSIVE`, not FAILED solely from the skipped marker, and not VERIFIED from the job conclusion. Preserve the artifact and inspect its runtime payload before making a stronger claim.
-- The previously documented persistence durability gap and incomplete production-host/persistent-volume recovery evidence remain unresolved. This metadata reconciliation does not change source code, authority, cursor, checkpoint, manifest, canonical evidence, or runtime state.
+- HAHAWEEK Tests `37911412462`, Security and Regression `37911412442`, A9 Runtime `37911412429`, Analytical Reorg Runtime `37911412444`, HFI-RADAR Continuous Runtime `37911412484`, and Push on main `37911412428` completed with SUCCESS on the exact main commit.
+- HFI-MVP run `37911412461` completed with job conclusion SUCCESS. The workflow condition is `steps.runtime.outputs.exit_code != '0'`; its failure-marker step was SKIPPED, so the captured runtime exit code was zero. The artifact was also downloaded and inspected rather than relying on the step label alone.
+- Artifact ID `11606718451`; name `hfi-mvp-e2e-runtime-evidence-45685af686ae29500601d55ac77540b41b3b7a07`; SHA-256 `18e66b9f8d894d858dd8d621983c168c1a42a31cf7c6e80cd6fee219b7b01813`. The local ZIP hash matches GitHub's published digest.
+- Artifact payload confirms `state=VERIFIED`, `verification_class=E5_RUNTIME`, exact commit `45685af686ae29500601d55ac77540b41b3b7a07`, chain ID `4663`, and replay `equivalent=true`.
+- Payload summary: raw events 8,664; canonical evidence 8,664; Formation `VALID`; seven-day outcome coverage `COMPLETE`; liquidity-survival criterion `PASS`; validation result `CONFIRMED`; publication readiness `true` (readiness only; no external publication was performed). The historical observation window was 2026-09-10T09:04:36Z to 2026-09-17T09:04:36Z.
+- This verifies the E5 vertical slice represented by this artifact. It does not verify production-host/persistent-volume recovery, power-loss durability, backup/restore, complete legacy caller inventory, all contracts, or production activation.
+- The earlier sentence interpreting the skipped step as evidence that HFI-MVP had not reached `VERIFIED` was incorrect and is replaced by this artifact-backed result. Historical runtime failures on older commit heads remain preserved.
 - V4 production authority remains `INACTIVE`; Architecture Gate and Implementation Freeze remain `BLOCKED`; production readiness remains `NOT READY`.
+
 
