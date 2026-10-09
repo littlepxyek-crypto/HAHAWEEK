@@ -72,8 +72,10 @@ class IngestionEngine {
     this.processorRange = processorRange;
     this.batchSize = batchSize;
     this.maxBatchesPerRun = maxBatchesPerRun ?? Infinity;
-    this.authorityGate = authorityGate || (() => ({ status: 'UNGUARDED' }));
-    this.authorityGateProvided = typeof authorityGate === 'function';
+    if (typeof authorityGate !== 'function') {
+      throw new Error('AUTHORITY_GATE_REQUIRED');
+    }
+    this.authorityGate = authorityGate;
     this.writerFence = writerFence;
     this.writerFenceRenewalIntervalMs = writerFenceRenewalIntervalMs ?? (
       writerFence && typeof writerFence.getLeaseMs === 'function'
@@ -131,20 +133,14 @@ class IngestionEngine {
 
       /*
        * First run:
-       * establish a safe starting point without
-       * processing historical blocks.
+       * do not persist an unverified cursor boundary. Treat the safe head as
+       * the first block to acquire, process, and authorize. The cursor remains
+       * null until the ordinary PROCESS -> AUTHORITY ACCEPT -> CURSOR ADVANCE
+       * path succeeds. Blocks before safeHead remain outside this acquisition
+       * window and are not interpreted as absent evidence.
        */
       if (current === null) {
-        current = safeHead;
-
-        this.cursor.initialize(current);
-
-        return {
-          processed: 0,
-          latestBlock,
-          safeHead,
-          cursor: current,
-        };
+        current = safeHead - 1;
       }
 
       /*
@@ -248,7 +244,7 @@ class IngestionEngine {
             authorityInput.processingContext = processingContext;
           }
           lastAuthorityOutcome = this.authorityGate(authorityInput);
-          if (this.authorityGateProvided && lastAuthorityOutcome?.status !== 'AUTHORIZED') {
+          if (lastAuthorityOutcome?.status !== 'AUTHORIZED') {
             throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
           }
           this.cursor.advance(toBlock);
@@ -288,7 +284,7 @@ class IngestionEngine {
          * Cursor advances ONLY after successful processing.
          */
         const authorityOutcome = this.authorityGate({ checkpointCommitted: true, fromBlock: block, toBlock: block, blockNumber: block });
-        if (this.authorityGateProvided && authorityOutcome?.status !== 'AUTHORIZED') {
+        if (authorityOutcome?.status !== 'AUTHORIZED') {
           throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
         }
         this.cursor.advance(block);

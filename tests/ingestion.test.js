@@ -33,17 +33,27 @@ function makeProvider(head) {
   };
 }
 
-test('initial run starts at safe head without processing history', async () => {
+test('initial run processes only the safe-head block before cursor advancement', async () => {
   const cursor = makeCursor();
-  const processed = [];
+  const processedRanges = [];
+  const authorityInputs = [];
 
   const engine = new IngestionEngine({
+    authorityGate: input => {
+      authorityInputs.push(input);
+      return { status: 'AUTHORIZED' };
+    },
     provider: makeProvider(100),
     cursor,
     confirmations: 3,
-    processor: async (block) => {
-      processed.push(block);
+    processor: async () => {
+      throw new Error('SINGLE_BLOCK_PROCESSOR_SHOULD_NOT_RUN');
     },
+    processorRange: async (fromBlock, toBlock) => {
+      processedRanges.push([fromBlock, toBlock]);
+      return { status: 'VERIFIED', fromBlock, toBlock, generation: '1' };
+    },
+    batchSize: 10,
   });
 
   const result = await engine.runOnce();
@@ -51,8 +61,13 @@ test('initial run starts at safe head without processing history', async () => {
   assert.equal(result.latestBlock, 100);
   assert.equal(result.safeHead, 97);
   assert.equal(result.cursor, 97);
-  assert.equal(result.processed, 0);
-  assert.deepEqual(processed, []);
+  assert.equal(result.processed, 1);
+  assert.deepEqual(processedRanges, [[97, 97]]);
+  assert.equal(authorityInputs.length, 1);
+  assert.equal(authorityInputs[0].checkpointCommitted, true);
+  assert.equal(authorityInputs[0].fromBlock, 97);
+  assert.equal(authorityInputs[0].toBlock, 97);
+  assert.equal(cursor.get(), 97);
 });
 
 test('blocks are processed sequentially', async () => {
@@ -60,6 +75,7 @@ test('blocks are processed sequentially', async () => {
   const processed = [];
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(106),
     cursor,
     confirmations: 3,
@@ -79,6 +95,7 @@ test('cursor advances only after successful processing', async () => {
   const cursor = makeCursor(100);
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(103),
     cursor,
     confirmations: 0,
@@ -102,6 +119,7 @@ test('restart resumes from persisted cursor', async () => {
   const processed = [];
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(103),
     cursor,
     confirmations: 0,
@@ -121,6 +139,7 @@ test('no processing occurs when cursor reaches safe head', async () => {
   const processed = [];
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(100),
     cursor,
     confirmations: 3,
@@ -144,6 +163,7 @@ test('constructor rejects missing dependencies', () => {
 
   assert.throws(
     () => new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
       provider: {},
     }),
     /CURSOR_REQUIRED/
@@ -151,6 +171,7 @@ test('constructor rejects missing dependencies', () => {
 
   assert.throws(
     () => new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
       provider: {},
       cursor: {},
     }),
@@ -165,6 +186,7 @@ test('constructor rejects invalid confirmations', () => {
 
   assert.throws(
     () => new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
       provider,
       cursor,
       confirmations: -1,
@@ -175,6 +197,7 @@ test('constructor rejects invalid confirmations', () => {
 
   assert.throws(
     () => new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
       provider,
       cursor,
       confirmations: 1.5,
@@ -195,6 +218,7 @@ test('range processor advances cursor only after successful batch', async () => 
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider,
     cursor,
     confirmations: 0,
@@ -224,6 +248,7 @@ test('writer fence is renewed during a long-running batch', async () => {
   let renewals = 0;
   const writerFence = { renew() { renewals += 1; }, assertOwned() {}, getLeaseMs() { return 30; } };
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(101), cursor, confirmations: 0, processor: async () => {},
     processorRange: async () => { await new Promise(resolve => setTimeout(resolve, 70)); },
     batchSize: 1, writerFence,
@@ -243,6 +268,7 @@ test('writer fence is renewed at batch boundaries', async () => {
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(102),
     cursor,
     confirmations: 0,
@@ -279,6 +305,7 @@ test('watchdog owns renewal when available and avoids main-thread fence contenti
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(101),
     cursor,
     confirmations: 0,
@@ -309,6 +336,7 @@ test('writer fence boundary renewal failure fails closed before cursor advance',
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(101),
     cursor,
     confirmations: 0,
@@ -336,6 +364,7 @@ test('writer fence renewal failure fails closed without advancing cursor', async
     getLeaseMs() { return 20; },
   };
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(101), cursor, confirmations: 0, processor: async () => {},
     processorRange: async () => { await new Promise(resolve => setTimeout(resolve, 40)); },
     batchSize: 1, writerFence,
@@ -355,6 +384,7 @@ test('failed batch does not advance cursor', async () => {
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider,
     cursor,
     confirmations: 0,

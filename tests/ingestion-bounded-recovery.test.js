@@ -41,6 +41,7 @@ test('bounded recovery stops after configured batch limit and resumes next run',
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider,
     cursor,
     confirmations: 0,
@@ -89,6 +90,7 @@ test('bounded recovery preserves cursor when a batch fails and remains bounded o
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider,
     cursor,
     confirmations: 0,

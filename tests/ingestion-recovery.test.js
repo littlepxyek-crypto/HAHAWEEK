@@ -35,6 +35,7 @@ test('restart resumes exactly after persisted cursor', async () => {
   const firstProcessed = [];
 
   const firstEngine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(103),
     cursor: makeCursor(),
     confirmations: 0,
@@ -58,6 +59,7 @@ test('restart resumes exactly after persisted cursor', async () => {
   const secondProcessed = [];
 
   const secondEngine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider: makeProvider(103),
     cursor: makeCursor(),
     confirmations: 0,

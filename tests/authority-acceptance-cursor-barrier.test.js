@@ -62,3 +62,42 @@ test('legacy cursor does not advance when explicit authority acceptance is absen
   await assert.rejects(() => engine.runOnce(), /AUTHORITY_ACCEPTANCE_REQUIRED/);
   assert.equal(cursor.get(), 100);
 });
+
+
+test('first-run cursor remains null when safe-head processing is not authorized', async () => {
+  const cursor = makeCursor(null);
+  let processedRange = null;
+  let gateInput = null;
+  const engine = new IngestionEngine({
+    provider: { getBlockNumber: async () => 101 },
+    cursor,
+    confirmations: 0,
+    processor: async () => {},
+    processorRange: async (fromBlock, toBlock) => {
+      processedRange = [fromBlock, toBlock];
+      return { status: 'VERIFIED', fromBlock, toBlock, generation: '1' };
+    },
+    batchSize: 1,
+    authorityGate: input => {
+      gateInput = input;
+      return { status: 'REJECTED' };
+    },
+  });
+
+  await assert.rejects(() => engine.runOnce(), /AUTHORITY_ACCEPTANCE_REQUIRED/);
+  assert.deepEqual(processedRange, [101, 101]);
+  assert.equal(gateInput?.checkpointCommitted, true);
+  assert.equal(gateInput?.fromBlock, 101);
+  assert.equal(gateInput?.toBlock, 101);
+  assert.equal(cursor.get(), null);
+});
+
+
+test('ingestion engine rejects missing authority gate before runtime', () => {
+  assert.throws(() => new IngestionEngine({
+    provider: { getBlockNumber: async () => 101 },
+    cursor: makeCursor(100),
+    confirmations: 0,
+    processor: async () => {},
+  }), /AUTHORITY_GATE_REQUIRED/);
+});

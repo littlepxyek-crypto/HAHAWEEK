@@ -50,6 +50,7 @@ test('RPC retry allows ingestion to continue after transient failure', async () 
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider,
     cursor,
     confirmations: 0,
@@ -77,6 +78,7 @@ test('final RPC failure prevents ingestion from advancing cursor', async () => {
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider,
     cursor,
     confirmations: 0,

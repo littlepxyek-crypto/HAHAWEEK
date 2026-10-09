@@ -39,6 +39,7 @@ test('processor failure does not advance cursor past failed block', async () => 
   };
 
   const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
     provider,
     cursor,
     confirmations: 0,
