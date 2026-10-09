@@ -3,6 +3,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { cleanupResources } = require('../src/core/runtime-cleanup');
+const { createEngine } = require('../src');
 
 test('cleanup attempts every action and preserves cleanup failures', async () => {
   const calls = [];
@@ -45,4 +46,51 @@ test('a failing error reporter does not interrupt cleanup', async () => {
 
   assert.deepEqual(calls, ['first', 'second']);
   assert.equal(failures.length, 1);
+});
+
+
+test('initialization failure during writer-fence acquisition cleans all constructed resources and preserves the primary error', async () => {
+  const calls = [];
+  const primaryError = new Error('WRITER_FENCE_HELD');
+  const provider = {
+    destroy: async () => {
+      calls.push('provider.destroy');
+      throw new Error('PROVIDER_DESTROY_FAILED');
+    },
+  };
+  const writerFence = {
+    acquire: () => {
+      calls.push('writerFence.acquire');
+      throw primaryError;
+    },
+    stopWatchdog: async () => {
+      calls.push('writerFence.stopWatchdog');
+      throw new Error('WATCHDOG_STOP_FAILED');
+    },
+    release: () => {
+      calls.push('writerFence.release');
+      throw new Error('FENCE_RELEASE_FAILED');
+    },
+  };
+
+  const originalConsoleError = console.error;
+  console.error = () => {};
+  try {
+    await assert.rejects(
+      createEngine({
+        providerFactory: () => provider,
+        writerFenceFactory: () => writerFence,
+      }),
+      error => error === primaryError
+    );
+  } finally {
+    console.error = originalConsoleError;
+  }
+
+  assert.deepEqual(calls, [
+    'writerFence.acquire',
+    'writerFence.stopWatchdog',
+    'writerFence.release',
+    'provider.destroy',
+  ]);
 });
