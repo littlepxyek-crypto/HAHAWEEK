@@ -42,9 +42,9 @@ PR #793 (`fix/mandatory-authority-gate`) is an existing corrective candidate. It
 
 ### HW-RCA-003 — Durability claims exceed inspected persistence proof (P1 for production activation)
 
-**Observed:** `src/core/state.js` writes JSON to a temporary file and renames it over the state file. The inspected path has no explicit `fsync` of the temporary file or containing directory. Existing tests include simulated process crashes and restart recovery.
+**Observed:** Both `src/core/state.js` and `src/core/database.js` write to a temporary file and rename it over the target file, without an explicit `fsync` of the temporary file or containing directory in the inspected save paths. The SQLite wrapper uses `sql.js` and exports the in-memory database to a file; the cursor/state file and database therefore share this durability-proof gap. Existing tests include simulated process crashes and restart recovery.
 
-**Root cause:** Process-level recovery fixtures do not establish power-loss durability or guarantees of a specific persistent volume/filesystem.
+**Root cause:** Process-level recovery fixtures do not establish power-loss durability or guarantees of a specific persistent volume/filesystem. The persistence implementation has atomic-replacement intent, but rename alone is not evidence that file contents and directory metadata survive sudden host/storage loss.
 
 **Impact:** Production durability under host/storage failure is unproven; this is a proof gap, not evidence that data loss has occurred.
 
@@ -91,7 +91,7 @@ PR #793 (`fix/mandatory-authority-gate`) is an existing corrective candidate. It
 ## Evidence inventory inspected
 
 - `src/core/ingestion.js` on main and `fix/mandatory-authority-gate`
-- `src/core/state.js`, `src/core/block-cursor.js`, `src/core/runner.js`
+- `src/core/state.js`, `src/core/database.js`, `src/core/block-cursor.js`, `src/core/runner.js`
 - `src/core/f03-ingestion-authority-integration.js`
 - `src/core/runtime-processing-context.js`
 - `tests/authority-acceptance-cursor-barrier.test.js` on the PR #793 branch
@@ -148,3 +148,8 @@ This update supersedes the earlier statement that PR #793 was only a candidate. 
 ### Current disposition
 
 Do not infer project completion from this authority-gate merge. Continue exact-head verification, then address the lifecycle/cursor durability proof gap and complete the contract/code/test/runtime reconciliation. No source semantics, historical evidence, cursor, checkpoint, manifest, or activation state were changed by this documentation addendum.
+
+
+### Additive persistence-path clarification — 2026-10-09
+
+Inspection of the current `main` versions of `src/core/state.js` and `src/core/database.js` confirms the durability finding applies to both persisted cursor/operational state and the SQL.js database export. Both use temporary-file replacement without explicit file and parent-directory sync in the inspected save path. This does **not** establish that data loss occurred, nor does it prove a defect on every filesystem; it establishes that power-loss durability is not demonstrated by the source or existing process-level recovery tests. No persistence code was changed because the deployment storage target and required durability guarantees have not been specified/verified, and a change must be tested against those assumptions rather than treated as universally portable.
