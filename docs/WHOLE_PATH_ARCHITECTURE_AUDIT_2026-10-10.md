@@ -130,3 +130,13 @@ The initial strict-gate patch was too broad for legacy unit fixtures and caused 
 - This is a documentation-only merge. It does not change V4 authority, canonical evidence, cursor, checkpoint, manifest, deployment, or frozen architecture semantics.
 - V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
 
+
+
+## HFI-MVP runtime failure diagnosis and bounded mitigation — 2026-10-10
+
+- Exact-head run `38002980916` on commit `d92bdabd3a506bebc23e3af26a786b82a8bc8823` completed with runtime state `FAILED`, candidate stage `outcome_logs`, and ethers `TIMEOUT` (`request.send`, code `TIMEOUT`). The workflow uploaded a commit-bound artifact; the new CI summary made the candidate error visible in job logs.
+- This confirms a request timeout at outcome-log acquisition. It does not establish whether the timeout was caused by response size, provider load, or an unrelated transient outage.
+- A bounded mitigation reduces outcome-log chunks from 10,000 to 2,500 blocks and limits concurrency for that stage to two; the stage heartbeat now records range/chunk/concurrency. General log concurrency remains unchanged. Transient errors still do not trigger recursive splitting.
+- Latest follow-up tests/runtime must be inspected at the new exact HEAD. No claim of runtime success is made by this audit entry.
+- Cleanup overlap review: PR #802 contains only the four cleanup-related files; PR #804 contains those same cleanup files plus HFI runtime policy and diagnostic changes. The shared cleanup helper and `src/index.js` cleanup implementation are present on PR #804, with additional guarded resource-construction handling and expanded regression coverage. PR #802 should be closed as superseded only after confirming these changes remain present on the current #804 head; do not merge both branches.
+- No cursor, checkpoint, manifest, canonical evidence, production deployment, or V4 authority state is intentionally changed. V4 authority remains INACTIVE; Architecture Gate BLOCKED; production readiness NOT READY.
