@@ -31,7 +31,8 @@ jobs:
         run: |
           set +e
           rm -f docs/runtime/hfi-mvp-e2e-latest.json
-          npm run hfi:runtime
+          # Bound the process independently of the Node watchdog; preserve SIGTERM evidence.
+          timeout --verbose --signal=TERM --kill-after=15s 25m npm run hfi:runtime
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
           exit 0
