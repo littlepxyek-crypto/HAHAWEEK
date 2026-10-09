@@ -50,7 +50,7 @@ test('runtime uses provider-supported bounded outcome ranges and bounded acquisi
 test('formation and outcome acquisition retain explicit bounded windows', () => {
   assert.match(runtime, /formationEnd=Math\.min\(latest,il\.blockNumber\+10000\)/);
   assert.match(runtime, /TARGET_FORMATION_CHUNK=500/);
-  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK\)/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY\)/);
 });
 
 test('runtime supports an explicit candidate hint without treating it as evidence authority', () => {
