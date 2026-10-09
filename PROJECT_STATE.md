@@ -2713,3 +2713,24 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - V4 production authority: `INACTIVE`. Architecture Gate: `BLOCKED`. Implementation Freeze: `BLOCKED`. Production readiness: `NOT READY`.
 - No production activation, cursor reset, canonical evidence rewrite/deletion, or external X publication was performed by this reconciliation.
 - This snapshot is additive; earlier project-state snapshots remain historical evidence and are not rewritten.
+
+
+---
+
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — POST-PR-793 TERMINAL CI / HFI-MVP STATUS
+
+- Exact `main` HEAD: `45685af686ae29500601d55ac77540b41b3b7a07`.
+- Terminal exact-head workflows verified through GitHub job records:
+  - HAHAWEEK Tests run `37911412462`: SUCCESS.
+  - Security and Regression run `37911412442`: SUCCESS.
+  - A9 Runtime Verification run `37911412429`: SUCCESS.
+  - Analytical Reorg Runtime Verification run `37911412444`: SUCCESS.
+  - HFI-RADAR Continuous Runtime Verification run `37911412484`: SUCCESS.
+  - Push on main run `37911412428`: SUCCESS.
+- HFI-MVP Runtime Verification run `37911412461` is now terminal: job `runtime` completed with CI conclusion `success`, but the workflow step named `HFI-MVP runtime verification did not reach VERIFIED; preserved runtime evidence is authoritative.` was **SKIPPED**. This is not evidence of `VERIFIED` HFI-MVP runtime.
+- Preserved HFI-MVP artifact: `hfi-mvp-e2e-runtime-evidence-45685af686ae29500601d55ac77540b41b3b7a07`, artifact ID `11606718451`, SHA-256 `18e66b9f8d894d858dd8d621983c168c1a42a31cf7c6e80cd6fee219b7b01813`. Artifact provenance verification and upload succeeded; artifact payload has not been independently inspected in this session.
+- CI job success and artifact provenance are not substituted for runtime verification. Exact-head HFI-MVP status is **NOT VERIFIED / INCONCLUSIVE** until the artifact's runtime payload is inspected or a workflow produces an explicit verified result.
+- Source inspection of `src/core/state.js` and `src/core/database.js` still shows temporary-file replacement with `renameSync` and no explicit file/containing-directory `fsync` in the inspected save paths. This is an unproven power-loss durability boundary, not evidence of observed data loss.
+- Production persistent-volume recovery, backup/restore, power-loss durability, complete legacy caller inventory, and full activation-gate reconciliation remain **NOT VERIFIED**.
+- V4 production authority: **INACTIVE**. Architecture Gate: **BLOCKED**. Implementation Freeze: **BLOCKED**. Production readiness: **NOT READY**.
+- This is an additive status correction. Earlier pending snapshots and historical runtime failures remain preserved and are not rewritten.
