@@ -44,6 +44,7 @@ test(
       const processed = [];
 
       const engine = new IngestionEngine({
+    authorityGate: () => ({ status: 'AUTHORIZED' }),
         provider,
         cursor,
         confirmations,
