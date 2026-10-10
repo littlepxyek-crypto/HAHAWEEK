@@ -76,6 +76,16 @@ The previously running second attempt has now completed. This addendum preserves
 - Integrity counts: 8,664 raw and 8,664 canonical records; manifest `653bef88df94ee30998d491788d99465b64ac0962abc8c8d9eb56082aeb61239`.
 - Deterministic replay `equivalent=true`; graph projection contains 25,337 nodes and 34,410 edges.
 - Source record says `no_external_publication=true`; this is not evidence of external X publication.
-- The artifact's `candidate_results` array is empty although top-level formation/outcome/validation fields are populated. Targeted-pool semantics for this field remain unverified and should be inspected separately.
+- The artifact's `candidate_results` array is empty although top-level formation/outcome/validation fields are populated. A later code inspection found that `scripts/hfi-mvp-runtime-verify.js` initializes `base.candidate_results` to the candidate diagnostics array, appends entries on per-candidate incomplete/error paths, and returns the successful top-level formation/outcome/validation payload without appending a successful candidate entry. This is consistent with a failure-diagnostics-only interpretation, but no explicit schema/contract or test was located that establishes that meaning. Therefore the field's intended semantics remain `UNKNOWN`; do not treat the empty array as evidence that no candidate was evaluated, and do not change the runtime output until the artifact contract is explicit.
 
 This verifies one successful E5 runtime slice after the earlier timeout. It does not establish the cause of the transient timeout, guarantee future RPC availability, verify production-host durability/recovery drills, or authorize V4 production activation. The record remains OPEN until the historical runtime-stall wording and targeted-pool `candidate_results` semantics are reconciled.
+
+
+## Addendum — candidate_results contract inspection (2026-10-11)
+
+Inspected the default-branch runtime verifier at blob `642e8092b019842b482aae4f5d1d2a2811ae41c5`. The successful path persists `formation`, `outcome`, `criterion`, `validation`, `report`, `claims`, replay, and integrity fields at the top level; the shared `candidate_results` array is populated by non-success candidate paths and is not given a success entry before the successful return.
+
+- Finding: observed implementation behavior is clear; the public meaning of `candidate_results` is not contractually established by the evidence inspected.
+- Classification: P2 contract/documentation ambiguity; no evidence currently proves a runtime correctness defect.
+- Action: preserve the artifact and top-level evidence. Do not patch runtime output or weaken any assertions until the field's intended contract and consumer expectations are inspected and reconciled.
+- Verification boundary: this is code inspection only, not a test execution. Workflow #481 has no terminal artifact at the time of this addendum.
