@@ -2753,3 +2753,17 @@ This section supersedes the earlier pending-verification statements only for the
 - This is a documentation-only merge. It does not change V4 authority, canonical evidence, cursor, checkpoint, manifest, deployment, or frozen architecture semantics.
 - V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
 
+
+
+---
+
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-10 — POST-PR-802 — RUNTIME CLEANUP / REQUIRED CHECKS
+
+- Exact current `main` HEAD verified from GitHub: `2c7ad0fea3a72bb8743378fa15fe80ccf89b5bd5`, commit title `fix: isolate runtime cleanup and bound RPC retries`.
+- Exact-head check-runs endpoint returned 12 check runs; all 12 were terminal `SUCCESS` at inspection, including `test-and-security`, `test`, `runtime`, `a9-runtime`, `continuous-runtime`, `analytical-reorg-runtime`, and both CodeQL analysis checks. This records GitHub check-run evidence for this exact commit; it does not establish every production lifecycle or durability gate.
+- Active ruleset `HAHAWEEK-main-protection` applies to the default branch and requires the status-check context `test-and-security`; it also prohibits branch deletion and non-fast-forward updates, requires pull requests and review-thread resolution, and permits no bypass actors. The legacy combined commit-status endpoint returning `pending` with zero status entries is not by itself evidence that the required check-run is missing: the exact PR #799 head has a completed successful check run named `test-and-security`.
+- PR #799 remains OPEN but is stale relative to current `main`: its head is `6b6bbaa85f19511f1d7e66b3c59d7cfd4feb024d`, its merge base snapshot predates current `main`, and GitHub reports `mergeable=false` / `mergeable_state=dirty`. Do not merge or force-merge it. This is a branch freshness/conflict blocker distinct from the required-check status endpoint.
+- Current-main runtime cleanup and bounded RPC retry checks are green on the exact HEAD, but persistent-volume restart, physical power-loss durability, backup/restore, full cursor/checkpoint crash atomicity, and all production lifecycle criteria remain NOT VERIFIED or deferred.
+- Local test execution was not performed through this GitHub-only inspection. No local test claim is made.
+- V4 production authority remains `INACTIVE`; Architecture Gate remains `BLOCKED`; Implementation Freeze remains `BLOCKED`; production readiness remains `NOT READY`.
+- This addendum is additive and preserves all prior snapshots. No cursor reset, canonical evidence rewrite/deletion, production deployment, authority activation, or external publication was performed.
