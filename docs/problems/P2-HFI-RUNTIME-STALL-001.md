@@ -93,7 +93,24 @@ At the inspected current `main` revision, `src/core/hfi-log-range-policy.js` and
 - a transient error remains non-splittable even if its message also mentions a block range;
 - unknown errors fail closed without range splitting.
 
-The current runtime verifier imports `shouldSplitLogRange` from that policy module. This differs from the older hardening implementation shown at commit `34d867ffd4602ebc0909b0f712f5c372890dd572`, where retryable transport failures could trigger splitting. The exact intervening change-introducing commit and its rationale have not yet been established by this inspection; no claim is made about why that behavior changed.
+The current runtime verifier imports `shouldSplitLogRange` from that policy module. Repository history now explains the policy evolution:
 
-**Disposition:** the earlier runtime-stall mitigation is historical evidence for its exact commit, not a statement of current behavior. The current bounded-retry/no-split policy is covered by focused tests on the inspected `main` snapshot. Keep this record's prior verification and status intact; do not rewrite historical results. Further root-cause or runtime changes require tracing the intervening policy history and evidence from a reproducible failure. This documentation reconciliation does not authorize V4 production activation.
+- Commit `a0aecba1742a2a3ef449fdcef8b8917131473f25` changed splitting to require range-limit wording rather than splitting every exhausted request.
+- Commit `1224847cf7616aa67eed80dbec7f7811087a7cbd` later reintroduced splitting after retryable transport failures as well as range-limit errors.
+- The subsequent correction in PR #804 identified the defect: incidental request-context wording such as “block range” could cause a timeout or rate-limit response to be misclassified as an explicit range rejection, multiplying requests during an outage.
+- Commit `46217924ca82413ba9805e0ea205afa642068a78` gave retryable transport/rate-limit classification precedence and narrowed range matching; commit `71c6c1acba487ea30e8f32b6b438cca8e5b02d15` added negative vectors for timeout/rate-limit errors that also mention a range. PR #804 was merged into `main`; the extracted `src/core/hfi-log-range-policy.js` and `tests/hfi-log-range-policy.test.js` retain the corrected bounded-retry/no-split boundary.
 
+**Disposition:** the historical mitigation remains evidence for its exact code revision; the policy evolution is now traced. The original RPC timeout's root cause remains UNKNOWN. Current policy tests were inspected in the repository, but this execution did not run them locally. This reconciliation does not authorize V4 production activation.
+
+
+
+## Addendum — workflow runtime stall observation (2026-10-11)
+
+Workflow run [#481](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/38088458203), job `114319796949`, was still reported `in_progress` at the latest API inspection. The run began at `2026-10-10T21:39:28Z`; the runtime step began at `21:39:40Z`. At inspection, the runtime step had not completed despite the workflow's configured 45-minute job timeout and the runtime command's external 25-minute bound. Artifact-provenance and artifact-upload steps remained pending, and no artifact was listed.
+
+- Severity: P2 — CI/runtime operational stall.
+- Immediate cause: the workflow runtime step has not reached a terminal state in GitHub Actions.
+- Root cause: UNKNOWN; available job metadata does not establish whether the process, runner, timeout handling, or status reporting is responsible.
+- Impact: no terminal runtime result or artifact exists for this run; this is not evidence of a formation failure or canonical evidence failure.
+- Disposition: BLOCKED pending a terminal workflow result or runner-level investigation. Do not infer success/failure, and do not use this run as runtime verification evidence.
+- No cursor, checkpoint, manifest, canonical evidence, or V4 authority change is evidenced by this workflow status.
