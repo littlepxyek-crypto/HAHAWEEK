@@ -105,14 +105,20 @@
 
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-07 — VERIFIED / RECONCILED
 
-- Current main HEAD verified: `96b26068765da2736c9d9c397b2ad292a4e7425f` (merge PR #765, `docs: reconcile project state with current main runtime evidence`).
-- PR #765 is CLOSED / MERGED; merge commit `96b26068765da2736c9d9c397b2ad292a4e7425f` is the current main HEAD. The change is documentation-only and preserves historical snapshots additively.
-- Exact merge-head CI is terminal SUCCESS for: HAHAWEEK Tests, HAHAWEEK Security and Regression, HAHAWEEK A9 Runtime Verification, HAHAWEEK Analytical Reorg Runtime Verification, HFI-MVP Runtime Verification, CodeQL Actions, and CodeQL JavaScript/TypeScript.
-- Merge-head HFI-MVP runtime verification reached terminal SUCCESS on the exact merge SHA; runtime artifact provenance verification also succeeded and the failure guard was skipped.
-- V4 production authority remains INACTIVE. No production authority activation is inferred from HFI runtime success.
-- Architecture Gate remains BLOCKED pending the broader system-wide activation/contract/lifecycle criteria; this documentation reconciliation does not authorize V4 production activation or a new architectural phase.
-- Local repository execution remains unavailable in this environment because github.com resolution/clone was not available; GitHub repository state and Actions are the execution evidence for this reconciliation.
+- Current main HEAD verified at reconciliation time: `d4f338475858690c251dd75ae049bccf0b23a87f` (merge PR #766, documentation-only project-state reconciliation).
+- PR #766 is CLOSED / MERGED; merge commit `d4f338475858690c251dd75ae049bccf0b23a87f` is the current main HEAD at this reconciliation.
+- This commit changes documentation only; no V4 authority, canonical evidence, cursor, checkpoint, manifest, formation, validation, or provider semantics changed.
+- Exact pre-merge main CI evidence remains bound to prior merge head `96b26068765da2736c9d9c397b2ad292a4e7425f`; this documentation merge itself has no associated workflow runs, so no new CI success is claimed for it.
+- V4 production authority remains INACTIVE. No production authority activation is inferred from documentation reconciliation.
+- Architecture Gate remains BLOCKED pending broader system-wide activation/contract/lifecycle criteria.
+- Local repository execution remains unavailable because github.com resolution/clone is unavailable in this environment; GitHub repository state and Actions remain the execution evidence.
 - Historical snapshots below are preserved additively and are not rewritten.
+
+## HISTORICAL MAIN RECONCILIATION SNAPSHOT — 2026-10-07 — VERIFIED / RECONCILED
+
+- Previous main HEAD: `96b26068765da2736c9d9c397b2ad292a4e7425f` (merge PR #765).
+- Previous exact-main CI/runtime evidence remains historical evidence for that exact merge SHA and is not reinterpreted as evidence for `d4f3384`.
+- V4 production authority remained INACTIVE and Architecture Gate remained BLOCKED.
 
 ## MAIN RECONCILIATION SNAPSHOT — 2026-10-05 — VERIFIED / RECONCILED
 
