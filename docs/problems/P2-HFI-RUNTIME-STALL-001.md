@@ -104,13 +104,17 @@ The current runtime verifier imports `shouldSplitLogRange` from that policy modu
 
 
 
-## Addendum — workflow runtime stall observation (2026-10-11)
+## Separate Problem Record — P2-HFI-WORKFLOW-STALL-001 (2026-10-11)
+
+This is a distinct CI workflow/runner incident; it does not reopen or overwrite the historical bounded-runtime fix status above.
 
 Workflow run [#481](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/38088458203), job `114319796949`, was still reported `in_progress` at the latest API inspection. The run began at `2026-10-10T21:39:28Z`; the runtime step began at `21:39:40Z`. At inspection, the runtime step had not completed despite the workflow's configured 45-minute job timeout and the runtime command's external 25-minute bound. Artifact-provenance and artifact-upload steps remained pending, and no artifact was listed.
 
+- ID: P2-HFI-WORKFLOW-STALL-001.
 - Severity: P2 — CI/runtime operational stall.
 - Immediate cause: the workflow runtime step has not reached a terminal state in GitHub Actions.
 - Root cause: UNKNOWN; available job metadata does not establish whether the process, runner, timeout handling, or status reporting is responsible.
 - Impact: no terminal runtime result or artifact exists for this run; this is not evidence of a formation failure or canonical evidence failure.
+- Regression test: not applicable until the cause is isolated; no code correction is authorized by current evidence.
 - Disposition: BLOCKED pending a terminal workflow result or runner-level investigation. Do not infer success/failure, and do not use this run as runtime verification evidence.
 - No cursor, checkpoint, manifest, canonical evidence, or V4 authority change is evidenced by this workflow status.
