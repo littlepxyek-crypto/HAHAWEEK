@@ -2776,3 +2776,11 @@ This section supersedes the earlier pending-verification statements only for the
 - The prior #796/#797 check results are historical evidence for their old heads only and are not carried forward as proof for #806/#807.
 - PR #805 remains documentation-only. These successor PRs are not merged. No production state, evidence, cursor, checkpoint, manifest, deployment, or V4 authority was changed by creating them.
 - V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED. Production readiness remains NOT READY.
+
+
+## SUCCESSOR PR EXACT-HEAD CI UPDATE — 2026-10-10
+
+- PR #806 head `45920c6d609c3f6270277e285fe120bbbf23500e`: 8 of 9 observed check runs are terminal SUCCESS; the `runtime` check remains IN_PROGRESS. No all-checks-passed claim is made.
+- PR #807 head `c7eaf8ba0a224b8bf18577c4bef1b08d8c946fd9`: `test` and `test-and-security` completed SUCCESS, as did analytical-reorg, continuous-runtime, and a9-runtime checks at the latest observation. Three checks remain IN_PROGRESS; CodeQL is NEUTRAL. Treat the PR as not fully verified until required checks are terminal and branch protection reports readiness.
+- PR #805 documentation-update head `c3f05e48987b7f4237de5c845a5842fa44cd4ced`: test-and-security, analytical-reorg, and a9-runtime checks completed SUCCESS; test, runtime, and both analysis checks remain IN_PROGRESS; CodeQL is NEUTRAL. No merge decision is recorded.
+- These are observations of GitHub check runs on the listed exact heads, not local test execution or production-runtime evidence. No PR in this update was merged. V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
