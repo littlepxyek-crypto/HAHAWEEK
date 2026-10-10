@@ -2753,3 +2753,34 @@ This section supersedes the earlier pending-verification statements only for the
 - This is a documentation-only merge. It does not change V4 authority, canonical evidence, cursor, checkpoint, manifest, deployment, or frozen architecture semantics.
 - V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
 
+
+
+---
+
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-10 — POST-PR-802 — RUNTIME CLEANUP / REQUIRED CHECKS
+
+- Exact current `main` HEAD verified from GitHub: `2c7ad0fea3a72bb8743378fa15fe80ccf89b5bd5`, commit title `fix: isolate runtime cleanup and bound RPC retries`.
+- A later exact-head check-runs query returned 13 check runs; all 13 were terminal `SUCCESS` at the later inspection, including `test-and-security`, `test`, `runtime`, `a9-runtime`, `continuous-runtime`, `analytical-reorg-runtime`, and both CodeQL analysis checks. This records GitHub check-run evidence for this exact commit; it does not establish every production lifecycle or durability gate.
+- Active ruleset `HAHAWEEK-main-protection` applies to the default branch and requires the status-check context `test-and-security`; it also prohibits branch deletion and non-fast-forward updates, requires pull requests and review-thread resolution, and permits no bypass actors. The legacy combined commit-status endpoint returning `pending` with zero status entries is not by itself evidence that the required check-run is missing: the exact PR #799 head has a completed successful check run named `test-and-security`.
+- PR #799 remains OPEN but is stale relative to current `main`: its head is `6b6bbaa85f19511f1d7e66b3c59d7cfd4feb024d`, its merge base snapshot predates current `main`, and GitHub reports `mergeable=false` / `mergeable_state=dirty`. Do not merge or force-merge it. This is a branch freshness/conflict blocker distinct from the required-check status endpoint.
+- Current-main runtime cleanup and bounded RPC retry checks are green on the exact HEAD, but persistent-volume restart, physical power-loss durability, backup/restore, full cursor/checkpoint crash atomicity, and all production lifecycle criteria remain NOT VERIFIED or deferred.
+- Local test execution was not performed through this GitHub-only inspection. No local test claim is made.
+- V4 production authority remains `INACTIVE`; Architecture Gate remains `BLOCKED`; Implementation Freeze remains `BLOCKED`; production readiness remains `NOT READY`.
+- This addendum is additive and preserves all prior snapshots. No cursor reset, canonical evidence rewrite/deletion, production deployment, authority activation, or external publication was performed.
+
+
+## OBSERVABILITY / ORCHESTRATION SUCCESSOR PRS — 2026-10-10
+
+- PR #806 is an open draft successor to the stale-base AI orchestration proposal #796. It was created from current `main` at base SHA `2c7ad0fea3a72bb8743378fa15fe80ccf89b5bd5`; head SHA at creation: `45920c6d609c3f6270277e285fe120bbbf23500e`. It contains documentation only. Its exact-head checks have not yet been verified in this snapshot.
+- PR #807 is an open draft successor to stale-base observability proposal #797. It was created from the same current `main` base SHA; head SHA at creation: `c7eaf8ba0a224b8bf18577c4bef1b08d8c946fd9`. It preserves CommonJS configuration and adds explicit, bounded freshness semantics; exact-head tests and CI remain pending verification.
+- The prior #796/#797 check results are historical evidence for their old heads only and are not carried forward as proof for #806/#807.
+- PR #805 remains documentation-only. These successor PRs are not merged. No production state, evidence, cursor, checkpoint, manifest, deployment, or V4 authority was changed by creating them.
+- V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED. Production readiness remains NOT READY.
+
+
+## SUCCESSOR PR EXACT-HEAD CI UPDATE — 2026-10-10
+
+- PR #806 head `45920c6d609c3f6270277e285fe120bbbf23500e`: 8 of 9 observed check runs are terminal SUCCESS; the `runtime` check remains IN_PROGRESS. No all-checks-passed claim is made.
+- PR #807 head `c7eaf8ba0a224b8bf18577c4bef1b08d8c946fd9`: `test` and `test-and-security` completed SUCCESS, as did analytical-reorg, continuous-runtime, and a9-runtime checks at the latest observation. Three checks remain IN_PROGRESS; CodeQL is NEUTRAL. Treat the PR as not fully verified until required checks are terminal and branch protection reports readiness.
+- PR #805 documentation-update head `c3f05e48987b7f4237de5c845a5842fa44cd4ced`: test-and-security, analytical-reorg, and a9-runtime checks completed SUCCESS; test, runtime, and both analysis checks remain IN_PROGRESS; CodeQL is NEUTRAL. No merge decision is recorded.
+- These are observations of GitHub check runs on the listed exact heads, not local test execution or production-runtime evidence. No PR in this update was merged. V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
