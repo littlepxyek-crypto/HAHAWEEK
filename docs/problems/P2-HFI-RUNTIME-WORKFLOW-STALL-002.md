@@ -89,3 +89,22 @@ Run #485 is now terminal and its artifact has been downloaded and inspected. Thi
 - Underlying RPC timeout root cause: UNKNOWN.
 - Runtime acceptance: BLOCKED until a complete exact-head artifact reaches `VERIFIED` with provenance, completeness, formation, outcome coverage, validation, and replay evidence.
 - V4 authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
+
+
+## Addendum — exact-head runtime status recheck (2026-10-11)
+
+The latest repository HEAD at the start of this check was `6261cd1dbb6169af199794ab105c96a8821b01e7`. The following GitHub Actions state was returned by the API:
+
+- HFI-MVP run `38089272394` targets that exact HEAD. It remains reported as `in_progress`; runtime job `114322169566` has `Run set +e` in progress, with provenance verification, artifact upload, and the final guard still pending. No artifact is listed.
+- The earlier HFI-MVP run `38089082920` on `94370a5cdd1a67a78cd0d831a6e4b3fd324e5f5b` has the same reported state: runtime job `114321616821` remains in progress at `Run set +e`, downstream evidence steps pending, and no artifact listed.
+- Both run records have stale-looking update timestamps from `2026-10-10T21:52:24Z` and `2026-10-10T21:49:24Z` respectively. Job-log retrieval returns GitHub API `404 BlobNotFound`. This is evidence of an observability/state discrepancy, not proof that the process is currently executing, terminated, or that HAHAWEEK itself is the root cause.
+- On exact HEAD `6261cd1...`, Tests (`38089272384`), Security/Regression (`38089272386`), A9 runtime (`38089272452`), and Analytical Reorg runtime (`38089272398`) are `completed/success`. These results do not establish HFI-MVP runtime success.
+- No runtime code, workflow timeout, retry policy, or authority state was changed in response to this observation. Repeatedly launching the same broad historical outcome query without isolating the timeout behavior is not justified by the current evidence.
+
+### Updated disposition
+
+- HFI-MVP exact-head verification: BLOCKED; no terminal artifact.
+- Workflow observability / stale run state: BLOCKED; root cause UNKNOWN.
+- HFI outcome acquisition timeout on run #485: FAILED, immediate timeout established; underlying transport/provider cause UNKNOWN.
+- Other exact-head checks listed above: VERIFIED SUCCESS for their individual workflows only.
+- V4 authority: INACTIVE. Architecture Gate: BLOCKED. Production readiness: NOT READY.
