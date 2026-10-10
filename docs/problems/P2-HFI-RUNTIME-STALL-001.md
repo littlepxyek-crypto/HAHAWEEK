@@ -80,3 +80,20 @@ Automatic multi-provider RPC failover is intentionally NOT implemented. Producti
 A live persistent-host restart/recovery, backup/restore, RPC degradation, and writer-fence contention drill remain unverified.
 
 Therefore this problem is resolved for the bounded CI/HFI runtime path, but it does not by itself authorize production V4 activation.
+
+
+## Addendum — current policy reconciliation (2026-10-11)
+
+The historical verification above is bound to hardening commit `34d867ffd4602ebc0909b0f712f5c372890dd572`. It must not be read as proof that the current default-branch policy still splits ranges after transient transport or rate-limit errors.
+
+At the inspected current `main` revision, `src/core/hfi-log-range-policy.js` and `tests/hfi-log-range-policy.test.js` establish this behavior:
+
+- explicit, non-transient range/result-limit rejection may trigger adaptive range splitting;
+- timeout and rate-limit errors are retryable, but must not trigger range splitting;
+- a transient error remains non-splittable even if its message also mentions a block range;
+- unknown errors fail closed without range splitting.
+
+The current runtime verifier imports `shouldSplitLogRange` from that policy module. This differs from the older hardening implementation shown at commit `34d867ffd4602ebc0909b0f712f5c372890dd572`, where retryable transport failures could trigger splitting. The exact intervening change-introducing commit and its rationale have not yet been established by this inspection; no claim is made about why that behavior changed.
+
+**Disposition:** the earlier runtime-stall mitigation is historical evidence for its exact commit, not a statement of current behavior. The current bounded-retry/no-split policy is covered by focused tests on the inspected `main` snapshot. Keep this record's prior verification and status intact; do not rewrite historical results. Further root-cause or runtime changes require tracing the intervening policy history and evidence from a reproducible failure. This documentation reconciliation does not authorize V4 production activation.
+
