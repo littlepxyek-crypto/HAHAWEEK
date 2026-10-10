@@ -4,7 +4,7 @@ ID: P2-HFI-OUTCOME-RPC-TIMEOUT-001
 Severity: P2 — MEDIUM  
 Discovered At: 2026-10-10  
 Location: HFI-MVP runtime verifier / `outcome_logs` / Robinhood Mainnet RPC boundary  
-Status: BLOCKED — INVESTIGATION REQUIRED
+Status: OPEN — RETRY VERIFIED; ROOT CAUSE UNKNOWN
 
 ## Symptom
 
@@ -22,7 +22,7 @@ The HFI-MVP E5 runtime attempt recorded a timeout while acquiring historical swa
 - Artifact payload: `verification_class=E5_RUNTIME`, `state=FAILED`, `stage=outcome_logs`, `chain_id=4663`
 - Query range: blocks `59281989` through `65245352`; chunk size `2500`; outcome-log concurrency `2`
 - Error: ethers `TIMEOUT` during `request.send`
-- Attempt 2 was `IN_PROGRESS` at the last recorded status inspection. The artifact above belongs to the earlier attempt and must not be treated as attempt 2's result.
+- At initial record creation, attempt 2 was still `IN_PROGRESS`; a later inspection confirmed its terminal result and the separately preserved attempt-2 artifact below.
 
 ## Immediate Cause
 
@@ -48,7 +48,7 @@ This behavior is intentionally fail-closed and must not be changed solely to mak
 
 ## Corrective Action
 
-No runtime-code change is authorized by the present evidence. First obtain terminal attempt-2 evidence and inspect the available job logs/artifact. If the timeout recurs, gather request-level duration, retry count, endpoint response/error details, and effective runtime/request-budget state. Then evaluate the smallest bounded correction against the existing policy and contracts.
+No runtime-code change is authorized by the present evidence. Attempt-2 terminal evidence and artifact have now been inspected (see addendum below). If the timeout recurs, gather request-level duration, retry count, endpoint response/error details, and effective runtime/request-budget state. Then evaluate the smallest bounded correction against the existing policy and contracts.
 
 ## Required Verification Before Closure
 
@@ -60,4 +60,22 @@ No runtime-code change is authorized by the present evidence. First obtain termi
 
 ## Residual Risk
 
-Historical outcome-log acquisition may time out before complete seven-day coverage is established. A retryable transport failure must remain an acquisition failure/unknown state, never negative analytical evidence. Root cause and corrective fix are not yet verified.
+Historical outcome-log acquisition may time out on future runs. A retryable transport failure must remain an acquisition failure/unknown state, never negative analytical evidence. Attempt 2 succeeded, but root cause remains UNKNOWN and production reliability is not established.
+
+
+## Addendum — terminal attempt-2 reconciliation (2026-10-11)
+
+The previously running second attempt has now completed. This addendum preserves the first-attempt failure above and does not rewrite it.
+
+- Workflow run #479, attempt 2: [HFI-MVP Runtime Verification](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/38036371453); runtime job `114188496941` concluded `success`.
+- Artifact ID `11667716207`; artifact ZIP SHA-256 recomputed after download: `f05fb02a2d242c2af293012fa5b4832deefdd1d3251317c38c002ce8367f23a2`, matching the GitHub artifact digest.
+- Payload commit `48365ff888020b503efe513d2e2569707e01151a`, `verification_class=E5_RUNTIME`, `state=VERIFIED`, `stage=replay`, chain ID `4663`; latest block `84913515`.
+- Acquisition completeness `COMPLETE`; formation `VALID` with `POOL_CREATED → LIQUIDITY_ADDED → SWAP`.
+- Outcome window `2026-09-10T09:04:36.000Z` through `2026-09-17T09:04:36.000Z`; 8,662 outcome observations.
+- Validation `CONFIRMED`; `liquidity-survival-hfi-v1=PASS`.
+- Integrity counts: 8,664 raw and 8,664 canonical records; manifest `653bef88df94ee30998d491788d99465b64ac0962abc8c8d9eb56082aeb61239`.
+- Deterministic replay `equivalent=true`; graph projection contains 25,337 nodes and 34,410 edges.
+- Source record says `no_external_publication=true`; this is not evidence of external X publication.
+- The artifact's `candidate_results` array is empty although top-level formation/outcome/validation fields are populated. Targeted-pool semantics for this field remain unverified and should be inspected separately.
+
+This verifies one successful E5 runtime slice after the earlier timeout. It does not establish the cause of the transient timeout, guarantee future RPC availability, verify production-host durability/recovery drills, or authorize V4 production activation. The record remains OPEN until the historical runtime-stall wording and targeted-pool `candidate_results` semantics are reconciled.
