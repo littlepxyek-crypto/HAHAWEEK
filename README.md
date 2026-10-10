@@ -10,7 +10,7 @@ It connects acquisition, raw evidence, provenance, relationships, temporal forma
 
 **Others detect signals. HAHAWEEK reconstructs how a formation becomes evidence.**
 
-[![Security & Regression](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/workflows/security.yml/badge.svg)](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/workflows/security.yml)
+[![Security & Regression](https://github.com/littlepxyek-crypto/hahaweek/actions/workflows/security.yml/badge.svg)](https://github.com/littlepxyek-crypto/hahaweek/actions/workflows/security.yml)
 
 ---
 
@@ -273,11 +273,13 @@ Future evidence must not leak backward into formation detection.
 
 **Design Gate 2: PASS**
 
-The current Design Gate 2 state records F-01..F-05 and H-01..H-05 as VERIFIED / FROZEN, with the acceptance evidence documented in [Design Gate 2 State](docs/DESIGN_GATE_2_STATE.md).
+The current Design Gate 2 state records F-01..F-05 and H-01..H-05 as VERIFIED / FROZEN, with the acceptance evidence documented in [Design Gate 2 State](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/DESIGN_GATE_2_STATE.md).
 
 **Gate 2 PASS is a design/provenance acceptance state. It does not itself activate V4 production authority.**
 
-V4 production implementation and V4 production authority activation remain distinct. **Production V4 authority remains INACTIVE/BLOCKED unless a separate authorized production-boundary contract explicitly permits activation.**
+Code presence, test success, runtime verification, authorization, and active production authority are separate states. A component can be implemented without being verified; verified without being authorized; and authorized without being active.
+
+**Production V4 authority remains INACTIVE/BLOCKED. No production activation is implied by source files, passing unit tests, a historical runtime artifact, or Design Gate 2 PASS.**
 
 ---
 
@@ -308,7 +310,7 @@ Evidence-backed Research Report
 
 The MVP explicitly excludes automated trading, private keys/signing, predictive price models, production V4 cutover, legacy migration, and autonomous claim publication.
 
-See [MVP Scope](docs/MVP_SCOPE_SPEC_V0_1.md).
+See [MVP Scope](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/MVP_SCOPE_SPEC_V0_1.md).
 
 ---
 
@@ -352,42 +354,43 @@ X can be an input and publication channel.
 
 ### Architecture
 
-- [Canonical Blueprint](docs/BLUEPRINT_CANONICAL.md)
-- [MVP Scope](docs/MVP_SCOPE_SPEC_V0_1.md)
-- [Threat Model](docs/THREAT_MODEL_SPEC_V0_1.md)
+- [Engineering Glossary v1](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/ENGINEERING_GLOSSARY_V1.md)
+- [Canonical Blueprint](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/BLUEPRINT_CANONICAL.md)
+- [MVP Scope](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/MVP_SCOPE_SPEC_V0_1.md)
+- [Threat Model](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/THREAT_MODEL_SPEC_V0_1.md)
 
 ### V4 Evidence Integrity
 
-- [V4 Canonical Reference Model](docs/V4_CANONICAL_REFERENCE_MODEL.md)
-- [V4 Normative Lexical Forms](docs/V4_NORMATIVE_LEXICAL_FORMS.md)
-- [V4 Event Identity Contract](docs/V4_EVENT_IDENTITY_INPUT_CONTRACT.md)
-- [V4 Transition Contract](docs/V4_NORMATIVE_TRANSITION_INPUT_CONTRACT.md)
-- [V4 Checkpoint Contract](docs/V4_NORMATIVE_CHECKPOINT_INPUT_CONTRACT.md)
-- [V4 Cursor Contract](docs/V4_NORMATIVE_CURSOR_INPUT_CONTRACT.md)
-- [Checkpoint / Recovery Boundary Audit](docs/V4_CHECKPOINT_RECOVERY_BOUNDARY_AUDIT.md)
+- [V4 Canonical Reference Model](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/V4_CANONICAL_REFERENCE_MODEL.md)
+- [V4 Normative Lexical Forms](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/V4_NORMATIVE_LEXICAL_FORMS.md)
+- [V4 Event Identity Contract](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/V4_EVENT_IDENTITY_INPUT_CONTRACT.md)
+- [V4 Transition Contract](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/V4_NORMATIVE_TRANSITION_INPUT_CONTRACT.md)
+- [V4 Checkpoint Contract](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/V4_NORMATIVE_CHECKPOINT_INPUT_CONTRACT.md)
+- [V4 Cursor Contract](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/V4_NORMATIVE_CURSOR_INPUT_CONTRACT.md)
+- [Checkpoint / Recovery Boundary Audit](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/V4_CHECKPOINT_RECOVERY_BOUNDARY_AUDIT.md)
 
 ### Trust, Identity & Cross-Spec
 
-- [Identity Resolution L4/L5](docs/IDENTITY_RESOLUTION_L4_L5_CONTRACT_V0_1.md)
-- [Source Independence](docs/SOURCE_INDEPENDENCE_CONTRACT_V0_1.md)
-- [Cross-Spec L4 Validation](docs/CROSS_SPEC_L4_VALIDATION_CONTRACT_V0.1.md)
-- [Cross-Spec Reconciliation Audit](docs/CROSS_SPEC_RECONCILIATION_AUDIT_V0_1.md)
+- [Identity Resolution L4/L5](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/IDENTITY_RESOLUTION_L4_L5_CONTRACT_V0_1.md)
+- [Source Independence](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/SOURCE_INDEPENDENCE_CONTRACT_V0_1.md)
+- [Cross-Spec L4 Validation](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/CROSS_SPEC_L4_VALIDATION_CONTRACT_V0.1.md)
+- [Cross-Spec Reconciliation Audit](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/CROSS_SPEC_RECONCILIATION_AUDIT_V0_1.md)
 
 ### Reference Intelligence
 
-- [Reference Intelligence Contract](docs/REFERENCE_INTELLIGENCE_CONTRACT_V1.md)
-- [Reference Observation Provenance](docs/REFERENCE_OBSERVATION_PROVENANCE_CONTRACT_V1.md)
-- [Reference Provider Resource Boundary](docs/REFERENCE_PROVIDER_RESOURCE_BOUNDARY_V1.md)
-- [Investigation Execution State Machine](docs/INVESTIGATION_EXECUTION_STATE_MACHINE_V1.md)
+- [Reference Intelligence Contract](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/REFERENCE_INTELLIGENCE_CONTRACT_V1.md)
+- [Reference Observation Provenance](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/REFERENCE_OBSERVATION_PROVENANCE_CONTRACT_V1.md)
+- [Reference Provider Resource Boundary](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/REFERENCE_PROVIDER_RESOURCE_BOUNDARY_V1.md)
+- [Investigation Execution State Machine](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/INVESTIGATION_EXECUTION_STATE_MACHINE_V1.md)
 
 Reference Intelligence is non-authoritative, provenance-preserving, temporally explicit, and resource-bounded. It cannot mutate V4 authority or become canonical evidence automatically.
 
 ### Engineering & Continuity
 
-- [Design Gate 2 State](docs/DESIGN_GATE_2_STATE.md)
-- [GitHub Continuity Protocol](docs/GITHUB_CONTINUITY_PROTOCOL.md)
-- [GitHub Hardening Checklist](docs/GITHUB_HARDENING_CHECKLIST.md)
-- [Decisions](docs/DECISIONS.md)
+- [Design Gate 2 State](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/DESIGN_GATE_2_STATE.md)
+- [GitHub Continuity Protocol](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/GITHUB_CONTINUITY_PROTOCOL.md)
+- [GitHub Hardening Checklist](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/GITHUB_HARDENING_CHECKLIST.md)
+- [Decisions](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/DECISIONS.md)
 
 ---
 
@@ -452,15 +455,19 @@ HAHAWEEK is an active research and engineering project.
 Current status is intentionally conservative:
 
 ```text
-Architecture                 DEFINED
-V4 Integrity                 VERIFIED ENGINEERING BASELINE
-Design Gate 2                PASS
-HFI-MVP Runtime              VERIFIED
-Reference Intelligence      IMPLEMENTED / VERIFIED (fixture boundary)
-Production V4                BLOCKED / INACTIVE
-MVP                          CONTROLLED VALIDATION
-Automated Trading            NOT PART OF THE FOUNDATION
+Architecture                  DEFINED (design baseline)
+V4 Integrity                  VERIFIED ENGINEERING BASELINE (scope-limited)
+Design Gate 2                 PASS (design/provenance state only)
+HFI-MVP Runtime               VERIFIED FOR RECORDED EXACT COMMIT ONLY
+Reference Intelligence        IMPLEMENTED / VERIFIED (controlled fixture boundary)
+Live External Providers       DEFERRED
+Production V4 Authority       INACTIVE / BLOCKED
+Production Readiness          NOT READY
+MVP                           CONTROLLED VALIDATION
+Automated Trading             NOT PART OF THE FOUNDATION
 ```
+
+**Status rule:** `IMPLEMENTED` means code exists; `VERIFIED` requires recorded test/runtime evidence for an exact revision and scope; `AUTHORIZED` requires explicit authorization; `ACTIVE` means the applicable activation gate has passed. These labels are not interchangeable. See the [Authority Activation State Machine](https://github.com/littlepxyek-crypto/hahaweek/blob/main/docs/AUTHORITY_ACTIVATION_STATE_MACHINE_V1.md).
 
 ---
 

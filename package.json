@@ -19,20 +19,21 @@
     "hfi:radar:runtime": "node scripts/hfi-radar-operational-runtime-verify.js",
     "hfi:radar:live": "node scripts/hfi-radar-continuous-runtime.js",
     "verify:source-independence": "node scripts/source-independence-runtime-verify.js",
-    "verify:analytical-reorg": "node scripts/analytical-reorg-runtime-verify.js"
+    "verify:analytical-reorg": "node scripts/analytical-reorg-runtime-verify.js",
+    "verify:readme-links": "node scripts/verify-readme-links.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/littlepxyek-crypto/HAHAWEEK.git"
+    "url": "git+https://github.com/littlepxyek-crypto/hahaweek.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/littlepxyek-crypto/HAHAWEEK/issues"
+    "url": "https://github.com/littlepxyek-crypto/hahaweek/issues"
   },
-  "homepage": "https://github.com/littlepxyek-crypto/HAHAWEEK#readme",
+  "homepage": "https://github.com/littlepxyek-crypto/hahaweek#readme",
   "dependencies": {
     "ethers": "^6.17.0",
     "sql.js": "^1.14.2"
