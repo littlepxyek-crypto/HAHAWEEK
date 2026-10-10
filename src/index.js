@@ -6,6 +6,7 @@ const {
   createHealthyState,
   readOperationalState,
 } = require('./core/operational-state');
+const { cleanupResources } = require('./core/runtime-cleanup');
 
 let shutdownRequested = false;
 
@@ -21,10 +22,6 @@ function handleSIGINT() {
 function handleSIGTERM() {
   requestShutdown('SIGTERM');
 }
-
-process.on('SIGINT', handleSIGINT);
-process.on('SIGTERM', handleSIGTERM);
-
 
 const { createProvider } = require('./core/rpc');
 const {
@@ -112,14 +109,24 @@ function createDurableExpectedAuthorityFactory(database) {
     readF03AuthorityChain({ database, fromBlock, toBlock });
 }
 
-async function createEngine({ authorityFactory, expectedAuthorityFactory } = {}) {
-  const provider = createProvider();
-  const writerFence = createWriterFence();
-  writerFence.acquire();
-  const legacyWriteBarrier = createLegacyWriteBarrier({ writerFence });
+async function createEngine({
+  authorityFactory,
+  expectedAuthorityFactory,
+  providerFactory = createProvider,
+  writerFenceFactory = createWriterFence,
+} = {}) {
+  let provider = null;
+  let writerFence = null;
+  let legacyWriteBarrier = null;
   let database = null;
 
   try {
+    // Resource construction and acquisition belong inside the guarded lifecycle:
+    // a busy/invalid writer fence must not leak the already-created RPC provider.
+    provider = providerFactory();
+    writerFence = writerFenceFactory();
+    writerFence.acquire();
+    legacyWriteBarrier = createLegacyWriteBarrier({ writerFence });
     /*
      * Start the existing watchdog immediately after acquiring the fence.
      * Engine initialization and authority reconciliation may perform
@@ -280,24 +287,33 @@ async function createEngine({ authorityFactory, expectedAuthorityFactory } = {})
       writerFence,
     };
   } catch (error) {
-    if (database) {
-      database.close();
+    const cleanupFailures = await cleanupResources([
+      ...(writerFence ? [['writerFence.stopWatchdog', () => writerFence.stopWatchdog()]] : []),
+      ...(database ? [['database.close', () => database.close()]] : []),
+      ...(writerFence ? [['writerFence.release', () => writerFence.release()]] : []),
+      ...(provider ? [['provider.destroy', () => provider.destroy()]] : []),
+    ], (label, cleanupError) => {
+      console.error(`HAHAWEEK INITIALIZATION CLEANUP FAILED (${label}): ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`);
+    });
+
+    // Preserve the initialization error as the primary failure.
+    if (cleanupFailures.length > 0) {
+      console.error(`HAHAWEEK INITIALIZATION CLEANUP: ${cleanupFailures.length} cleanup action(s) failed`);
     }
-    try {
-      await writerFence.stopWatchdog();
-    } catch {
-      // Preserve the original initialization failure.
-    }
-    writerFence.release();
-    provider.destroy();
     throw error;
   }
 }
 
 async function main() {
-  const engine = await createEngine();
+  shutdownRequested = false;
+  process.on('SIGINT', handleSIGINT);
+  process.on('SIGTERM', handleSIGTERM);
+
+  let engine = null;
+  let primaryError = null;
 
   try {
+    engine = await createEngine();
     /*
      * Mark execution as running before processing.
      * H-01 may reject this write when legacy persistence is frozen.
@@ -353,6 +369,11 @@ async function main() {
       console.log(`Cursor outcome: ${result.cursor}`);
     }
   } catch (error) {
+    primaryError = error;
+    if (!engine) {
+      throw error;
+    }
+
     const message =
       error instanceof Error
         ? error.message
@@ -414,12 +435,26 @@ async function main() {
 
     throw error;
   } finally {
-    engine.database.close();
-    engine.writerFence.release();
-    engine.provider.destroy();
+    const cleanupFailures = engine
+      ? await cleanupResources([
+          ['database.close', () => engine.database.close()],
+          ['writerFence.stopWatchdog', () => engine.writerFence.stopWatchdog()],
+          ['writerFence.release', () => engine.writerFence.release()],
+          ['provider.destroy', () => engine.provider.destroy()],
+        ], (label, error) => {
+          console.error(`HAHAWEEK CLEANUP FAILED (${label}): ${error instanceof Error ? error.message : String(error)}`);
+        })
+      : [];
 
     process.removeListener('SIGINT', handleSIGINT);
     process.removeListener('SIGTERM', handleSIGTERM);
+
+    if (cleanupFailures.length > 0 && !primaryError) {
+      throw new AggregateError(
+        cleanupFailures.map(item => item.error),
+        'RUNTIME_CLEANUP_FAILED'
+      );
+    }
   }
 }
 

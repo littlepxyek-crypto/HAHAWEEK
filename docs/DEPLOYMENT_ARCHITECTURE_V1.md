@@ -106,3 +106,22 @@ A real production host, persistent-volume restart drill, backup/restore drill, w
 
 
 Current-head verification evidence (2026-10-07): commit 0659876e682657afacbc080a78bc8ce3a1f44f0a ran HAHAWEEK Tests successfully. The test workflow executes npm test, verify:v4, verify:v4:coverage, and verify:source-independence. The exact-head Security and Regression workflow also completed successfully.
+
+## Runtime cleanup failure isolation — 2026-10-10
+
+The runtime cleanup implementation is being hardened so one failed cleanup action does not prevent later cleanup actions from running. Initialization cleanup and normal shutdown attempt database close, writer-watchdog stop, writer-fence release, and provider destruction independently, and preserve the primary runtime error when cleanup also fails. Cleanup failures are logged; if the runtime otherwise succeeded, cleanup failure is surfaced as an aggregate error.
+
+Signal handlers are installed for the duration of `main()` and removed in its `finally` path, including when engine initialization fails. This behavior change is proposed in PR review and remains NOT VERIFIED until exact-head tests, negative tests, and runtime CI terminate successfully. It does not change canonical evidence, V4 authority, cursor/checkpoint/manifest semantics, or production activation.
+
+
+
+## HFI-MVP RPC range retry boundary — 2026-10-10
+
+HFI-MVP adaptive log-range splitting is permitted only when the RPC explicitly rejects a queried block range or result size. Transient transport failures (including timeout, connection reset, gateway errors, and rate limits) receive bounded retries and then fail the acquisition stage; they must not trigger recursive range splitting, which can multiply request volume during an endpoint outage. Non-retryable errors fail immediately. The runtime artifact must preserve the failure stage and remain non-VERIFIED when acquisition is incomplete. This policy does not change canonical authority, cursor, checkpoint, manifest, or V4 activation semantics.
+
+
+## HFI-MVP outcome-log timeout follow-up — 2026-10-10
+
+Exact-head runtime evidence for `d92bdabd3a506bebc23e3af26a786b82a8bc8823` now identifies the failed stage as `outcome_logs` for candidate pool `0xf399bd1544377680d48c62fd85c2105b869e55906c4189cc5ab3b4e83446928c`. The provider error was ethers `TIMEOUT` during `request.send`; runtime correctly remained `FAILED` and did not promote the candidate. This is direct evidence of a transient RPC request timeout at outcome acquisition, not proof of a deterministic contract or pool-data defect.
+
+The outcome query has therefore been made more conservative: its fixed block chunk is reduced from 10,000 to 2,500 and its concurrency is capped at two, while the general bounded concurrency remains unchanged for other acquisition stages. The runtime heartbeat now records the outcome query block interval, chunk size, and concurrency. Transient timeouts still receive only bounded retries and do not trigger recursive splitting; the change reduces per-request work without allowing unbounded retry amplification. Exact-head runtime re-verification is required before this mitigation can be considered effective.

@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 
 const runtime = fs.readFileSync('scripts/hfi-mvp-runtime-verify.js', 'utf8');
+const policy = fs.readFileSync('src/core/hfi-log-range-policy.js', 'utf8');
 const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
 test('runtime artifact is commit-bound at startup', () => {
@@ -29,7 +30,8 @@ test('runtime preserves stage heartbeat before expensive acquisition so watchdog
 
 test('runtime log acquisition can adaptively split provider-rejected ranges with a bounded depth', () => {
   assert.match(runtime, /const minChunk=Number\(process\.env\.HFI_LOG_MIN_CHUNK \|\| 250\),maxSplitDepth=14/);
-  assert.match(runtime, /const shouldSplit=isRangeLimitError\(last\)\|\|isRetryableRpcError\(last\);if\(!shouldSplit\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
+  assert.match(runtime, /const shouldSplit=shouldSplitLogRange\(last\);if\(!shouldSplit\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
+  assert.match(policy, /function shouldSplitLogRange\(error\) \{\s*return isRangeLimitError\(error\)/);
 });
 
 test('workflow removes stale artifact before runtime execution', () => {
