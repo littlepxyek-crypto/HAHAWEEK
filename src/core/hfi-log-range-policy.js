@@ -16,7 +16,12 @@ function isRetryableRpcError(error) {
 }
 
 function isRangeLimitError(error) {
-  return /logs? matched|too many logs|too many results|result[s]? limit|exceeds (?:the )?(?:maximum )?(?:block )?range|block range|query range|max(?:imum)? .*range/.test(rpcErrorText(error));
+  // A transport/rate-limit failure takes precedence over incidental range wording
+  // in the provider message. Only explicit, non-transient range/result-limit
+  // rejection may trigger adaptive splitting.
+  if (isRetryableRpcError(error)) return false;
+
+  return /logs? matched|too many logs|too many results|result[s]? limit|returned[^\n]{0,60}(?:\d+\s+)?results|exceeds (?:the )?(?:maximum )?(?:block )?range|block range[^\n]{0,40}(?:too large|too wide|exceeds?|maximum|limit)|query range[^\n]{0,40}(?:too large|too wide|exceeds?|maximum|limit)|max(?:imum)? .*range/.test(rpcErrorText(error));
 }
 
 // Split only when the endpoint explicitly rejects the queried block range.
