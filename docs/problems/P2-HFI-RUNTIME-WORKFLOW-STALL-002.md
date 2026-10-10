@@ -65,3 +65,27 @@ Runtime verification may remain non-terminal without a usable artifact or logs. 
 ## Disposition
 
 BLOCKED — investigate execution lifecycle and preserve authority. No merge, cursor reset, authority activation, or production-readiness change authorized by this record.
+
+
+## Addendum — terminal runtime evidence reconciliation (2026-10-11)
+
+Run #485 is now terminal and its artifact has been downloaded and inspected. This supersedes the earlier observation that run #485 had no artifact or readable logs; the earlier observation is retained as historical context rather than silently overwritten.
+
+- Run #485 / `38088869624`: terminal `failure`; runtime job `114320992276` is `completed/failure`.
+- Artifact ID `11683511189`, name `hfi-mvp-e2e-runtime-evidence-ff9c304f841345f4996cbad3500a55b92f34e592`, 813 bytes. Downloaded ZIP contained `hfi-mvp-e2e-latest.json`; payload commit matches `ff9c304f841345f4996cbad3500a55b92f34e592`.
+- Payload state `FAILED`, stage `outcome_logs`, start `2026-10-10T21:46:06.740Z`, completion `2026-10-10T21:49:32.379Z`.
+- The target historical log query spans blocks `59281989–65245352`, with chunk size `2500` and concurrency `2`. The candidate diagnostic records ethers `TIMEOUT` (`request.send`) and failure code `NO_VERIFIED_HFI_FORMATION`.
+- Workflow logs show runtime artifact provenance verification and artifact upload succeeded; the deliberate final guard step failed because runtime state did not reach `VERIFIED`. Therefore run #485 was not an indefinitely executing job: it completed a failed runtime attempt, and the previous apparent in-progress state was stale.
+- This is consistent with the separate `P2-HFI-OUTCOME-RPC-TIMEOUT-001` record. The immediate failure is established as a timeout during outcome-log acquisition; the underlying root cause (provider, network, request-specific latency, or other transport condition) remains UNKNOWN.
+- Run #481 / `38088458203` still reports `in_progress`; its job logs return GitHub API `404 BlobNotFound` and no artifact is listed. Its terminal state and cause remain UNKNOWN.
+- Run #486 / `38089082920`, triggered by commit `94370a5cdd1a67a78cd0d831a6e4b3fd324e5f5b`, was observed as `in_progress` with the runtime step still active and no artifact at the time of this inspection. This is not yet a terminal result. The latest commit's other observed workflows (tests, security/regression, A9 runtime, and analytical reorg runtime) completed successfully; those do not replace HFI-MVP runtime verification.
+- Runtime code was not changed. The current policy deliberately does not split a range on a timeout, because splitting transient transport failures can multiply requests and amplify an outage. Existing bounded retries were observed in code; the artifact does not provide per-request attempt counts or exact timed-out chunk, so no further root-cause claim is justified.
+
+## Updated Disposition
+
+- Run #485: RESOLVED as a workflow-state ambiguity; HFI-MVP runtime result is FAILED due to outcome-log RPC timeout.
+- Run #481: BLOCKED / terminal state UNKNOWN.
+- Run #486: BLOCKED pending terminal artifact and exact-head runtime result.
+- Underlying RPC timeout root cause: UNKNOWN.
+- Runtime acceptance: BLOCKED until a complete exact-head artifact reaches `VERIFIED` with provenance, completeness, formation, outcome coverage, validation, and replay evidence.
+- V4 authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
