@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 
 const { detectPoolBootstrapFromDecodedEvents } = require('../src/core/hfi-formation-adapter');
 const { createHistoricalOutcome } = require('../src/core/historical-outcome');
-const { createLiquiditySurvivalCriterion } = require('../src/core/liquidity-survival');
+const { createLiquiditySurvivalCriterion, LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT, LIQUIDITY_SURVIVAL_CLAIM_STATEMENT } = require('../src/core/liquidity-survival');
 const { createValidationBoundary } = require('../src/core/validation-boundary');
 const { createHypothesis, linkValidationToHypothesis } = require('../src/core/formation-hypothesis-validation');
 const { createResearchReport } = require('../src/core/research-report');
@@ -150,7 +150,7 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
   const hypothesis = createHypothesis({
     formation_id: formation.formation_id,
     formation_state: formation.state,
-    statement: 'Observed active liquidity survives the configured seven-day validation window.',
+    statement: LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT,
     evidence_ids: [...new Set([...formation.evidence_ids, ...criterion.evidence_ids])],
     temporal_context: { formation_cutoff: formation.formation_end, validation_window_end: outcome.observation_end },
     processing_context_id: 'test:hfi-mvp',
@@ -168,7 +168,7 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
     validation,
     claims: [{
       claim_id: 'claim:liquidity-survival',
-      statement: 'Observed active liquidity remained at or above the configured threshold throughout the complete seven-day observation window.',
+      statement: LIQUIDITY_SURVIVAL_CLAIM_STATEMENT,
       evidence_ids: criterion.evidence_ids,
     }],
   };
