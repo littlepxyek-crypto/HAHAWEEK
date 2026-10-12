@@ -150,7 +150,7 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
   const hypothesis = createHypothesis({
     formation_id: formation.formation_id,
     formation_state: formation.state,
-    statement: 'LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT',
+    statement: LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT,
     evidence_ids: [...new Set([...formation.evidence_ids, ...criterion.evidence_ids])],
     temporal_context: { formation_cutoff: formation.formation_end, validation_window_end: outcome.observation_end },
     processing_context_id: 'test:hfi-mvp',
@@ -168,7 +168,7 @@ test('HFI-MVP vertical projection preserves deterministic lineage through X cont
     validation,
     claims: [{
       claim_id: 'claim:liquidity-survival',
-      statement: 'LIQUIDITY_SURVIVAL_CLAIM_STATEMENT',
+      statement: LIQUIDITY_SURVIVAL_CLAIM_STATEMENT,
       evidence_ids: criterion.evidence_ids,
     }],
   };
