@@ -2753,3 +2753,26 @@ This section supersedes the earlier pending-verification statements only for the
 - This is a documentation-only merge. It does not change V4 authority, canonical evidence, cursor, checkpoint, manifest, deployment, or frozen architecture semantics.
 - V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
 
+
+
+---
+
+## READ-ONLY CONTRACT GAP AUDIT — 2026-10-14 — LIQUIDITY_SURVIVAL
+
+- Audit mode: READ-ONLY / OBSERVATIONAL / PAPER-ONLY. This entry is append-only; no earlier snapshot is rewritten.
+- Exact main HEAD inspected: `2c7ad0fea3a72bb8743378fa15fe80ccf89b5bd5`.
+- Contract inspected: `docs/CONTRACT_HFI_MVP_E2E_V0_1.md`, status CONTRACT — AUTHORIZED (A0–A5 only; no A6).
+- Design inspected: `docs/HFI_MVP_LIQUIDITY_SURVIVAL_DESIGN_V0_1.md`, status DESIGN — AUTHORIZED / READY FOR IMPLEMENTATION.
+- Design semantics are explicit: `liquidity-survival-v1`; 7×24-hour window from verified First Swap; experimental 50% reference-liquidity threshold; observations are qualifying Swap events; COMPLETE requires full acquisition coverage and at least one qualifying observation in each of seven 24-hour buckets; PASS requires COMPLETE coverage and all qualifying observations at/above threshold; FAIL requires COMPLETE coverage and at least one below threshold; missing/partial/unknown/contradictory evidence yields INCONCLUSIVE. The design explicitly does NOT establish continuous liquidity between observations, total TVL/reserves, USD liquidity, price stability, profitability, market quality, or future performance.
+- Exact-HEAD GitHub Actions evidence inspected:
+  - Tests run `38016803156`: SUCCESS; `npm test`, `verify:v4`, `verify:v4:coverage`, and `verify:source-independence` succeeded.
+  - Security and Regression run `38016803193`: SUCCESS; tests, dependency audit, and tracked-secret scan succeeded.
+  - HFI-MVP Runtime run `38016803180`: SUCCESS; runtime job `114108768416`; runtime reported `state=VERIFIED`, `stage=replay`, no runtime failure, and exact commit provenance check passed.
+  - HFI-MVP artifact ID `11656987829`, name `hfi-mvp-e2e-runtime-evidence-2c7ad0fea3a72bb8743378fa15fe80ccf89b5bd5`, digest `sha256:a023e3c68b6cfe388f6d6d283ac91ad4e4547db93b7cfafd4464e0552908a54d`.
+  - Exact-HEAD HFI-RADAR Operational Runtime run `38016803110`, HFI-RADAR Continuous Runtime run `38016803167`, A9 Runtime run `38016803172`, Analytical Reorg Runtime run `38016803100`, and Push on main run `38016803531` all report SUCCESS. These checks do not establish production readiness.
+- Contract gap finding `HW-LS-GAP-001` — CLAIM SCOPE MISMATCH: GitHub PR #811 (`fix(hfi): scope liquidity survival claims to observed swaps`, head `a52479ed1115f77798898e28cfefb326d0d3a89d`) records that the exact-main runtime criterion returned PASS for 8,662 qualifying observations, while the research report claim used the phrase “throughout” the window. That wording overstates the authorized sampled-observation design, which does not prove continuous liquidity between observations.
+- PR #811 was observed as OPEN and DRAFT at audit time. Its own description states tests and exact-head runtime verification are pending; no PR-head pass or merge is claimed here. Its proposed correction is not part of exact main HEAD `2c7ad0f...`.
+- Decision: the LIQUIDITY_SURVIVAL methodology is already defined by an authorized design; a new `DESIGN DECISION REQUIRED` for missing methodology semantics is therefore NOT required on current evidence. However, claim-scope reconciliation remains BLOCKED pending verification of the correction on the relevant PR head and a subsequent authorized merge/post-merge verification. Do not interpret sampled Swap observations as proof of continuous liquidity.
+- Status: `CONTRACT SEMANTICS = DEFINED`; `EXACT-HEAD TEST/SECURITY/RUNTIME = VERIFIED FOR THE RECORDED RUNS`; `CLAIM-SCOPE GAP = OPEN`; `LIQUIDITY_SURVIVAL CLAIM ACCEPTANCE = BLOCKED`.
+- No source code, configuration, runtime state, cursor, checkpoint, manifest, canonical evidence, raw evidence, deployment, publication, or production authority was changed by this audit. No merge or activation was performed.
+- V4 production authority remains `INACTIVE`; Architecture Gate remains `BLOCKED`; production readiness remains `NOT READY`.
