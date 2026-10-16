@@ -57,6 +57,14 @@ test('overlapping or out-of-range completed requests fail closed', () => {
   });
   assert.equal(outOfRange.status, 'PARTIAL');
   assert.equal(outOfRange.invalid_ranges.length, 1);
+
+  const nestedOverlap = evaluateBlockRangeCoverage({
+    requested_from: 100,
+    requested_to: 109,
+    completed_ranges: [{ from: 100, to: 109 }, { from: 103, to: 105 }],
+  });
+  assert.equal(nestedOverlap.status, 'PARTIAL');
+  assert.equal(nestedOverlap.overlap, true);
 });
 
 test('filled seven-day buckets do not compensate for incomplete acquisition', () => {
