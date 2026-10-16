@@ -18,13 +18,18 @@ function evaluateBlockRangeCoverage({ requested_from, requested_to, completed_ra
   }
   ranges.sort((a, b) => a.from - b.from || a.to - b.to);
 
+  let overlap = false;
+  let previousEnd = null;
+  for (const range of ranges) {
+    if (previousEnd !== null && range.from <= previousEnd) overlap = true;
+    previousEnd = previousEnd === null ? range.to : Math.max(previousEnd, range.to);
+  }
+
   let next = requested_from;
   let contiguous_through = requested_from - 1;
   let gap_at = null;
-  let overlap = false;
   for (const range of ranges) {
     if (range.from < next) {
-      overlap = true;
       continue;
     }
     if (range.from > next) {
