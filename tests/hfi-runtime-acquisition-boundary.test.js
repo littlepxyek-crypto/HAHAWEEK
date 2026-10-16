@@ -139,6 +139,10 @@ test('range splitting is reserved for explicit eth_getLogs range/result-limit fa
 });
 
 
+test('outcome observations exclude swaps beyond the exact seven-day window boundary', () => {
+  assert.match(runtime, /se\\.filter\\(x=>Date\\.parse\\(tm\\.get\\(x\\.blockNumber\\)\\)>=ft&&Date\\.parse\\(tm\\.get\\(x\\.blockNumber\\)\\)<=endT\\)\\.map/);
+});
+
 test('HFI formation runtime integrates acquisition completeness', () => {
   assert.ok(runtime.includes('evaluateAcquisitionCompleteness'));
   assert.ok(runtime.includes('acquisitionCompleteness.status'));
