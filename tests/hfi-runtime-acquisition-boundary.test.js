@@ -42,20 +42,20 @@ test('runtime uses provider-supported bounded outcome ranges and bounded acquisi
   assert.match(runtime, /MAXC=8/);
   assert.match(runtime, /TARGET_OUTCOME_CHUNK=2500/);
   assert.match(runtime, /TARGET_OUTCOME_LOG_CONCURRENCY=2/);
-  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?/);
   assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
 
 test('outcome-log heartbeat reports the actual lower concurrency bound used by the query', () => {
   assert.match(runtime, /checkpoint\(base,'outcome_logs',\{from:firstSwap\.blockNumber,to:hi,chunk_size:TARGET_OUTCOME_CHUNK,concurrency:TARGET_OUTCOME_LOG_CONCURRENCY\}\)/);
-  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?/);
 });
 
 test('formation and outcome acquisition retain explicit bounded windows', () => {
   assert.match(runtime, /formationEnd=Math\.min\(latest,il\.blockNumber\+10000\)/);
   assert.match(runtime, /TARGET_FORMATION_CHUNK=500/);
-  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY\)/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?\)/);
 });
 
 test('runtime supports an explicit candidate hint without treating it as evidence authority', () => {
