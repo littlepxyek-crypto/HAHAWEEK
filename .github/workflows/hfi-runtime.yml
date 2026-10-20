@@ -50,7 +50,7 @@ jobs:
           node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync('docs/runtime/hfi-mvp-e2e-latest.json','utf8'));if(x.commit!==process.env.EXPECTED_COMMIT){console.error('RUNTIME_ARTIFACT_COMMIT_MISMATCH',x.commit,process.env.EXPECTED_COMMIT);process.exit(1)}"
       - name: Upload HFI-MVP runtime evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hfi-mvp-e2e-runtime-evidence-${{ github.event.pull_request.head.sha || github.sha }}
           path: docs/runtime/hfi-mvp-e2e-latest.json

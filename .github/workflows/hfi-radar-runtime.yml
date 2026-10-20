@@ -83,7 +83,7 @@ jobs:
         
       - name: Upload operational runtime evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hfi-radar-operational-runtime-evidence-${{ github.sha }}
           path: docs/runtime/hfi-radar-operational-latest.json
