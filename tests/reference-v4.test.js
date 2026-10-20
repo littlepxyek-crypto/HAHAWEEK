@@ -3,6 +3,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
+const fs = require("node:fs");
+const os = require("node:os");
 const { canonicalize } = require("../src/reference/v4/jcs");
 const { domainSeparatedHash } = require("../src/reference/v4/hash");
 const { verifyVectorSet } = require("../scripts/verify-golden-vectors");
@@ -43,12 +45,16 @@ test("golden vectors reproduce their stored canonical bytes and hashes", () => {
   assert.equal(result.count, 1);
 });
 
-test("golden vector verifier detects mutation", () => {
-  const original = require(fixture);
+test("golden vector verifier rejects a mutated fixture", () => {
+  const original = JSON.parse(fs.readFileSync(fixture, "utf8"));
   const mutated = structuredClone(original);
-  mutated.vectors[0].input_object.block_number = "124";
-  assert.notEqual(
-    domainSeparatedHash(mutated.vectors[0].domain, mutated.vectors[0].input_object).hash,
-    mutated.vectors[0].expected_hash
-  );
+  mutated.vectors[0].input_object.a = "c";
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "hahaweek-v4-"));
+  const tempFixture = path.join(tempDir, "mutated.json");
+  try {
+    fs.writeFileSync(tempFixture, JSON.stringify(mutated));
+    assert.throws(() => verifyVectorSet(tempFixture), /hash mismatch|canonical bytes mismatch/);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
 });
