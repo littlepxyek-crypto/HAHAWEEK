@@ -180,7 +180,8 @@
           "generation": "0",
           "checkpoint_hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe",
           "position": "0"
-        }
+        },
+        "hash": "0x1662d8f8ce13caa623ee798bbc2df2962dd602fc009b829d2d2048111f00335c"
       },
       "acquisition_position_valid": true,
       "expected": "RECOVERY_RESUME_ALLOWED"
@@ -207,7 +208,8 @@
           "generation": "0",
           "checkpoint_hash": "0x0fb8ff402ef4562f99a946ba1383d7d5762efc30279d860e4cb9c5283dc6babe",
           "position": "0"
-        }
+        },
+        "hash": "0x1662d8f8ce13caa623ee798bbc2df2962dd602fc009b829d2d2048111f00335c"
       },
       "acquisition_position_valid": true,
       "expected": "RECOVERY_FAIL_CLOSED"
