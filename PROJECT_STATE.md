@@ -2753,3 +2753,50 @@ This section supersedes the earlier pending-verification statements only for the
 - This is a documentation-only merge. It does not change V4 authority, canonical evidence, cursor, checkpoint, manifest, deployment, or frozen architecture semantics.
 - V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
 
+
+
+---
+
+## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-10 — POST-PR-802 — RUNTIME CLEANUP / REQUIRED CHECKS
+
+- Exact current `main` HEAD verified from GitHub: `2c7ad0fea3a72bb8743378fa15fe80ccf89b5bd5`, commit title `fix: isolate runtime cleanup and bound RPC retries`.
+- A later exact-head check-runs query returned 13 check runs; all 13 were terminal `SUCCESS` at the later inspection, including `test-and-security`, `test`, `runtime`, `a9-runtime`, `continuous-runtime`, `analytical-reorg-runtime`, and both CodeQL analysis checks. This records GitHub check-run evidence for this exact commit; it does not establish every production lifecycle or durability gate.
+- Active ruleset `HAHAWEEK-main-protection` applies to the default branch and requires the status-check context `test-and-security`; it also prohibits branch deletion and non-fast-forward updates, requires pull requests and review-thread resolution, and permits no bypass actors. The legacy combined commit-status endpoint returning `pending` with zero status entries is not by itself evidence that the required check-run is missing: the exact PR #799 head has a completed successful check run named `test-and-security`.
+- PR #799 remains OPEN but is stale relative to current `main`: its head is `6b6bbaa85f19511f1d7e66b3c59d7cfd4feb024d`, its merge base snapshot predates current `main`, and GitHub reports `mergeable=false` / `mergeable_state=dirty`. Do not merge or force-merge it. This is a branch freshness/conflict blocker distinct from the required-check status endpoint.
+- Current-main runtime cleanup and bounded RPC retry checks are green on the exact HEAD, but persistent-volume restart, physical power-loss durability, backup/restore, full cursor/checkpoint crash atomicity, and all production lifecycle criteria remain NOT VERIFIED or deferred.
+- Local test execution was not performed through this GitHub-only inspection. No local test claim is made.
+- V4 production authority remains `INACTIVE`; Architecture Gate remains `BLOCKED`; Implementation Freeze remains `BLOCKED`; production readiness remains `NOT READY`.
+- This addendum is additive and preserves all prior snapshots. No cursor reset, canonical evidence rewrite/deletion, production deployment, authority activation, or external publication was performed.
+
+
+## OBSERVABILITY / ORCHESTRATION SUCCESSOR PRS — 2026-10-10
+
+- PR #806 is an open draft successor to the stale-base AI orchestration proposal #796. It was created from current `main` at base SHA `2c7ad0fea3a72bb8743378fa15fe80ccf89b5bd5`; head SHA at creation: `45920c6d609c3f6270277e285fe120bbbf23500e`. It contains documentation only. Its exact-head checks have not yet been verified in this snapshot.
+- PR #807 is an open draft successor to stale-base observability proposal #797. It was created from the same current `main` base SHA; head SHA at creation: `c7eaf8ba0a224b8bf18577c4bef1b08d8c946fd9`. It preserves CommonJS configuration and adds explicit, bounded freshness semantics; exact-head tests and CI remain pending verification.
+- The prior #796/#797 check results are historical evidence for their old heads only and are not carried forward as proof for #806/#807.
+- PR #805 remains documentation-only. These successor PRs are not merged. No production state, evidence, cursor, checkpoint, manifest, deployment, or V4 authority was changed by creating them.
+- V4 production authority remains INACTIVE. Architecture Gate remains BLOCKED. Production readiness remains NOT READY.
+
+
+## SUCCESSOR PR EXACT-HEAD CI UPDATE — 2026-10-10
+
+- PR #806 head `45920c6d609c3f6270277e285fe120bbbf23500e`: 8 of 9 observed check runs are terminal SUCCESS; the `runtime` check remains IN_PROGRESS. No all-checks-passed claim is made.
+- PR #807 head `c7eaf8ba0a224b8bf18577c4bef1b08d8c946fd9`: `test` and `test-and-security` completed SUCCESS, as did analytical-reorg, continuous-runtime, and a9-runtime checks at the latest observation. Three checks remain IN_PROGRESS; CodeQL is NEUTRAL. Treat the PR as not fully verified until required checks are terminal and branch protection reports readiness.
+- PR #805 documentation-update head `c3f05e48987b7f4237de5c845a5842fa44cd4ced`: test-and-security, analytical-reorg, and a9-runtime checks completed SUCCESS; test, runtime, and both analysis checks remain IN_PROGRESS; CodeQL is NEUTRAL. No merge decision is recorded.
+- These are observations of GitHub check runs on the listed exact heads, not local test execution or production-runtime evidence. No PR in this update was merged. V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
+
+
+---
+
+## HFI-MVP E5 RUNTIME RECONCILIATION — 2026-10-12 — PR #810 EXACT-HEAD ARTIFACT
+
+- Workflow run: https://github.com/littlepxyek-crypto/HAHAWEEK/actions/runs/38192314795. Exact tested commit: `d52cbf038085a41b2db1d9ab4f3ba509f36447b6`. Contract: `HFI-MVP-E2E-V0_1`; verification class: `E5_RUNTIME`. This is evidence for the PR #810 head, not post-merge or main-HEAD runtime evidence.
+- Runtime artifact ID `11722367182`, name `hfi-mvp-e2e-runtime-evidence-d52cbf038085a41b2db1d9ab4f3ba509f36447b6`. GitHub Actions reported terminal SUCCESS for the HFI-MVP workflow and successful artifact provenance verification/upload. The runtime payload reports `state=VERIFIED`, stage `replay`, chain ID `4663`, and latest block `86291145`.
+- Downloaded artifact ZIP SHA-256 was independently recomputed as `23c07d71c439db0c7e988d6ca9651d0ffb726b728aa1ad1d040c54f370cf3a28`, matching the upload log. The contained JSON is 112,341,858 bytes with SHA-256 `e1519016de615c0dce795c9cfce658ac7b12f9c5ba0a55c4a6c3a8211bbeffcf`.
+- The runtime payload records one `POOL_BOOTSTRAP` formation: Pool Created at block `59281988` / transaction index `10` / log index `37`; Liquidity Added at block `59281988` / transaction index `10` / log index `41`; First Swap at block `59281989` / transaction index `5` / log index `3`. The outcome window is `2026-09-10T09:04:36Z` through `2026-09-17T09:04:36Z`, coverage `COMPLETE`, 8,662 observations, zero missing buckets, configured minimum fraction 5,000 basis points (50%), and validation result `CONFIRMED`.
+- Read-only artifact consistency checks: 8,664 raw evidence records and 8,664 canonical evidence records; all raw event digests recomputed without mismatch; raw event IDs and canonical evidence IDs unique; every canonical raw reference resolves; formation/outcome/criterion/validation/report/X projection evidence references resolve to canonical evidence; graph has 25,337 unique nodes and 34,410 edges with no missing endpoints. Recomputed the runtime manifest from the recorded formation ID and graph with the documented domain prefix and canonical key ordering; it matches `653bef88df94ee30998d491788d99465b64ac0962abc8c8d9eb56082aeb61239`.
+- Deterministic replay reports `equivalent=true` for formation, outcome, validation, and report IDs. X publication-readiness projection is `true`, but `source.no_external_publication=true`; no external publication is evidenced or authorized.
+- Scope limitation: this is a bounded E5 vertical slice, not global HFI-MVP completion or production readiness. In particular, AC-20 restart/recovery, applicable reorg/failure boundaries across the full lifecycle, post-merge verification on the resulting main commit, and final state reconciliation are not established by this artifact alone. The workflow run does not prove persistent-volume durability, physical power-loss recovery, backup/restore, sustained operator readiness, or V4 production activation.
+- This evidence belongs to PR #810's exact head and must not be relabeled as a main-HEAD or post-merge runtime run. PR #810 remains OPEN / DRAFT / UNMERGED; PR #805 remains OPEN / UNMERGED. The original timeout and stalled-run records remain historical evidence; this successful run does not overwrite or erase those failures.
+- No repository runtime code, production state, cursor, checkpoint, manifest, canonical evidence, deployment, or authority was changed during this inspection. Local repository tests were NOT RUN by this audit.
+- Disposition: E5 runtime vertical slice VERIFIED for the exact artifact/commit and bounded scope; global HFI-MVP lifecycle remains NOT COMPLETE / NOT VERIFIED where the required acceptance evidence is absent. V4 production authority remains INACTIVE; Architecture Gate remains BLOCKED; production readiness remains NOT READY.
