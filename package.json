@@ -12,6 +12,8 @@
     "start": "node src/index.js",
     "scan": "node src/index.js --once",
     "health": "node src/health.js",
+    "observe": "node src/observability/watch.js",
+    "observe:once": "node src/observability/console.js",
     "hahaweek": "./bin/hahaweek",
     "verify:v4": "node scripts/verify-golden-vectors.js",
     "verify:v4:coverage": "node scripts/verify-golden-vector-coverage.js",
@@ -28,7 +30,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/littlepxyek-crypto/HAHAWEEK/issues"
   },
