@@ -19,7 +19,9 @@
     "hfi:radar:runtime": "node scripts/hfi-radar-operational-runtime-verify.js",
     "hfi:radar:live": "node scripts/hfi-radar-continuous-runtime.js",
     "verify:source-independence": "node scripts/source-independence-runtime-verify.js",
-    "verify:analytical-reorg": "node scripts/analytical-reorg-runtime-verify.js"
+    "verify:analytical-reorg": "node scripts/analytical-reorg-runtime-verify.js",
+    "observe": "node src/observability/watch.js",
+    "observe:once": "node src/observability/console.js"
   },
   "repository": {
     "type": "git",
