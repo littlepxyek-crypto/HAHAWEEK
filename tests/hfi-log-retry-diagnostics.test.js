@@ -49,6 +49,25 @@ test('untrusted object-valued provider error codes cannot break retry classifica
   assert.equal(events[0].error_code, null);
 });
 
+test('provider error accessors cannot interrupt retry diagnostics', async () => {
+  const error = new Error('request timeout');
+  Object.defineProperty(error, 'code', {
+    get() { throw new Error('must not invoke provider accessor'); },
+  });
+  const provider = mockProvider([error, [{ blockNumber: 123 }]]);
+  const events = [];
+
+  const result = await fetchLogRangeWithRetry({
+    provider, filter: {}, fromBlock: 100, toBlock: 101,
+    onAttempt: (event) => events.push(event), sleep: noSleep, random: fixedRandom,
+  });
+
+  assert.deepEqual(result, [{ blockNumber: 123 }]);
+  assert.equal(provider.calls, 2);
+  assert.deepEqual(events.map((event) => event.decision), ['RETRY', 'RETURN']);
+  assert.equal(events[0].error_code, null);
+});
+
 test('sensitive provider error codes are omitted from emitted diagnostics', async () => {
   const secretCode = 'https://secret.example/?token=do-not-log';
   const provider = mockProvider([
