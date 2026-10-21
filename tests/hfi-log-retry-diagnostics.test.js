@@ -29,6 +29,26 @@ test('diagnostic error codes use a strict safe allowlist', () => {
   assert.equal(safeErrorCode({ code: { toString() { throw new Error('must not be called'); } } }), null);
 });
 
+test('untrusted object-valued provider error codes cannot break retry classification', async () => {
+  const provider = mockProvider([
+    Object.assign(new Error('request timeout'), {
+      code: { toString() { throw new Error('must not be called'); } },
+    }),
+    [{ blockNumber: 123 }],
+  ]);
+  const events = [];
+
+  const result = await fetchLogRangeWithRetry({
+    provider, filter: {}, fromBlock: 100, toBlock: 101,
+    onAttempt: (event) => events.push(event), sleep: noSleep, random: fixedRandom,
+  });
+
+  assert.deepEqual(result, [{ blockNumber: 123 }]);
+  assert.equal(provider.calls, 2);
+  assert.deepEqual(events.map((event) => event.decision), ['RETRY', 'RETURN']);
+  assert.equal(events[0].error_code, null);
+});
+
 test('sensitive provider error codes are omitted from emitted diagnostics', async () => {
   const secretCode = 'https://secret.example/?token=do-not-log';
   const provider = mockProvider([
