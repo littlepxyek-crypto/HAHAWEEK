@@ -21,6 +21,23 @@ function safeErrorCode(error) {
   return SAFE_ERROR_CODES.has(normalized) ? normalized : null;
 }
 
+function classificationError(error) {
+  const primitive = (value) => typeof value === 'string' || typeof value === 'number'
+    ? value
+    : undefined;
+  return {
+    shortMessage: primitive(error?.shortMessage),
+    message: primitive(error?.message),
+    code: primitive(error?.code),
+    error: { message: primitive(error?.error?.message), code: primitive(error?.error?.code) },
+    info: { error: {
+      message: primitive(error?.info?.error?.message),
+      code: primitive(error?.info?.error?.code),
+    } },
+    cause: { message: primitive(error?.cause?.message), code: primitive(error?.cause?.code) },
+  };
+}
+
 function diagnosticFor({ fromBlock, toBlock, attempt, durationMs, error, maxAttempts, canSplitRange = () => true }) {
   if (!error) {
     return {
@@ -36,8 +53,9 @@ function diagnosticFor({ fromBlock, toBlock, attempt, durationMs, error, maxAtte
     };
   }
 
-  const rangeLimit = isRangeLimitError(error);
-  const retryable = isRetryableRpcError(error);
+  const classifiedError = classificationError(error);
+  const rangeLimit = isRangeLimitError(classifiedError);
+  const retryable = isRetryableRpcError(classifiedError);
   return {
     from_block: fromBlock,
     to_block: toBlock,
@@ -87,8 +105,9 @@ async function fetchLogRangeWithRetry({
       return result;
     } catch (error) {
       lastError = error;
-      const rangeLimit = isRangeLimitError(error);
-      const retryable = isRetryableRpcError(error);
+      const classifiedError = classificationError(error);
+      const rangeLimit = isRangeLimitError(classifiedError);
+      const retryable = isRetryableRpcError(classifiedError);
       const event = diagnosticFor({
         fromBlock, toBlock, attempt,
         durationMs: Math.max(0, Date.now() - startedAt),
