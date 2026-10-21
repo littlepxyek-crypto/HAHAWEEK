@@ -3,6 +3,8 @@
 const LIQUIDITY_SURVIVAL_RULE_VERSION = 'liquidity-survival-v1';
 const DEFAULT_WINDOW_SECONDS = 7 * 24 * 60 * 60;
 const DEFAULT_MINIMUM_FRACTION_BPS = 5000;
+const LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT = "Observed active liquidity at qualifying Swap events met the configured threshold during the seven-day validation window.";
+const LIQUIDITY_SURVIVAL_CLAIM_STATEMENT = "Every qualifying observed Swap event during the seven-day observation window reported active liquidity at or above the configured threshold. This sampled criterion does not establish that liquidity remained above the threshold continuously between observations.";
 const BPS_DENOMINATOR = 10000n;
 
 function requireObject(value, name) {
@@ -157,6 +159,8 @@ function createLiquiditySurvivalCriterion(input) {
 
 module.exports = {
   LIQUIDITY_SURVIVAL_RULE_VERSION,
+  LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT,
+  LIQUIDITY_SURVIVAL_CLAIM_STATEMENT,
   DEFAULT_WINDOW_SECONDS,
   DEFAULT_MINIMUM_FRACTION_BPS,
   createLiquiditySurvivalCriterion,
