@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { fetchLogRangeWithRetry, safeErrorCode } = require('../src/core/hfi-log-retry-diagnostics');
+const { fetchLogRangeWithRetry, safeErrorCode, diagnosticFor } = require('../src/core/hfi-log-retry-diagnostics');
 
 function mockProvider(sequence) {
   let calls = 0;
@@ -190,4 +190,66 @@ test('range-limit diagnostic reports failure when adaptive splitting is out of b
   assert.equal(provider.calls, 1);
   assert.equal(events[0].decision, 'FAIL');
   assert.equal(events[0].error_category, 'RANGE_LIMIT');
+});
+
+
+test('nested provider accessors are never invoked during classification or diagnostics', async () => {
+  const error = new Error('request timeout');
+  let accessorCalls = 0;
+  Object.defineProperty(error, 'error', {
+    configurable: true,
+    get() {
+      accessorCalls += 1;
+      throw new Error('nested provider accessor must not run');
+    },
+  });
+  Object.defineProperty(error, 'info', {
+    configurable: true,
+    get() {
+      accessorCalls += 1;
+      throw new Error('info provider accessor must not run');
+    },
+  });
+
+  const provider = mockProvider([error, [{ blockNumber: 123 }]]);
+  const events = [];
+  const result = await fetchLogRangeWithRetry({
+    provider, filter: {}, fromBlock: 100, toBlock: 101,
+    onAttempt: (event) => events.push(event), sleep: noSleep, random: fixedRandom,
+  });
+
+  assert.deepEqual(result, [{ blockNumber: 123 }]);
+  assert.equal(provider.calls, 2);
+  assert.equal(accessorCalls, 0);
+  assert.deepEqual(events.map((event) => event.decision), ['RETRY', 'RETURN']);
+});
+
+test('hostile proxy descriptors fail closed without escaping diagnostic classification', () => {
+  const hostile = new Proxy({ code: 'TIMEOUT', message: 'request timeout' }, {
+    getOwnPropertyDescriptor() {
+      throw new Error('provider proxy trap must not escape');
+    },
+  });
+
+  assert.equal(safeErrorCode(hostile), null);
+  assert.doesNotThrow(() => diagnosticFor({
+    fromBlock: 1,
+    toBlock: 2,
+    attempt: 1,
+    durationMs: 1,
+    error: hostile,
+    maxAttempts: 3,
+  }));
+
+  const event = diagnosticFor({
+    fromBlock: 1,
+    toBlock: 2,
+    attempt: 1,
+    durationMs: 1,
+    error: hostile,
+    maxAttempts: 3,
+  });
+  assert.equal(event.error_code, null);
+  assert.equal(event.error_category, 'NON_RETRYABLE');
+  assert.equal(event.decision, 'FAIL');
 });
