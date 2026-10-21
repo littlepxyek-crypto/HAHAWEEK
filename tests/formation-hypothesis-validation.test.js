@@ -2,6 +2,8 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const {
   createHypothesis,
@@ -84,5 +86,44 @@ test('validation result cannot be silently promoted into hypothesis authority', 
       },
     }),
     /HYPOTHESIS_AUTHORITY_INVALID/
+  );
+});
+
+test('hypothesis identity is deterministic for identical semantic inputs', () => {
+  const first = createHypothesis(hypothesisInput());
+  const replay = createHypothesis(hypothesisInput());
+  assert.equal(replay.hypothesis_id, first.hypothesis_id);
+});
+
+test('hypothesis identity changes when statement, formation, or rule version changes', () => {
+  const baseline = createHypothesis(hypothesisInput());
+  const changedStatement = createHypothesis(hypothesisInput({
+    statement: 'A different observed-liquidity hypothesis statement.',
+  }));
+  const changedFormation = createHypothesis(hypothesisInput({
+    formation_id: 'formation:v1:other',
+  }));
+  const changedRuleVersion = createHypothesis(hypothesisInput({
+    rule_version: 'hypothesis-v2',
+  }));
+
+  assert.notEqual(changedStatement.hypothesis_id, baseline.hypothesis_id);
+  assert.notEqual(changedFormation.hypothesis_id, baseline.hypothesis_id);
+  assert.notEqual(changedRuleVersion.hypothesis_id, baseline.hypothesis_id);
+});
+
+test('runtime replay uses the canonical liquidity-survival hypothesis statement', () => {
+  const runtimeSource = fs.readFileSync(
+    path.join(__dirname, '../scripts/hfi-mvp-runtime-verify.js'),
+    'utf8'
+  );
+
+  assert.match(
+    runtimeSource,
+    /replayHypothesis=createHypothesis\(\{formation_id:replay\.formation_id,formation_state:replay\.state,statement:LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT,/
+  );
+  assert.doesNotMatch(
+    runtimeSource,
+    /statement:'Observed active liquidity survives the configured seven-day validation window\.'/
   );
 });
