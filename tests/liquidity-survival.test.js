@@ -6,7 +6,16 @@ const assert = require('node:assert/strict');
 const {
   createLiquiditySurvivalCriterion,
   LIQUIDITY_SURVIVAL_RULE_VERSION,
+  LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT,
+  LIQUIDITY_SURVIVAL_CLAIM_STATEMENT,
 } = require('../src/core/liquidity-survival');
+
+test('liquidity-survival language is explicitly scoped to observed Swap events', () => {
+  assert.match(LIQUIDITY_SURVIVAL_HYPOTHESIS_STATEMENT, /qualifying Swap events/i);
+  assert.match(LIQUIDITY_SURVIVAL_CLAIM_STATEMENT, /qualifying observed Swap event/i);
+  assert.match(LIQUIDITY_SURVIVAL_CLAIM_STATEMENT, /does not establish.*continuously between observations/i);
+  assert.doesNotMatch(LIQUIDITY_SURVIVAL_CLAIM_STATEMENT, /throughout the complete seven-day observation window/i);
+});
 
 const start = '2026-01-01T00:00:00.000Z';
 const end = '2026-01-08T00:00:00.000Z';
