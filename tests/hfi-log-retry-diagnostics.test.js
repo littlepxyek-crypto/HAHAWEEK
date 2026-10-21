@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { fetchLogRangeWithRetry } = require('../src/core/hfi-log-retry-diagnostics');
+const { fetchLogRangeWithRetry, safeErrorCode } = require('../src/core/hfi-log-retry-diagnostics');
 
 function mockProvider(sequence) {
   let calls = 0;
@@ -18,6 +18,15 @@ function mockProvider(sequence) {
 
 const noSleep = async () => {};
 const fixedRandom = () => 0.5;
+
+test('diagnostic error codes use a strict safe allowlist', () => {
+  assert.equal(safeErrorCode({ code: 'TIMEOUT' }), 'TIMEOUT');
+  assert.equal(safeErrorCode({ code: 503 }), '503');
+  assert.equal(safeErrorCode({ code: 'https://secret.example/?token=do-not-log' }), null);
+  assert.equal(safeErrorCode({ code: 'token=secret-value' }), null);
+  assert.equal(safeErrorCode({ code: 'PRIVATE_API_KEY_123' }), null);
+  assert.equal(safeErrorCode({ code: 'unknown provider payload' }), null);
+});
 
 test('getLogs retry diagnostics record a transient failure followed by success', async () => {
   const provider = mockProvider([
