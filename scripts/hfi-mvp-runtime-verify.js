@@ -36,7 +36,7 @@ const ranges=[];for(let n=a;n<=b;n+=s)ranges.push([n,Math.min(b,n+s-1)]);
 async function fetchRange(n,e,depth=0){
 let result;
 try{
-result=await fetchLogRangeWithRetry({provider:p,filter:f,fromBlock:n,toBlock:e,maxAttempts:3,beforeAttempt:()=>{budgetCheck();requestCount++},onAttempt:event=>console.log('HFI_RPC_LOG_ATTEMPT '+JSON.stringify({stage:initialBase.stage??null,...event}))});
+result=await fetchLogRangeWithRetry({provider:p,filter:f,fromBlock:n,toBlock:e,maxAttempts:3,beforeAttempt:()=>{budgetCheck();requestCount++},canSplitRange:()=>depth<maxSplitDepth&&e-n+1>minChunk,onAttempt:event=>console.log('HFI_RPC_LOG_ATTEMPT '+JSON.stringify({stage:initialBase.stage??null,...event}))});
 onRange({from:n,to:e});return result;
 }catch(last){
 const shouldSplit=shouldSplitLogRange(last);if(!shouldSplit||depth>=maxSplitDepth||e-n+1<=minChunk)throw last;
