@@ -26,6 +26,7 @@ test('diagnostic error codes use a strict safe allowlist', () => {
   assert.equal(safeErrorCode({ code: 'token=secret-value' }), null);
   assert.equal(safeErrorCode({ code: 'PRIVATE_API_KEY_123' }), null);
   assert.equal(safeErrorCode({ code: 'unknown provider payload' }), null);
+  assert.equal(safeErrorCode({ code: { toString() { throw new Error('must not be called'); } } }), null);
 });
 
 test('sensitive provider error codes are omitted from emitted diagnostics', async () => {
