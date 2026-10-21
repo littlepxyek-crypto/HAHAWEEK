@@ -1,0 +1,100 @@
+'use strict';
+
+const {
+  isRetryableRpcError,
+  isRangeLimitError,
+} = require('./hfi-log-range-policy');
+
+function safeErrorCode(error) {
+  const code = error?.code ?? error?.error?.code ?? error?.info?.error?.code;
+  if (code === undefined || code === null) return null;
+  return String(code).replace(/[^a-zA-Z0-9_.-]/g, '_').slice(0, 64) || null;
+}
+
+function diagnosticFor({ fromBlock, toBlock, attempt, durationMs, error, maxAttempts }) {
+  if (!error) {
+    return {
+      from_block: fromBlock,
+      to_block: toBlock,
+      attempt,
+      duration_ms: durationMs,
+      outcome: 'SUCCESS',
+      error_category: null,
+      error_code: null,
+      retryable: false,
+      decision: 'RETURN',
+    };
+  }
+
+  const rangeLimit = isRangeLimitError(error);
+  const retryable = isRetryableRpcError(error);
+  return {
+    from_block: fromBlock,
+    to_block: toBlock,
+    attempt,
+    duration_ms: durationMs,
+    outcome: 'ERROR',
+    error_category: rangeLimit ? 'RANGE_LIMIT' : retryable ? 'TRANSIENT_RPC' : 'NON_RETRYABLE',
+    error_code: safeErrorCode(error),
+    retryable,
+    decision: rangeLimit ? 'SPLIT' : retryable && attempt < maxAttempts ? 'RETRY' : 'FAIL',
+  };
+}
+
+async function fetchLogRangeWithRetry({
+  provider,
+  filter,
+  fromBlock,
+  toBlock,
+  maxAttempts = 3,
+  beforeAttempt = () => {},
+  onAttempt = () => {},
+  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+  random = Math.random,
+  baseDelayMs = 250,
+  maxDelayMs = 10000,
+}) {
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    beforeAttempt();
+    const startedAt = Date.now();
+
+    try {
+      const result = await provider.getLogs({
+        ...filter,
+        fromBlock,
+        toBlock,
+      });
+      const event = diagnosticFor({
+        fromBlock, toBlock, attempt,
+        durationMs: Math.max(0, Date.now() - startedAt),
+        error: null,
+        maxAttempts,
+      });
+      try { onAttempt(event); } catch { /* Diagnostics must not change acquisition behavior. */ }
+      return result;
+    } catch (error) {
+      lastError = error;
+      const rangeLimit = isRangeLimitError(error);
+      const retryable = isRetryableRpcError(error);
+      const event = diagnosticFor({
+        fromBlock, toBlock, attempt,
+        durationMs: Math.max(0, Date.now() - startedAt),
+        error,
+        maxAttempts,
+      });
+      try { onAttempt(event); } catch { /* Diagnostics must not change acquisition behavior. */ }
+
+      if (rangeLimit || !retryable || attempt >= maxAttempts) throw lastError;
+
+      const backoff = Math.min(maxDelayMs, baseDelayMs * (2 ** (attempt - 1)));
+      const jitter = 0.75 + random() * 0.5;
+      await sleep(Math.round(backoff * jitter));
+    }
+  }
+
+  throw lastError;
+}
+
+module.exports = { fetchLogRangeWithRetry, diagnosticFor, safeErrorCode };
