@@ -6,6 +6,7 @@ const fs = require('node:fs');
 
 const runtime = fs.readFileSync('scripts/hfi-mvp-runtime-verify.js', 'utf8');
 const policy = fs.readFileSync('src/core/hfi-log-range-policy.js', 'utf8');
+const retryDiagnostics = fs.readFileSync('src/core/hfi-log-retry-diagnostics.js', 'utf8');
 const helper = fs.readFileSync('src/core/hfi-targeted-formation-acquisition.js', 'utf8');
 const workflow = fs.readFileSync('.github/workflows/hfi-runtime.yml', 'utf8');
 
@@ -31,7 +32,10 @@ test('RPC log acquisition has a global runtime and request budget', () => {
 });
 
 test('RPC log acquisition uses bounded adaptive retries and range splitting', () => {
-  assert.match(runtime, /while\(attempt<3\)/);
+  assert.match(runtime, /fetchLogRangeWithRetry/);
+  assert.match(runtime, /maxAttempts:3/);
+  assert.match(runtime, /beforeAttempt:()=>\{budgetCheck\(\);requestCount\+\+\}/);
+  assert.match(runtime, /canSplitRange:\(\)=>depth<maxSplitDepth&&e-n\+1>minChunk/);
   assert.match(runtime, /const minChunk=Number\(process\.env\.HFI_LOG_MIN_CHUNK \|\| 250\),maxSplitDepth=14/);
   assert.match(runtime, /const shouldSplit=shouldSplitLogRange\(last\);if\(!shouldSplit\|\|depth>=maxSplitDepth\|\|e-n\+1<=minChunk\)throw last/);
   assert.match(runtime, /fetchRange\(n,mid/);
@@ -125,8 +129,8 @@ test('resource-budget failures retain request and elapsed diagnostics', () => {
 
 test('RPC transport failures use bounded retry without triggering adaptive recursive splitting', () => {
   assert.match(policy, /function isRetryableRpcError\(error\)/);
-  assert.match(runtime, /if\(isRangeLimitError\(x\)\)break;if\(!isRetryableRpcError\(x\)\)throw last/);
-  assert.match(runtime, /const jitter=0\.75\+Math\.random\(\)\*0\.5/);
+  assert.match(retryDiagnostics, /if \(rangeLimit \|\| !retryable \|\| attempt >= maxAttempts\) throw lastError/);
+  assert.match(retryDiagnostics, /const jitter = 0\.75 \+ random\(\) \* 0\.5/);
   assert.match(runtime, /const shouldSplit=shouldSplitLogRange\(last\)/);
   assert.match(policy, /function shouldSplitLogRange\(error\) \{\s*return isRangeLimitError\(error\)/);
 });
