@@ -45,8 +45,9 @@ test('sensitive provider error codes are omitted from emitted diagnostics', asyn
     /request timeout/
   );
 
-  assert.equal(events.length, 1);
-  assert.equal(events[0].error_code, null);
+  assert.equal(events.length, 3);
+  assert.ok(events.every((event) => event.error_code === null));
+  assert.ok(events.every((event) => event.decision === 'RETRY' || event.decision === 'FAIL'));
   assert.doesNotMatch(JSON.stringify(events), /secret\.example|do-not-log|token=/);
 });
 
