@@ -15,8 +15,14 @@ const SAFE_ERROR_CODES = new Set([
 ]);
 
 function safeErrorCode(error) {
-  const code = error?.code ?? error?.error?.code ?? error?.info?.error?.code;
-  if (typeof code !== 'string' && typeof code !== 'number') return null;
+  const direct = ownPrimitive(error, 'code');
+  const nested = ownDataValue(error, 'error');
+  const nestedCode = ownPrimitive(nested, 'code');
+  const info = ownDataValue(error, 'info');
+  const infoError = ownDataValue(info, 'error');
+  const infoCode = ownPrimitive(infoError, 'code');
+  const code = direct ?? nestedCode ?? infoCode;
+  if (code === undefined) return null;
   const normalized = String(code).trim().toUpperCase();
   return SAFE_ERROR_CODES.has(normalized) ? normalized : null;
 }
