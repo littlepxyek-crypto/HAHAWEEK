@@ -5,10 +5,20 @@ const {
   isRangeLimitError,
 } = require('./hfi-log-range-policy');
 
+const SAFE_ERROR_CODES = new Set([
+  'TIMEOUT', 'NETWORK_ERROR', 'SERVER_ERROR', 'UNKNOWN_ERROR', 'BAD_DATA',
+  'CALL_EXCEPTION', 'INVALID_ARGUMENT', 'OFFCHAIN_FAULT', 'NONCE_EXPIRED',
+  'REPLACEMENT_UNDERPRICED', 'INSUFFICIENT_FUNDS', 'ACTION_REJECTED',
+  'ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EAI_AGAIN', 'ENOTFOUND',
+  'EHOSTUNREACH', 'ERR_NETWORK', 'ERR_SOCKET_TIMEOUT',
+  '429', '502', '503', '504', '-32000', '-32005',
+]);
+
 function safeErrorCode(error) {
   const code = error?.code ?? error?.error?.code ?? error?.info?.error?.code;
   if (code === undefined || code === null) return null;
-  return String(code).replace(/[^a-zA-Z0-9_.-]/g, '_').slice(0, 64) || null;
+  const normalized = String(code).trim().toUpperCase();
+  return SAFE_ERROR_CODES.has(normalized) ? normalized : null;
 }
 
 function diagnosticFor({ fromBlock, toBlock, attempt, durationMs, error, maxAttempts, canSplitRange = () => true }) {
