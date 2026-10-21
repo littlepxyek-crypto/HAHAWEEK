@@ -32,6 +32,8 @@ test('sensitive provider error codes are omitted from emitted diagnostics', asyn
   const secretCode = 'https://secret.example/?token=do-not-log';
   const provider = mockProvider([
     Object.assign(new Error('request timeout'), { code: secretCode }),
+    Object.assign(new Error('request timeout'), { code: secretCode }),
+    Object.assign(new Error('request timeout'), { code: secretCode }),
   ]);
   const events = [];
 
