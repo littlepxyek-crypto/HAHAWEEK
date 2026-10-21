@@ -45,7 +45,7 @@ test('sensitive provider error codes are omitted from emitted diagnostics', asyn
 
   assert.equal(events.length, 1);
   assert.equal(events[0].error_code, null);
-  assert.doesNotMatch(JSON.stringify(events), /secret\\.example|do-not-log|token=/);
+  assert.doesNotMatch(JSON.stringify(events), /secret\.example|do-not-log|token=/);
 });
 
 test('getLogs retry diagnostics record a transient failure followed by success', async () => {
