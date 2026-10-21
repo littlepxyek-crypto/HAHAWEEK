@@ -99,3 +99,23 @@ test('unknown getLogs errors fail closed without retry', async () => {
   assert.equal(events[0].error_category, 'NON_RETRYABLE');
   assert.equal(events[0].decision, 'FAIL');
 });
+
+test('range-limit diagnostic reports failure when adaptive splitting is out of bounds', async () => {
+  const provider = mockProvider([
+    new Error('query returned more than 10000 results; block range too large'),
+  ]);
+  const events = [];
+
+  await assert.rejects(
+    fetchLogRangeWithRetry({
+      provider, filter: {}, fromBlock: 100, toBlock: 10000,
+      onAttempt: (event) => events.push(event), sleep: noSleep, random: fixedRandom,
+      canSplitRange: () => false,
+    }),
+    /block range too large/
+  );
+
+  assert.equal(provider.calls, 1);
+  assert.equal(events[0].decision, 'FAIL');
+  assert.equal(events[0].error_category, 'RANGE_LIMIT');
+});
