@@ -14,6 +14,28 @@ const SAFE_ERROR_CODES = new Set([
   '429', '502', '503', '504', '-32000', '-32005',
 ]);
 
+function ownDataValue(object, key) {
+  if (object === null || (typeof object !== 'object' && typeof object !== 'function')) {
+    return undefined;
+  }
+
+  try {
+    const descriptor = Object.getOwnPropertyDescriptor(object, key);
+    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
+      return undefined;
+    }
+    return descriptor.value;
+  } catch {
+    // Provider-controlled proxies/descriptors are untrusted metadata.
+    return undefined;
+  }
+}
+
+function ownPrimitive(object, key) {
+  const value = ownDataValue(object, key);
+  return typeof value === 'string' || typeof value === 'number' ? value : undefined;
+}
+
 function safeErrorCode(error) {
   const direct = ownPrimitive(error, 'code');
   const nested = ownDataValue(error, 'error');
@@ -27,31 +49,11 @@ function safeErrorCode(error) {
   return SAFE_ERROR_CODES.has(normalized) ? normalized : null;
 }
 
-function ownPrimitive(object, key) {
-  if (object === null || (typeof object !== 'object' && typeof object !== 'function')) return undefined;
-  try {
-    const descriptor = Object.getOwnPropertyDescriptor(object, key);
-    if (!descriptor || !Object.prototype.hasOwnProperty.call(descriptor, 'value')) return undefined;
-    const value = descriptor.value;
-    return typeof value === 'string' || typeof value === 'number' ? value : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
 function classificationError(error) {
-  const nestedError = ownPrimitive(error, 'error') === undefined
-    ? (error && typeof error === 'object' ? Object.getOwnPropertyDescriptor(error, 'error')?.value : undefined)
-    : undefined;
-  const info = error && typeof error === 'object'
-    ? Object.getOwnPropertyDescriptor(error, 'info')?.value
-    : undefined;
-  const infoError = info && typeof info === 'object'
-    ? Object.getOwnPropertyDescriptor(info, 'error')?.value
-    : undefined;
-  const cause = error && typeof error === 'object'
-    ? Object.getOwnPropertyDescriptor(error, 'cause')?.value
-    : undefined;
+  const nestedError = ownDataValue(error, 'error');
+  const info = ownDataValue(error, 'info');
+  const infoError = ownDataValue(info, 'error');
+  const cause = ownDataValue(error, 'cause');
 
   return {
     shortMessage: ownPrimitive(error, 'shortMessage'),
