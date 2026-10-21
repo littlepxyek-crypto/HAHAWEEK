@@ -28,14 +28,20 @@ const runtimeCommit=()=>{try{return require('node:child_process').execFileSync('
 const makeProvider=()=>{const r=new ethers.FetchRequest(RPC);r.timeout=30000;return new ethers.JsonRpcProvider(r,ethers.Network.from({name:'robinhood-mainnet',chainId:CHAIN_ID}),{batchMaxCount:TARGET_POOL_ID?TARGET_BATCH_MAX:1})};
 const ord=(a,b)=>a.blockNumber-b.blockNumber||(a.transactionIndex??0)-(b.transactionIndex??0)||(a.logIndex??a.index??0)-(b.logIndex??b.index??0);
 const raw=l=>{const x={chain_id:CHAIN_ID,block_number:l.blockNumber,transaction_hash:l.transactionHash.toLowerCase(),block_hash:l.blockHash?.toLowerCase()??null,transaction_index:l.transactionIndex??null,log_index:l.index??l.logIndex??0,address:l.address.toLowerCase(),topics:l.topics.map(x=>x.toLowerCase()),data:l.data,captured_at:new Date().toISOString()};return {...x,event_id:'raw:v1:'+rawEventDigest(x)}};
-const {isRetryableRpcError,isRangeLimitError,shouldSplitLogRange}=require('../src/core/hfi-log-range-policy');
+const {shouldSplitLogRange}=require('../src/core/hfi-log-range-policy');
+const {fetchLogRangeWithRetry}=require('../src/core/hfi-log-retry-diagnostics');
 async function logs(p,f,a,b,s=10000,concurrencyLimit=TARGET_LOG_CONCURRENCY,onRange=()=>{}){
 const minChunk=Number(process.env.HFI_LOG_MIN_CHUNK || 250),maxSplitDepth=14,concurrency=concurrencyLimit;const startedAt=Date.now();let requestCount=0;const budgetCheck=()=>{if(Date.now()-startedAt>MAX_RUNTIME_MS){const e=new Error('HFI_RUNTIME_RESOURCE_TIMEOUT');e.code='HFI_RUNTIME_RESOURCE_TIMEOUT';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}if(requestCount>=MAX_LOG_REQUESTS){const e=new Error('HFI_LOG_REQUEST_BUDGET_EXCEEDED');e.code='HFI_LOG_REQUEST_BUDGET_EXCEEDED';e.request_count=requestCount;e.elapsed_ms=Date.now()-startedAt;throw e}};
 const ranges=[];for(let n=a;n<=b;n+=s)ranges.push([n,Math.min(b,n+s-1)]);
-async function fetchRange(n,e,depth=0){let attempt=0,last;
-while(attempt<3){budgetCheck();requestCount++;try{const result=await p.getLogs({...f,fromBlock:n,toBlock:e});onRange({from:n,to:e});return result}catch(x){last=x;if(isRangeLimitError(x))break;if(!isRetryableRpcError(x))throw last;attempt++;if(attempt>=3)break;const backoff=Math.min(10000,250*2**(attempt-1));const jitter=0.75+Math.random()*0.5;await new Promise(r=>setTimeout(r,Math.round(backoff*jitter)))}}
+async function fetchRange(n,e,depth=0){
+let result;
+try{
+result=await fetchLogRangeWithRetry({provider:p,filter:f,fromBlock:n,toBlock:e,maxAttempts:3,beforeAttempt:()=>{budgetCheck();requestCount++},onAttempt:event=>console.log('HFI_RPC_LOG_ATTEMPT '+JSON.stringify({stage:base.stage??null,...event}))});
+onRange({from:n,to:e});return result;
+}catch(last){
 const shouldSplit=shouldSplitLogRange(last);if(!shouldSplit||depth>=maxSplitDepth||e-n+1<=minChunk)throw last;
-const mid=Math.floor((n+e)/2);return (await Promise.all([fetchRange(n,mid,depth+1),fetchRange(mid+1,e,depth+1)])).flat();}
+const mid=Math.floor((n+e)/2);return (await Promise.all([fetchRange(n,mid,depth+1),fetchRange(mid+1,e,depth+1)])).flat();
+}}
 const out=[];let cursor=0;
 async function worker(){while(true){const i=cursor++;if(i>=ranges.length)return;const [n,e]=ranges[i];out.push(...await fetchRange(n,e));}}
 await Promise.all(Array.from({length:Math.min(concurrency,ranges.length)},worker));
