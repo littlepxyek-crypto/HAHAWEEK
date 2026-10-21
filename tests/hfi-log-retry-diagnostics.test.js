@@ -28,6 +28,26 @@ test('diagnostic error codes use a strict safe allowlist', () => {
   assert.equal(safeErrorCode({ code: 'unknown provider payload' }), null);
 });
 
+test('sensitive provider error codes are omitted from emitted diagnostics', async () => {
+  const secretCode = 'https://secret.example/?token=do-not-log';
+  const provider = mockProvider([
+    Object.assign(new Error('request timeout'), { code: secretCode }),
+  ]);
+  const events = [];
+
+  await assert.rejects(
+    fetchLogRangeWithRetry({
+      provider, filter: {}, fromBlock: 1, toBlock: 2,
+      onAttempt: (event) => events.push(event), sleep: noSleep, random: fixedRandom,
+    }),
+    /request timeout/
+  );
+
+  assert.equal(events.length, 1);
+  assert.equal(events[0].error_code, null);
+  assert.doesNotMatch(JSON.stringify(events), /secret\\.example|do-not-log|token=/);
+});
+
 test('getLogs retry diagnostics record a transient failure followed by success', async () => {
   const provider = mockProvider([
     Object.assign(new Error('request timeout https://secret.example/?token=do-not-log'), { code: 'TIMEOUT' }),
