@@ -11,7 +11,7 @@ function safeErrorCode(error) {
   return String(code).replace(/[^a-zA-Z0-9_.-]/g, '_').slice(0, 64) || null;
 }
 
-function diagnosticFor({ fromBlock, toBlock, attempt, durationMs, error, maxAttempts }) {
+function diagnosticFor({ fromBlock, toBlock, attempt, durationMs, error, maxAttempts, canSplitRange = () => true }) {
   if (!error) {
     return {
       from_block: fromBlock,
@@ -37,7 +37,7 @@ function diagnosticFor({ fromBlock, toBlock, attempt, durationMs, error, maxAtte
     error_category: rangeLimit ? 'RANGE_LIMIT' : retryable ? 'TRANSIENT_RPC' : 'NON_RETRYABLE',
     error_code: safeErrorCode(error),
     retryable,
-    decision: rangeLimit ? 'SPLIT' : retryable && attempt < maxAttempts ? 'RETRY' : 'FAIL',
+    decision: rangeLimit ? (canSplitRange() ? 'SPLIT' : 'FAIL') : retryable && attempt < maxAttempts ? 'RETRY' : 'FAIL',
   };
 }
 
@@ -53,6 +53,7 @@ async function fetchLogRangeWithRetry({
   random = Math.random,
   baseDelayMs = 250,
   maxDelayMs = 10000,
+  canSplitRange = () => true,
 }) {
   let lastError;
 
@@ -83,6 +84,7 @@ async function fetchLogRangeWithRetry({
         durationMs: Math.max(0, Date.now() - startedAt),
         error,
         maxAttempts,
+        canSplitRange,
       });
       try { onAttempt(event); } catch { /* Diagnostics must not change acquisition behavior. */ }
 
