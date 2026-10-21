@@ -16,7 +16,7 @@ const SAFE_ERROR_CODES = new Set([
 
 function safeErrorCode(error) {
   const code = error?.code ?? error?.error?.code ?? error?.info?.error?.code;
-  if (code === undefined || code === null) return null;
+  if (typeof code !== 'string' && typeof code !== 'number') return null;
   const normalized = String(code).trim().toUpperCase();
   return SAFE_ERROR_CODES.has(normalized) ? normalized : null;
 }
