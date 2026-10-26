@@ -6,6 +6,7 @@ const {
   RPC_URL,
   CHAIN_ID,
 } = require('./config');
+const { redactUrl } = require('./redact');
 
 const RPC_TIMEOUT_MS = Number(
   process.env.RPC_TIMEOUT_MS || 15000
@@ -50,7 +51,8 @@ async function getRpcStatus() {
     const blockNumber = await provider.getBlockNumber();
 
     return {
-      rpcUrl: RPC_URL,
+      // Never expose a keyed RPC URL through status/health output.
+      rpcUrl: redactUrl(RPC_URL),
       expectedChainId: CHAIN_ID,
       actualChainId,
       blockNumber,

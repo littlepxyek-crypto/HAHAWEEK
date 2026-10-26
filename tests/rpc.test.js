@@ -17,11 +17,7 @@ test('RPC timeout is configured', () => {
 test('createRpcRequest uses configured RPC URL', () => {
   const request = createRpcRequest();
 
-  assert.equal(
-    request.url,
-    process.env.RPC_URL ||
-      'https://rpc.mainnet.chain.robinhood.com'
-  );
+  assert.equal(request.url, require('../src/core/config').RPC_URL);
 });
 
 test('createRpcRequest applies configured timeout', () => {

@@ -14,6 +14,7 @@ const { createIntelligenceProjection } = require('../src/core/intelligence-proje
 const { createIntelligenceEvidenceSummary } = require('../src/core/intelligence-evidence-summary');
 const { createValidatedRadarRecord } = require('../src/core/validated-radar-record');
 const { createRadarReconciliation } = require('../src/core/hfi-radar-reconciliation');
+const { redactUrl } = require('../src/core/redact');
 
 const OUT = 'docs/runtime/hfi-radar-operational-latest.json';
 const HFI_OUT = 'docs/runtime/hfi-mvp-e2e-latest.json';
@@ -319,7 +320,7 @@ function main() {
         contract_id: 'HAHAWEEK-HFI-RADAR-OPERATIONALIZATION-V0_2',
         commit: COMMIT,
         chain_id: CHAIN_ID,
-        rpc_url: RPC,
+        rpc_url: redactUrl(RPC),
         state: 'VERIFIED',
         started_at: startedAt,
         completed_at: new Date().toISOString(),

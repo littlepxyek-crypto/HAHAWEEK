@@ -33,7 +33,7 @@ test('runHealth returns RPC status and reports HEALTH OK', async () => {
   });
 
   assert.deepEqual(calls, [
-    'RPC: https://example.invalid/rpc',
+    'RPC: https://example.invalid/redacted',
     'Expected Chain ID: 4663',
     'Actual Chain ID: 4663',
     'Current Block: 123456',

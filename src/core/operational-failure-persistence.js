@@ -1,5 +1,8 @@
 'use strict';
 
+const { RPC_URL, RPC_URLS } = require('./config');
+const { redactText } = require('./redact');
+
 const { createWriterFence } = require('./single-writer-fence');
 const { loadState, saveState } = require('./state');
 const {
@@ -35,10 +38,13 @@ function persistOperationalFailure(error, options = {}) {
     const next = createFailureState({
       ...baseState,
       status: 'FAILED',
-      lastError:
+      // Persisted state must never carry a keyed RPC URL.
+      lastError: redactText(
         error instanceof Error
           ? error.message
           : String(error),
+        [RPC_URL, ...RPC_URLS]
+      ),
     }, failure);
 
     saveState(next, {
