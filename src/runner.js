@@ -256,7 +256,17 @@ function shutdown(signal) {
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 
-if (require.main === module) {
+if (require.main === module && require('./core/config').MODE === 'window') {
+  // Window mode needs a fresh process per pass (epoch rotation, ledger lock).
+  const watch = require('./watch');
+  process.removeAllListeners('SIGINT');
+  process.removeAllListeners('SIGTERM');
+  process.on('SIGINT', () => watch.shutdown('SIGINT'));
+  process.on('SIGTERM', () => watch.shutdown('SIGTERM'));
+  watch.runWatch().then(({ outcome }) => {
+    if (outcome === 'FAIL_CLOSED') process.exitCode = EXIT_FAIL_CLOSED;
+  });
+} else if (require.main === module) {
   runRunner()
     .then(({ outcome }) => {
       if (outcome === 'FAIL_CLOSED') process.exitCode = EXIT_FAIL_CLOSED;

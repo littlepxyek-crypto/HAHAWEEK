@@ -35,7 +35,13 @@ const {
   MAX_RUNTIME_MS,
   MAX_RPC_CALLS_PER_RUN,
   START_BLOCK,
+  MODE,
 } = require('./core/config');
+const config = require('./core/config');
+const path = require('path');
+const { createRuntimeBudget } = require('./core/rpc-call');
+const { ensureGapTable, hasExactGap, recordGap } = require('./core/window-ledger');
+const { runWindowPass } = require('./core/window-ingestion');
 const { redactText } = require('./core/redact');
 
 function redactRpc(message) {
@@ -123,7 +129,10 @@ async function createEngine({
   expectedAuthorityFactory,
   providerFactory = createProvider,
   writerFenceFactory = createWriterFence,
+  mode = MODE,
 } = {}) {
+  const windowMode = mode === 'window';
+  let windowPlanner = null;
   let provider = null;
   let writerFence = null;
   let legacyWriteBarrier = null;
@@ -145,6 +154,10 @@ async function createEngine({
     await writerFence.startWatchdog();
 
     database = await createDatabase(undefined, { legacyWriteBarrier });
+    if (windowMode) {
+      writerFence.assertOwned();
+      ensureGapTable(database);
+    }
 
   const rawEventStore = createRawEventStore(database.db, { legacyWriteBarrier });
 
@@ -181,7 +194,7 @@ async function createEngine({
     throw new Error(`LEGACY_SINGLE_BLOCK_PATH_DISABLED: block ${block}`);
   };
 
-  const processorRange = async (fromBlock, toBlock, budget) => {
+  const processorRange = async (fromBlock, toBlock, budget, options = {}) => {
     const context = await createVerifiedProcessingContext({
       database,
       provider,
@@ -190,6 +203,9 @@ async function createEngine({
       chainId: CHAIN_ID,
       fromBlock,
       toBlock,
+      // Window mode passes the head it planned against (saves one RPC call
+      // per segment); the decision input still checks the range against it.
+      ...(Number.isInteger(options.latestBlock) ? { latestBlock: options.latestBlock } : {}),
       provenance: {
         component: 'runtime-processing-context',
         range: `${fromBlock}-${toBlock}`,
@@ -253,7 +269,23 @@ async function createEngine({
     database,
     cursor,
     expectedAuthorityFactory: productionExpectedAuthorityFactory,
+    // Window mode: a cursor jump is accepted only over a recorded gap that
+    // covers exactly the skipped range; anything else fails closed.
+    ...(windowMode ? { gapCovers: (start, end) => hasExactGap(database, start, end) } : {}),
   });
+
+  const windowOptions = windowMode
+    ? {
+        rangePlanner: (args) => {
+          if (typeof windowPlanner !== 'function') throw new Error('WINDOW_PLANNER_REQUIRED');
+          return windowPlanner(args);
+        },
+        gapRecorder: (gap) => {
+          writerFence.assertOwned();
+          recordGap(database, gap);
+        },
+      }
+    : {};
 
   const ingestion = new IngestionEngine({
     provider,
@@ -266,6 +298,7 @@ async function createEngine({
     maxRuntimeMs: MAX_RUNTIME_MS,
     maxRpcCalls: MAX_RPC_CALLS_PER_RUN,
     startBlock: START_BLOCK,
+    ...windowOptions,
     writerFence,
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,
@@ -279,11 +312,16 @@ async function createEngine({
   });
 
     return {
+      mode,
       provider,
       database,
       ingestion,
       legacyWriteBarrier,
       writerFence,
+      setWindowPlanner(planner) {
+        if (!windowMode) throw new Error('WINDOW_MODE_REQUIRED');
+        windowPlanner = planner;
+      },
     };
   } catch (error) {
     const cleanupFailures = await cleanupResources([
@@ -301,6 +339,27 @@ async function createEngine({
     }
     throw error;
   }
+}
+
+function windowLedgerFile() {
+  // src/pass.js sets HAHAWEEK_WINDOW_ROOT_DIR to the root data dir (outside
+  // the evidence epoch). Run directly, the ledger sits in the data dir.
+  const root = process.env.HAHAWEEK_WINDOW_ROOT_DIR ||
+    process.env.HAHAWEEK_DATA_DIR || path.join(process.cwd(), 'data');
+  return path.join(root, 'window', 'discovery-ledger.json');
+}
+
+function printWindowSummary(result) {
+  console.log(`Mode: window`);
+  console.log(`Horizon (min(safe head, discovery)): ${result.horizon}`);
+  console.log(`Segments authorized: ${result.segments.length}` +
+    ` (${result.segments.map(s => `${s.fromBlock}-${s.toBlock}`).join(', ') || '-'})`);
+  console.log(`Gaps recorded: ${result.gaps.length}` +
+    ` (${result.gaps.reduce((sum, g) => sum + (g.endBlock - g.startBlock + 1), 0)} blocks skipped)`);
+  console.log(`Pools: selected=${result.pools.selected} deferred=${result.pools.deferred}` +
+    ` ingested=${result.pools.ingested} dropped=${result.pools.dropped} pending=${result.pools.pending}`);
+  console.log(`Latest-window coverage: ${result.latestCoverage ?? 'UNKNOWN'}`);
+  console.log(`Stage 2 ms: ${result.stageMs}`);
 }
 
 async function main() {
@@ -336,7 +395,14 @@ async function main() {
           : currentState.lastProcessedBlock,
     }, { legacyWriteBarrier: engine.legacyWriteBarrier });
 
-    const result = await engine.ingestion.runOnce();
+    const result = engine.mode === 'window'
+      ? await runWindowPass({
+          engine,
+          ledgerFile: windowLedgerFile(),
+          settings: config,
+          createBudget: () => createRuntimeBudget({ maxRuntimeMs: MAX_RUNTIME_MS, maxCalls: MAX_RPC_CALLS_PER_RUN }),
+        })
+      : await engine.ingestion.runOnce();
 
     const healthyState = createHealthyState(loadState());
     saveState({
@@ -355,6 +421,7 @@ async function main() {
     console.log(`Safe head: ${result.safeHead}`);
     console.log(`Processed: ${result.processed}`);
     console.log(`Cursor: ${result.cursor}`);
+    if (result.mode === 'window') printWindowSummary(result);
     if (Number.isInteger(result.behind)) {
       console.log(`Behind safe head: ${result.behind} blocks`);
     }

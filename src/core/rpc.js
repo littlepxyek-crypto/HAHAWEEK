@@ -1,5 +1,7 @@
 'use strict';
 
+const http = require('node:http');
+const https = require('node:https');
 const { ethers } = require('ethers');
 
 const {
@@ -13,9 +15,26 @@ const {
 const { redactUrl } = require('./redact');
 const { withBackoff, assertNoRateLimitResult } = require('./rpc-backoff');
 
+/*
+ * Keep-alive HTTP(S) agents shared by every provider in the process, so
+ * consecutive JSON-RPC requests reuse TCP/TLS connections instead of paying a
+ * new handshake each time. Idle sockets are unref'd by Node and never keep
+ * the process alive.
+ */
+const AGENT_OPTIONS = Object.freeze({ keepAlive: true, keepAliveMsecs: 15000, maxSockets: 32, maxFreeSockets: 16 });
+const agents = {
+  http: new http.Agent(AGENT_OPTIONS),
+  https: new https.Agent(AGENT_OPTIONS),
+};
+
+function agentFor(url) {
+  return String(url).toLowerCase().startsWith('https:') ? agents.https : agents.http;
+}
+
 function createRpcRequest(url = RPC_URL, { timeoutMs = RPC_TIMEOUT_MS } = {}) {
   const request = new ethers.FetchRequest(url);
   request.timeout = timeoutMs;
+  request.getUrlFunc = ethers.FetchRequest.createGetUrlFunc({ agent: agentFor(url) });
   // Disable ethers' own hidden 429 loop (12 attempts, Retry-After read as ms).
   // 429 surfaces to BackoffJsonRpcProvider, which honours Retry-After in seconds.
   request.retryFunc = async () => false;
@@ -101,8 +120,16 @@ async function getRpcStatus() {
   }
 }
 
+function destroyAgents() {
+  agents.http.destroy();
+  agents.https.destroy();
+}
+
 module.exports = {
   RPC_TIMEOUT_MS,
+  AGENT_OPTIONS,
+  agentFor,
+  destroyAgents,
   BackoffJsonRpcProvider,
   createRpcRequest,
   createProvider,
