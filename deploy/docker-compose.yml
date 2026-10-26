@@ -11,6 +11,8 @@ services:
       CHAIN_ID: "4663"
       CONFIRMATIONS: "3"
       POLL_INTERVAL_MS: "5000"
+      # Compose targets a host with a keyed RPC, so it defaults to the fast profile.
+      HAHAWEEK_PROFILE: "${HAHAWEEK_PROFILE:-fast}"
       HAHAWEEK_CHUNK_SIZE: "${HAHAWEEK_CHUNK_SIZE:-500}"
       HAHAWEEK_MAX_BATCHES_PER_RUN: "${HAHAWEEK_MAX_BATCHES_PER_RUN:-20}"
       HAHAWEEK_HEADER_CONCURRENCY: "${HAHAWEEK_HEADER_CONCURRENCY:-8}"
