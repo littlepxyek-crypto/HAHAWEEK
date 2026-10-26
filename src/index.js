@@ -160,27 +160,16 @@ async function createEngine({
     chunkSize: 10,
   });
 
-  const processor = async (block, budget) => {
-    const result = await rawLogs.ingestRange(
-      block,
-      block,
-      createRelevantLogFilter(),
-      budget
-    );
-
-    /*
-     * Persist once per completed block,
-     * not once per event.
-     */
-    database.save();
-
-    console.log(
-      `Block ${block}: fetched=${result.fetched} ` +
-      `inserted=${result.inserted} ` +
-      `duplicates=${result.duplicates}`
-    );
-
-    return result;
+  /*
+   * Legacy single-block path is disabled.
+   * It persisted raw logs before the authority gate, and with
+   * requireProcessingContext: true the gate can never accept it,
+   * leaving unauthorized writes and a stuck cursor.
+   * Production ingestion must use processorRange:
+   * verified processing context -> authority gate -> cursor advance.
+   */
+  const processor = async (block) => {
+    throw new Error(`LEGACY_SINGLE_BLOCK_PATH_DISABLED: block ${block}`);
   };
 
   const processorRange = async (fromBlock, toBlock, budget) => {

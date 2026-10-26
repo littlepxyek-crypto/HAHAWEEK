@@ -54,7 +54,7 @@ knowledge and adapter material:
 - `src/core/pool-identity.js`
 - `src/core/liquidity-event.js`
 - `src/core/swap-event.js`
-- `src/core/pool-formation.js`
+- `src/core/pool-formation.js` (removed 2026-10-26: built FormationEvent directly from raw RPC logs, bypassing canonical/V4 integrity)
 - `src/core/formation-event.js`
 - `src/core/formation-timeline.js`
 
