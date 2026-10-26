@@ -598,7 +598,7 @@
 ## STEP 614 — F-03 Runtime Authority Establishment — RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Contract Amendment: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_CONTRACT_AMENDMENT_V0_1.md`, explicitly authorized by user on 2026-09-27.
+- Contract Amendment: explicitly authorized by user on 2026-09-27. The referenced file `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_CONTRACT_AMENDMENT_V0_1.md` is NOT present in the repository (found missing in path audit 2026-10-26); restore it or treat the amendment as undocumented.
 - Analysis: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_ANALYSIS_V0_1.md`.
 - Design: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_DESIGN_V0_1.md`.
 - Implementation PR #589 merged as `4446c5e7dab4d0751b9b55b82835ce533a314784`.
