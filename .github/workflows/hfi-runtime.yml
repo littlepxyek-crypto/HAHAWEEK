@@ -1,9 +1,10 @@
 name: HAHAWEEK HFI-MVP Runtime Verification
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+  # Hits the public mainnet RPC; run on a daily schedule and manual dispatch only,
+  # not as a PR/push gate (public-RPC timeouts and rate limits made it flaky).
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'
 permissions:
   contents: read
 jobs:
