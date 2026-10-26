@@ -80,6 +80,9 @@ async function rpcCall(fn, options = {}) {
       return await fn();
     } catch (error) {
       lastError = error;
+      // The provider transport already retried with backoff (rpc-backoff.js);
+      // do not multiply the attempts against a struggling public RPC.
+      if (error && error.hahaweekRetryExhausted === true) throw lastError;
       if (attempt === maxAttempts) throw lastError;
       if (budget) budget.assertWithinBudget();
       await sleep(calculateDelay(attempt, baseDelayMs));
