@@ -20,3 +20,6 @@ data/backups/
 # Logs and local reports
 *.log
 coverage/
+
+# Generated verification output
+docs/runtime/
