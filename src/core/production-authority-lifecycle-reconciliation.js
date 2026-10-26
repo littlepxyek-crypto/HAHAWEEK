@@ -45,7 +45,13 @@ function reconcileProductionAuthorityLifecycleCursor({
   database,
   cursor,
   expectedAuthorityFactory,
+  // Window-watch only: (startBlock, endBlock) -> true when a recorded gap
+  // covers EXACTLY that skipped range. Absent: any gap fails closed.
+  gapCovers,
 }) {
+  if (gapCovers !== undefined && typeof gapCovers !== 'function') {
+    throw new Error('LIFECYCLE_RECONCILIATION_GAP_SOURCE_INVALID');
+  }
   if (!database || !database.db) throw new Error('LIFECYCLE_RECONCILIATION_DATABASE_REQUIRED');
   if (!cursor || typeof cursor.get !== 'function' || typeof cursor.advance !== 'function') {
     throw new Error('LIFECYCLE_RECONCILIATION_CURSOR_REQUIRED');
@@ -96,7 +102,9 @@ function reconcileProductionAuthorityLifecycleCursor({
     }
 
     if (record.fromBlock !== current + 1) {
-      throw new Error('LIFECYCLE_RECONCILIATION_RANGE_GAP');
+      if (!gapCovers || gapCovers(current + 1, record.fromBlock - 1) !== true) {
+        throw new Error('LIFECYCLE_RECONCILIATION_RANGE_GAP');
+      }
     }
 
     if (record.cursorBlock !== record.toBlock) {

@@ -360,23 +360,36 @@ function findBranchCommonAncestor(db, { chainId, firstBlockHash, secondBlockHash
  * Fetch block headers fromBlock..toBlock with bounded concurrency.
  * Results are returned in block order; validation and parent-link checks are
  * done by the caller exactly as for sequential fetching.
+ *
+ * Sliding window: up to `concurrency` requests are in flight and a new one
+ * starts as soon as any finishes (the earlier fixed waves waited for the
+ * slowest request of every wave; on the public RPC single requests swing from
+ * ~90 ms to >1 s). `beforeWave` (the writer-fence check) still runs before
+ * every `concurrency`-th request is started, the same number of times as
+ * before; after it or any request fails, no further request is started.
  */
 async function fetchHeadersInOrder({ provider, fromBlock, toBlock, concurrency = 1, beforeWave }) {
   if (!Number.isSafeInteger(concurrency) || concurrency < 1) fail('INVALID_HEADER_CONCURRENCY');
   const total = toBlock - fromBlock + 1;
   const headers = new Array(total);
-  for (let offset = 0; offset < total; offset += concurrency) {
-    if (typeof beforeWave === 'function') beforeWave();
-    const wave = [];
-    for (let i = offset; i < Math.min(offset + concurrency, total); i += 1) {
-      wave.push(
-        Promise.resolve(provider.getBlock(fromBlock + i)).then(header => {
-          headers[i] = header;
-        })
-      );
+  let next = 0;
+  let failed = false;
+  const worker = async () => {
+    while (!failed && next < total) {
+      const index = next;
+      next += 1;
+      try {
+        if (index % concurrency === 0 && typeof beforeWave === 'function') beforeWave();
+        headers[index] = await provider.getBlock(fromBlock + index);
+      } catch (error) {
+        failed = true;
+        throw error;
+      }
     }
-    await Promise.all(wave);
-  }
+  };
+  const workers = [];
+  for (let i = 0; i < Math.min(concurrency, total); i += 1) workers.push(worker());
+  await Promise.all(workers);
   return headers;
 }
 

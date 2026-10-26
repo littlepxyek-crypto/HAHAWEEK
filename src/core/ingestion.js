@@ -18,6 +18,9 @@ class IngestionEngine {
     maxRuntimeMs,
     maxRpcCalls,
     startBlock = null,
+    rangePlanner,
+    gapRecorder,
+    batchCommitter,
   }) {
     if (!provider) {
       throw new Error('PROVIDER_REQUIRED');
@@ -67,6 +70,16 @@ class IngestionEngine {
       throw new Error('INVALID_START_BLOCK');
     }
 
+    if (rangePlanner !== undefined && typeof rangePlanner !== 'function') {
+      throw new Error('INVALID_RANGE_PLANNER');
+    }
+    if (rangePlanner !== undefined && typeof gapRecorder !== 'function') {
+      throw new Error('GAP_RECORDER_REQUIRED');
+    }
+    if (rangePlanner !== undefined && typeof processorRange !== 'function') {
+      throw new Error('PROCESSOR_RANGE_REQUIRED');
+    }
+
     if (
       processorRange !== undefined &&
       batchSize === undefined
@@ -82,6 +95,14 @@ class IngestionEngine {
     this.batchSize = batchSize;
     this.maxBatchesPerRun = maxBatchesPerRun ?? Infinity;
     this.startBlock = startBlock ?? null;
+    if (batchCommitter !== undefined && typeof batchCommitter !== 'function') {
+      throw new Error('INVALID_BATCH_COMMITTER');
+    }
+    // Durable commit of a batch (deferred DB saves) after AUTHORIZED and
+    // before the cursor advances.
+    this.batchCommitter = batchCommitter;
+    this.rangePlanner = rangePlanner;
+    this.gapRecorder = gapRecorder;
     if (typeof authorityGate !== 'function') {
       throw new Error('AUTHORITY_GATE_REQUIRED');
     }
@@ -138,6 +159,16 @@ class IngestionEngine {
         latestBlock,
         this.confirmations
       );
+
+      if (typeof this.rangePlanner === 'function') {
+        return await this.runPlannedSegments({
+          budget,
+          latestBlock,
+          safeHead,
+          assertWriterFenceHeartbeat,
+          watchdogStarted,
+        });
+      }
 
       let current = this.cursor.get();
 
@@ -265,6 +296,10 @@ class IngestionEngine {
           if (lastAuthorityOutcome?.status !== 'AUTHORIZED') {
             throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
           }
+          if (this.batchCommitter) {
+            assertWriterFenceHeartbeat();
+            this.batchCommitter({ fromBlock, toBlock });
+          }
           this.cursor.advance(toBlock);
 
           processed += toBlock - fromBlock + 1;
@@ -327,6 +362,109 @@ class IngestionEngine {
     }
   }
 }
+
+/*
+ * Window-watch: process planned, possibly non-adjacent segments.
+ *
+ * For every segment, in ascending order:
+ *   1. if it does not start right after the cursor, record the skipped range
+ *      [cursor + 1, segment.from - 1] as a gap BEFORE processing it;
+ *   2. verified processing context (headers + linkage + raw logs + lineage);
+ *      a segment that is not adjacent to an earlier lineage resolves to a new
+ *      INITIAL lineage, so no continuity is claimed across a gap;
+ *   3. authority gate; the cursor advances only after AUTHORIZED.
+ * Any failure stops the pass with the cursor at the last authorized segment.
+ */
+IngestionEngine.prototype.runPlannedSegments = async function runPlannedSegments({
+  budget,
+  latestBlock,
+  safeHead,
+  assertWriterFenceHeartbeat,
+  watchdogStarted,
+}) {
+  const plan = await this.rangePlanner({ cursor: this.cursor.get(), safeHead, latestBlock });
+  const segments = plan && Array.isArray(plan.segments) ? plan.segments : null;
+  if (!segments) throw new Error('WINDOW_PLAN_INVALID');
+
+  let processed = 0;
+  let lastProcessingContext = null;
+  let lastAuthorityOutcome = null;
+  const authorized = [];
+  const gaps = [];
+
+  for (const segment of segments) {
+    const { fromBlock, toBlock } = segment;
+    if (!Number.isSafeInteger(fromBlock) || !Number.isSafeInteger(toBlock) || fromBlock < 0 || toBlock < fromBlock) {
+      throw new Error('WINDOW_SEGMENT_INVALID');
+    }
+    if (toBlock > safeHead) throw new Error('WINDOW_SEGMENT_ABOVE_SAFE_HEAD');
+    if (Number.isInteger(plan.horizon) && toBlock > plan.horizon) throw new Error('WINDOW_SEGMENT_ABOVE_HORIZON');
+    const cursor = this.cursor.get();
+    if (cursor !== null && fromBlock <= cursor) throw new Error('WINDOW_SEGMENT_OVERLAPS_CURSOR');
+
+    assertWriterFenceHeartbeat();
+    if (!watchdogStarted && this.writerFence && typeof this.writerFence.renew === 'function') {
+      this.writerFence.renew();
+    }
+
+    if (cursor !== null && fromBlock > cursor + 1) {
+      const gap = {
+        startBlock: cursor + 1,
+        endBlock: fromBlock - 1,
+        reason: 'WINDOW_SKIPPED',
+        discoveryScanned: Number.isInteger(plan.discoveryScannedThrough)
+          ? fromBlock - 1 <= plan.discoveryScannedThrough
+          : false,
+      };
+      this.gapRecorder(gap);
+      gaps.push(gap);
+    }
+    assertWriterFenceHeartbeat();
+
+    const processingContext = await this.processorRange(fromBlock, toBlock, budget, { latestBlock });
+    assertWriterFenceHeartbeat();
+    if (!watchdogStarted && this.writerFence && typeof this.writerFence.renew === 'function') {
+      this.writerFence.renew();
+    }
+    assertWriterFenceHeartbeat();
+
+    lastProcessingContext = processingContext;
+    const authorityInput = {
+      checkpointCommitted: true,
+      fromBlock,
+      toBlock,
+      blockNumber: toBlock,
+    };
+    if (processingContext !== undefined) authorityInput.processingContext = processingContext;
+    lastAuthorityOutcome = this.authorityGate(authorityInput);
+    if (lastAuthorityOutcome?.status !== 'AUTHORIZED') {
+      throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
+    }
+    if (this.batchCommitter) {
+      assertWriterFenceHeartbeat();
+      this.batchCommitter({ fromBlock, toBlock });
+    }
+    this.cursor.advance(toBlock);
+    authorized.push({ fromBlock, toBlock, transitionType: processingContext?.transitionType ?? null });
+    processed += toBlock - fromBlock + 1;
+  }
+
+  const cursorAfter = this.cursor.get();
+  return {
+    mode: 'window',
+    processed,
+    latestBlock,
+    safeHead,
+    horizon: plan.horizon ?? null,
+    cursor: cursorAfter,
+    behind: Number.isInteger(cursorAfter) ? Math.max(0, safeHead - cursorAfter) : null,
+    segments: authorized,
+    gaps,
+    plan,
+    processingContext: lastProcessingContext,
+    authorityOutcome: lastAuthorityOutcome,
+  };
+};
 
 module.exports = {
   IngestionEngine,

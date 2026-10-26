@@ -28,7 +28,8 @@ Status labels used below:
 |---|---|
 | `src/index.js` | One ingestion pass (`IngestionEngine.runOnce()`), then exits. `--once` is accepted; behaviour is the same. |
 | `src/pass.js` | One pass for schedulers that start a new process each time (GitHub Actions cron, Termux). Before touching RPC it reads `state.json`: a previous **non-retryable** failure is a fail-closed STOP (exit 78, no pass) until an operator passes `--resume-after-stop`. A retryable provider failure exits 0 with a warning (cursor unchanged; next pass retries). |
-| `src/runner.js` | Long-running loop: `health.js` → `index.js` → sleep (`HAHAWEEK_LOOP_SLEEP_MS`, or `HAHAWEEK_CATCHUP_SLEEP_MS` while a pass hit its batch cap). Retryable failures back off; a non-retryable state is a fail-closed STOP: exit code 78, or stay idle with `HAHAWEEK_RUNNER_ON_STOP=hold`. |
+| `src/watch.js` | Window mode loop: runs `src/pass.js` in a fresh process, sleeps `HAHAWEEK_LOOP_SLEEP_MS`, backs off on errors, stops on exit 78 (see §3b). |
+| `src/runner.js` | Long-running loop (in window mode it delegates to `src/watch.js`): `health.js` → `index.js` → sleep (`HAHAWEEK_LOOP_SLEEP_MS`, or `HAHAWEEK_CATCHUP_SLEEP_MS` while a pass hit its batch cap). Retryable failures back off; a non-retryable state is a fail-closed STOP: exit code 78, or stay idle with `HAHAWEEK_RUNNER_ON_STOP=hold`. |
 | `src/health.js` | Checks RPC chain ID and head, prints operational state. Used as Docker healthcheck. |
 | `src/status.js` | Prints persisted operational state from `state.json` (no RPC). |
 | `bin/hahaweek` | Shell wrapper around the above (Termux shebang). |
@@ -78,16 +79,64 @@ The SQLite file is exported at each batch's commit boundaries (processing contex
 
 ## 3a. Free runtime: GitHub Actions schedule
 
-`.github/workflows/ingest-scheduled.yml` runs **one bounded `src/pass.js` pass with the free profile** at minutes 7 and 37 of every hour, plus `workflow_dispatch`. GitHub runs `schedule:` only from the default branch, so it is active only once merged to `main`.
+`.github/workflows/ingest-scheduled.yml` runs **one bounded `src/pass.js` window-watch pass (`HAHAWEEK_MODE=window`, §3b) with the free profile** at minutes 7 and 37 of every hour, plus `workflow_dispatch`. GitHub runs `schedule:` only from the default branch, so it is active only once merged to `main`.
 
 - No secrets. Token permissions `contents: read`, `actions: read`. The job runs only in `littlepxyek-crypto/HAHAWEEK` on `refs/heads/main`; forks and PRs never run it.
 - `concurrency: hahaweek-scheduled-ingestion` (no cancel): two passes never overlap. `timeout-minutes: 25`.
-- **State lives in the GitHub Actions cache**, key `hahaweek-state-v1-<run_id>-<attempt>`, restored by prefix (newest first). The whole `data/` directory is saved as one unit after every pass that ran, including failed ones (so a STOP carries into the next run). A cancelled/timed-out pass is not saved; the next run restores the previous consistent snapshot.
+- **State lives in the GitHub Actions cache**, key `hahaweek-state-v2-<run_id>-<attempt>` (v2 = window layout: `epoch.json`, `epochs/`, `window/`), restored by prefix (newest first). The whole `data/` directory is saved as one unit after every pass that ran, including failed ones (so a STOP carries into the next run). A cancelled/timed-out pass is not saved; the next run restores the previous consistent snapshot.
   - Why not commit to a `hahaweek-data` branch: the DB grows ~8 KB per block (measured: 3.8 MB after 467 blocks), ~200 MB/day at this cadence. Every commit would store a full new copy and the file passes GitHub's 100 MB hard limit within a day. The cache compresses it ~12× (zstd), needs no write permission and holds 10 GB per repo.
   - Risk: GitHub evicts caches unused for 7 days or when the repo exceeds 10 GB. If the cache is empty but earlier runs succeeded, the job **refuses to start from scratch** (exit 78) unless dispatched with `allow_fresh_state=true`.
 - A fail-closed STOP stays stopped: every later run exits 78 without RPC until dispatched with `resume_after_stop=true`.
-- Pass size: repo variable `HAHAWEEK_MAX_BATCHES_PER_RUN` or the dispatch input `max_batches` (default 5 = 500 blocks).
+- Pass size: planned by window mode (new-pool segments + latest 200 blocks). `HAHAWEEK_MAX_BATCHES_PER_RUN` / `max_batches` apply to contiguous mode only.
 - Scheduled workflows in public repos are disabled by GitHub after 60 days without repository activity; re-enable in the Actions tab.
+
+## 3b. Window-watch mode (`HAHAWEEK_MODE=window`)
+
+`HAHAWEEK_MODE` is `contiguous` (default: every block in order, profiles above) or `window`. Window mode trades completeness for timeliness on the free public RPC: it finds **every** new pool, but fully ingests only short windows.
+
+**Stage 1, discovery** (`window-discovery.js`). `eth_getLogs` on the PoolManager with the `Initialize` topic only, in `HAHAWEEK_DISCOVERY_CHUNK_BLOCKS` chunks (100,000), at most `HAHAWEEK_DISCOVERY_MAX_BLOCKS_PER_PASS` (1,000,000) per pass. On `logs matched by query exceeds limit of 10000` the chunk is halved and retried, down to `HAHAWEEK_DISCOVERY_MIN_CHUNK_BLOCKS` (1,000). Discovery is contiguous: its cursor (`scannedThrough`) only advances over completed chunks. The discovery ledger (`<root>/window/discovery-ledger.json`) sits **outside** the evidence epoch and is planning input, not evidence. Without a ledger the first pass starts `HAHAWEEK_DISCOVERY_INITIAL_LOOKBACK_BLOCKS` (200) below the safe head. Probe: 1M blocks ≈ 1.9 s, ~5,300 logs; ~4,400 new pools/day.
+
+**Stage 2, full ingestion** (`window-plan.js`, `IngestionEngine.runPlannedSegments`). Planned per pass, strictly ascending, never past `min(safe head, discovery scannedThrough)` and never at or below the cursor (or, in a fresh epoch, the highest block an earlier epoch ingested):
+
+- a `HAHAWEEK_WINDOW_SEGMENT_BLOCKS` (5) segment from each new pool's `Initialize` block, newest `HAHAWEEK_WINDOW_MAX_POOLS_PER_PASS` (60) pools only;
+- the newest `HAHAWEEK_WINDOW_LATEST_BLOCKS` (200) blocks;
+- overlapping/adjacent ranges merged, then split into batches of `HAHAWEEK_WINDOW_BATCH_BLOCKS` (= `CHUNK_SIZE`).
+
+Each batch, in order:
+
+1. If it does not start at `cursor + 1`, the skipped range `[cursor + 1, from - 1]` is inserted into `window_gaps` (reason `WINDOW_SKIPPED`, `discovery_scanned` flag) **before** the batch is processed. The row is written to disk by the batch's own commit, so a durable authority lifecycle after a gap always has its gap on disk.
+2. The unchanged verified processing context (headers, parent-hash linkage, raw logs, canonical lineage). A batch not adjacent to an earlier lineage resolves to a new **`INITIAL`** lineage (generation 1, no parent): continuity is never claimed across a gap.
+3. F-03 / production authority gate; the DB is flushed and the cursor advances only after `AUTHORIZED`. Any failure ends the pass with the cursor on the last authorized batch.
+
+Pools whose `Initialize` block is at or below the cursor leave the pending list: *ingested* when an authorized lifecycle covers that block, otherwise *dropped* (pool cap, or a failed pass). Both are counted in the ledger.
+
+**Integrity.**
+
+- `window_gaps` is append-only (triggers).
+- Startup reconciliation (`production-authority-lifecycle-reconciliation.js`) still fails closed on any lifecycle that does not start at `cursor + 1`, **unless** a recorded gap covers exactly `[cursor + 1, lifecycle.from - 1]` (window mode only; contiguous mode never accepts a gap).
+- `evidence-coverage.js` classifies any block range as `COMPLETE` (all authorized), `PARTIAL` (rest is recorded gaps) or `UNKNOWN` (some block is neither, e.g. before the epoch). `analyticalCoverageInputs()` maps it to the existing `acquisition_status` (formation completeness → `UNKNOWN`/`ACQUISITION_INCOMPLETE` unless `COMPLETE`), `coverage_status` (outcome / liquidity survival / validation: insufficient unless `COMPLETE`) and `block_range_status`.
+
+**Retention: evidence epochs** (`window-retention.js`). Evidence tables are append-only, so rows are never pruned. `src/pass.js` points `HAHAWEEK_DATA_DIR` at `<root>/epochs/<id>/` (sqlite, JSONL, `state.json` with the cursor, writer fence). A new, empty epoch starts when the current one is older than `HAHAWEEK_EPOCH_MAX_AGE_MS` (24 h) or larger than `HAHAWEEK_EPOCH_MAX_BYTES` (150 MB); `HAHAWEEK_EPOCH_KEEP_OLD` (1) older epochs are kept, older ones deleted whole. Rotation is **held** while the current epoch records a fail-closed STOP (or unreadable state). A new epoch starts with no cursor, so its first batch is `INITIAL`; blocks before it are `UNKNOWN` in that epoch. Per-file overrides (`HAHAWEEK_STATE_FILE`, `HAHAWEEK_DB_FILE`, …) are rejected in window mode. A lock (`<root>/window/pass.lock`) keeps passes on one root from overlapping.
+
+**Entry points.** `src/pass.js` (one pass; epoch + lock + STOP rule) and `src/watch.js` (loop: a fresh `pass.js` process each time; exit 78 stops it). `src/runner.js` delegates to `watch.js` in window mode.
+
+**Measured (public RPC, 2026-10-26, fresh data dirs).**
+
+| Pass | Blocks fully ingested | Wall time |
+|---|---|---|
+| contiguous free, 2×100 blocks, before this change | 193 | 13.8 s (9 sqlite file writes) |
+| contiguous free, 2×100 blocks, after | 200 | 12.7 s (3 writes) |
+| window, ~70 s after the previous pass (2–4 segments, 1–3 gaps) | 200–210 | 6.3–8.1 s |
+| window, 30 min of chain (17,280 blocks discovered in 0.27 s, 39 pools → 40 segments, 38 gaps) | 390 | 33.9 s |
+| window, 100 latest blocks, while the RPC answered in ~0.5–1.3 s per call (later the same day) | 100–115 | 33–51 s |
+
+Header requests dominate (one `eth_getBlockByNumber` per ingested block plus ethers' `eth_chainId` checks). Public-RPC latency moved between ~85 ms and ~1 s per call within an hour, so the same pass takes 6–50 s; headers are fetched with a sliding window (a new request starts as soon as one finishes). Window mode uses `HAHAWEEK_WINDOW_HEADER_CONCURRENCY` (4): 8 drew occasional HTTP 429s, 4 was almost as fast without any. The old ~200 s / 250 blocks was RPC latency at concurrency 2, not CPU.
+
+**Storage.** Measured 8.5–12.8 KB per fully ingested block in sqlite plus ~1–1.5 KB JSONL. Estimates: GitHub Actions every 30 min ≈ 20–25k blocks/day ≈ 200–350 MB/day (rotates every ~11–18 h, ≤ ~300 MB on disk with 1 old epoch); a Termux loop every ~2 min with 100 latest blocks ≈ 90k blocks/day ≈ 1 GB/day written (rotates every few hours, still ≤ ~300 MB on disk) and ~0.3 GB/day download.
+
+**Detection latency for a new pool** = time to the next pass + pass duration: GitHub Actions up to ~30 min (plus GitHub's schedule delay, often several minutes); a Termux loop sleeping 60–120 s ≈ 1–2.5 min.
+
+**Limits (honest).** Blocks in gaps are not ingested: a pool's activity after its 5-block segment is seen only if it falls in a later segment or latest window. More than 60 new pools between two passes (≈ 90 per 30 min at the average rate) means the older ones are dropped, so the 30-minute Actions cadence misses some pools' detail; a short Termux loop does not. Coverage stays `PARTIAL`/`UNKNOWN` for any range that touches a gap or the time before an epoch.
 
 ## 4. Live pipeline (one batch)
 
@@ -140,6 +189,8 @@ result as a CI artifact.
 | `writer-fence-state.json` | Single-writer lease (its fence counter is kept across runs). |
 | `legacy-write-state.json` | Legacy-write freeze flag. |
 
+In window mode these files live in `<HAHAWEEK_DATA_DIR>/epochs/<id>/`, with `epoch.json` and `window/discovery-ledger.json` at the root (§3b). The DB gains the append-only `window_gaps` table. Writes are committed once per authorized batch (`database.setDeferredSaves` + `flush` before the cursor advances), not once per processing step.
+
 Schema and event identity details: [DATA_SCHEMA.md](DATA_SCHEMA.md), [EVENT_SCHEMA.md](EVENT_SCHEMA.md), [EVIDENCE_MODEL.md](EVIDENCE_MODEL.md).
 
 ## 7. Known gaps
@@ -151,7 +202,7 @@ Schema and event identity details: [DATA_SCHEMA.md](DATA_SCHEMA.md), [EVENT_SCHE
 5. CHAIN_ID is still defined in two places (`config.js`, `pool-discovery.js`).
 6. Raw IDs differ between the live runtime (`4663:block:tx:logIndex`) and the HFI scripts (`raw:v1:<digest>`).
 7. A changed `block_hash` for an existing event ID is an `INTEGRITY_CONFLICT` hard stop, not reorg handling. `CHAIN_ID` is defined in two places.
-8. Storage grows ~8 KB per block (sqlite) + ~1 KB (JSONL) with no retention policy; this limits how long the free GitHub Actions / Termux runtimes can run.
+8. Storage grows ~8–13 KB per block (sqlite) + ~1 KB (JSONL). Contiguous mode still has no retention policy; window mode rotates whole evidence epochs (§3b).
 9. `PROCESSING_CONTEXT_RECOVERY_PROVIDER_UNAVAILABLE` (provider error during recovery) is classified UNKNOWN, i.e. a STOP, not a retryable provider failure.
 10. Mainnet-RPC workflows run on push/PR; actions are not all SHA-pinned; `bin/hahaweek` has a Termux-only shebang.
 

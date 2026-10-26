@@ -12,6 +12,7 @@
     "start": "node src/index.js",
     "scan": "node src/index.js --once",
     "pass": "node src/pass.js",
+    "watch": "node src/watch.js",
     "health": "node src/health.js",
     "hahaweek": "./bin/hahaweek",
     "verify:v4": "node scripts/verify-golden-vectors.js",

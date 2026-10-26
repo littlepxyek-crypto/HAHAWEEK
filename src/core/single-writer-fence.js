@@ -411,10 +411,17 @@ function createWriterFence(options = {}) {
 
     current.worker.postMessage({ type: 'stop' });
 
+    // Wait up to 1 s for a clean exit, then terminate. The timer is cleared
+    // as soon as the worker exits; it used to stay armed and keep the
+    // process alive for a fixed extra second after every pass.
+    let timer = null;
     await Promise.race([
       exited,
-      new Promise(resolve => setTimeout(resolve, 1000)),
+      new Promise(resolve => {
+        timer = setTimeout(resolve, 1000);
+      }),
     ]);
+    if (timer) clearTimeout(timer);
 
     await current.worker.terminate();
   }
