@@ -7,6 +7,6 @@ Priority order from the 2026-10-26 architecture audit. Status is updated as PRs 
 3. **Live derivation stage** (M–L). After each accepted batch, read new `canonical_evidence` from the DB and run formation adapter → completeness → radar candidate; persist append-only tables bound to the authority generation.
 4. **Delayed validation and reporting** (M). Scheduled job for formations whose 7-day window has ended: historical outcome → liquidity survival → validation → research report from the DB, persisted. Shrink `scripts/hfi-mvp-runtime-verify.js` to call `src`; unify raw ID scheme.
 5. **Output surface** (S–M). CLI on the read-only query service (`hahaweek radar|formations|report <id>`) and a static JSON/HTML feed.
-6. **Run it for real** (S). Scheduled GitHub Actions job with persisted DB, or a small VPS with the compose file; backup/restore of `data/`.
+6. **Run it for real** (S). Started in PR #819: free scheduled GitHub Actions pass with state in the Actions cache (`ingest-scheduled.yml`) and a Termux recipe. Still open: storage retention/backup of `data/`, a real SQLite engine for long runs, or a keyed RPC + `fast` profile to track the head.
 7. **CI cleanup and hardening** (S). Mainnet-RPC workflows on schedule/manual, pin actions to SHAs, one Node version with `npm ci`, remove dead/duplicate modules, fix `bin/` shebang.
 8. **Reorg and authority semantics** (M). Treat a `block_hash` change as a reorg instead of `INTEGRITY_CONFLICT`, single-source `CHAIN_ID`, wire or retire `authority-activation-state`.
