@@ -79,15 +79,15 @@ The SQLite file is exported at each batch's commit boundaries (processing contex
 
 ## 3a. Free runtime: GitHub Actions schedule
 
-`.github/workflows/ingest-scheduled.yml` runs **one bounded `src/pass.js` pass with the free profile** at minutes 7 and 37 of every hour, plus `workflow_dispatch`. GitHub runs `schedule:` only from the default branch, so it is active only once merged to `main`.
+`.github/workflows/ingest-scheduled.yml` runs **one bounded `src/pass.js` window-watch pass (`HAHAWEEK_MODE=window`, §3b) with the free profile** at minutes 7 and 37 of every hour, plus `workflow_dispatch`. GitHub runs `schedule:` only from the default branch, so it is active only once merged to `main`.
 
 - No secrets. Token permissions `contents: read`, `actions: read`. The job runs only in `littlepxyek-crypto/HAHAWEEK` on `refs/heads/main`; forks and PRs never run it.
 - `concurrency: hahaweek-scheduled-ingestion` (no cancel): two passes never overlap. `timeout-minutes: 25`.
-- **State lives in the GitHub Actions cache**, key `hahaweek-state-v1-<run_id>-<attempt>`, restored by prefix (newest first). The whole `data/` directory is saved as one unit after every pass that ran, including failed ones (so a STOP carries into the next run). A cancelled/timed-out pass is not saved; the next run restores the previous consistent snapshot.
+- **State lives in the GitHub Actions cache**, key `hahaweek-state-v2-<run_id>-<attempt>` (v2 = window layout: `epoch.json`, `epochs/`, `window/`), restored by prefix (newest first). The whole `data/` directory is saved as one unit after every pass that ran, including failed ones (so a STOP carries into the next run). A cancelled/timed-out pass is not saved; the next run restores the previous consistent snapshot.
   - Why not commit to a `hahaweek-data` branch: the DB grows ~8 KB per block (measured: 3.8 MB after 467 blocks), ~200 MB/day at this cadence. Every commit would store a full new copy and the file passes GitHub's 100 MB hard limit within a day. The cache compresses it ~12× (zstd), needs no write permission and holds 10 GB per repo.
   - Risk: GitHub evicts caches unused for 7 days or when the repo exceeds 10 GB. If the cache is empty but earlier runs succeeded, the job **refuses to start from scratch** (exit 78) unless dispatched with `allow_fresh_state=true`.
 - A fail-closed STOP stays stopped: every later run exits 78 without RPC until dispatched with `resume_after_stop=true`.
-- Pass size: repo variable `HAHAWEEK_MAX_BATCHES_PER_RUN` or the dispatch input `max_batches` (default 5 = 500 blocks).
+- Pass size: planned by window mode (new-pool segments + latest 200 blocks). `HAHAWEEK_MAX_BATCHES_PER_RUN` / `max_batches` apply to contiguous mode only.
 - Scheduled workflows in public repos are disabled by GitHub after 60 days without repository activity; re-enable in the Actions tab.
 
 ## 3b. Window-watch mode (`HAHAWEEK_MODE=window`)

@@ -1,14 +1,20 @@
 name: HAHAWEEK Scheduled Ingestion (free)
 
-# One bounded ingestion pass with the free profile, on a schedule.
+# One bounded window-watch pass (HAHAWEEK_MODE=window) with the free profile,
+# on a schedule: stage 1 finds every new Uniswap v4 pool (Initialize-only
+# getLogs over all blocks since the last pass), stage 2 fully ingests 5 blocks
+# after each new pool (max 60 newest) plus the latest 200 blocks. Skipped
+# ranges are recorded as gaps. See ARCHITECTURE.md section 3b.
 # Free: public repo => GitHub-hosted runner minutes are free; public RPC, no key;
 # no secrets used anywhere in this workflow.
 #
 # GitHub only runs `schedule:` workflows from the DEFAULT branch, so this
 # becomes active only after it is merged to main.
 #
-# State (data/: sqlite, raw-events.jsonl, state.json, writer-fence-state.json)
-# lives in the GitHub Actions cache, not in git. Why: the sqlite file grows by
+# State (data/: epoch.json, epochs/<id>/{sqlite, raw-events.jsonl, state.json,
+# writer-fence-state.json}, window/discovery-ledger.json) lives in the GitHub
+# Actions cache, not in git. Window mode rotates whole evidence epochs at 24 h
+# or 150 MB and keeps one old epoch, so data/ stays around <= ~300 MB. Why: the sqlite file grows by
 # roughly 8 KB per block (~200 MB/day at this cadence) and every git commit
 # would store a full new copy, hitting GitHub's 100 MB per-file limit within a
 # day. The cache is zstd-compressed (~12x on this DB), needs no write
@@ -21,7 +27,7 @@ on:
   workflow_dispatch:
     inputs:
       max_batches:
-        description: "Batches this pass (free default 5 x 100 blocks)"
+        description: "Contiguous mode only: batches this pass (window mode plans its own segments)"
         required: false
         default: ""
       resume_after_stop:
@@ -53,6 +59,7 @@ jobs:
     timeout-minutes: 25
     env:
       HAHAWEEK_PROFILE: free
+      HAHAWEEK_MODE: window
       HAHAWEEK_DATA_DIR: ${{ github.workspace }}/data
       # Optional repo variable (Settings > Secrets and variables > Actions > Variables).
       HAHAWEEK_MAX_BATCHES_PER_RUN: ${{ inputs.max_batches || vars.HAHAWEEK_MAX_BATCHES_PER_RUN || '5' }}
@@ -78,9 +85,10 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: data
-          key: hahaweek-state-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          # v2: window-mode layout (epochs/, window/). Never mixed with v1.
+          key: hahaweek-state-v2-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
-            hahaweek-state-v1-
+            hahaweek-state-v2-
 
       - name: Refuse to start fresh if earlier state was lost
         if: steps.restore.outputs.cache-matched-key == ''
@@ -98,10 +106,11 @@ jobs:
           echo "No saved state: first run (or operator-approved fresh start)."
           mkdir -p data
 
-      - name: One ingestion pass (free profile)
+      - name: One window-watch pass (free profile)
         id: pass
         run: |
-          rm -f data/*.lock data/*.tmp
+          # Leftovers of a cancelled run; concurrency guarantees no live pass.
+          find data -type f \( -name '*.lock' -o -name '*.tmp' \) -delete 2>/dev/null || true
           args=""
           if [ "${{ inputs.resume_after_stop && 'true' || 'false' }}" = "true" ]; then
             args="--resume-after-stop"
@@ -112,22 +121,28 @@ jobs:
         if: always() && steps.pass.outcome != 'skipped'
         run: |
           {
-            echo "### HAHAWEEK pass"
+            echo "### HAHAWEEK window pass"
+            epoch=$(jq -r '.current // empty' data/epoch.json 2>/dev/null || true)
+            echo "Epoch: ${epoch:-none}"
             echo '```json'
-            cat data/state.json 2>/dev/null || echo '{}'
+            cat "data/epochs/${epoch}/state.json" 2>/dev/null || echo '{}'
             echo '```'
-            du -sh data 2>/dev/null || true
+            echo '```json'
+            jq '{scannedFrom, scannedThrough, ingestedThrough, pending: (.pending | length), totals}' \
+              data/window/discovery-ledger.json 2>/dev/null || echo '{}'
+            echo '```'
+            du -sh data data/epochs/* 2>/dev/null || true
           } >> "$GITHUB_STEP_SUMMARY"
 
       # Save even when the pass failed: state.json must carry a fail-closed
       # STOP into the next run. Skip only if the pass never ran.
       - name: Drop lock/tmp files before saving
         if: always() && steps.pass.outcome != 'skipped' && steps.pass.outcome != 'cancelled'
-        run: rm -f data/*.lock data/*.tmp
+        run: find data -type f \( -name '*.lock' -o -name '*.tmp' \) -delete 2>/dev/null || true
 
       - name: Upload state to cache
         if: always() && steps.pass.outcome != 'skipped' && steps.pass.outcome != 'cancelled'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: data
-          key: hahaweek-state-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          key: hahaweek-state-v2-${{ github.run_id }}-${{ github.run_attempt }}

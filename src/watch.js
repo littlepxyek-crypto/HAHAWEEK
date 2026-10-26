@@ -20,10 +20,14 @@ const EXIT_FAIL_CLOSED = 78;
 let stopping = false;
 let child = null;
 
+let wake = null;
+
+// Sleep that a SIGTERM/SIGINT ends at once.
 function sleep(ms) {
+  if (stopping) return Promise.resolve();
   return new Promise(resolve => {
-    const timer = setTimeout(resolve, ms);
-    if (stopping) { clearTimeout(timer); resolve(); }
+    const timer = setTimeout(() => { wake = null; resolve(); }, ms);
+    wake = () => { clearTimeout(timer); wake = null; resolve(); };
   });
 }
 
@@ -79,6 +83,7 @@ function shutdown(signal) {
   stopping = true;
   console.log(`WATCH: received ${signal}`);
   if (child) child.kill('SIGTERM');
+  if (wake) wake();
 }
 
 if (require.main === module) {

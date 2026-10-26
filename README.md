@@ -489,16 +489,16 @@ Mode default tetap `contiguous` (profil `free`/`fast` seperti sebelumnya). Detai
 
 ### Free runtime: GitHub Actions (no computer, no VPS)
 
-`.github/workflows/ingest-scheduled.yml` runs one free-profile pass every 30 minutes (minutes 7 and 37) and on demand. Public repo, so runner minutes are free; no secrets are used. **It becomes active only after it is merged to `main`** (GitHub runs schedules from the default branch only).
+`.github/workflows/ingest-scheduled.yml` runs one free-profile **window-watch** pass (`HAHAWEEK_MODE=window`) every 30 minutes (minutes 7 and 37) and on demand: every new pool since the last pass is found, up to 60 of the newest get their first 5 blocks fully ingested, plus the newest 200 blocks. Public repo, so runner minutes are free; no secrets are used. **It becomes active only after it is merged to `main`** (GitHub runs schedules from the default branch only).
 
 - State (`data/`) is kept in the GitHub Actions cache between runs, not in git. See [ARCHITECTURE.md §3a](ARCHITECTURE.md#3a-free-runtime-github-actions-schedule).
 - Run now from the phone: GitHub app or browser → repo → **Actions** → *HAHAWEEK Scheduled Ingestion (free)* → **Run workflow**.
-- Bigger passes: set repo variable `HAHAWEEK_MAX_BATCHES_PER_RUN` (Settings → Secrets and variables → Actions → Variables).
+- New-pool latency is one schedule interval (up to ~30 min plus GitHub's delay). More than ~60 new pools in 30 minutes means the oldest of them are not ingested in detail (counted as `dropped`); a Termux loop avoids that.
 - If a run ends in a fail-closed STOP, later runs stay stopped (exit 78) until you run it manually with **resume_after_stop** ticked, after reading the log.
 
 ### Termux (Android) option
 
-Copy-paste into Termux. Wi-Fi recommended: one pass downloads ~1.7 MB and the database grows ~8 KB per block (~4 MB per default pass).
+Copy-paste into Termux. Wi-Fi recommended.
 
 ```bash
 pkg update -y && pkg install -y nodejs-lts git
@@ -507,15 +507,26 @@ cd HAHAWEEK
 npm ci --omit=dev
 ```
 
-One pass (free profile, 2 batches = 200 blocks to stay light on a phone):
+**Window-watch (recommended on a phone).** Finds every new pool and fully ingests 5 blocks after it plus the newest blocks; skipped ranges are recorded as gaps. One pass:
+
+```bash
+HAHAWEEK_MODE=window node src/pass.js
+```
+
+Loop: a new pass every 2 minutes, newest 100 blocks per pass (lighter on quota: ~0.3 GB download per day, data on disk stays ≤ ~300 MB because old epochs are deleted). It stops by itself on a fail-closed STOP (exit 78). Press Ctrl+C to end.
+
+```bash
+termux-wake-lock 2>/dev/null
+HAHAWEEK_MODE=window HAHAWEEK_LOOP_SLEEP_MS=120000 HAHAWEEK_WINDOW_LATEST_BLOCKS=100 node src/watch.js
+termux-wake-unlock 2>/dev/null
+```
+
+A new pool shows up within ~2–2.5 minutes this way. After a STOP: read the log, then `HAHAWEEK_MODE=window node src/pass.js --resume-after-stop`.
+
+**Contiguous (every block, falls behind the head).** One pass of 200 blocks, then a light loop every 15 minutes:
 
 ```bash
 HAHAWEEK_PROFILE=free HAHAWEEK_MAX_BATCHES_PER_RUN=2 node src/pass.js
-```
-
-Light loop: one pass every 15 minutes, stops by itself on a fail-closed STOP (exit 78). Press Ctrl+C to end.
-
-```bash
 termux-wake-lock 2>/dev/null
 while true; do
   HAHAWEEK_PROFILE=free HAHAWEEK_MAX_BATCHES_PER_RUN=2 node src/pass.js
@@ -525,7 +536,9 @@ done
 termux-wake-unlock 2>/dev/null
 ```
 
-Check progress any time: `node src/status.js`. Data lives in `./data` inside the `HAHAWEEK` folder.
+Do not point both modes at the same `./data` folder: window mode keeps its evidence in `./data/epochs/`, contiguous mode in `./data/` itself.
+
+Check progress any time: `node src/status.js` (contiguous) or `cat data/window/discovery-ledger.json` (window). Data lives in `./data` inside the `HAHAWEEK` folder.
 
 Docker: `docker compose -f deploy/docker-compose.yml up -d` (requires `RPC_URL`; defaults to the `fast` profile). The container runs `src/runner.js` and stays idle instead of restarting after a fail-closed STOP.
 
