@@ -41,21 +41,23 @@ test('RPC log acquisition uses bounded adaptive retries and range splitting', ()
 test('runtime uses provider-supported bounded outcome ranges and bounded acquisition concurrency', () => {
   assert.match(runtime, /MAXC=8/);
   assert.match(runtime, /TARGET_OUTCOME_CHUNK=2500/);
+  assert.match(runtime, /const outcomeChunk=Number\(process\.env\.HFI_OUTCOME_LOG_CHUNK\|\|TARGET_OUTCOME_CHUNK\)/);
+  assert.match(workflow, /HFI_OUTCOME_LOG_CHUNK: "100000"/);
   assert.match(runtime, /TARGET_OUTCOME_LOG_CONCURRENCY=2/);
-  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,outcomeChunk,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?/);
   assert.match(runtime, /TARGET_LOG_CONCURRENCY=4/);
   assert.match(runtime, /Math\.min\(concurrency,ranges\.length\)/);
 });
 
 test('outcome-log heartbeat reports the actual lower concurrency bound used by the query', () => {
-  assert.match(runtime, /checkpoint\(base,'outcome_logs',\{from:firstSwap\.blockNumber,to:hi,chunk_size:TARGET_OUTCOME_CHUNK,concurrency:TARGET_OUTCOME_LOG_CONCURRENCY\}\)/);
-  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?/);
+  assert.match(runtime, /checkpoint\(base,'outcome_logs',\{from:firstSwap\.blockNumber,to:hi,chunk_size:outcomeChunk,concurrency:TARGET_OUTCOME_LOG_CONCURRENCY\}\)/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,outcomeChunk,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?/);
 });
 
 test('formation and outcome acquisition retain explicit bounded windows', () => {
   assert.match(runtime, /formationEnd=Math\.min\(latest,il\.blockNumber\+10000\)/);
   assert.match(runtime, /TARGET_FORMATION_CHUNK=500/);
-  assert.match(runtime, /firstSwap\.blockNumber,hi,TARGET_OUTCOME_CHUNK,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?\)/);
+  assert.match(runtime, /firstSwap\.blockNumber,hi,outcomeChunk,TARGET_OUTCOME_LOG_CONCURRENCY(?:,range=>outcomeRanges\.push\(range\))?\)/);
 });
 
 test('runtime supports an explicit candidate hint without treating it as evidence authority', () => {
