@@ -116,3 +116,9 @@ Residual risk: live external-provider integration, provider-specific schema mapp
 Status: IMPLEMENTED / VERIFICATION PENDING
 Decision: A Reference provider may report its own independence metadata, but that metadata is never the HAHAWEEK independence authority. The gateway derives `independence_class` only from the registered adapter classification; absent an explicit adapter classification, the observation is I0 UNKNOWN. Provider-declared classification is retained only as provenance metadata.
 Reason: Preserve source-independence safety and prevent provider self-promotion into corroboration eligibility.
+
+
+## D-021 — Root ARCHITECTURE.md is the single source of architecture status
+Status: ACCEPTED (2026-10-26)
+Decision: `ARCHITECTURE.md` at the repository root describes what the code actually runs, using the labels LIVE / IMPLEMENTED-NOT-WIRED / STUB / MISSING. Older design documents in `docs/` are intent and history; `ARCHITECTURE.md` wins where they disagree. Historical STEP records were moved to `docs/archive/`, and tests that only asserted documentation prose were removed (behaviour tests are unchanged).
+Reason: the docs claimed "V4 production authority INACTIVE" while `src/index.js` runs the production-authority lifecycle on every batch, and advertised sources/outputs that do not run. Prose-assertion tests forced doc churn on every code change.

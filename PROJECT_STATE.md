@@ -1,3 +1,5 @@
+> **Note (2026-10-26):** Historical STEP records live in `docs/archive/` (paths below were updated). This file is a historical log; the current as-built architecture status is in [ARCHITECTURE.md](ARCHITECTURE.md), which wins where they disagree.
+
 ## CURRENT MAIN RECONCILIATION SNAPSHOT — 2026-10-09 — MOST RECENT VERIFIED HFI-MVP E5 RUNTIME / PRODUCTION GATE BLOCKED
 
 - Current main HEAD verified at reconciliation time: `a9abae93e622e48530e5aec8053eb89b17b906c2`.
@@ -317,7 +319,7 @@
 - Post-failure durable state preserved evidence and authority no-advance semantics.
 - Recovery from last verified cursor `64992806` succeeded through cursor `64993006` with VERIFIED processing, CONTINUATION, generation `1`, and AUTHORIZED authority.
 - Post-recovery status was HEALTHY; cursor and last verified cursor were both `64993006`; recovery was VERIFIED and not required; writer fence was released.
-- Final direct runtime evidence is recorded in `docs/STEP_614_ACTUAL_OPERATOR_RUNTIME_FINAL_EVIDENCE_2026-09-29.md`.
+- Final direct runtime evidence is recorded in `docs/archive/STEP_614_ACTUAL_OPERATOR_RUNTIME_FINAL_EVIDENCE_2026-09-29.md`.
 - The observed writer-fence failure remains recorded as a real runtime failure boundary and is not suppressed or reclassified.
 - **Current STEP: 614**
 - **Current phase: DOCUMENTATION**
@@ -329,15 +331,15 @@
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Actual operator runtime on exact main `22a4bf88d22e49beb1062d045126e09c5e83b7f4` exposed provider transport failure `ECONNRESET` during scan startup after health returned OK.
 - Runtime watchdog diagnostics during the failure showed 8 renewals and `lastRenewFailureCode=null`; the failure was therefore isolated from the previously observed writer-fence expiration path.
-- Analysis: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_DESIGN_V0_1.md`.
 - Implementation PR #650 merged as `5097fa5daedd790ec0fd8c1f4a3e28376863ec28`.
 - PR #650 head `beaf284d938d936bda72e4f42625c6cbd9898961`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
-- Post-Merge Verification: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_POST_MERGE_VERIFICATION_V0_1.md`.
+- Post-Merge Verification: `docs/archive/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_POST_MERGE_VERIFICATION_V0_1.md`.
 - Post-Merge Verification PR #651 merged as `1f3bf86b17581529f0a07fd47955841941b34ca4`.
 - PR #651 head `57d7c784d8385bd0ed0a0c3516dcc0bf6f280a9f`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
-- Reconciliation: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_RECONCILIATION_V0_1.md`.
-- Final Documentation: `docs/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_FINAL_DOCUMENTATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_RECONCILIATION_V0_1.md`.
+- Final Documentation: `docs/archive/STEP_614_RUNTIME_ECONNRESET_PROVIDER_CLASSIFICATION_FINAL_DOCUMENTATION_V0_1.md`.
 - Current repository-side remediation maps `ECONNRESET` to the existing `PROVIDER_UNAVAILABLE` / `DEGRADED` / `RETRYABLE` boundary and preserves evidence and authority semantics.
 - No Contract Amendment; no cursor reset, evidence deletion/rewrite, authority expansion, writer-fence semantic change, V4 activation, Surveillance authority, signing, trading, or execution semantics changed.
 - Exact merge-head workflow associations for PR #650 and PR #651 returned no runs; exact merge-head CI GREEN is not claimed.
@@ -353,22 +355,22 @@
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Governing Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Fresh runtime failure after provider timeout reproduced `WRITER_FENCE_EXPIRED`; repository analysis identified the bounded initialization interval in which the writer fence was acquired before watchdog startup.
-- Analysis: `docs/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_DESIGN_V0_1.md`.
 - Implementation PR #645 merged as `ef88d65cf4e7f916d20c5f8bf87e9f2adb16bbd1`.
 - PR #645 final head `5954532662c67daef92c433b012270579604e834`.
 - PR #645 final head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
 - The first PR-head CI attempt was cancelled after `npm test` remained alive; diagnosis found test cleanup did not stop the watchdog newly started by `createEngine()`. Cleanup was corrected in the same PR and fresh CI completed SUCCESS.
-- Post-Merge Verification: `docs/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_POST_MERGE_VERIFICATION_V0_1.md`.
+- Post-Merge Verification: `docs/archive/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_POST_MERGE_VERIFICATION_V0_1.md`.
 - Post-Merge Verification PR #646 merged as `0c4c68ee122b7b743a863fd81e51e3ca6ec5f47a`.
-- Final Documentation: `docs/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_FINAL_DOCUMENTATION_V0_1.md`.
+- Final Documentation: `docs/archive/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_FINAL_DOCUMENTATION_V0_1.md`.
 - Reconciliation PR #647 merged as `3d6b87efb30ba0b284679b9cce46daf47b6a3114`.
 - Final Documentation PR #648 merged as `0a0df61430a3677a68a99df6ebfbaede2aee51c3`.
 - Current main was directly verified at `0a0df61430a3677a68a99df6ebfbaede2aee51c3` before this state-sync commit.
 - PR #646 head `7ad20d4177d67be6edee417197248fac8a6e50ed`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
 - Main ref was directly verified at `0c4c68ee122b7b743a863fd81e51e3ca6ec5f47a`.
 - PR #645 merge commit and tested PR head have zero file-content differences; exact merge-head workflow association returned no runs through the repository integration, so exact merge-head CI GREEN is not claimed.
-- Reconciliation: `docs/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_614_RUNTIME_INITIALIZATION_WRITER_FENCE_LIVENESS_HARDENING_RECONCILIATION_V0_1.md`.
 - No Contract Amendment; no lease-duration, expiry, writer-ownership, cursor, evidence, checkpoint, authority, V4, Surveillance, signing, trading, or execution semantics changed.
 - No historical rewrite, evidence deletion, cursor reset, unauthorized cursor advance, or fallback authority was introduced.
 - Repository lifecycle through reconciliation is VERIFIED / RECONCILED / DOCUMENTED.
@@ -382,16 +384,16 @@
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Fresh operator evidence on 2026-09-28 reproduced `WRITER_FENCE_EXPIRED` after successful watchdog renewals; root cause remains UNKNOWN / UNPROVEN.
-- Analysis: `docs/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_DESIGN_V0_1.md`.
 - Implementation PR #641 merged as `3ae9bafecbd1198d412bc36900fb43a3aef6b5ce`.
 - PR #641 head `12b56519bfaa6615c48fde498524198d270710c2`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
-- Post-Merge Verification: `docs/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_POST_MERGE_VERIFICATION_V0_1.md`.
+- Post-Merge Verification: `docs/archive/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_POST_MERGE_VERIFICATION_V0_1.md`.
 - Post-Merge Verification PR #642 merged as `4a5be5a78b515baab41a8e3a7d97a1549efc5aed`.
 - PR #642 head `76f35a594fa0f01e3bc5cf1a185f31ec01ddc451`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
-- Reconciliation: `docs/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #643 merged as `51113b71a3499949112f9a57e9079e80a470fe08`. Its first CI attempt failed because PROJECT_STATE was moved to RECONCILIATION while the existing lifecycle authority test expected DOCUMENTATION; the defect was classified and corrected. Corrected PR #643 head CI then completed SUCCESS for Tests and Security/Regression.
-- Final Documentation: `docs/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_FINAL_DOCUMENTATION_V0_1.md`.
+- Final Documentation: `docs/archive/STEP_614_WRITER_FENCE_RUNTIME_LIVENESS_HARDENING_FINAL_DOCUMENTATION_V0_1.md`.
 - Exact merge-commit workflow lookups for implementation and post-merge merge commits returned no associated runs/statuses; exact merge-head CI GREEN is not claimed.
 - No Contract Amendment; no lease-duration, expiry, writer-ownership, cursor, evidence, checkpoint, authority, V4, Surveillance, signing, trading, or execution semantics changed.
 - Repository-side bounded lifecycle is VERIFIED / RECONCILED / DOCUMENTED after the state-synchronization correction.
@@ -404,7 +406,7 @@
 ## STEP 614 — Final Documentation — DOCUMENTATION — VERIFIED / RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Final documentation: `docs/STEP_614_FINAL_DOCUMENTATION_V0_6.md`.
+- Final documentation: `docs/archive/STEP_614_FINAL_DOCUMENTATION_V0_6.md`.
 - PR #639 merged as `602f3d221a1c7827dcd62eefa8ea1522928c7bec`.
 - PR #639 post-merge verification and reconciliation are preserved.
 - Exact current-main HAHAWEEK Tests: SUCCESS.
@@ -419,12 +421,12 @@
 ## STEP 614 — Writer-Fence Watchdog Runtime Liveness Diagnostics — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED / OPERATOR RUNTIME PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Diagnostics Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_ANALYSIS_V0_1.md`.
-- Diagnostics Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_DESIGN_V0_1.md`.
+- Diagnostics Analysis: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_ANALYSIS_V0_1.md`.
+- Diagnostics Design: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_DESIGN_V0_1.md`.
 - Implementation PR #611 merged as `676ab419a6efc0a0ea7c10bcfdc4a6f03c16cd45`.
 - Post-merge verification PR #612 merged as `2d6b4ae10108ae6e6f393d59c49a5007a8141374`.
 - Reconciliation PR #613 merged as `fd4e1a8bc4375addbcfddfdf63799484ebf387a5`.
-- Final documentation: `docs/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_FINAL_DOCUMENTATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_RUNTIME_LIVENESS_DIAGNOSTICS_FINAL_DOCUMENTATION_V0_1.md`.
 - PR #611 exact merge-head Tests: SUCCESS.
 - PR #611 exact merge-head Security/Regression: SUCCESS.
 - PR #611 exact merge-head CodeQL JavaScript/TypeScript: SUCCESS.
@@ -453,13 +455,13 @@
 - Runtime finding: fresh Termux on main `4273964106d57e8276b3273f1f48959a5330dc49` reproduced `WRITER_FENCE_BUSY` during range `64988757-64988766`.
 - Read-only evidence immediately after failure showed no active HAHAWEEK/Node process, no lock file, and durable fence state `ownerId=NONE`, `fence=56`, `expiresAt=0`.
 - Root cause: watchdog worker and main-thread periodic/batch renewal paths could self-contend on the same exclusive fence lock.
-- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_DESIGN_V0_1.md`.
 - PR #601 merged as `cc11357c177bfbeeb30866e56fa38e6ed8663f44`.
 - PR-head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
 - Exact merge-head workflow lookup returned no runs; exact merge-head CI GREEN is not claimed.
 - Post-merge verification confirms watchdog-exclusive renewal, preserved ownership assertions, non-watchdog fallback, and synchronized watchdog shutdown.
-- Post-merge verification document: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_POST_MERGE_VERIFICATION_V0_1.md`.
+- Post-merge verification document: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_POST_MERGE_VERIFICATION_V0_1.md`.
 - No Contract Amendment; no authority, evidence, cursor, CBDR, V4, Surveillance, or execution semantics change.
 - Fresh operator runtime on merge commit is required before this capability can be reconciled as live.
 - Global LIVE-READINESS remains **NOT READY / BLOCKED / FAIL-CLOSED**.
@@ -478,8 +480,8 @@
 - Fresh operator runtime on main `4273964106d57e8276b3273f1f48959a5330dc49` reproduced `WRITER_FENCE_BUSY` while processing `64988757-64988766`.
 - Immediate read-only post-failure evidence showed no HAHAWEEK/Node process, no remaining `data/writer-fence-state.json.lock`, and durable fence state `ownerId=NONE`, `fence=56`, `expiresAt=0`.
 - Repository analysis identified self-contention: the watchdog worker and the main-thread timer/batch renewal paths can concurrently acquire the same exclusive fence lock.
-- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_CONTENTION_DESIGN_V0_1.md`.
 - Remediation is bounded to the existing writer-fence implementation: when the watchdog is active, it becomes the sole renewal mechanism; main-thread heartbeat and explicit renewals are disabled for that run; ownership assertions remain.
 - No Contract Amendment is required because authority, cursor, evidence, CBDR, V4, Surveillance, and execution semantics are unchanged.
 - Regression added to ensure a watchdog-capable ingestion path performs no main-thread renewals.
@@ -498,8 +500,8 @@
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Runtime diagnostic for range `64988747-64988756` established partial durable state: ACCEPTED/CANONICAL processing result and canonical decision snapshot existed, while canonical lineage and production authority lifecycle were absent.
-- Analysis: `docs/STEP_614_PARTIAL_CONTEXT_RECOVERY_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_PARTIAL_CONTEXT_RECOVERY_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_PARTIAL_CONTEXT_RECOVERY_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_PARTIAL_CONTEXT_RECOVERY_DESIGN_V0_1.md`.
 - Implementation PR #599 merged as `d03735f9ccd95325e5e332a7123da0ecdba1dab9`.
 - PR #599 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
 - Exact merge-head workflow lookup returned no runs; exact merge-head CI GREEN is not claimed.
@@ -522,8 +524,8 @@
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Fresh operator restart on `a93bee5c39b73fa08f7675937343ea19bdd8b4e7` reproduced `WRITER_FENCE_EXPIRED` after durable cursor recovery and successful VERIFIED/AUTHORIZED processing.
-- Analysis: `docs/STEP_614_WRITER_FENCE_WATCHDOG_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_WRITER_FENCE_WATCHDOG_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_WRITER_FENCE_WATCHDOG_DESIGN_V0_1.md`.
 - PR #597 merged as `1db2ef4feddc0af926c4200b8d25f1483038f02f`.
 - PR #597 head CI: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS.
 - Exact merge-head workflow lookup returned no runs; no exact merge-head CI GREEN is claimed.
@@ -548,8 +550,8 @@
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
 - Fresh Termux evidence after PR #594 merge reproduced an external RPC transport failure: `ECONNABORTED`, after four successful ingestion ranges.
 - Runtime state correctly preserved evidence and blocked authority advance, but classified the known transport failure as `UNKNOWN_FAILURE`, causing STOP rather than the existing retryable provider-unavailable path.
-- Analysis: `docs/STEP_614_ECONNABORTED_RUNTIME_FAILURE_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_ECONNABORTED_RUNTIME_FAILURE_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_ECONNABORTED_RUNTIME_FAILURE_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_ECONNABORTED_RUNTIME_FAILURE_DESIGN_V0_1.md`.
 - Code: `src/core/operational-state.js` now maps `ECONNABORTED` to existing `PROVIDER_UNAVAILABLE`.
 - Test: `tests/operational-state.test.js` adds deterministic classification/retry regression coverage.
 - PR #595 merged as `e68c2f582c038925ad0365122685b18d163d89cc`.
@@ -598,13 +600,13 @@
 ## STEP 614 — F-03 Runtime Authority Establishment — RECONCILIATION — VERIFIED / RECONCILED / DOCUMENTED / RUNTIME EVIDENCE PENDING
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md`.
-- Contract Amendment: explicitly authorized by user on 2026-09-27. The referenced file `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_CONTRACT_AMENDMENT_V0_1.md` is NOT present in the repository (found missing in path audit 2026-10-26); restore it or treat the amendment as undocumented.
-- Analysis: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_DESIGN_V0_1.md`.
+- Contract Amendment: explicitly authorized by user on 2026-09-27. The referenced file `docs/archive/STEP_614_F03_RUNTIME_ESTABLISHMENT_CONTRACT_AMENDMENT_V0_1.md` is NOT present in the repository (found missing in path audit 2026-10-26); restore it or treat the amendment as undocumented.
+- Analysis: `docs/archive/STEP_614_F03_RUNTIME_ESTABLISHMENT_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_614_F03_RUNTIME_ESTABLISHMENT_DESIGN_V0_1.md`.
 - Implementation PR #589 merged as `4446c5e7dab4d0751b9b55b82835ce533a314784`.
-- Post-Merge Verification: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_POST_MERGE_VERIFICATION_V0_1.md`.
-- Reconciliation: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_RECONCILIATION_V0_1.md`.
-- Final Documentation: `docs/STEP_614_F03_RUNTIME_ESTABLISHMENT_FINAL_DOCUMENTATION_V0_1.md`.
+- Post-Merge Verification: `docs/archive/STEP_614_F03_RUNTIME_ESTABLISHMENT_POST_MERGE_VERIFICATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_614_F03_RUNTIME_ESTABLISHMENT_RECONCILIATION_V0_1.md`.
+- Final Documentation: `docs/archive/STEP_614_F03_RUNTIME_ESTABLISHMENT_FINAL_DOCUMENTATION_V0_1.md`.
 - PR-head HAHAWEEK Tests: SUCCESS.
 - PR-head Security/Regression: SUCCESS.
 - Exact merge-head HAHAWEEK Tests: SUCCESS.
@@ -637,7 +639,7 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Final documentation: `docs/STEP_614_FINAL_DOCUMENTATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_614_FINAL_DOCUMENTATION_V0_1.md`.
 - Full repository lifecycle is verified, reconciled, and documented.
 - F-614-01 is implemented and regression-tested.
 - Repository-side LIVE-READINESS checks are verified.
@@ -650,7 +652,7 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — RECONCILIATION — VERIFIED / IN PROGRESS
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Final Reconciliation: `docs/STEP_614_FINAL_RECONCILIATION_V0_1.md`.
+- Final Reconciliation: `docs/archive/STEP_614_FINAL_RECONCILIATION_V0_1.md`.
 - Contract through Post-Merge Verification are verified and preserved.
 - Repository-side LIVE-READINESS checks are evidenced.
 - Actual operator environment remains UNVERIFIED.
@@ -662,7 +664,7 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — VERIFICATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Final Post-Merge Verification: `docs/STEP_614_FINAL_POST_MERGE_VERIFICATION_V0_1.md`.
+- Final Post-Merge Verification: `docs/archive/STEP_614_FINAL_POST_MERGE_VERIFICATION_V0_1.md`.
 - Exact main merge head: `924bc32973718346fc549b4e03ee39325114673e`.
 - Exact merge-head Tests: SUCCESS.
 - Exact merge-head Security/Regression: SUCCESS.
@@ -678,7 +680,7 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — MERGE — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Merge checkpoint: `docs/STEP_614_MERGE_CHECKPOINT_V0_1.md`.
+- Merge checkpoint: `docs/archive/STEP_614_MERGE_CHECKPOINT_V0_1.md`.
 - Review PR #567 merged `14cfc58ff241b5be07da4039d3ce34aee5d2f0b6`.
 - Current main Tests: SUCCESS.
 - Current main Security/Regression: SUCCESS.
@@ -695,7 +697,7 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — REVIEW — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Review checkpoint: `docs/STEP_614_REVIEW_CHECKPOINT_V0_1.md`.
+- Review checkpoint: `docs/archive/STEP_614_REVIEW_CHECKPOINT_V0_1.md`.
 - Current merge head before Review: `daecc368ef5c679f3ec5b9f23c47cc4899f9c0cd`.
 - Tests: SUCCESS.
 - Security/Regression: SUCCESS.
@@ -711,7 +713,7 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — CI — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- CI evidence: `docs/STEP_614_CI_EVIDENCE_V0_1.md`.
+- CI evidence: `docs/archive/STEP_614_CI_EVIDENCE_V0_1.md`.
 - Security/Regression PR #565 merged `283e6d4683a542400966a01c3b5b66751685f246`.
 - Exact merge-commit Tests: SUCCESS.
 - Exact merge-commit Security/Regression: SUCCESS.
@@ -726,7 +728,7 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — SECURITY/REGRESSION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Security/Regression evidence: `docs/STEP_614_SECURITY_REGRESSION_V0_1.md`.
+- Security/Regression evidence: `docs/archive/STEP_614_SECURITY_REGRESSION_V0_1.md`.
 - Test PR #564 merged `3c9872d77cbc3fcca6aca91f931c573cc77484fc`.
 - HAHAWEEK Tests SUCCESS.
 - HAHAWEEK Security and Regression SUCCESS.
@@ -743,7 +745,7 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — TEST — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Test evidence: `docs/STEP_614_TEST_EVIDENCE_V0_1.md`.
+- Test evidence: `docs/archive/STEP_614_TEST_EVIDENCE_V0_1.md`.
 - Code PR #562 merged `735d00d4eb26d2bf9af5eae13d4b84ab3d812a18`.
 - Main Test run #36280449582: SUCCESS.
 - Test result: 703 total, 702 passed, 0 failed, 1 skipped.
@@ -758,12 +760,12 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — TEST — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Analysis: `docs/STEP_614_ANALYSIS_V0_1.md` — PR #557 merged `390f5c308fecc5c9adffa9579dfcf61b049da977`.
-- Design: `docs/STEP_614_DESIGN_V0_1.md` — PR #560 merged `c61ec588cd97e0a4405a171411cc631570531fce`.
+- Analysis: `docs/archive/STEP_614_ANALYSIS_V0_1.md` — PR #557 merged `390f5c308fecc5c9adffa9579dfcf61b049da977`.
+- Design: `docs/archive/STEP_614_DESIGN_V0_1.md` — PR #560 merged `c61ec588cd97e0a4405a171411cc631570531fce`.
 - Code: PR #562 merged `735d00d4eb26d2bf9af5eae13d4b84ab3d812a18`.
-- Code Post-Merge Verification: `docs/STEP_614_CODE_POST_MERGE_VERIFICATION_V0_1.md`.
-- Code Reconciliation: `docs/STEP_614_CODE_RECONCILIATION_V0_1.md`.
-- Code Final Documentation: `docs/STEP_614_CODE_FINAL_DOCUMENTATION_V0_1.md`.
+- Code Post-Merge Verification: `docs/archive/STEP_614_CODE_POST_MERGE_VERIFICATION_V0_1.md`.
+- Code Reconciliation: `docs/archive/STEP_614_CODE_RECONCILIATION_V0_1.md`.
+- Code Final Documentation: `docs/archive/STEP_614_CODE_FINAL_DOCUMENTATION_V0_1.md`.
 - Code tests: HAHAWEEK Tests SUCCESS; Security/Regression SUCCESS; CodeQL Actions SUCCESS; CodeQL JavaScript/TypeScript SUCCESS.
 - F-614-01 implementation is complete: status wrapper propagates `src/status.js` failures.
 - Regression coverage: `tests/operator-status-cli.test.js`.
@@ -776,11 +778,11 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — DESIGN — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Analysis: `docs/STEP_614_ANALYSIS_V0_1.md` — PR #557 merged `390f5c308fecc5c9adffa9579dfcf61b049da977`.
-- Design: `docs/STEP_614_DESIGN_V0_1.md` — PR #560 merged `c61ec588cd97e0a4405a171411cc631570531fce`.
-- Design Post-Merge Verification: `docs/STEP_614_DESIGN_POST_MERGE_VERIFICATION_V0_1.md`.
-- Design Reconciliation: `docs/STEP_614_DESIGN_RECONCILIATION_V0_1.md`.
-- Design Final Documentation: `docs/STEP_614_DESIGN_FINAL_DOCUMENTATION_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_ANALYSIS_V0_1.md` — PR #557 merged `390f5c308fecc5c9adffa9579dfcf61b049da977`.
+- Design: `docs/archive/STEP_614_DESIGN_V0_1.md` — PR #560 merged `c61ec588cd97e0a4405a171411cc631570531fce`.
+- Design Post-Merge Verification: `docs/archive/STEP_614_DESIGN_POST_MERGE_VERIFICATION_V0_1.md`.
+- Design Reconciliation: `docs/archive/STEP_614_DESIGN_RECONCILIATION_V0_1.md`.
+- Design Final Documentation: `docs/archive/STEP_614_DESIGN_FINAL_DOCUMENTATION_V0_1.md`.
 - Design CI: Tests SUCCESS; Security/Regression SUCCESS; CodeQL Actions SUCCESS; CodeQL JavaScript/TypeScript SUCCESS.
 - F-614-01 remains the bounded implementation target: status wrapper must propagate `src/status.js` failure.
 - F-614-02 remains actual operator runtime UNVERIFIED.
@@ -793,9 +795,9 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — ANALYSIS — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Analysis: `docs/STEP_614_ANALYSIS_V0_1.md` — PR #557 merged `390f5c308fecc5c9adffa9579dfcf61b049da977`.
-- Analysis Post-Merge Verification: `docs/STEP_614_ANALYSIS_POST_MERGE_VERIFICATION_V0_1.md` — PR #558 merged `03661922bf97d595f8aba9b2e3c6cd77e06a72d3`.
-- Analysis Reconciliation: `docs/STEP_614_ANALYSIS_RECONCILIATION_V0_1.md`.
+- Analysis: `docs/archive/STEP_614_ANALYSIS_V0_1.md` — PR #557 merged `390f5c308fecc5c9adffa9579dfcf61b049da977`.
+- Analysis Post-Merge Verification: `docs/archive/STEP_614_ANALYSIS_POST_MERGE_VERIFICATION_V0_1.md` — PR #558 merged `03661922bf97d595f8aba9b2e3c6cd77e06a72d3`.
+- Analysis Reconciliation: `docs/archive/STEP_614_ANALYSIS_RECONCILIATION_V0_1.md`.
 - Analysis finding F-614-01: `bin/hahaweek status` masks `src/status.js` failures with `|| true`; this is a Contract-relevant operator fail-closed defect.
 - Analysis finding F-614-02: actual operator environment remains UNVERIFIED and cannot be substituted by repository CI.
 - Tests and Security/Regression: SUCCESS for Analysis lifecycle.
@@ -809,9 +811,9 @@
 ## STEP 614 — Live-Readiness / Actual Operator Runtime — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Post-Merge Verification: `docs/STEP_614_POST_MERGE_VERIFICATION_V0_1.md` — PR #554 merged `fe40472075a996acffacb2e3cb1dd1b70664d11c`.
-- Reconciliation: `docs/STEP_614_RECONCILIATION_V0_1.md` — PR #555 merged `7bdd6e1b4e23ed961ae4a3d7d56f927c99f07c62`.
-- Final documentation: `docs/STEP_614_FINAL_DOCUMENTATION_V0_1.md`.
+- Post-Merge Verification: `docs/archive/STEP_614_POST_MERGE_VERIFICATION_V0_1.md` — PR #554 merged `fe40472075a996acffacb2e3cb1dd1b70664d11c`.
+- Reconciliation: `docs/archive/STEP_614_RECONCILIATION_V0_1.md` — PR #555 merged `7bdd6e1b4e23ed961ae4a3d7d56f927c99f07c62`.
+- Final documentation: `docs/archive/STEP_614_FINAL_DOCUMENTATION_V0_1.md`.
 - Contract merge CI: Tests SUCCESS; Security/Regression SUCCESS; CodeQL Actions SUCCESS; CodeQL JavaScript/TypeScript SUCCESS.
 - Verification PR CI: Tests SUCCESS; Security/Regression SUCCESS.
 - Reconciliation initially exposed a stale STEP 613 lifecycle assertion; test-only correction aligned the assertion to authoritative STEP 614 Reconciliation. Corrected Tests/Security-Regression and post-merge checks are SUCCESS.
@@ -828,7 +830,7 @@
 - Contract: `docs/CONTRACT_LIVE_READINESS_ACTUAL_OPERATOR_RUNTIME_V0_1.md` — PR #553 merged `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
 - Contract review: #5327989097.
 - Contract merge verified on `main` at `77bea8efd1f5c4457c1d2088d95529f40caf54b8`.
-- Post-merge verification: `docs/STEP_614_POST_MERGE_VERIFICATION_V0_1.md` — PR #554 merged `fe40472075a996acffacb2e3cb1dd1b70664d11c`.
+- Post-merge verification: `docs/archive/STEP_614_POST_MERGE_VERIFICATION_V0_1.md` — PR #554 merged `fe40472075a996acffacb2e3cb1dd1b70664d11c`.
 - Post-merge verification review: #5328005236.
 - Exact merge-commit CI for Contract `77bea8...`: Tests SUCCESS; Security/Regression SUCCESS; CodeQL Actions SUCCESS; CodeQL JavaScript/TypeScript SUCCESS.
 - Verification PR CI: Tests SUCCESS; Security/Regression SUCCESS.
@@ -852,7 +854,7 @@
 - Review: PR #548 merged `5ac971b7a5e8f8feb780a6b24e568c1ba5cdd526`.
 - Verification: PR #549 merged `3460950ca6b20128345e9a137ba25ea3ab69b3c4`.
 - Reconciliation: PR #550 merged `20a311a4574e6f19179540e68db6c288ae0d6f6e`.
-- Final documentation: `docs/STEP_613_FINAL_DOCUMENTATION_V0_1.md`, branch `step-613-documentation-2026-09-26`, commit `d5309223ee56af6c1e439bf94791bc0d88b2034a`.
+- Final documentation: `docs/archive/STEP_613_FINAL_DOCUMENTATION_V0_1.md`, branch `step-613-documentation-2026-09-26`, commit `d5309223ee56af6c1e439bf94791bc0d88b2034a`.
 - Final CI evidence includes npm test, verify:v4, and verify:v4:coverage SUCCESS on the final reconciliation head.
 - Operator runtime limitation remains explicit: interactive Termux execution has not been observed by the repository connector.
 - STEP 613 repository lifecycle is complete; global VERIFIED LIVE is not claimed.
@@ -871,7 +873,7 @@
 - CI: PR #547 merged `eb27e7bda3c7e7d9e8b58edd956d3b4fd55959d3`.
 - Review: PR #548 merged `5ac971b7a5e8f8feb780a6b24e568c1ba5cdd526`.
 - Verification: PR #549 merged `3460950ca6b20128345e9a137ba25ea3ab69b3c4`.
-- Reconciliation: `docs/STEP_613_RECONCILIATION_V0_1.md`, branch `step-613-reconciliation-2026-09-26`, commit `c0bc5cdc9924880cc5689df4adba64921d63d947`.
+- Reconciliation: `docs/archive/STEP_613_RECONCILIATION_V0_1.md`, branch `step-613-reconciliation-2026-09-26`, commit `c0bc5cdc9924880cc5689df4adba64921d63d947`.
 - **Current STEP: 613**
 - **Current phase: RECONCILIATION — VERIFIED**
 - **Next STEP: Documentation for STEP 613 is authorized by verified Reconciliation.**
@@ -886,7 +888,7 @@
 - Security/Regression: PR #546 merged `6588e2612d6d428d5624d70c7b0fe214096af2fd`.
 - CI: PR #547 merged `eb27e7bda3c7e7d9e8b58edd956d3b4fd55959d3`.
 - Review: PR #548 merged `5ac971b7a5e8f8feb780a6b24e568c1ba5cdd526`.
-- Post-Merge Verification: `docs/STEP_613_POST_MERGE_VERIFICATION_V0_1.md`, branch `step-613-post-merge-verification-2026-09-26`, commit `85c86f61dc137e155e09fc73cc1fa1175d4fb456`.
+- Post-Merge Verification: `docs/archive/STEP_613_POST_MERGE_VERIFICATION_V0_1.md`, branch `step-613-post-merge-verification-2026-09-26`, commit `85c86f61dc137e155e09fc73cc1fa1175d4fb456`.
 - **Current STEP: 613**
 - **Current phase: VERIFICATION — VERIFIED**
 - **Next STEP: Reconciliation is authorized by verified Post-Merge Verification.**
@@ -900,7 +902,7 @@
 - Test: PR #545 merged `7d74956a2f0edbc2e3637cc88d55a9a0caad9f60`.
 - Security/Regression: PR #546 merged `6588e2612d6d428d5624d70c7b0fe214096af2fd`.
 - CI: PR #547 merged `eb27e7bda3c7e7d9e8b58edd956d3b4fd55959d3`.
-- Review: `docs/STEP_613_REVIEW_CHECKPOINT_V0_1.md`, branch `step-613-review-2026-09-26`, commit `a223e5450c782bff49df23a29314c8d45e8c9fe9`.
+- Review: `docs/archive/STEP_613_REVIEW_CHECKPOINT_V0_1.md`, branch `step-613-review-2026-09-26`, commit `a223e5450c782bff49df23a29314c8d45e8c9fe9`.
 - **Current STEP: 613**
 - **Current phase: REVIEW — VERIFIED**
 - **Next STEP: Merge is already verified for STEP 613; Post-Merge Verification is authorized.**
@@ -913,7 +915,7 @@
 - Code: PR #544 merged `a0fec03db84ded31b0e2214a3510c39fd638b6ef`.
 - Test: PR #545 merged `7d74956a2f0edbc2e3637cc88d55a9a0caad9f60`.
 - Security/Regression: PR #546 merged `6588e2612d6d428d5624d70c7b0fe214096af2fd`.
-- CI evidence: `docs/STEP_613_CI_EVIDENCE_V0_1.md`, branch `step-613-ci-2026-09-26`, commit `b3c97eb152ea437971ee1612ec32349992640da0`.
+- CI evidence: `docs/archive/STEP_613_CI_EVIDENCE_V0_1.md`, branch `step-613-ci-2026-09-26`, commit `b3c97eb152ea437971ee1612ec32349992640da0`.
 - Final corrected PR-head Tests/Security-Regression evidence is terminal SUCCESS.
 - Exact merge-commit CI is not claimed where GitHub exposes no associated run.
 - **Current STEP: 613**
@@ -927,7 +929,7 @@
 - Design: PR #543 merged `12921a0af21280bd4d1d7323bfe2b859b44f1c6b`.
 - Code: PR #544 merged `a0fec03db84ded31b0e2214a3510c39fd638b6ef`.
 - Test: PR #545 merged `7d74956a2f0edbc2e3637cc88d55a9a0caad9f60`.
-- Security/Regression: `docs/STEP_613_SECURITY_REGRESSION_V0_1.md`, branch `step-613-security-regression-2026-09-26`, commit `5339815402344354d07c273503b4fb3fccf607d1`.
+- Security/Regression: `docs/archive/STEP_613_SECURITY_REGRESSION_V0_1.md`, branch `step-613-security-regression-2026-09-26`, commit `5339815402344354d07c273503b4fb3fccf607d1`.
 - Security/Regression evidence: final corrected implementation run #3640 SUCCESS; follow-up security/regression run #3647 SUCCESS.
 - **Current STEP: 613**
 - **Current phase: SECURITY/REGRESSION — VERIFIED**
@@ -936,10 +938,10 @@
 ## STEP 613 — Failure-Isolated Resilience & Operator Architecture — TEST — VERIFIED / IN PROGRESS
 
 - Contract: `docs/CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE_V0_1.md` — PR #541, merged `4b58ad889991ee803d572b663cbeacd2143a003a`.
-- Analysis: `docs/STEP_613_ANALYSIS_V0_1.md` — PR #542, merged `5e1801138da7c73ecd1aa24716873af54ffd933f`.
-- Design: `docs/STEP_613_DESIGN_V0_1.md` — PR #543, merged `12921a0af21280bd4d1d7323bfe2b859b44f1c6b`.
+- Analysis: `docs/archive/STEP_613_ANALYSIS_V0_1.md` — PR #542, merged `5e1801138da7c73ecd1aa24716873af54ffd933f`.
+- Design: `docs/archive/STEP_613_DESIGN_V0_1.md` — PR #543, merged `12921a0af21280bd4d1d7323bfe2b859b44f1c6b`.
 - Code: PR #544, merged as `a0fec03db84ded31b0e2214a3510c39fd638b6ef`.
-- Test evidence: `docs/STEP_613_TEST_EVIDENCE_V0_1.md`.
+- Test evidence: `docs/archive/STEP_613_TEST_EVIDENCE_V0_1.md`.
 - Final code head test evidence: HAHAWEEK Tests #1943 SUCCESS; Security and Regression #3640 SUCCESS.
 - Initial test failure was a stale STEP 608 health assertion; fixed in test-only code before final CI success.
 - **Current STEP: 613**
@@ -950,8 +952,8 @@
 
 - Authorization: explicit user authorization received 2026-09-26.
 - Contract: `docs/CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE_V0_1.md` — PR #541, merged `4b58ad889991ee803d572b663cbeacd2143a003a`.
-- Analysis: `docs/STEP_613_ANALYSIS_V0_1.md` — PR #542, merged `5e1801138da7c73ecd1aa24716873af54ffd933f`.
-- Design: `docs/STEP_613_DESIGN_V0_1.md` — branch `step-613-resilience-design-2026-09-26`, commit `503520bc68adf71af1efad717ea5e05488da6c16`.
+- Analysis: `docs/archive/STEP_613_ANALYSIS_V0_1.md` — PR #542, merged `5e1801138da7c73ecd1aa24716873af54ffd933f`.
+- Design: `docs/archive/STEP_613_DESIGN_V0_1.md` — branch `step-613-resilience-design-2026-09-26`, commit `503520bc68adf71af1efad717ea5e05488da6c16`.
 - Design freezes operational states, failure classes, retry/STOP policy, durable failure/recovery state, operator status projection, recovery state machine, observer isolation, concurrency, reorg/temporal boundaries, and test vectors.
 - No production implementation introduced by Design.
 - Historical STEP 612 and earlier artifacts remain preserved.
@@ -963,7 +965,7 @@
 
 - Authorization: explicit user authorization received 2026-09-26 to continue HAHAWEEK through VERIFIED LIVE, subject to the Standing Execution Instruction and mandatory Contract lifecycle.
 - Contract: `docs/CONTRACT_FAILURE_ISOLATED_RESILIENCE_OPERATOR_ARCHITECTURE_V0_1.md` — PR #541, merged as `4b58ad889991ee803d572b663cbeacd2143a003a`.
-- Analysis: `docs/STEP_613_ANALYSIS_V0_1.md` — branch `step-613-resilience-analysis-2026-09-26`, commit `6e776d8f298a99cee9b69d37ed9b4dd06c908f35`.
+- Analysis: `docs/archive/STEP_613_ANALYSIS_V0_1.md` — branch `step-613-resilience-analysis-2026-09-26`, commit `6e776d8f298a99cee9b69d37ed9b4dd06c908f35`.
 - Analysis inspected existing RPC retry, raw evidence ingestion, canonical processing/reorg lineage, writer fence, cursor, authority gate, durable authority lifecycle reconciliation, health, runner, and recovery tests.
 - Findings: existing integrity/recovery primitives are substantial; remaining resilience gap is a unified durable operational state/failure classification and operator recovery boundary.
 - No production implementation introduced by Analysis.
@@ -976,8 +978,8 @@
 ## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
 - Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
-- Analysis: `docs/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
-- Design: `docs/STEP_612_DESIGN_V0_1.md` — merged PR #534, merge `5d88797827b5000b66f5d5f06ace4c8eedec17da`.
+- Analysis: `docs/archive/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
+- Design: `docs/archive/STEP_612_DESIGN_V0_1.md` — merged PR #534, merge `5d88797827b5000b66f5d5f06ace4c8eedec17da`.
 - Code/Test: PR #536, head `de402b8d6247a78b4710b9121adb006c4b98a261`.
 - Merge: PR #536 merged at `2026-09-26T15:37:05Z` as `8bc52f927e1125b965b316ebf5f36a5149b7a070`.
 - Post-merge CI on the merge commit: Analyze (javascript-typescript) SUCCESS; Analyze (actions) SUCCESS; test SUCCESS; test-and-security SUCCESS.
@@ -985,8 +987,8 @@
 - Post-merge verification confirms the merged capability remains a derived, evidence-linked Surveillance measurement boundary. Raw/canonical evidence, cursor authority, V4 authority, trading/execution authority, actor inference, and automated action remain unchanged.
 - Operator commands are repository-defined in STEP 608: `status`, `test`, `health`, `scan`, `start`, `repair`. Source availability is verified; interactive Termux execution is not claimed from the GitHub connector environment.
 - Recovery/cursor and historical evidence boundaries remain preserved. No cursor reset or historical rewrite was introduced.
-- Final reconciliation: `docs/STEP_612_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
-- Final documentation: `docs/STEP_612_FINAL_DOCUMENTATION_V0_1.md`.
+- Final reconciliation: `docs/archive/STEP_612_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_612_FINAL_DOCUMENTATION_V0_1.md`.
 - STEP 612 is complete as a domain-measurement lifecycle.
 - This STEP does **not** establish global VERIFIED LIVE status. Global LIVE-READINESS requires broader resilience, recovery, operator-runtime, architecture, and security evidence.
 - No new numbered STEP is inferred. Remaining global live-readiness work requires an authorized Contract or explicit user authorization.
@@ -996,7 +998,7 @@
 ## STEP 612 — Domain Measurement Extension — Price Impact / Slippage — ANALYSIS — VERIFIED / RECONCILED
 
 - Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge commit `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
-- Analysis: `docs/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge commit `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
+- Analysis: `docs/archive/STEP_612_ANALYSIS_V0_1.md` — merged PR #532, merge commit `fef0c6effe3786dbd7a4857f983ab251014f0a2c`.
 - Analysis freezes the supported PoolManager concentrated-liquidity event model, quote-per-base convention, explicit base/quote direction, required pre-trade reference evidence, independent quote evidence for slippage, deterministic formulas, precision requirements, evidence binding, identity inputs, temporal/reorg behavior, and conflict handling.
 - No production implementation was introduced by Analysis.
 - Post-merge verification confirmed PR #532 merged successfully and the resulting Analysis artifact is present on `main`.
@@ -1010,7 +1012,7 @@
 
 - Authorization: explicit user authorization received 2026-09-26.
 - Contract: `docs/CONTRACT_DOMAIN_MEASUREMENT_PRICE_IMPACT_SLIPPAGE_V0_1.md` — merged PR #530, merge commit `8ebc3f4080982361ec4bf1a36ef48ca838aa91cb`.
-- Contract reconciliation: `docs/STEP_612_CONTRACT_RECONCILIATION_V0_1.md` — current state transition evidence.
+- Contract reconciliation: `docs/archive/STEP_612_CONTRACT_RECONCILIATION_V0_1.md` — current state transition evidence.
 - Contract scope: deterministic, evidence-linked, versioned derived price-impact/slippage measurement.
 - Protected boundaries: raw/canonical evidence, historical artifacts, cursor, V4 authority, production/trading authority, and Surveillance authority.
 - Contract phase is verified and reconciled; no Analysis/Design/Code/Test completion is claimed.
@@ -1020,17 +1022,17 @@
 
 ## STEP 611 — Lifecycle State Authority & Next-Step Boundary — DOCUMENTATION — VERIFIED / RECONCILED / DOCUMENTED
 
-- Contract: `docs/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Analysis: `docs/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Design: `docs/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Contract: `docs/archive/STEP_611_LIFECYCLE_STATE_AUTHORITY_NEXT_STEP_BOUNDARY_CONTRACT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Analysis: `docs/archive/STEP_611_ANALYSIS_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Design: `docs/archive/STEP_611_DESIGN_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
 - Code: `src/core/lifecycle-state-authority.js` — VERIFIED / RECONCILED / DOCUMENTED.
 - Test: `tests/lifecycle-state-authority.test.js` — VERIFIED / RECONCILED / DOCUMENTED.
-- Security/Regression: `docs/STEP_611_SECURITY_REGRESSION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- CI: `docs/STEP_611_CI_EVIDENCE_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Review: `docs/STEP_611_REVIEW_CHECKPOINT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Verification: `docs/STEP_611_POST_MERGE_VERIFICATION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
-- Reconciliation: `docs/STEP_611_RECONCILIATION_V0_1.md`.
-- Final documentation: `docs/STEP_611_FINAL_DOCUMENTATION_V0_1.md`.
+- Security/Regression: `docs/archive/STEP_611_SECURITY_REGRESSION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- CI: `docs/archive/STEP_611_CI_EVIDENCE_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Review: `docs/archive/STEP_611_REVIEW_CHECKPOINT_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Verification: `docs/archive/STEP_611_POST_MERGE_VERIFICATION_V0_1.md` — VERIFIED / RECONCILED / DOCUMENTED.
+- Reconciliation: `docs/archive/STEP_611_RECONCILIATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_611_FINAL_DOCUMENTATION_V0_1.md`.
 - Full traceability chain is recorded from Contract through Verification.
 - Final CI closure uses terminal SUCCESS evidence from the corrected branches.
 - Historical STEP 610 artifacts remain immutable.
@@ -1046,9 +1048,9 @@
 - Root cause: implementation validated only supplied property-evidence keys.
 - Fix: all eight frozen transparency properties now require non-empty evidence arrays.
 - Existing regression fixture was updated to preserve the intended unresolved-reference assertion.
-- Reconciliation: `docs/STEP_610_SECURITY_REGRESSION_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #511 merged as `403eb5cbee3cb3ba4fa873e18430deee40b6eb28`.
+- Reconciliation: `docs/archive/STEP_610_SECURITY_REGRESSION_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #511 merged as `403eb5cbee3cb3ba4fa873e18430deee40b6eb28`.
 - Reconciliation CI: HAHAWEEK Tests #1715 / run `36210962987` SUCCESS; Security and Regression #3402 / run `36210963012` SUCCESS.
-- Final documentation: `docs/STEP_610_SECURITY_REGRESSION_FINAL_DOCUMENTATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_610_SECURITY_REGRESSION_FINAL_DOCUMENTATION_V0_1.md`.
 - No raw/canonical mutation, cursor advancement, V4 authority change, new database authority, actor inference, trading/execution authority, or automated action introduced.
 - Exact merge-commit workflow lookups returned zero runs; exact-merge CI GREEN is not claimed.
 - **STEP 610 Security/Regression final state: VERIFIED / RECONCILED / DOCUMENTED.**
@@ -1056,15 +1058,15 @@
 
 ## STEP 610 — Domain Measurement Evidence Boundaries — VERIFIED / RECONCILED / DOCUMENTED
 
-- Contract: `docs/STEP_610_DOMAIN_MEASUREMENT_EVIDENCE_BOUNDARIES_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_610_DOMAIN_MEASUREMENT_EVIDENCE_BOUNDARIES_CONTRACT_V0_1.md`.
 - Contract commit: `745bef8d553a304ad6decc646f65299afc0850a4`.
 - Contract PR #494 merged as `f4dd33f159788bb4c1bfbfddb0e18457d7945a4a`.
 - PR-head Tests #1631 / run `36205096517` SUCCESS; Security and Regression #3318 / run `36205096483` SUCCESS.
-- Contract reconciliation: `docs/STEP_610_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Contract reconciliation: `docs/archive/STEP_610_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #495 merged as `304fc2d9486b1d1aff8eca7e00d5bfa794805984`.
 - Reconciliation PR-head Tests #1635 / run `36205188909` SUCCESS; Security and Regression #3322 / run `36205188729` SUCCESS.
 - Exact merge-commit workflow lookups for the Contract merge and reconciliation merge returned zero workflow runs; exact-merge CI GREEN is not claimed.
-- Final documentation: `docs/STEP_610_FINAL_DOCUMENTATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_610_FINAL_DOCUMENTATION_V0_1.md`.
 - Scope covers liquidity/depth, transaction cost, contract/deployer transparency, and promotional provenance.
 - All measurements remain derived, evidence-linked, versioned observations; raw/canonical evidence, cursor authority, V4 authority, and trading/execution authority remain unchanged.
 - ADDRESS != ACTOR, fail-closed temporal ordering, explicit uncertainty, provenance binding, deterministic versioning, and non-latest-wins conflict handling remain mandatory.
@@ -1077,7 +1079,7 @@
 
 ## STEP 609 — Surveillance Observation Boundary — VERIFIED / RECONCILED / DOCUMENTED
 
-- Final documentation: `docs/STEP_609_FINAL_DOCUMENTATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_609_FINAL_DOCUMENTATION_V0_1.md`.
 - Contract: PR #482 merged `2fbde6f6d3a5e8bfd1727d37ac048f12138392db`; reconciliation PR #483 merged `88ef4d80975b0b494280f7280bc42780a9c733b5`; final documentation PR #484 merged `07b19dee8445160d08fd319039d92616a7aa94d4`.
 - Analysis: PR #485 merged `f158f83fc68eb7ad2e6669f69d1b272bfeea7d2c`; reconciliation PR #486 merged `cfbeced85dbd94e68fb06eb7a5c6768692035652`; final documentation PR #487 merged `a3e761113ff60970172ae9368b3148887bd5c1f6`.
 - Design: PR #488 merged `51a9823e57b9d5867efa3d6e0f703273f16650b9`; Design reconciliation PR #492 merged `b4171034f64a77be4d6965f3921b37c8ee4e6446`.
@@ -1095,11 +1097,11 @@
 
 ## STEP 609 — Surveillance Observation Boundary Analysis — VERIFIED / RECONCILED / DOCUMENTED
 
-- Analysis: `docs/STEP_609_ANALYSIS_V0_1.md`.
+- Analysis: `docs/archive/STEP_609_ANALYSIS_V0_1.md`.
 - Analysis commit: `0486a9730c906814edb508ed69a5a9991d68ea07`.
 - Analysis PR #485 merged as `f158f83fc68eb7ad2e6669f69d1b272bfeea7d2c`.
 - PR-head HAHAWEEK Tests #1593 / run `36199820573` SUCCESS; Security and Regression #3280 / run `36199820587` SUCCESS.
-- Analysis reconciliation: `docs/STEP_609_ANALYSIS_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #486 merged as `cfbeced85dbd94e68fb06eb7a5c6768692035652`.
+- Analysis reconciliation: `docs/archive/STEP_609_ANALYSIS_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #486 merged as `cfbeced85dbd94e68fb06eb7a5c6768692035652`.
 - Reconciliation PR-head HAHAWEEK Tests #1597 / run `36199893672` SUCCESS; Security and Regression #3284 / run `36199893704` SUCCESS.
 - Repository inspection confirms existing canonical/raw evidence, evidence graph, derived-evidence validation, liquidity/swap event decoding, flow aggregation, validation, persistence, and regression surfaces.
 - Analysis confirms the remaining STEP 609 gaps are observation envelope/identity, evidence binding, validation/uncertainty, and measurement semantics for depth, transaction cost, contract/deployer, and promotional provenance.
@@ -1110,11 +1112,11 @@
 
 ## STEP 609 — Surveillance Observation Boundary Contract — VERIFIED / RECONCILED / DOCUMENTED
 
-- Contract: `docs/STEP_609_SURVEILLANCE_OBSERVATION_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_609_SURVEILLANCE_OBSERVATION_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract commit: `dad316bd3a0c5c2b5087824342555b3b5afbb89a`.
 - Contract PR #482 merged as `2fbde6f6d3a5e8bfd1727d37ac048f12138392db`.
 - PR-head HAHAWEEK Tests #1577 / run `36199435105` SUCCESS; Security and Regression #3264 / run `36199435099` SUCCESS.
-- Contract reconciliation: `docs/STEP_609_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #483 merged as `88ef4d80975b0b494280f7280bc42780a9c733b5`.
+- Contract reconciliation: `docs/archive/STEP_609_CONTRACT_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #483 merged as `88ef4d80975b0b494280f7280bc42780a9c733b5`.
 - Reconciliation PR-head HAHAWEEK Tests #1581 / run `36199535035` SUCCESS; Security and Regression #3268 / run `36199535039` SUCCESS.
 - Exact merge-commit workflow lookups for the Contract merge and reconciliation merge returned zero workflow runs; exact-merge CI GREEN is not claimed.
 - Contract defines derived surveillance observations for liquidity/depth, wallet activity, transaction cost, contract/deployer transparency, utility/provenance, and promotional provenance.
@@ -1127,15 +1129,15 @@
 
 ## STEP 608 — Operator Reproducibility — VERIFIED / RECONCILED / DOCUMENTED
 
-- Contract: `docs/STEP_608_OPERATOR_REPRODUCIBILITY_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md`; Contract PR #471 merged as `26047fa23808e684e83bfc79126c51a75386cf64`.
+- Contract: `docs/archive/STEP_608_OPERATOR_REPRODUCIBILITY_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md`; Contract PR #471 merged as `26047fa23808e684e83bfc79126c51a75386cf64`.
 - Contract reconciliation PR #472 merged as `32ce2440cc9a14935b432cda8a78da04c4b2ca21`; final Contract documentation PR #473 merged as `b1524e88f635105ca7b8facdd79a254c206bb0c6`.
-- Analysis: `docs/STEP_608_ANALYSIS_V0_1.md`; PR #474 merged as `8c5cab5e1520f2faa1622a9c5f171009a6055250`; reconciliation PR #475 merged as `b79aded5e4359d01807c73b050d16369e21fd4d8`; final documentation PR #476 merged as `d51d307808929a8560fd9d53a4e4cf6bb6d06c10`.
-- Design: `docs/STEP_608_DESIGN_V0_1.md`; PR #477 merged as `d149e858329ea3329a2394c65104dcf9fa33b8fd`.
+- Analysis: `docs/archive/STEP_608_ANALYSIS_V0_1.md`; PR #474 merged as `8c5cab5e1520f2faa1622a9c5f171009a6055250`; reconciliation PR #475 merged as `b79aded5e4359d01807c73b050d16369e21fd4d8`; final documentation PR #476 merged as `d51d307808929a8560fd9d53a4e4cf6bb6d06c10`.
+- Design: `docs/archive/STEP_608_DESIGN_V0_1.md`; PR #477 merged as `d149e858329ea3329a2394c65104dcf9fa33b8fd`.
 - Code test: `tests/step-608-operator-acceptance.test.js`; corrected test commit `3075026e6a9c2b25719fce36998ba0e1996bcf7f`; Code PR #478 merged as `9235e1762abf43350ed587eeffad0c995889dbb6`.
 - Initial Code CI failure was caused by Ubuntu CI being unable to execute the repository's Termux-specific shebang directly. The test harness was corrected to invoke the existing shell script through `bash`; production code was not changed.
 - Final Code PR-head CI: HAHAWEEK Tests #1560 / run `36157307907` SUCCESS; Security and Regression #3247 / run `36157307899` SUCCESS.
 - Code reconciliation PR #479 merged as `6fae6d87cbd48c962710f52c179c6dd50ba100f8`; PR-head Tests #1564 / run `36157439741` SUCCESS; Security/Regression #3251 / run `36157439729` SUCCESS.
-- Operator guide: `docs/STEP_608_OPERATOR_GUIDE_V0_1.md`; final documentation PR #480 merged as `a184fb79bd94201a604fcb3f3b37dee82cbcda78`; PR-head Tests #1569 / run `36157582680` SUCCESS; Security/Regression #3256 / run `36157582671` SUCCESS.
+- Operator guide: `docs/archive/STEP_608_OPERATOR_GUIDE_V0_1.md`; final documentation PR #480 merged as `a184fb79bd94201a604fcb3f3b37dee82cbcda78`; PR-head Tests #1569 / run `36157582680` SUCCESS; Security/Regression #3256 / run `36157582671` SUCCESS.
 - Exact merge-commit workflow lookups for STEP 608 merge commits returned zero workflow runs; exact-merge CI GREEN is not claimed.
 - STEP 608 establishes repository-grounded operator setup/run, health/status, failure recognition, supported repair/restart, recovery verification, evidence/cursor preservation, and explicit STOP/FAIL-CLOSED behavior.
 - No undocumented recovery command was introduced. No cursor reset, historical rewrite, evidence deletion, silent normalization, second writer/lock, fallback/default authority, automated action/trading, or V4 production activation occurred.
@@ -1150,7 +1152,7 @@
 - Code test/evidence implementation PR #468 merged as `60fa635c60efbc60e5b64571b983cafaab0ae85d`.
 - PR #468 head `2793b8acb6e3869504f9548decc5676d26b465ba`: HAHAWEEK Tests #1516 / run `36152298974` SUCCESS; Security and Regression #3203 / run `36152299017` SUCCESS.
 - Implementation is additive test/evidence infrastructure only: 209 additions, 0 deletions; production semantics were not changed.
-- Reconciliation artifact: `docs/STEP_607_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Reconciliation artifact: `docs/archive/STEP_607_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #469 merged as `794824f06744f3f4200089920c8efe8e06ffdcbb`.
 - Reconciliation PR-head `e8602b11ee82a97c1dda79450b805e18993bdfbd`: HAHAWEEK Tests #1520 / run `36152448138` SUCCESS; Security and Regression #3207 / run `36152448153` SUCCESS.
 - Exact merge-commit workflow lookup for Code merge `60fa635c60efbc60e5b64571b983cafaab0ae85d` returned zero workflow runs; exact-merge CI GREEN is not claimed.
@@ -1165,11 +1167,11 @@
 
 ## STEP 607 — Design Final Documentation — VERIFIED / RECONCILED / DOCUMENTED
 
-- Design artifact: `docs/STEP_607_DESIGN_V0_1.md`; Design PR #461 merged as `9d71ac010ac4ed9543f562643daffeb247e53e14`.
-- Design reconciliation: `docs/STEP_607_DESIGN_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #462 merged as `2cea4276b6f96cf6ac06f5ad8ac8411e8ea7b9c0`.
-- Final Design documentation: `docs/STEP_607_DESIGN_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`; PR #463 merged as `8cc49023006ce6b9f56db7c32d7074d7f86dbbd2`.
+- Design artifact: `docs/archive/STEP_607_DESIGN_V0_1.md`; Design PR #461 merged as `9d71ac010ac4ed9543f562643daffeb247e53e14`.
+- Design reconciliation: `docs/archive/STEP_607_DESIGN_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #462 merged as `2cea4276b6f96cf6ac06f5ad8ac8411e8ea7b9c0`.
+- Final Design documentation: `docs/archive/STEP_607_DESIGN_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`; PR #463 merged as `8cc49023006ce6b9f56db7c32d7074d7f86dbbd2`.
 - Final documentation PR-head `a61b533005113d705cf3ea02e3b07a07ac6c3564`: HAHAWEEK Tests #1498 / run `36151331819` SUCCESS; Security and Regression #3185 / run `36151331679` SUCCESS.
-- Final documentation reconciliation: `docs/STEP_607_DESIGN_FINAL_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #464 merged as `05c4d281e2bfe2ebff5a5c2b54adaf7daee36b21`.
+- Final documentation reconciliation: `docs/archive/STEP_607_DESIGN_FINAL_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`; PR #464 merged as `05c4d281e2bfe2ebff5a5c2b54adaf7daee36b21`.
 - Reconciliation PR-head `b7d8bda2cd5be53491059b9e14ad952bc64255b8`: HAHAWEEK Tests #1502 / run `36151547448` SUCCESS; Security and Regression #3189 / run `36151547356` SUCCESS.
 - Exact merge-commit workflow lookup for final documentation merge `8cc49023006ce6b9f56db7c32d7074d7f86dbbd2` returned zero workflow runs; exact-merge CI GREEN is not claimed.
 - Exact merge-commit workflow lookup for reconciliation merge `05c4d281e2bfe2ebff5a5c2b54adaf7daee36b21` returned zero workflow runs; exact-merge CI GREEN is not claimed.
@@ -1183,10 +1185,10 @@
 
 ## STEP 606 — Production Authority Lifecycle Failure-Atomicity — VERIFIED / RECONCILED / DOCUMENTED
 
-- Contract: `docs/STEP_606_PRODUCTION_AUTHORITY_LIFECYCLE_FAILURE_ATOMICITY_CONTRACT_V0_1.md`.
-- Analysis: `docs/STEP_606_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_606_DESIGN_V0_1.md`.
-- Design reconciliation: `docs/STEP_606_DESIGN_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Contract: `docs/archive/STEP_606_PRODUCTION_AUTHORITY_LIFECYCLE_FAILURE_ATOMICITY_CONTRACT_V0_1.md`.
+- Analysis: `docs/archive/STEP_606_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_606_DESIGN_V0_1.md`.
+- Design reconciliation: `docs/archive/STEP_606_DESIGN_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
 - Code implementation PR #452 merged as `68564c1929d694774dd3a02de250612fc34bca59`.
 - Code PR-head `283f6c4383a565d0f174bde57b5a5d228b49535a`: HAHAWEEK Tests #1454 SUCCESS; Security and Regression #3141 SUCCESS.
 - Code reconciliation PR #453 merged as `cef5ad4592899439814263567fc95b942252d302`.
@@ -1203,7 +1205,7 @@
 
 ## STEP 606 — Contract — IN PROGRESS
 
-- Contract: `docs/STEP_606_PRODUCTION_AUTHORITY_LIFECYCLE_FAILURE_ATOMICITY_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_606_PRODUCTION_AUTHORITY_LIFECYCLE_FAILURE_ATOMICITY_CONTRACT_V0_1.md`.
 - Baseline: `18baa3849cf2c7c487fb76de45b37ed08fc6459c`.
 - Scope: contract-only failure-atomicity boundary for lifecycle persistence, final authority validation, cursor advancement, crash/restart, reorg/replacement, concurrency, and Operator Acceptance.
 - No production semantic change.
@@ -1218,8 +1220,8 @@
 - PR #443 head `05f77678dbfe10b5a79e89b7c40bc12b80bc7da2`: HAHAWEEK Tests #1411 SUCCESS; Security and Regression #3098 SUCCESS.
 - Reconciliation PR #444 head `d27e7def1f10211be069bbfb100e112bfd009d4a`: HAHAWEEK Tests #1415 SUCCESS; Security and Regression #3102 SUCCESS.
 - Direct post-merge workflow/status lookup for exact reconciliation merge `173aaf3d8b349d06e140aab8758bf2ba20f03aab` returned no PR-triggered workflow runs/status records; no exact-merge CI GREEN is claimed.
-- Final documentation: `docs/STEP_605_CODE_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`.
-- Reconciliation: `docs/STEP_605_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_605_CODE_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_605_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
 - STEP 605 Code preserves historical evidence, frozen lifecycle schema/identity/binding, cursor semantics, writer-fence ownership, raw/canonical evidence, and Surveillance authority boundaries.
 - No V4 production activation occurred; Gate 2 remains PASS and V4 production authority remains INACTIVE / BLOCKED.
 - Operator Acceptance remains repository-grounded; no undocumented command or recovery procedure was introduced.
@@ -1237,7 +1239,7 @@
   - Analyze (actions) `108086996505`: SUCCESS.
   - Analyze (javascript-typescript) `108086996103`: SUCCESS.
 - All four required checks are terminal SUCCESS and target the exact reconciliation merge.
-- Final documentation: `docs/STEP_605_DESIGN_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_605_DESIGN_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`.
 - Design remains limited to activation-readiness hardening; no V4 production activation occurred.
 - Frozen lifecycle schema/identity/binding, cursor semantics, writer-fence ownership, raw/canonical evidence, historical evidence, and Surveillance authority remain unchanged.
 - Operator Acceptance remains repository-grounded; no undocumented command or recovery procedure was introduced.
@@ -1256,7 +1258,7 @@
   - Analyze (actions) `108077829911`: SUCCESS.
   - Analyze (javascript-typescript) `108077830157`: SUCCESS.
 - All four checks are terminal SUCCESS and target the exact reconciliation merge.
-- Final documentation: `docs/STEP_605_ANALYSIS_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`.
+- Final documentation: `docs/archive/STEP_605_ANALYSIS_FINAL_POST_MERGE_VERIFICATION_DOCUMENTATION_V0_1.md`.
 - STEP 605 Analysis post-merge verification is directly evidenced, reconciled, and documented.
 - Analysis conclusion remains FAIL-CLOSED for V4 activation: failure-atomicity across lifecycle persistence → final authority validation → cursor advancement is not yet proven; integrated crash/restart/reorg/concurrency evidence remains required; operator lifecycle observability remains an acceptance concern.
 - No production activation occurred. No frozen lifecycle schema/identity/binding, cursor semantics, writer-fence ownership, raw/canonical evidence, historical evidence, or Surveillance authority changed.
@@ -1321,11 +1323,11 @@
 
 ## STEP 602 — Production Authority Establishment Input/Source Boundary Contract — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_602_PRODUCTION_AUTHORITY_ESTABLISHMENT_INPUT_SOURCE_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_602_PRODUCTION_AUTHORITY_ESTABLISHMENT_INPUT_SOURCE_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract commit: `6942540ebc0787e60bb273d1ba0009da808c4640`.- PR #421 merged to `main` as `1112aa5fb958d8d2617937acdfb39da46f82d1b7`.
 - PR-head HAHAWEEK Tests `36093908787` and Security and Regression `36093908722` passed.
 - Exact post-merge checks passed: HAHAWEEK Tests `36093967850`; Security and Regression `36093967780`; CodeQL / Push on main `36093967910`, including Analyze (actions) and Analyze (javascript-typescript).
-- Reconciliation: `docs/STEP_602_PRODUCTION_AUTHORITY_ESTABLISHMENT_INPUT_SOURCE_BOUNDARY_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_602_PRODUCTION_AUTHORITY_ESTABLISHMENT_INPUT_SOURCE_BOUNDARY_CONTRACT_RECONCILIATION_V0_1.md`.
 - STEP 602 defines the explicit establishment source/input boundary without implementing or activating V4 production authority.
 - Expected authority and production authority remain distinct; existing binding, lineage/generation, writer-fence, cursor, evidence, Operator Acceptance, and Surveillance ownership remain unchanged.
 - No cursor reset/unauthorized advance, evidence mutation/deletion, historical rewrite, silent normalization, new writer/lock, fallback/default authority, automated action/trading, predictive/ranking authority, or V4 activation occurred.
@@ -1335,12 +1337,12 @@
 
 ## STEP 601 — Production Authority Lifecycle Persistence Analysis — VERIFIED / RECONCILED
 
-- Analysis: `docs/STEP_601_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_ANALYSIS_V0_1.md`.
+- Analysis: `docs/archive/STEP_601_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_ANALYSIS_V0_1.md`.
 - Analysis commit: `e273c6b37974469d06ce5e2845a1b9f4d86c644c`.
 - PR #419 merged to `main` as `e39a2f2e16be329713032c6a1136b73404d4f957`.
 - PR-head HAHAWEEK Tests `36093519878` and Security and Regression `36093520058` passed.
 - Exact post-merge checks passed: HAHAWEEK Tests `36093582920`; Security and Regression `36093582820`; CodeQL / Push on main `36093582475` with Analyze (actions) and Analyze (javascript-typescript) successful.
-- Reconciliation: `docs/STEP_601_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_ANALYSIS_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_601_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_ANALYSIS_RECONCILIATION_V0_1.md`.
 - Analysis confirms the STEP 600 lifecycle persistence seam is concrete using existing database/migration/durability/writer-fence mechanisms.
 - The live production authority producer/input remains undefined; `src/index.js` still requires an explicit `authorityFactory` and fails closed with `AUTHORITY_SOURCE_REQUIRED` when absent.
 - No production implementation is authorized. Gate 2 remains PASS and V4 production authority remains INACTIVE / BLOCKED.
@@ -1353,12 +1355,12 @@
 
 ## STEP 600 — Production Authority Lifecycle Persistence Contract — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_600_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_600_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_CONTRACT_V0_1.md`.
 - Contract commit: `9740f6fc69be2210a6b283083841de8145a0ddf0`.
 - PR #417 merged to `main` as `b6a6554fd3890addac4b208b2593e2a83a0ccf43`.
 - PR-head HAHAWEEK Tests and HAHAWEEK Security and Regression both passed.
 - Exact post-merge checks passed: HAHAWEEK Tests `36093146645`; HAHAWEEK Security and Regression `36093146637`; CodeQL / Push on main `36093146173`, including Analyze (actions) and Analyze (javascript-typescript).
-- Reconciliation: `docs/STEP_600_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_600_PRODUCTION_AUTHORITY_LIFECYCLE_PERSISTENCE_CONTRACT_RECONCILIATION_V0_1.md`.
 - STEP 600 defines an explicit lifecycle-persistence boundary without implementing or activating V4 production authority.
 - Existing F-03 expected-authority, authority binding, VERIFIED processing context, lineage/generation, writer-fence, cursor ordering, evidence, and Surveillance ownership remain unchanged.
 - Operator Acceptance remains repository-grounded; no command or recovery procedure was invented.
@@ -1370,7 +1372,7 @@
 
 ## STEP 599 — V4 Production Authority Source Lifecycle — VERIFIED / RECONCILED
 
-- State-finalization document: `docs/STEP_599_V4_PRODUCTION_AUTHORITY_SOURCE_LIFECYCLE_STATE_FINALIZATION_V0_1.md`.
+- State-finalization document: `docs/archive/STEP_599_V4_PRODUCTION_AUTHORITY_SOURCE_LIFECYCLE_STATE_FINALIZATION_V0_1.md`.
 - State-finalization commit: `a4c768fcb30a97ad78a5db6d3776dfd894382ad2`.
 - Lifecycle contract commit: `4ef6834238e9a417e8183c4949db925c0fde0f76`; Contract PR #410 merged as `7430c83fdd6588ceb9df491d679649ae0917bc0d`.
 - Reconciliation PR #411 merged as `eed4fbec82fbe9fde10ca2127272646e905551b7`.
@@ -1386,7 +1388,7 @@
 
 ## STEP 598 — Analysis State Finalization — VERIFIED / RECONCILED
 
-- State-finalization document: `docs/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_ANALYSIS_STATE_FINALIZATION_V0_1.md`.
+- State-finalization document: `docs/archive/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_ANALYSIS_STATE_FINALIZATION_V0_1.md`.
 - State-finalization commit: `e63eb1fd614e101ae4c15996e72a1e11a7e1c9d7`.
 - State-finalization PR #408 merged as `90b9a00f86146c86ff0e85ace8812d234790b92b`.
 - Exact post-merge check-runs on merge commit `90b9a00f86146c86ff0e85ace8812d234790b92b`: Analyze (actions) `107922920483` SUCCESS; Analyze (javascript-typescript) `107922920259` SUCCESS; test `107922917217` SUCCESS; test-and-security `107922917215` SUCCESS.
@@ -1403,10 +1405,10 @@
 ## STEP 598 — V4 Production Authority Source Contract — VERIFIED / RECONCILED
 
 - Baseline: `565465d44bb41afd21418c9c49f1fd658dfbb6f9`.
-- Contract: `docs/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_CONTRACT_V0_1.md`.
 - Contract commit: `fafdecbb68d17776c7eee57d148572fb44b211d5`.
 - Contract PR #403 merged as `07249ac56518fba64d95176958a7b52a72c968a0`.
-- Reconciliation: `docs/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_598_V4_PRODUCTION_AUTHORITY_SOURCE_CONTRACT_RECONCILIATION_V0_1.md`.
 - Reconciliation commit: `59ad7b49a64fca39e9a0c28822df82c575014036`.
 - Reconciliation PR #404 merged as `cd936c79ced1594fa0f77872f62ee941a1521e4b`.
 - Exact PR #404 head checks: test `107916177307` SUCCESS; test-and-security `107916177515` SUCCESS; Analyze (actions) `107916191318` SUCCESS; Analyze (javascript-typescript) `107916191178` SUCCESS.
@@ -1424,12 +1426,12 @@
 ## STEP 597 — V4 Production Implementation Boundary Analysis — VERIFIED / RECONCILED
 
 - Baseline: `d9f65b342545c33a65164f124d791227f41aa0ba`.
-- Analysis: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_ANALYSIS_V0_1.md`.
+- Analysis: `docs/archive/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_ANALYSIS_V0_1.md`.
 - Analysis commit: `d929502977da29ef528007f16bf227db34ed911d`.
 - Analysis PR #401 merged as `29a083ac56a261b7aa831d37c7e17907ca211e14`.
 - Analysis PR-head CI: test, test-and-security, Analyze (actions), Analyze (javascript-typescript), and CodeQL all SUCCESS.
 - Post-merge checks on `29a083ac56a261b7aa831d37c7e17907ca211e14`: test `107914164991` SUCCESS; test-and-security `107914165084` SUCCESS; Analyze (actions) `107914168541` SUCCESS; Analyze (javascript-typescript) `107914168784` SUCCESS.
-- Reconciliation: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_ANALYSIS_RECONCILIATION_V0_1.md`, commit `5428dc34000923e1c585e80d102c0cb895696b4c`.
+- Reconciliation: `docs/archive/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_ANALYSIS_RECONCILIATION_V0_1.md`, commit `5428dc34000923e1c585e80d102c0cb895696b4c`.
 - Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
 - Analysis establishes a repository-grounded integration seam before the unchanged cursor barrier but finds the live production authority source undefined: `src/index.js` requires an explicit `authorityFactory` and fails closed with `AUTHORITY_SOURCE_REQUIRED` when absent.
 - Existing canonical decision, lineage/generation, processing-context, authority, cursor, writer/fencing, recovery, reorg, evidence, and integrity ownership remain unchanged.
@@ -1443,10 +1445,10 @@
 ## STEP 597 — V4 Production Implementation Boundary — VERIFIED / RECONCILED
 
 - Baseline before STEP 597: `997d61b63ef7f3d893cef2eec257663e126513f0`.
-- Contract: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract commit: `30755791a541edb515dde567efb71955bea1c942`.
 - Contract PR #398 merged as `e1dcb3256afb952be8ed6661b10d6cadf7933e9f`.
-- Reconciliation: `docs/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_597_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #399 merged as `368258af8b03fad3bd28a9e760a5d4c8f171ba1e`.
 - Exact post-merge check-runs on reconciliation merge commit `368258af8b03fad3bd28a9e760a5d4c8f171ba1e` are terminal SUCCESS: test `107910627727`; test-and-security `107910629221`; Analyze (actions) `107910628516`; Analyze (javascript-typescript) `107910628569`.
 - Gate 2 remains PASS; V4 production authority remains INACTIVE / BLOCKED.
@@ -1465,12 +1467,12 @@
 - Exact PR #396 merge-commit post-merge checks are terminal SUCCESS: test `107906154987`; test-and-security `107906155242`; Analyze (actions) `107906157694`; Analyze (javascript-typescript) `107906158077`.
 - PR #396 completed post-merge verification for the documentation/reconciliation update and introduced no production semantic or V4 authority change.
 
-- Contract: `docs/STEP_596_V4_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_596_V4_PRODUCTION_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract commit: `0152788f945b758b1da681290096dd75d28cd724`.
 - Contract PR #387 merged as `6681b89dcffb36335c598a87fb947e3060ede797`.
 - Gate 2 remains PASS and is distinct from V4 production implementation and V4 production authority activation.
 - V4 production authority remains INACTIVE / BLOCKED.
-- Reconciliation: `docs/STEP_596_V4_PRODUCTION_BOUNDARY_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_596_V4_PRODUCTION_BOUNDARY_RECONCILIATION_V0_1.md`.
 - PR #393 merged as `de8484a508bedb12de2e5095d1e22360cf274d52`.
 - Exact PR #393 merge-commit checks are terminal SUCCESS: test `107891190594`; test-and-security `107891190702`; Analyze (actions) `107891194652`; Analyze (javascript-typescript) `107891194261`.
 - PR #393 completed the final documentation/reconciliation evidence for STEP 596.
@@ -1491,11 +1493,11 @@
 
 ## STEP 595 — Design Gate 2 State Reconciliation — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_CONTRACT_V0_1.md`.- Contract PR #382 merged as `c864d6755e07a81a43d0f39679a869ab81b1b00b`.
+- Contract: `docs/archive/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_CONTRACT_V0_1.md`.- Contract PR #382 merged as `c864d6755e07a81a43d0f39679a869ab81b1b00b`.
 - Analysis confirmed that `docs/DESIGN_GATE_2_STATE.md` was PASS while README documentation was stale at OPEN; current Gate 2 evidence supports PASS.
-- Design: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_DESIGN_V0_1.md`.
+- Design: `docs/archive/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_DESIGN_V0_1.md`.
 - Code PR #384 merged as `99becf1a2272c7d0aaa9021b246aac35280fc87e`.
-- Reconciliation: `docs/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_595_DESIGN_GATE_2_STATE_RECONCILIATION_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #385 merged as `6e9503988094c6dee1e511127dd095f1d3dbd8b4`.
 - Exact reconciliation PR-head CI: test SUCCESS; test-and-security SUCCESS; CodeQL SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
 - Exact post-merge CI on merge commit `6e9503988094c6dee1e511127dd095f1d3dbd8b4`: HAHAWEEK Tests SUCCESS; HAHAWEEK Security and Regression SUCCESS; Push on main / CodeQL SUCCESS.
@@ -1509,10 +1511,10 @@
 
 ## STEP 594 — Canonical System Definition — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_594_CANONICAL_SYSTEM_DEFINITION_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_594_CANONICAL_SYSTEM_DEFINITION_CONTRACT_V0_1.md`.
 - Contract PR #379 merged as `ef611ddac41832ffccaa4b7d91039b42e72db8db`.
 - Exact contract merge checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
-- Reconciliation: `docs/STEP_594_CANONICAL_SYSTEM_DEFINITION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_594_CANONICAL_SYSTEM_DEFINITION_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #380 merged as `2172f6e0cc5acff3ce009056be9292528ecfa799`.
 - Exact reconciliation merge checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
 - Canonical definition is frozen as documentation/contract only: HAHAWEEK is an evidence-first blockchain research and engineering system for reconstructing early on-chain formations from preserved evidence through deterministic acquisition, canonical processing, lineage, validation, durable processing results, and auditable derived outputs.
@@ -1524,10 +1526,10 @@
 
 ## STEP 593 — Operator Operability Execution Verification — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_593_OPERATOR_OPERABILITY_EXECUTION_VERIFICATION_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_593_OPERATOR_OPERABILITY_EXECUTION_VERIFICATION_CONTRACT_V0_1.md`.
 - Contract PR #376 merged as `21bc8802e571e14e6d17866d245f630f98c75878`.
 - Exact contract merge commit checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
-- Reconciliation: `docs/STEP_593_OPERATOR_OPERABILITY_EXECUTION_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_593_OPERATOR_OPERABILITY_EXECUTION_VERIFICATION_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #377 merged as `3214dde6c3222fa699f6c440f9841b68681d4778`.
 - Exact reconciliation PR-head checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
 - Exact reconciliation merge commit `3214dde6c3222fa699f6c440f9841b68681d4778` checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
@@ -1541,10 +1543,10 @@
 
 ## STEP 592 — Operator Operability & Reproducible Runbook — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_592_OPERATOR_OPERABILITY_REPRODUCIBLE_RUNBOOK_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_592_OPERATOR_OPERABILITY_REPRODUCIBLE_RUNBOOK_CONTRACT_V0_1.md`.
 - Contract commit: `fba160e2bb6f2ae45fd46b8ab8a18272d0179c53`.
 - Contract PR #373 merged as `359a7a9e5557126577d09cdb5aa090293826cfb5`.
-- Reconciliation: `docs/STEP_592_OPERATOR_OPERABILITY_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_592_OPERATOR_OPERABILITY_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #374 merged as `0d61dc27b5ed07a8ad3a3ea5b3b9e8ac75bf5420`.
 - Exact reconciliation PR-head checks: test SUCCESS; test-and-security SUCCESS; CodeQL SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
 - Exact merge-commit `0d61dc27b5ed07a8ad3a3ea5b3b9e8ac75bf5420` checks: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS.
@@ -1558,7 +1560,7 @@
 
 ## STEP 591 — Operator Acceptance & Surveillance Compatibility — VERIFIED / RECONCILED
 
-- Contract: `docs/STEP_591_OPERATOR_ACCEPTANCE_SURVEILLANCE_COMPATIBILITY_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_591_OPERATOR_ACCEPTANCE_SURVEILLANCE_COMPATIBILITY_CONTRACT_V0_1.md`.
 - Contract PR #371 merged as `a6b14dbfffc78af6d6ef1c63478e0e35f2edd7ad`.
 - Exact merge-commit `test`: SUCCESS.
 - Exact merge-commit `test-and-security`: SUCCESS.
@@ -1570,13 +1572,13 @@
 - Surveillance remains derived, evidence-linked, versioned, reproducible, and non-authoritative; ADDRESS != ACTOR.
 - No raw/canonical evidence mutation, cursor advancement, authority grant, automated action/trading, historical rewrite, evidence deletion, silent normalization, or V4 activation occurred.
 - V4 production activation remains INACTIVE; Gate 2 is not implied.
-- Reconciliation: `docs/STEP_591_OPERATOR_ACCEPTANCE_SURVEILLANCE_COMPATIBILITY_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_591_OPERATOR_ACCEPTANCE_SURVEILLANCE_COMPATIBILITY_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 592.
 
 ## STEP 590 — Runtime Canonical Lineage / Processing Context Integration — VERIFIED / RECONCILED
 
 - Baseline main commit for implementation: `dd5c11195ff8b423db000d9a0d28101ee453ba53`.
-- Contract: `docs/STEP_590_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_590_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
 - Contract PR #368 merged as `dd5c11195ff8b423db000d9a0d28101ee453ba53`.
 - Implementation PR #369 merged as `12c233f2efbce77b96dccf8f7fdc13ecaf55c1ea`.
 - Final PR-head: `478ce66c9d83dc98f83faa4fdd673402f0050222`.
@@ -1590,13 +1592,13 @@
 - Operator Acceptance: derived verified processing-context output is available without introducing a new source of truth or invented operator procedure.
 - Surveillance boundary preserved as derived/evidence-linked only.
 - V4 production activation remains INACTIVE; Gate 2 is not implied.
-- Reconciliation: `docs/STEP_590_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_590_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 591.
 
 ## STEP 588 — Runtime Generation Establishment Contract — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `9fe4976dbc32ba3a16fad4465b32f2816383a8a6`.
-- Contract: `docs/STEP_588_RUNTIME_GENERATION_ESTABLISHMENT_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_588_RUNTIME_GENERATION_ESTABLISHMENT_CONTRACT_V0_1.md`.
 - Contract PR #362 merged as `1245fa00307e36e45756e1100a8bcbf89e2cf0b5`.
 - PR-head HAHAWEEK Tests run `36006610872`: SUCCESS.
 - PR-head HAHAWEEK Security and Regression run `36006611099`: SUCCESS.
@@ -1607,15 +1609,15 @@
 - Review/comment evidence recorded on PR #362; no self-approval claim.
 - Generation semantics are now contractually frozen and independent of authority/cursor state.
 - V4 production activation remains INACTIVE.
-- Reconciliation: `docs/STEP_588_RUNTIME_GENERATION_ESTABLISHMENT_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_588_RUNTIME_GENERATION_ESTABLISHMENT_CONTRACT_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 589 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design.
 
 ## STEP 587 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `74908d8c44fe181b2beadf3db1547889dce92b98`.
 - Contract PR #359 merged as `74908d8c44fe181b2beadf3db1547889dce92b98`.
-- Analysis: `docs/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
 - Analysis/design PR #360 merged as `e60b8852e148e8d307afaa6648ebca4247109d2b`.
 - PR-head HAHAWEEK Tests run `36005612820`: SUCCESS.
 - PR-head HAHAWEEK Security and Regression run `36005612764`: SUCCESS.
@@ -1626,13 +1628,13 @@
 - Review/comment evidence recorded on PR #360; no self-approval claim.
 - Repository-grounded blocker: INITIAL/REORG_REPLACEMENT generation establishment is not contractually sourced; no production implementation bypassed it.
 - V4 production activation remains INACTIVE.
-- Reconciliation: `docs/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_587_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 588 — Runtime Generation Establishment Contract.
 
 ## STEP 586 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design Contract — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `3a5544cfc47d931d2159ebd142cb356bc86a42b4`.
-- Contract: `docs/STEP_586_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_586_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
 - Contract PR #357 merged as `c5a48a14aae9d2e8c4eddb0d2e1066b975c4071d`.
 - PR-head HAHAWEEK Tests run `35997673166`: SUCCESS.
 - PR-head HAHAWEEK Security and Regression run `35997673163`: SUCCESS.
@@ -1643,13 +1645,13 @@
 - Review/comment evidence recorded on PR #357; no self-approval claim.
 - Contract phase only; production implementation is not claimed.
 - V4 production activation remains INACTIVE.
-- Reconciliation: `docs/STEP_586_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_586_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 587 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design.
 
 ## STEP 585 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design Contract — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `83add47d39ca86fe1a14c4befa5d6c23cd091c9a`.
-- Contract: `docs/STEP_585_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_585_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
 - Contract PR #355 merged as `e06f6e6a459e4aecbb8a5d7f92d3150fe3c3d7dd`.
 - PR-head HAHAWEEK Tests run `35996912290`: SUCCESS.
 - PR-head HAHAWEEK Security and Regression run `35996911492`: SUCCESS.
@@ -1660,13 +1662,13 @@
 - Review/comment evidence recorded on PR #355; no self-approval claim.
 - Contract authorizes repository-grounded analysis/design only; no production implementation occurred.
 - V4 production activation remains INACTIVE.
-- Reconciliation: `docs/STEP_585_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_585_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 586 — Runtime Canonical Lineage / Processing Context Integration Implementation Analysis & Design.
 
 ## STEP 584 — Runtime Canonical Lineage / Processing Context Integration Implementation Contract — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `8ab2f1ee93d3a13f4f2bb17e1fc295aaa148fe18`.
-- Contract: `docs/STEP_584_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_584_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
 - Contract PR #353 merged as `03c89aef3e32df3b621465c429befc60d133cc13`.
 - PR-head HAHAWEEK Tests run `35996080260`: SUCCESS.
 - PR-head HAHAWEEK Security and Regression run `35996080276`: SUCCESS.
@@ -1678,16 +1680,16 @@
 - Contract phase authorizes the smallest runtime integration boundary from STEP 583; production implementation is not claimed yet.
 - Operator observability is limited to derived verified context and does not create a new source of truth.
 - V4 production activation remains INACTIVE.
-- Reconciliation: `docs/STEP_584_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_584_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 585 — Runtime Canonical Lineage / Processing Context Integration Implementation Analysis & Design.
 
 ## STEP 583 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `8e71caf7a3789763bce390e3dbc2cf6ca7f3a8cd`.
-- Contract: `docs/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
 - Contract PR #350 merged as `8e71caf7a3789763bce390e3dbc2cf6ca7f3a8cd`.
-- Analysis: `docs/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
+- Analysis: `docs/archive/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
 - Analysis/design PR #351 merged as `165fa719ce95643938eb607f11dd6a33d6b5e093`.
 - PR-head HAHAWEEK Tests run `35995407369`: SUCCESS.
 - PR-head HAHAWEEK Security and Regression run `35995407336`: SUCCESS.- PR-head CodeQL dynamic run `35995404196`: SUCCESS.
@@ -1699,12 +1701,12 @@
 - Operator observability gap is documented for implementation without creating a separate UI scope.
 - No production runtime, schema, cursor, historical evidence, frozen STEP 568/579 semantics, or V4 activation changed.
 - V4 production activation remains INACTIVE.
-- Reconciliation: `docs/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_583_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 584 — Runtime Canonical Lineage / Processing Context Integration Implementation Contract.
 
 ## STEP 582 — Runtime Canonical Lineage / Processing Context Integration Contract — VERIFIED / RECONCILED
 - Baseline main commit inspected: `16717bcbb115e954ad6e35ba7d333c880f2f2482`.
-- Contract: `docs/STEP_582_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_582_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_IMPLEMENTATION_CONTRACT_V0_1.md`.
 - Contract PR #348 merged as `e98d7e33d659dd6c1e0d174acfbcfb9c79eb6ee9`.
 - PR-head HAHAWEEK Tests run `35994157666`: SUCCESS.
 - PR-head HAHAWEEK Security and Regression run `35994157733`: SUCCESS.
@@ -1715,16 +1717,16 @@
 - Review/comment evidence recorded on PR #348; no self-approval claim.
 - Contract phase is limited to the implementation boundary. No production runtime, schema, cursor, historical evidence, frozen STEP 568/579 semantics, or V4 activation changed.
 - V4 production activation remains INACTIVE.
-- Reconciliation: `docs/STEP_582_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_582_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_CONTRACT_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 583 — Runtime Canonical Lineage / Processing Context Integration Implementation Analysis & Design.
 ## STEP 581 — Runtime Canonical Lineage / Processing Context Integration Analysis & Design — VERIFIED / RECONCILED
 
 - Contract PR #345 merged as `ea99db0886d03df884f96360d8b5e58fa7cf7495`.
 - Analysis/design PR #346 merged as `f8e84d86dc9fd35d6ebbec9d8236bd202bfa2f20`.
-- Contract: `docs/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
-- Analysis: `docs/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_V0_1.md`.
-- Design: `docs/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
-- Reconciliation: `docs/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
+- Contract: `docs/archive/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_DESIGN_CONTRACT_V0_1.md`.
+- Analysis: `docs/archive/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_DESIGN_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_581_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
 - PR #346 final-head HAHAWEEK Tests: SUCCESS.
 - PR #346 final-head HAHAWEEK Security and Regression: SUCCESS.
 - PR #346 final-head V4 golden-vector verification and coverage: SUCCESS.
@@ -1737,9 +1739,9 @@
 ## STEP 580 — Runtime Canonical Lineage / Processing Context Integration Boundary — VERIFIED / RECONCILED
 
 - Contract PR #343 merged to main as `e5c6127e0c545164060b700ede38dff6ef0bfa98`.
-- Contract: `docs/STEP_580_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_BOUNDARY_CONTRACT_V0_1.md`.
-- Reconciliation: `docs/STEP_580_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
-- CI synchronization note: `docs/STEP_580_CI_RULESET_SYNCHRONIZATION_NOTE_V0_1.md`.
+- Contract: `docs/archive/STEP_580_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_BOUNDARY_CONTRACT_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_580_RUNTIME_CANONICAL_LINEAGE_PROCESSING_CONTEXT_INTEGRATION_RECONCILIATION_V0_1.md`.
+- CI synchronization note: `docs/archive/STEP_580_CI_RULESET_SYNCHRONIZATION_NOTE_V0_1.md`.
 - PR-head required CI passed: HAHAWEEK Tests and HAHAWEEK Security and Regression.
 - Post-merge main required CI passed: HAHAWEEK Tests and HAHAWEEK Security and Regression.
 - Post-merge security evidence: 619/620 tests passed, 1 skipped; npm audit reported 0 vulnerabilities; tracked-secret baseline passed.
@@ -1753,7 +1755,7 @@
 
 - Baseline main commit inspected: `67261beefe8a2ca11ae23d0fa77f68cbddaff409`.
 - Implementation branch: `step-579-runtime-canonical-lineage`.
-- Design addendum: `docs/STEP_579_RUNTIME_CANONICAL_LINEAGE_IMPLEMENTATION_DESIGN_ADDENDUM_V0_1.md`.
+- Design addendum: `docs/archive/STEP_579_RUNTIME_CANONICAL_LINEAGE_IMPLEMENTATION_DESIGN_ADDENDUM_V0_1.md`.
 - Implementation PR #341 merged to main as `86ee596af71193a6bc3ab3e1cdceb2b86beac9b7`.
 - Final PR-head: `ff2506c1c354a50bdab0fafbacffbdea6467157e`.
 - Final PR-head HAHAWEEK Tests: SUCCESS (runs `35988050724` and `35988050522`).
@@ -1766,7 +1768,7 @@
 - Review/comment evidence: review ID `5303210585`; no self-approval claim.
 - Post-merge main verification confirmed `src/core/runtime-canonical-lineage.js` at blob SHA `6e2fd97c4ad7a29359faf38bbf4ee623adcb7559`.
 - Exact merge commit had no associated workflow runs at reconciliation time; no post-merge CI GREEN claim is made.
-- Reconciliation: `docs/STEP_579_RUNTIME_CANONICAL_LINEAGE_INTEGRATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_579_RUNTIME_CANONICAL_LINEAGE_INTEGRATION_RECONCILIATION_V0_1.md`.
 - STEP 579 is VERIFIED / RECONCILED.
 - V4 production activation remains INACTIVE.
 - Next STEP: STEP 580 — Runtime Canonical Lineage / Processing Context Integration Boundary.
@@ -1787,42 +1789,42 @@
 - Exact merge commit post-merge test: SUCCESS; test-and-security: SUCCESS; CodeQL: SUCCESS.
 - Exact merge commit static analyses were still running at reconciliation time; no all-post-merge-static-analysis GREEN claim is made.
 - No STEP 576 contract, STEP 563, STEP 568, cursor, F-03 authority, historical evidence, or V4 activation was changed.
-- Reconciliation: `docs/STEP_578_RUNTIME_CANONICAL_DECISION_INPUT_PERSISTENCE_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_578_RUNTIME_CANONICAL_DECISION_INPUT_PERSISTENCE_RECONCILIATION_V0_1.md`.
 - STEP 578 is VERIFIED / RECONCILED.
 - Next STEP: STEP 579 — Runtime Canonical Lineage Integration Implementation.
 
 ## STEP 577 — Runtime Canonical Decision Input Implementation Design & Analysis — VERIFIED / RECONCILED
 
 - Baseline main commit inspected: `435c2562cd0c83c096ecc1cb40133bad053b5aa3`.
-- Design: `docs/STEP_577_RUNTIME_CANONICAL_DECISION_INPUT_IMPLEMENTATION_DESIGN_ANALYSIS_V0_1.md`.
+- Design: `docs/archive/STEP_577_RUNTIME_CANONICAL_DECISION_INPUT_IMPLEMENTATION_DESIGN_ANALYSIS_V0_1.md`.
 - PR #337 merged to main as `b45fbf1bca8eb44be1bf2fa6ee2c18cb8d0a12a4`.
 - PR-head `be5f89098805c64bb434cb99ec89d7100ba19e29`: test SUCCESS; test-and-security SUCCESS; Analyze (actions) SUCCESS; Analyze (javascript-typescript) SUCCESS; CodeQL SUCCESS.
 - Review/comment evidence recorded on PR #337; no self-approval claim.
 - Design freezes the smallest repository-compatible canonical decision input implementation boundary, additive persistence model, exact CBDR/snapshot identity formulas, golden vectors, branch preservation/reorg input, writer-fence ordering, replay/recovery, and fail-closed behavior.
 - No production runtime code, STEP 563, STEP 568, cursor, F-03 authority, historical evidence, or V4 activation changed.
 - Post-merge exact commit `b45fbf1bca8eb44be1bf2fa6ee2c18cb8d0a12a4` has test and test-and-security SUCCESS; static-analysis jobs were still in progress at reconciliation time, so no all-post-merge-analysis GREEN claim is made.
-- Reconciliation: `docs/STEP_577_RUNTIME_CANONICAL_DECISION_INPUT_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_577_RUNTIME_CANONICAL_DECISION_INPUT_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
 - STEP 577 is VERIFIED / RECONCILED.
 - Next STEP: STEP 578 — Runtime Canonical Decision Input Persistence/API Implementation.
 
 ## STEP 576 — Runtime Canonical Decision Input Contract — VERIFIED / FROZEN / RECONCILED
 
 - Starting/main commit inspected: `5ef01879cb201351bc36fc5b1a0441179b32a936`.
-- Contract: `docs/STEP_576_RUNTIME_CANONICAL_DECISION_INPUT_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_576_RUNTIME_CANONICAL_DECISION_INPUT_CONTRACT_V0_1.md`.
 - PR #335 merged to main as `9f428631341aca2394b7bc80d7fb024e1e08ea3c`.
 - PR-head `f524207eb102091d5e799a42a2beeaf5ff0b6641`: HAHAWEEK Tests `35983592391` SUCCESS; HAHAWEEK Security and Regression `35983592444` SUCCESS.
 - Review/comment evidence recorded on PR #335; no self-approval claim.
 - Contract freezes confirmation-safe canonical block-header chain evidence as the runtime canonical-decision input, exact decision-head/range semantics, parent linkage, immutable branch history, persistence/recovery, replay, writer-fence, conflict/fail-closed behavior, and golden-vector requirements.
 - No production runtime code, schema, cursor, historical evidence, STEP 563, STEP 568, F-03 authority, or V4 activation changed.
 - Exact merge commit `9f428631341aca2394b7bc80d7fb024e1e08ea3c` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_576_RUNTIME_CANONICAL_DECISION_INPUT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_576_RUNTIME_CANONICAL_DECISION_INPUT_RECONCILIATION_V0_1.md`.
 - STEP 576 is VERIFIED / FROZEN / RECONCILED.
 - Next STEP: STEP 577 — Runtime Canonical Decision Input Implementation Design & Analysis.
 
 ## STEP 575 — Runtime Canonical Decision Input / Lineage Implementation Readiness Analysis — BLOCKED / RECONCILED
 
 - Starting/main commit inspected: `ea6a8eff32b5c45d43e6ffed575db9c43ae7ff36`.
-- Analysis: `docs/STEP_575_RUNTIME_CANONICAL_DECISION_INPUT_LINEAGE_IMPLEMENTATION_READINESS_ANALYSIS_V0_1.md`.
+- Analysis: `docs/archive/STEP_575_RUNTIME_CANONICAL_DECISION_INPUT_LINEAGE_IMPLEMENTATION_READINESS_ANALYSIS_V0_1.md`.
 - PR #333 merged to main as `9ea8e65b9322a0c98292e279a97f29e72b59eec2`.
 - PR-head `36a125405a18597437a03b2a7a5634d0599e4f34`: HAHAWEEK Tests run `35983092868` SUCCESS; HAHAWEEK Security and Regression run `35983092895` SUCCESS.
 - Review/comment evidence recorded on PR #333; no self-approval claim.
@@ -1831,14 +1833,14 @@
 - STEP 575 therefore remains BLOCKED at readiness boundary; production runtime lineage code was not invented.
 - No production code, schema, cursor, historical evidence, STEP 563 semantics, STEP 568 semantics, or V4 activation changed.
 - Exact merge commit `9ea8e65b9322a0c98292e279a97f29e72b59eec2` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_575_RUNTIME_CANONICAL_DECISION_INPUT_LINEAGE_IMPLEMENTATION_READINESS_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_575_RUNTIME_CANONICAL_DECISION_INPUT_LINEAGE_IMPLEMENTATION_READINESS_RECONCILIATION_V0_1.md`.
 - STEP 575 is BLOCKED / RECONCILED.
 - Next STEP: STEP 576 — Runtime Canonical Decision Input Contract.
 
 ## STEP 574 — Runtime Canonical Lineage / Transition-History Implementation Design & Analysis — VERIFIED / RECONCILED
 
 - Starting/main commit inspected: `62075e423fdeb628da2de4f3cd111112383052a2`.
-- Design/analysis: `docs/STEP_574_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_DESIGN_ANALYSIS_V0_1.md`.
+- Design/analysis: `docs/archive/STEP_574_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_DESIGN_ANALYSIS_V0_1.md`.
 - PR #331 merged to main as `d4527cf37e5aef87d49bca5ead53706881e9e57e`.
 - PR-head `7e47ce4f1124f62d36c89662e090f3cca8f04616`: HAHAWEEK Tests run `35982440631` SUCCESS; HAHAWEEK Security and Regression run `35982440755` SUCCESS.
 - Review/comment evidence recorded on PR #331; no self-approval claim.
@@ -1846,35 +1848,35 @@
 - Design explicitly identifies the remaining canonical-decision input gap: repository cannot safely infer canonicality from RPC presence, so production implementation must fail closed unless an approved canonical-decision source exists.
 - No production code, schema migration, cursor behavior, historical evidence, STEP 563 formulas, STEP 568 semantics, or V4 activation changed.
 - Exact merge commit `d4527cf37e5aef87d49bca5ead53706881e9e57e` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_574_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_574_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
 - STEP 574 is VERIFIED / RECONCILED.
 - Next STEP: STEP 575 — Runtime Canonical Decision Input / Lineage Implementation Readiness Analysis.
 
 ## STEP 573 — Runtime Canonical Lineage / Transition-History Implementation Contract — VERIFIED / FROZEN
 
 - Repository baseline inspected at main commit `3c27293236a107751a31c189c5c906a0b9548556`.
-- Contract: `docs/STEP_573_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_573_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_CONTRACT_V0_1.md`.
 - PR #329 merged to main as `eb5b9ec0f1e6f73b6cf57e04578413223ba105b7`.
 - PR-head `0ed1d888791ba1035ffb6cead6a59860b64ce9b9`: HAHAWEEK Tests run `35981900043` SUCCESS; HAHAWEEK Security and Regression run `35981900028` SUCCESS.
 - Review/comment evidence recorded on PR #329; no self-approval claim.
 - Contract freezes immutable canonical transition history, exact F-02 states/edges, deterministic transition integrity, canonical/reorg lineage ownership, INITIAL/CONTINUATION/REORG_REPLACEMENT generation semantics, deterministic processing-result/execution identity requirements, replay/recovery, writer/concurrency, additive migration boundary, and golden-vector/test requirements.
 - STEP 563 formulas and STEP 568 schema/digest semantics remain unchanged; no production code, cursor behavior, historical evidence, or V4 activation changed.
 - Exact merge commit `eb5b9ec0f1e6f73b6cf57e04578413223ba105b7` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_573_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_573_RUNTIME_CANONICAL_LINEAGE_TRANSITION_HISTORY_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
 - STEP 573 is VERIFIED / FROZEN at the contract boundary.
 - Next STEP: STEP 574 — Runtime Canonical Lineage / Transition-History Implementation Design & Analysis.
 
 ## STEP 572 — Runtime Canonical Processing / Generation Lineage Implementation Analysis — BLOCKED / RECONCILED
 
 - Starting/main commit inspected: `bc7b2312387d53b00f3ad5fa0d32bac6c347a717`.
-- Analysis document: `docs/STEP_572_RUNTIME_CANONICAL_PROCESSING_GENERATION_LINEAGE_IMPLEMENTATION_ANALYSIS_FINDING_V0_1.md`.
+- Analysis document: `docs/archive/STEP_572_RUNTIME_CANONICAL_PROCESSING_GENERATION_LINEAGE_IMPLEMENTATION_ANALYSIS_FINDING_V0_1.md`.
 - PR #327 merged to main as `1d15bed8bbcc67fa39c0b91fd575a5dd42d5408c`.
 - PR-head `6ef19cd637644dae7b3ec537a7f3b0408171a698`: HAHAWEEK Tests run `35981477346` SUCCESS; HAHAWEEK Security and Regression run `35981477356` SUCCESS.
 - Review/comment evidence recorded on PR #327; no self-approval claim.
 - Repository analysis confirms the runtime canonical acceptance owner, durable immutable transition-history owner, runtime reorg/replacement decision owner, runtime generation lineage owner, and deterministic processing identity derivation owner are still missing.
 - No production code, cursor semantics, historical evidence, STEP 563 formulas, STEP 568 schema/digest semantics, or V4 production activation changed.
 - Exact merge commit `1d15bed8bbcc67fa39c0b91fd575a5dd42d5408c` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
-- Reconciliation document: `docs/STEP_572_RUNTIME_CANONICAL_PROCESSING_GENERATION_LINEAGE_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- Reconciliation document: `docs/archive/STEP_572_RUNTIME_CANONICAL_PROCESSING_GENERATION_LINEAGE_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
 - STEP 572 is BLOCKED / RECONCILED because safe runtime implementation would require inventing unfrozen transition-history, canonical/reorg lineage, generation-establishment, and processing-identity semantics.
 - Next STEP: STEP 573 — Runtime Canonical Lineage / Transition-History Implementation Contract.
 
@@ -1887,7 +1889,7 @@
 - Earlier CI failures were root-caused and corrected without weakening production semantics.
 - Existing F-03 tables/historical evidence preserved; cursor unchanged; generation never manufactured; V4 production activation remains INACTIVE.
 - Exact merge commit `91bb14d467910f6251faf14d00be00062ae27d0f` has no associated workflow runs/statuses; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_568_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_568_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_RECONCILIATION_V0_1.md`.
 - Next STEP: STEP 569 — Runtime Processing-Result Context Integration Boundary Contract.
 ## STEP 567 — Durable Processing-Result / Generation Persistence Implementation Contract — VERIFIED / RECONCILED
 
@@ -1897,7 +1899,7 @@
 - Generation remains canonical-processing lineage supplied; persistence never manufactures it.
 - No production code/schema/cursor/evidence/authority/RPC/V4 activation change in this contract stage.
 - Exact merge commit `b346887a7ba454625b0fa5fb07b93465e705fd10` has no associated workflow runs; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_567_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_567_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
 - V4 production activation remains INACTIVE.
 - Next STEP: STEP 568 — Durable Processing-Result / Generation Persistence Implementation.
 ## STEP 566 — Durable Processing-Result / Generation Persistence Contract — VERIFIED / RECONCILED
@@ -1909,7 +1911,7 @@
 - Generation is never manufactured by persistence and cannot come from cursor, expected authority, checkpoint digest, writer fence, wall clock, randomness, or hash truncation.
 - No production code, schema, cursor, evidence, authority, RPC behavior, or V4 activation changed.
 - Exact merge commit `6bb0ede2cb557cde5d5b7ea71b3f197f75f3fd11` has no associated PR-triggered workflow runs/statuses; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_566_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_566_DURABLE_PROCESSING_RESULT_GENERATION_PERSISTENCE_RECONCILIATION_V0_1.md`.
 - V4 production activation remains INACTIVE.
 - Next STEP: STEP 567 — Durable Processing-Result / Generation Persistence Implementation Contract.
 
@@ -1920,7 +1922,7 @@
 - STEP 565 freezes the missing boundary rather than manufacturing semantics from cursor, timestamp, writer fence, expected authority, checkpoint digest, randomness, or hash truncation.
 - No production code, schema, cursor, evidence, authority, or V4 activation was changed.
 - Exact merge commit `095c15cbac05c23f64e61adfde751f75cfe10a1e` has no associated PR-triggered workflow runs/statuses at reconciliation time; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_565_V4_RUNTIME_PROCESSING_RESULT_GENERATION_CONTEXT_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_565_V4_RUNTIME_PROCESSING_RESULT_GENERATION_CONTEXT_RECONCILIATION_V0_1.md`.
 - V4 production activation remains INACTIVE.
 - Next STEP: STEP 566 — Durable Processing-Result / Generation Persistence Contract.
 
@@ -1935,7 +1937,7 @@
 - Dedicated STEP 564 golden vectors and fixture coverage were added.
 - Initial CI failures were isolated to test/fixture issues and corrected without weakening production semantics.
 - Exact merge commit `78f7f0b1ec5a3c2776e9dd4ed21a32b3849b1dbf` currently has no associated PR-triggered workflow runs and no commit statuses; no post-merge CI GREEN is claimed.
-- Reconciliation: `docs/STEP_564_V4_EVIDENCE_COMMITMENT_GENERATION_DERIVATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_564_V4_EVIDENCE_COMMITMENT_GENERATION_DERIVATION_RECONCILIATION_V0_1.md`.
 - No frozen contract, cursor semantics, historical evidence, SQLite schema, durable expected-authority source, or V4 activation was changed.
 - V4 production activation remains INACTIVE.
 - Known boundary: runtime still needs an explicit processing-result/generation/canonicality context before production submitted-authority integration can proceed without inventing semantics.
@@ -1951,7 +1953,7 @@
 - Generation is not manufactured by the submitted authority producer and cannot be copied from durable expected authority, cursor, wall-clock time, writer-fence number, or arbitrary hash truncation.
 - No production code, cursor state, RPC/provider behavior, SQLite schema, historical evidence, or V4 activation was changed.
 - Exact workflow lookup for merge commit `0090484f2f800cb6aa6723a1270c006026da198d` returned no associated workflow runs; no post-merge CI GREEN result is claimed.
-- Reconciliation: `docs/STEP_563_V4_EVIDENCE_COMMITMENT_GENERATION_DERIVATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_563_V4_EVIDENCE_COMMITMENT_GENERATION_DERIVATION_RECONCILIATION_V0_1.md`.
 - STEP 563 is VERIFIED / FROZEN within the contract acceptance boundary.
 - Next STEP: STEP 564 — V4 Evidence Commitment & Generation Derivation Implementation.
 
@@ -1965,7 +1967,7 @@
 - Implementing those semantics inside STEP 562 would invent cryptographic/authority behavior and violate the fail-closed/source-separation rules.
 - No production code, schema, cursor semantics, historical evidence, RPC/provider behavior, or V4 activation was changed.
 - Exact workflow lookup for merge commit `a86e44720a33d067b668ebc70c5681bfed80b510` returned no associated workflow runs; no post-merge CI GREEN result is claimed.
-- Reconciliation: `docs/STEP_562_V4_SUBMITTED_AUTHORITY_PRODUCER_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- Reconciliation: `docs/archive/STEP_562_V4_SUBMITTED_AUTHORITY_PRODUCER_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
 - STEP 562 is BLOCKED / NOT COMPLETE.
 - Next STEP: STEP 563 — V4 Evidence Commitment & Generation Derivation Contract.
 - Step-number progression is explicitly justified by the missing repository contract semantics; no step was skipped.
@@ -1981,7 +1983,7 @@
 - No production code, cursor semantics, historical evidence, RPC/provider behavior, schema, or V4 activation was changed.
 - Formal self-approval was not possible because the PR owner cannot approve their own PR; review/comment evidence is recorded.
 - Exact workflow lookup for merge commit `996d7d1633bb67da555584b11677a625bc8b05f6` returned no associated workflow runs at reconciliation time; no post-merge CI GREEN result is claimed.
-- Reconciliation document: `docs/STEP_561_V4_SUBMITTED_AUTHORITY_PRODUCER_CONTRACT_RECONCILIATION_V0_1.md`.
+- Reconciliation document: `docs/archive/STEP_561_V4_SUBMITTED_AUTHORITY_PRODUCER_CONTRACT_RECONCILIATION_V0_1.md`.
 - STEP 561 is VERIFIED / FROZEN.
 - Next STEP: STEP 562 — V4 Submitted Authority Producer Implementation.
 
@@ -1996,7 +1998,7 @@
 - Deriving submitted authority from the durable expected-authority reader would violate the required source separation and is therefore explicitly rejected.
 - No production code, cursor semantics, historical evidence, RPC/provider behavior, schema, or V4 activation was changed by STEP 560.
 - Exact workflow lookup for merge commit `0217bf88d33392adf5d155d55e066249fbc1044c` returned no associated workflow runs; no post-merge CI GREEN result is claimed.
-- Reconciliation document: `docs/STEP_560_V4_PRODUCTION_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
+- Reconciliation document: `docs/archive/STEP_560_V4_PRODUCTION_IMPLEMENTATION_RECONCILIATION_V0_1.md`.
 - STEP 560 is NOT COMPLETE because its implementation acceptance criteria cannot be satisfied without defining the missing submitted/live authority producer.
 - Next STEP: STEP 561 — V4 Submitted Authority Producer Contract.
 - Numbering change is justified by the repository-grounded contract gap; inventing the missing production semantic inside STEP 560 would violate the standing execution rules.
@@ -2011,7 +2013,7 @@
 - V4 production activation remains explicitly INACTIVE. STEP 559 does not activate V4 authority.
 - No cursor reset, historical rewrite/deletion, silent normalization/replacement, RPC/provider change, uncontracted SQLite/schema migration, or production semantic activation was introduced.
 - Exact workflow lookup for merge commit `61e52ff56b4116f62356ea21be064a512e07cc2c` returned no associated workflow runs at reconciliation time; no post-merge CI GREEN result is claimed.
-- Reconciliation document: `docs/STEP_559_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_RECONCILIATION_V0_1.md`.
+- Reconciliation document: `docs/archive/STEP_559_V4_PRODUCTION_IMPLEMENTATION_BOUNDARY_RECONCILIATION_V0_1.md`.
 - STEP 559 acceptance is limited to the reviewed contract boundary and PR-head CI evidence.
 - Next explicit step: STEP 560 — V4 Production Implementation.
 
@@ -2024,7 +2026,7 @@
 - The contract requires expected authority commitments to resolve from durable persisted evidence/checkpoint state for the exact processed range, with fail-closed handling for missing evidence/linkage, wrong range, malformed records, and submitted-authority manufacture.
 - STEP 548 is contract-only; no durable-source runtime implementation is claimed.
 - Exact workflow lookup for merge commit `4abc61ddc4021018782012fc6373114fc8f59e46` returned no associated workflow runs at reconciliation time; no post-merge CI GREEN result is claimed.
-- Reconciliation document: `docs/STEP_548_F03_DURABLE_AUTHORITY_SOURCE_RECONCILIATION_V0_1.md`.
+- Reconciliation document: `docs/archive/STEP_548_F03_DURABLE_AUTHORITY_SOURCE_RECONCILIATION_V0_1.md`.
 - F-03 remains CONDITIONAL and Design Gate 2 remains NOT PASSED.
 - No V4 production activation, cursor reset/semantic change, historical rewrite/deletion, RPC/provider change, SQLite migration, or production evidence mutation was introduced.
 - Next explicit step: implement and independently test the durable expected-authority source boundary under a new reviewed implementation contract.
@@ -2353,7 +2355,7 @@
 ## STEP 482 — Independent Golden Vector Verification Boundary — CONTRACT DEFINITION
 
 - Branch: `step-482-independent-golden-vector-verification-contract-2026-09-23`.
-- Contract: `docs/STEP_482_INDEPENDENT_GOLDEN_VECTOR_VERIFICATION_BOUNDARY_V0_1.md`.
+- Contract: `docs/archive/STEP_482_INDEPENDENT_GOLDEN_VECTOR_VERIFICATION_BOUNDARY_V0_1.md`.
 - Scope is limited to independent offline verification of committed V4 golden-vector artifacts.
 - Verifier must not import production V4 reference modules or runtime/ingestion state.
 - Verification must be deterministic and fail closed on malformed vectors, canonical-byte mismatch, or hash mismatch.
@@ -2419,7 +2421,7 @@
 ## STEP 479 — X Publication Envelope Boundary — CONTRACT DEFINITION
 
 - Branch: `step-479-x-publication-envelope-contract-2026-09-23`.
-- Contract: `docs/STEP_479_X_PUBLICATION_ENVELOPE_BOUNDARY_V0_1.md`.
+- Contract: `docs/archive/STEP_479_X_PUBLICATION_ENVELOPE_BOUNDARY_V0_1.md`.
 - Scope is limited to a deterministic, immutable handoff envelope after STEP 478.
 - No external X publication/API, scheduling, prediction, ranking, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
 - Implementation and verification are intentionally not claimed yet.
@@ -2458,7 +2460,7 @@
 ## STEP 478 — X Content Validation / Publication-Readiness Contract — CONTRACT DEFINITION
 
 - Branch: `step-478-x-content-validation-readiness-contract-2026-09-23`.
-- Contract document: `docs/STEP_478_X_CONTENT_VALIDATION_READINESS_CONTRACT_V0_1.md`.
+- Contract document: `docs/archive/STEP_478_X_CONTENT_VALIDATION_READINESS_CONTRACT_V0_1.md`.
 - Scope is limited to structural/provenance validation of the frozen STEP 477 X Content projection.
 - Research Report remains the source of truth.
 - No external X publication, API calls, scheduling, ranking, prediction, trading/signing, raw-store, cursor/runtime, checkpoint, manifest, or V4 authority changes.
@@ -2545,7 +2547,7 @@
 ## STEP 569 — Runtime Processing-Result Context Integration Boundary — VERIFIED / RECONCILED
 
 - STEP 569 inspected main at `dec5b7700d63a0a0cd459dee57017e4b3e1965af` and confirmed that the current runtime processor did not yet construct the complete canonical processing-result context required by STEP 568.
-- Contract document: `docs/STEP_569_RUNTIME_PROCESSING_RESULT_CONTEXT_INTEGRATION_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract document: `docs/archive/STEP_569_RUNTIME_PROCESSING_RESULT_CONTEXT_INTEGRATION_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract PR #321 merged as `124473a4b3dfd5beaa00de7ca6cada05d4e96b15`.
 - PR-head HAHAWEEK Tests run #35980194068 passed.
 - PR-head HAHAWEEK Security and Regression run #35980193474 passed.
@@ -2559,7 +2561,7 @@
 ## STEP 570 — Runtime Processing-Result Context Integration — BLOCKED / RECONCILED
 
 - STEP 570 inspected the runtime at `c6898fd17efce21f228f84f44a688a803d238aed` and confirmed that no authoritative production canonical-processing/reorg lineage boundary currently supplies generation, canonical acceptance, transition lineage, and exact canonical evidence membership.
-- Analysis finding: `docs/STEP_570_RUNTIME_PROCESSING_RESULT_CONTEXT_IMPLEMENTATION_ANALYSIS_FINDING_V0_1.md`.
+- Analysis finding: `docs/archive/STEP_570_RUNTIME_PROCESSING_RESULT_CONTEXT_IMPLEMENTATION_ANALYSIS_FINDING_V0_1.md`.
 - Analysis PR #323 merged as `c6898fd17efce21f228f84f44a688a803d238aed`.
 - PR-head HAHAWEEK Tests run #35980502108 passed.
 - PR-head HAHAWEEK Security and Regression run #35980502314 passed.
@@ -2572,7 +2574,7 @@
 ## STEP 571 — Runtime Canonical Processing / Generation Lineage Boundary — VERIFIED / RECONCILED
 
 - Starting repository state inspected at `1cc3bac9515929d68dc4011ce80c35b78b6d4ce4`.
-- Contract: `docs/STEP_571_RUNTIME_CANONICAL_PROCESSING_GENERATION_LINEAGE_BOUNDARY_CONTRACT_V0_1.md`.
+- Contract: `docs/archive/STEP_571_RUNTIME_CANONICAL_PROCESSING_GENERATION_LINEAGE_BOUNDARY_CONTRACT_V0_1.md`.
 - Contract PR #325 merged as `5a0326b11a1c33f994f6d9f0887be8c15dd721ef`.
 - PR-head HAHAWEEK Security and Regression run #35980950581 passed.
 - PR-head HAHAWEEK Tests run #35980950721 passed.
@@ -2628,7 +2630,7 @@ The STEP 604 final documentation merge 2978293fd6562d3ba76c7bed2103ea37e3a83a39 
 - Test: `tests/domain-measurement.test.js`.
 - Code PR #504 merged as `d95613e355f2671ec5fc3056d6bb0af54c851c48`.
 - PR #504 Tests #1682 / run `36210072443` SUCCESS; Security and Regression #3369 / run `36210072387` SUCCESS.
-- Post-merge reconciliation: `docs/STEP_610_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
+- Post-merge reconciliation: `docs/archive/STEP_610_CODE_POST_MERGE_VERIFICATION_RECONCILIATION_V0_1.md`.
 - Reconciliation PR #505 merged as `526f2820f9b61337d177aab532e369ce975b2b09`.
 - PR #505 Tests #1686 / run `36210241036` SUCCESS; Security and Regression #3373 / run `36210240962` SUCCESS.
 - Domain measurements remain derived, evidence-linked, versioned, fail-closed, and non-authoritative. No raw/canonical mutation, cursor advancement, V4 authority expansion, actor inference, scoring/ranking, or automated action was introduced.

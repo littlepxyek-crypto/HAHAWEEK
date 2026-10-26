@@ -10,6 +10,8 @@ It connects acquisition, raw evidence, provenance, relationships, temporal forma
 
 **Others detect signals. HAHAWEEK reconstructs how a formation becomes evidence.**
 
+> **Status at a glance (see [ARCHITECTURE.md](ARCHITECTURE.md)):** the live runtime ingests Uniswap v4 PoolManager events on Robinhood Chain (chain ID 4663) through RPC → raw evidence → canonical evidence → V4/F-03 authority gate → cursor. Formation, validation, intelligence, radar, research report and X content are implemented and unit-tested but **not wired into the live runtime yet** (they run only in CI verification scripts). INTERNET and WALLET sources are planned. The diagrams below show the target design.
+
 [![Security & Regression](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/workflows/security.yml/badge.svg)](https://github.com/littlepxyek-crypto/HAHAWEEK/actions/workflows/security.yml)
 
 ---
@@ -39,7 +41,7 @@ LEARN
 And the evidence pipeline is:
 
 ```text
-INTERNET / RPC
+RPC  (INTERNET: planned)
       ↓
   ACQUISITION
       ↓
@@ -139,14 +141,16 @@ HAHAWEEK explicitly distinguishes:
 
 ---
 
-## Architecture
+## Architecture (target design)
+
+Stages marked `*` are implemented but not yet wired into the live runtime; `(planned)` has no implementation yet.
 
 ```text
                     HAHAWEEK
                        │
         ┌──────────────┼──────────────┐
         ↓              ↓              ↓
-    INTERNET          RPC           WALLET
+  INTERNET*          RPC        WALLET (planned)
         │              │              │
         └──────────────┼──────────────┘
                        ↓
@@ -160,17 +164,17 @@ HAHAWEEK explicitly distinguishes:
                     /       \
                    /         \
                   ↓           ↓
-       EVIDENCE GRAPH      FORMATION
+       EVIDENCE GRAPH*     FORMATION*
        (rebuildable)           ↓
-                           HYPOTHESIS
+                           HYPOTHESIS*
                                ↓
-                           VALIDATION
+                           VALIDATION*
                                ↓
-                          INTELLIGENCE
+                          INTELLIGENCE*
                            /       \
-                        RADAR     RESEARCH
+                        RADAR*    RESEARCH*
                                     ↓
-                                  REPORT
+                                  REPORT*
 ```
 
 The Evidence Graph is a projection and must remain rebuildable from authoritative evidence.
@@ -277,7 +281,7 @@ The current Design Gate 2 state records F-01..F-05 and H-01..H-05 as VERIFIED / 
 
 **Gate 2 PASS is a design/provenance acceptance state. It does not itself activate V4 production authority.**
 
-V4 production implementation and V4 production authority activation remain distinct. **Production V4 authority remains INACTIVE/BLOCKED unless a separate authorized production-boundary contract explicitly permits activation.**
+**What runs today:** `src/index.js` builds the V4/F-03 production-authority gate and lifecycle for every ingested batch; the cursor advances only when that gate returns `AUTHORIZED`. Older documents that call V4 authority "INACTIVE" describe the governance label, not the code: the activation state machine (`src/core/authority-activation-state.js`) exists but the live gate does not consult it. No production host deployment is recorded in this repository.
 
 ---
 
@@ -312,9 +316,9 @@ See [MVP Scope](docs/MVP_SCOPE_SPEC_V0_1.md).
 
 ---
 
-## Research & Publication
+## Research & Publication (planned output)
 
-Research is a first-class output.
+Research is designed as a first-class output. Today the report and X-content modules run only inside CI verification scripts; their results are CI artifacts and **nothing is published**.
 
 ```text
 DATA
@@ -352,6 +356,9 @@ X can be an input and publication channel.
 
 ### Architecture
 
+- [ARCHITECTURE.md](ARCHITECTURE.md) — as-built status (source of truth)
+- [ROADMAP.md](ROADMAP.md) · [DATA_SCHEMA.md](DATA_SCHEMA.md) · [EVENT_SCHEMA.md](EVENT_SCHEMA.md) · [EVIDENCE_MODEL.md](EVIDENCE_MODEL.md) · [TEST_PLAN.md](TEST_PLAN.md)
+- Historical STEP records: [docs/archive/](docs/archive/)
 - [Canonical Blueprint](docs/BLUEPRINT_CANONICAL.md)
 - [MVP Scope](docs/MVP_SCOPE_SPEC_V0_1.md)
 - [Threat Model](docs/THREAT_MODEL_SPEC_V0_1.md)
@@ -428,6 +435,15 @@ Run the test suite with:
 npm test
 ```
 
+Run ingestion:
+
+```bash
+npm install
+node src/index.js      # one ingestion pass, then exit
+node src/runner.js     # loop: health -> ingestion pass -> sleep; stops fail-closed on non-retryable state
+node src/status.js     # print persisted operational state
+```
+
 ---
 
 ## Design Principles
@@ -452,14 +468,13 @@ HAHAWEEK is an active research and engineering project.
 Current status is intentionally conservative:
 
 ```text
-Architecture                 DEFINED
-V4 Integrity                 VERIFIED ENGINEERING BASELINE
-Design Gate 2                PASS
-HFI-MVP Runtime              VERIFIED
-Reference Intelligence      IMPLEMENTED / VERIFIED (fixture boundary)
-Production V4                BLOCKED / INACTIVE
-MVP                          CONTROLLED VALIDATION
-Automated Trading            NOT PART OF THE FOUNDATION
+RPC ingestion (raw → canonical)   LIVE
+V4 / F-03 authority gate          LIVE (runs on every batch)
+Formation → report                IMPLEMENTED, NOT WIRED (CI scripts only)
+Radar / X content output          IMPLEMENTED, NOT WIRED; nothing published
+INTERNET / WALLET sources         PLANNED
+Production host deployment        NOT RECORDED
+Automated Trading                 NOT PART OF THE FOUNDATION
 ```
 
 ---
