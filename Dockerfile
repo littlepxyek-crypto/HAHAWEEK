@@ -11,4 +11,6 @@ RUN mkdir -p /app/data /app/docs/runtime && chown -R node:node /app
 USER node
 VOLUME ["/app/data"]
 HEALTHCHECK --interval=30s --timeout=20s --start-period=20s --retries=3 CMD node src/health.js
-CMD ["node", "src/index.js"]
+# Long-running loop: health -> ingestion pass -> sleep. A non-retryable
+# (BLOCKED/UNKNOWN) state stops cycling instead of restart-looping.
+CMD ["node", "src/runner.js"]

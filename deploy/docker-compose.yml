@@ -6,12 +6,21 @@ services:
     restart: unless-stopped
     init: true
     environment:
+      # Keyed RPC URL; never printed unredacted (see src/core/redact.js).
       RPC_URL: ${RPC_URL:?RPC_URL must be set to an approved production RPC}
       CHAIN_ID: "4663"
       CONFIRMATIONS: "3"
       POLL_INTERVAL_MS: "5000"
-      CHUNK_SIZE: "10"
-      MAX_BATCHES_PER_RUN: "10"
+      HAHAWEEK_CHUNK_SIZE: "${HAHAWEEK_CHUNK_SIZE:-500}"
+      HAHAWEEK_MAX_BATCHES_PER_RUN: "${HAHAWEEK_MAX_BATCHES_PER_RUN:-20}"
+      HAHAWEEK_HEADER_CONCURRENCY: "${HAHAWEEK_HEADER_CONCURRENCY:-8}"
+      # Only used when no cursor exists yet; empty = start at the safe head.
+      HAHAWEEK_START_BLOCK: "${HAHAWEEK_START_BLOCK:-}"
+      HAHAWEEK_LOOP_SLEEP_MS: "${HAHAWEEK_LOOP_SLEEP_MS:-5000}"
+      HAHAWEEK_CATCHUP_SLEEP_MS: "${HAHAWEEK_CATCHUP_SLEEP_MS:-250}"
+      # Docker cannot exempt an exit code from its restart policy, so the
+      # runner stays alive (idle) after a fail-closed STOP instead of exiting.
+      HAHAWEEK_RUNNER_ON_STOP: hold
       MAX_RUNTIME_MS: "900000"
       MAX_RPC_CALLS_PER_RUN: "4096"
       RPC_TIMEOUT_MS: "15000"

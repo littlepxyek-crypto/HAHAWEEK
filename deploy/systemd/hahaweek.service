@@ -9,8 +9,11 @@ User=hahaweek
 Group=hahaweek
 WorkingDirectory=/opt/hahaweek/current
 EnvironmentFile=/etc/hahaweek/hahaweek.env
-ExecStart=/usr/bin/node /opt/hahaweek/current/src/index.js
-Restart=always
+ExecStart=/usr/bin/node /opt/hahaweek/current/src/runner.js
+# The runner loops internally. Exit 78 = fail-closed STOP (BLOCKED/UNKNOWN
+# operational state): do not restart, an operator must intervene.
+Restart=on-failure
+RestartPreventExitStatus=78
 RestartSec=10
 TimeoutStartSec=30
 TimeoutStopSec=30
