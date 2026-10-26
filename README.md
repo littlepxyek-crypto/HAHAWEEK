@@ -435,14 +435,18 @@ Run the test suite with:
 npm test
 ```
 
-Run ingestion:
+Run ingestion (configuration: [.env.example](.env.example), details in [ARCHITECTURE.md](ARCHITECTURE.md)):
 
 ```bash
 npm install
+export HAHAWEEK_RPC_URL='https://<your keyed Robinhood Chain RPC>'   # optional; public RPC by default
+export HAHAWEEK_START_BLOCK=59281988                                 # optional backfill start, only used with no cursor
 node src/index.js      # one ingestion pass, then exit
-node src/runner.js     # loop: health -> ingestion pass -> sleep; stops fail-closed on non-retryable state
+node src/runner.js     # continuous: health -> ingestion pass -> sleep; fail-closed STOP exits 78
 node src/status.js     # print persisted operational state
 ```
+
+Docker: `docker compose -f deploy/docker-compose.yml up -d` (requires `RPC_URL`). The container runs `src/runner.js` and stays idle instead of restarting after a fail-closed STOP.
 
 ---
 

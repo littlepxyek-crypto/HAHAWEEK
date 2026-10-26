@@ -3,7 +3,7 @@
 Priority order from the 2026-10-26 architecture audit. Status is updated as PRs land.
 
 1. **Honest docs, one source of truth** (S). Root `ARCHITECTURE.md`, fill/remove empty root docs, archive STEP records to `docs/archive/`, drop prose-assertion tests.
-2. **Ingestion that keeps up with the chain** (M). Run through `src/runner.js` in Docker/systemd, larger configurable block ranges, concurrent header fetch, configurable start block / backfill, keyed RPC from env with redaction.
+2. **Ingestion that keeps up with the chain** (M). _In progress: runner entrypoint, configurable ranges, concurrent headers, start block, RPC redaction._ Run through `src/runner.js` in Docker/systemd, larger configurable block ranges, concurrent header fetch, configurable start block / backfill, keyed RPC from env with redaction.
 3. **Live derivation stage** (M–L). After each accepted batch, read new `canonical_evidence` from the DB and run formation adapter → completeness → radar candidate; persist append-only tables bound to the authority generation.
 4. **Delayed validation and reporting** (M). Scheduled job for formations whose 7-day window has ended: historical outcome → liquidity survival → validation → research report from the DB, persisted. Shrink `scripts/hfi-mvp-runtime-verify.js` to call `src`; unify raw ID scheme.
 5. **Output surface** (S–M). CLI on the read-only query service (`hahaweek radar|formations|report <id>`) and a static JSON/HTML feed.
