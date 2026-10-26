@@ -1,0 +1,64 @@
+{
+  "verification_class": "E5_RUNTIME_REORG_DERIVED",
+  "contract_id": "ANALYTICAL_REORG_PROPAGATION_V1",
+  "commit": "local",
+  "state": "VERIFIED",
+  "mode": "CONTROLLED_DERIVED_RUNTIME",
+  "live_rpc_reorg": false,
+  "started_at": "2026-10-26T01:11:17.803Z",
+  "completed_at": "2026-10-26T01:11:17.918Z",
+  "f02_status": "VERIFIED",
+  "propagation_status": "REBUILD_REQUIRED",
+  "lifecycle_status": "REBUILT",
+  "affected_projection_count": 6,
+  "affected_by_layer": {
+    "GRAPH": [
+      "graph:f02"
+    ],
+    "FORMATION": [
+      "formation:f02"
+    ],
+    "HYPOTHESIS": [
+      "hypothesis:f02"
+    ],
+    "VALIDATION": [
+      "validation:f02"
+    ],
+    "RESEARCH": [
+      "research:f02"
+    ],
+    "REPORT": [
+      "report:f02"
+    ]
+  },
+  "graph_formation_parallel": true,
+  "history": [
+    "INVALIDATED",
+    "INVALIDATED",
+    "INVALIDATED",
+    "INVALIDATED",
+    "INVALIDATED",
+    "INVALIDATED",
+    "REBUILT",
+    "REBUILT",
+    "REBUILT",
+    "REBUILT",
+    "REBUILT",
+    "REBUILT"
+  ],
+  "v4_mutation_check": {
+    "canonical_evidence": 0,
+    "canonical_transitions": 0
+  },
+  "failure_path": {
+    "status": "REBUILD_FAILED",
+    "failed_projection_id": "validation:f02",
+    "latest_state": "FAILED"
+  },
+  "safety": {
+    "canonical_evidence_mutated": false,
+    "canonical_transitions_mutated": false,
+    "stale_affected_projection_permitted": false,
+    "authority_activation": "INACTIVE"
+  }
+}
