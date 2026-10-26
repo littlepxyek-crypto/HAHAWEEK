@@ -991,10 +991,24 @@ async function createDatabase(filename = DB_FILE, options = {}) {
     },
   };
 
-  const save = () => {
+  /*
+   * Deferred saves (batch-boundary commit). While enabled, save() only marks
+   * the DB dirty; flush() writes it once. The ingestion engine enables this
+   * and flushes after the authority gate accepted a batch and BEFORE the
+   * cursor advances, so on disk the cursor can never be ahead of the evidence
+   * it points at. A crash before the flush loses only the unfinished batch,
+   * which the next pass redoes from the unchanged cursor. Rollback snapshots
+   * (snapshot/restore) are in memory and unaffected.
+   */
+  let deferSaves = false;
+  let dirty = false;
+  let realSaves = 0;
+
+  const writeFile = () => {
     if (inMemory) return;
     legacyWriteBarrier.assertWritable();
     const data = db.export();
+    realSaves += 1;
     const tmp = filename + '.tmp';
     try {
       fs.writeFileSync(tmp, Buffer.from(data));
@@ -1003,11 +1017,32 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       try { if (fs.existsSync(tmp)) fs.unlinkSync(tmp); } catch {}
       throw error;
     }
+    dirty = false;
+  };
+
+  const save = () => {
+    if (inMemory) return;
+    if (deferSaves) {
+      legacyWriteBarrier.assertWritable();
+      dirty = true;
+      return;
+    }
+    writeFile();
   };
 
   const database = {
     db: guardedDb,
     save,
+    setDeferredSaves(enabled) {
+      deferSaves = enabled === true;
+      if (!deferSaves && dirty) writeFile();
+    },
+    flush() {
+      if (dirty) writeFile();
+      return true;
+    },
+    isDirty: () => dirty,
+    saveCount: () => realSaves,
     snapshot() {
       return Buffer.from(db.export());
     },
@@ -1032,7 +1067,7 @@ async function createDatabase(filename = DB_FILE, options = {}) {
       }
     },
     close() {
-      if (!inMemory) save();
+      if (!inMemory) writeFile();
       db.close();
     },
   };

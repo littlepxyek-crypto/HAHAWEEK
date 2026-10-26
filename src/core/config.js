@@ -197,8 +197,9 @@ const WINDOW_DEFAULTS = Object.freeze({
   WINDOW_MAX_POOLS_PER_PASS: 60,
   // The newest N blocks (up to what discovery scanned) are always ingested.
   WINDOW_LATEST_BLOCKS: 200,
-  // Concurrent header requests in window mode (probe: no 429 at 24 parallel).
-  WINDOW_HEADER_CONCURRENCY: 8,
+  // Concurrent header requests in window mode. 8 drew occasional 429s on the
+  // public RPC (2026-10-26); 4 was almost as fast with none.
+  WINDOW_HEADER_CONCURRENCY: 4,
   // Cap of discovered-but-not-yet-ingested pools kept in the ledger.
   WINDOW_PENDING_MAX: 5000,
   // Stage 1 (Initialize-only getLogs).

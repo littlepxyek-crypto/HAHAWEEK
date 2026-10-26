@@ -20,6 +20,7 @@ class IngestionEngine {
     startBlock = null,
     rangePlanner,
     gapRecorder,
+    batchCommitter,
   }) {
     if (!provider) {
       throw new Error('PROVIDER_REQUIRED');
@@ -94,6 +95,12 @@ class IngestionEngine {
     this.batchSize = batchSize;
     this.maxBatchesPerRun = maxBatchesPerRun ?? Infinity;
     this.startBlock = startBlock ?? null;
+    if (batchCommitter !== undefined && typeof batchCommitter !== 'function') {
+      throw new Error('INVALID_BATCH_COMMITTER');
+    }
+    // Durable commit of a batch (deferred DB saves) after AUTHORIZED and
+    // before the cursor advances.
+    this.batchCommitter = batchCommitter;
     this.rangePlanner = rangePlanner;
     this.gapRecorder = gapRecorder;
     if (typeof authorityGate !== 'function') {
@@ -289,6 +296,10 @@ class IngestionEngine {
           if (lastAuthorityOutcome?.status !== 'AUTHORIZED') {
             throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
           }
+          if (this.batchCommitter) {
+            assertWriterFenceHeartbeat();
+            this.batchCommitter({ fromBlock, toBlock });
+          }
           this.cursor.advance(toBlock);
 
           processed += toBlock - fromBlock + 1;
@@ -428,6 +439,10 @@ IngestionEngine.prototype.runPlannedSegments = async function runPlannedSegments
     lastAuthorityOutcome = this.authorityGate(authorityInput);
     if (lastAuthorityOutcome?.status !== 'AUTHORIZED') {
       throw new Error('AUTHORITY_ACCEPTANCE_REQUIRED');
+    }
+    if (this.batchCommitter) {
+      assertWriterFenceHeartbeat();
+      this.batchCommitter({ fromBlock, toBlock });
     }
     this.cursor.advance(toBlock);
     authorized.push({ fromBlock, toBlock, transitionType: processingContext?.transitionType ?? null });

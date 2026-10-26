@@ -154,6 +154,9 @@ async function createEngine({
     await writerFence.startWatchdog();
 
     database = await createDatabase(undefined, { legacyWriteBarrier });
+    // Batch-boundary commit: one DB file write per authorized batch instead
+    // of one per processing step (see database.js setDeferredSaves).
+    if (typeof database.setDeferredSaves === 'function') database.setDeferredSaves(true);
     if (windowMode) {
       writerFence.assertOwned();
       ensureGapTable(database);
@@ -299,6 +302,9 @@ async function createEngine({
     maxRpcCalls: MAX_RPC_CALLS_PER_RUN,
     startBlock: START_BLOCK,
     ...windowOptions,
+    batchCommitter: typeof database.flush === 'function'
+      ? () => { writerFence.assertOwned(); database.flush(); }
+      : undefined,
     writerFence,
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,
