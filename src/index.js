@@ -25,13 +25,22 @@ function handleSIGTERM() {
 
 const { createProvider } = require('./core/rpc');
 const {
+  RPC_URL,
+  RPC_URLS,
   CHAIN_ID,
   CONFIRMATIONS,
   CHUNK_SIZE,
+  LOG_CHUNK_SIZE,
   MAX_BATCHES_PER_RUN,
   MAX_RUNTIME_MS,
   MAX_RPC_CALLS_PER_RUN,
+  START_BLOCK,
 } = require('./core/config');
+const { redactText } = require('./core/redact');
+
+function redactRpc(message) {
+  return redactText(message, [RPC_URL, ...RPC_URLS]);
+}
 
 const { BlockCursor } = require('./core/block-cursor');
 const { IngestionEngine } = require('./core/ingestion');
@@ -157,7 +166,7 @@ async function createEngine({
     },
 
     chainId: CHAIN_ID,
-    chunkSize: 10,
+    chunkSize: LOG_CHUNK_SIZE,
   });
 
   /*
@@ -256,6 +265,7 @@ async function createEngine({
     maxBatchesPerRun: MAX_BATCHES_PER_RUN,
     maxRuntimeMs: MAX_RUNTIME_MS,
     maxRpcCalls: MAX_RPC_CALLS_PER_RUN,
+    startBlock: START_BLOCK,
     writerFence,
     authorityGate: createAuthorityGate({
       authorityFactory: productionAuthorityFactory,
@@ -345,6 +355,9 @@ async function main() {
     console.log(`Safe head: ${result.safeHead}`);
     console.log(`Processed: ${result.processed}`);
     console.log(`Cursor: ${result.cursor}`);
+    if (Number.isInteger(result.behind)) {
+      console.log(`Behind safe head: ${result.behind} blocks`);
+    }
     if (result.processingContext) {
       console.log(`Processing context: ${result.processingContext.status}`);
       console.log(`Range: ${result.processingContext.fromBlock}-${result.processingContext.toBlock}`);
@@ -363,10 +376,11 @@ async function main() {
       throw error;
     }
 
-    const message =
+    const message = redactRpc(
       error instanceof Error
         ? error.message
-        : String(error);
+        : String(error)
+    );
 
     const failure = classifyFailure(error);
 
@@ -393,11 +407,11 @@ async function main() {
       );
     } catch (stateError) {
       console.error('HAHAWEEK OPERATIONAL STATE: PRIMARY WRITE FAILED');
-      console.error(
+      console.error(redactRpc(
         stateError instanceof Error
           ? stateError.message
           : String(stateError)
-      );
+      ));
 
       /*
        * If the active writer fence has already expired or become stale,
@@ -450,11 +464,11 @@ async function main() {
 if (require.main === module) {
   main().catch((error) => {
     console.error('HAHAWEEK SCAN: FAILED');
-    console.error(
+    console.error(redactRpc(
       error instanceof Error
         ? error.message
         : String(error)
-    );
+    ));
 
     process.exitCode = 1;
   });

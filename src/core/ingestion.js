@@ -17,6 +17,7 @@ class IngestionEngine {
     writerFenceRenewalIntervalMs,
     maxRuntimeMs,
     maxRpcCalls,
+    startBlock = null,
   }) {
     if (!provider) {
       throw new Error('PROVIDER_REQUIRED');
@@ -59,6 +60,14 @@ class IngestionEngine {
     }
 
     if (
+      startBlock !== null &&
+      startBlock !== undefined &&
+      (!Number.isSafeInteger(startBlock) || startBlock < 0)
+    ) {
+      throw new Error('INVALID_START_BLOCK');
+    }
+
+    if (
       processorRange !== undefined &&
       batchSize === undefined
     ) {
@@ -72,6 +81,7 @@ class IngestionEngine {
     this.processorRange = processorRange;
     this.batchSize = batchSize;
     this.maxBatchesPerRun = maxBatchesPerRun ?? Infinity;
+    this.startBlock = startBlock ?? null;
     if (typeof authorityGate !== 'function') {
       throw new Error('AUTHORITY_GATE_REQUIRED');
     }
@@ -140,7 +150,15 @@ class IngestionEngine {
        * window and are not interpreted as absent evidence.
        */
       if (current === null) {
-        current = safeHead - 1;
+        /*
+         * A configured start block (backfill) only applies while no cursor
+         * exists. It goes through the same verified PROCESS -> AUTHORITY ->
+         * CURSOR path; it never seeds the cursor directly. A start block
+         * above the safe head simply waits until the chain reaches it.
+         */
+        current = this.startBlock !== null
+          ? this.startBlock - 1
+          : safeHead - 1;
       }
 
       /*
@@ -253,11 +271,13 @@ class IngestionEngine {
             batchesProcessed += 1;
         }
 
+        const cursorAfter = this.cursor.get();
         return {
           processed,
           latestBlock,
           safeHead,
-          cursor: this.cursor.get(),
+          cursor: cursorAfter,
+          behind: Number.isInteger(cursorAfter) ? Math.max(0, safeHead - cursorAfter) : null,
           processingContext: lastProcessingContext,
           authorityOutcome: lastAuthorityOutcome,
         };
