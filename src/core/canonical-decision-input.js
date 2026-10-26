@@ -1,7 +1,11 @@
 'use strict';
 
 const crypto = require('node:crypto');
-const { RPC_URL, CHAIN_ID } = require('./config');
+const { RPC_URL, CHAIN_ID, HEADER_CONCURRENCY } = require('./config');
+const { redactUrl } = require('./redact');
+
+// Persisted source identifier: scheme + host only, so an RPC key never lands in the DB.
+const DEFAULT_SOURCE_ID = `rpc:${redactUrl(RPC_URL)}`;
 const { canonicalUtf8 } = require('../reference/v4/jcs');
 
 const CBDR_DOMAIN = 'HAHAWEEK-CANONICAL-DECISION-RECORD-V1';
@@ -38,7 +42,7 @@ function sha256Domain(domain, payload) {
     .digest('hex');
 }
 
-function canonicalSourceId(sourceId = `rpc:${RPC_URL}`) {
+function canonicalSourceId(sourceId = DEFAULT_SOURCE_ID) {
   assertString(sourceId, 'INVALID_SOURCE_ID');
   return sourceId;
 }
@@ -352,13 +356,38 @@ function findBranchCommonAncestor(db, { chainId, firstBlockHash, secondBlockHash
   fail('COMMON_ANCESTOR_MISSING');
 }
 
+/*
+ * Fetch block headers fromBlock..toBlock with bounded concurrency.
+ * Results are returned in block order; validation and parent-link checks are
+ * done by the caller exactly as for sequential fetching.
+ */
+async function fetchHeadersInOrder({ provider, fromBlock, toBlock, concurrency = 1, beforeWave }) {
+  if (!Number.isSafeInteger(concurrency) || concurrency < 1) fail('INVALID_HEADER_CONCURRENCY');
+  const total = toBlock - fromBlock + 1;
+  const headers = new Array(total);
+  for (let offset = 0; offset < total; offset += concurrency) {
+    if (typeof beforeWave === 'function') beforeWave();
+    const wave = [];
+    for (let i = offset; i < Math.min(offset + concurrency, total); i += 1) {
+      wave.push(
+        Promise.resolve(provider.getBlock(fromBlock + i)).then(header => {
+          headers[i] = header;
+        })
+      );
+    }
+    await Promise.all(wave);
+  }
+  return headers;
+}
+
 function createCanonicalDecisionInput({
   provider,
   db,
   writerFence,
   chainId = CHAIN_ID,
   confirmations,
-  sourceId = `rpc:${RPC_URL}`,
+  sourceId = DEFAULT_SOURCE_ID,
+  headerConcurrency = HEADER_CONCURRENCY,
   latestBlock,
   fromBlock,
   toBlock,
@@ -402,11 +431,16 @@ function createCanonicalDecisionInput({
 
     assertWriter(writerFence);
 
-    const headers = [];
-    for (let blockNumber = fromBlock; blockNumber <= toBlock; blockNumber += 1) {
-      const header = await provider.getBlock(blockNumber);
-      headers.push(validateHeader(header, blockNumber, chainId));
-    }
+    const fetchedHeaders = await fetchHeadersInOrder({
+      provider,
+      fromBlock,
+      toBlock,
+      concurrency: headerConcurrency,
+      beforeWave: () => assertWriter(writerFence),
+    });
+    const headers = fetchedHeaders.map((header, offset) =>
+      validateHeader(header, fromBlock + offset, chainId)
+    );
 
     if (fromBlock > 0 && headers[0].parent_block_hash) {
       const persistedParent = findCanonicalBlock(
@@ -531,6 +565,7 @@ function createCanonicalDecisionInput({
 
 module.exports = {
   CBDR_DOMAIN,
+  fetchHeadersInOrder,
   SNAPSHOT_DOMAIN,
   createRecordDigest,
   createSnapshotId,

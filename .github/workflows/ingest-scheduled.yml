@@ -1,0 +1,133 @@
+name: HAHAWEEK Scheduled Ingestion (free)
+
+# One bounded ingestion pass with the free profile, on a schedule.
+# Free: public repo => GitHub-hosted runner minutes are free; public RPC, no key;
+# no secrets used anywhere in this workflow.
+#
+# GitHub only runs `schedule:` workflows from the DEFAULT branch, so this
+# becomes active only after it is merged to main.
+#
+# State (data/: sqlite, raw-events.jsonl, state.json, writer-fence-state.json)
+# lives in the GitHub Actions cache, not in git. Why: the sqlite file grows by
+# roughly 8 KB per block (~200 MB/day at this cadence) and every git commit
+# would store a full new copy, hitting GitHub's 100 MB per-file limit within a
+# day. The cache is zstd-compressed (~12x on this DB), needs no write
+# permission on the repo, and holds 10 GB per repo. See ARCHITECTURE.md.
+
+on:
+  schedule:
+    # Every 30 minutes, off the top of the hour (GitHub delays :00 runs most).
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+    inputs:
+      max_batches:
+        description: "Batches this pass (free default 5 x 100 blocks)"
+        required: false
+        default: ""
+      resume_after_stop:
+        description: "Operator: run even though the last pass ended in a fail-closed STOP"
+        type: boolean
+        default: false
+      allow_fresh_state:
+        description: "Operator: start with empty state although earlier runs succeeded (state cache lost)"
+        type: boolean
+        default: false
+
+# Never two passes at once: they would share one cursor/writer fence.
+concurrency:
+  group: hahaweek-scheduled-ingestion
+  cancel-in-progress: false
+
+# Read-only token. actions: read only to check earlier runs when the cache is empty.
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  ingest:
+    # Only the upstream repo, only its default branch. Forks never run this.
+    if: >-
+      github.repository == 'littlepxyek-crypto/HAHAWEEK' &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      HAHAWEEK_PROFILE: free
+      HAHAWEEK_DATA_DIR: ${{ github.workspace }}/data
+      # Optional repo variable (Settings > Secrets and variables > Actions > Variables).
+      HAHAWEEK_MAX_BATCHES_PER_RUN: ${{ inputs.max_batches || vars.HAHAWEEK_MAX_BATCHES_PER_RUN || '5' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Restore state
+        id: restore
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: data
+          key: hahaweek-state-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            hahaweek-state-v1-
+
+      - name: Refuse to start fresh if earlier state was lost
+        if: steps.restore.outputs.cache-matched-key == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALLOW_FRESH: ${{ inputs.allow_fresh_state && 'true' || 'false' }}
+        run: |
+          previous=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ingest-scheduled.yml \
+            --status success --limit 1 --json databaseId --jq 'length')
+          if [ "$previous" != "0" ] && [ "$ALLOW_FRESH" != "true" ]; then
+            echo "::error::No saved state found, but earlier runs succeeded. Not starting a new chain from scratch."
+            echo "Run the workflow manually with allow_fresh_state=true if this is intended."
+            exit 78
+          fi
+          echo "No saved state: first run (or operator-approved fresh start)."
+          mkdir -p data
+
+      - name: One ingestion pass (free profile)
+        id: pass
+        run: |
+          rm -f data/*.lock data/*.tmp
+          args=""
+          if [ "${{ inputs.resume_after_stop && 'true' || 'false' }}" = "true" ]; then
+            args="--resume-after-stop"
+          fi
+          node src/pass.js $args
+
+      - name: Summary
+        if: always() && steps.pass.outcome != 'skipped'
+        run: |
+          {
+            echo "### HAHAWEEK pass"
+            echo '```json'
+            cat data/state.json 2>/dev/null || echo '{}'
+            echo '```'
+            du -sh data 2>/dev/null || true
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Save even when the pass failed: state.json must carry a fail-closed
+      # STOP into the next run. Skip only if the pass never ran.
+      - name: Drop lock/tmp files before saving
+        if: always() && steps.pass.outcome != 'skipped' && steps.pass.outcome != 'cancelled'
+        run: rm -f data/*.lock data/*.tmp
+
+      - name: Upload state to cache
+        if: always() && steps.pass.outcome != 'skipped' && steps.pass.outcome != 'cancelled'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: data
+          key: hahaweek-state-v1-${{ github.run_id }}-${{ github.run_attempt }}

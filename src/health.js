@@ -4,6 +4,8 @@ const { getRpcStatus } = require('./core/rpc');
 const { loadState } = require('./core/state');
 const { readOperationalState } = require('./core/operational-state');
 const { persistOperationalFailure } = require('./core/operational-failure-persistence');
+const { RPC_URL, RPC_URLS } = require('./core/config');
+const { redactUrl, redactText } = require('./core/redact');
 
 async function runHealth(
   getStatus = getRpcStatus,
@@ -14,7 +16,7 @@ async function runHealth(
   const state = readOperationalState(getState());
   const operationalState = state.operationalState || 'UNKNOWN';
 
-  output(`RPC: ${status.rpcUrl}`);
+  output(`RPC: ${redactUrl(status.rpcUrl)}`);
   output(`Expected Chain ID: ${status.expectedChainId}`);
   output(`Actual Chain ID: ${status.actualChainId}`);
   output(`Current Block: ${status.blockNumber}`);
@@ -37,7 +39,7 @@ async function main() {
     await runHealth();
   } catch (error) {
     console.error('HEALTH: FAILED');
-    console.error(error.message);
+    console.error(redactText(error && error.message, [RPC_URL, ...RPC_URLS]));
 
     try {
       persistOperationalFailure(error);

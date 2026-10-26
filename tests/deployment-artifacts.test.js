@@ -22,7 +22,13 @@ test('deployment baseline is persistent and fail-closed', () => {
   assert.match(compose, /no-new-privileges:true/);
   assert.match(compose, /cap_drop:/);
 
-  assert.match(systemd, /Restart=always/);
+  // Long-running loop through the runner, which stops fail-closed.
+  assert.match(dockerfile, /CMD \["node", "src\/runner\.js"\]/);
+  assert.match(compose, /HAHAWEEK_RUNNER_ON_STOP:\s*hold/);
+  assert.match(systemd, /ExecStart=\/usr\/bin\/node \/opt\/hahaweek\/current\/src\/runner\.js/);
+  assert.match(systemd, /Restart=on-failure/);
+  assert.match(systemd, /RestartPreventExitStatus=78/);
+  assert.doesNotMatch(systemd, /Restart=always/);
   assert.match(systemd, /ReadWritePaths=\/opt\/hahaweek\/data/);
   assert.match(systemd, /NoNewPrivileges=true/);
 });

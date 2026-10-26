@@ -435,14 +435,70 @@ Run the test suite with:
 npm test
 ```
 
-Run ingestion:
+Run ingestion (configuration: [.env.example](.env.example), details in [ARCHITECTURE.md](ARCHITECTURE.md)):
 
 ```bash
-npm install
+npm ci
+node src/pass.js       # one bounded pass (free profile by default), honours a previous fail-closed STOP
 node src/index.js      # one ingestion pass, then exit
-node src/runner.js     # loop: health -> ingestion pass -> sleep; stops fail-closed on non-retryable state
+node src/runner.js     # continuous: health -> ingestion pass -> sleep; fail-closed STOP exits 78
 node src/status.js     # print persisted operational state
 ```
+
+### Profiles: `free` (default) and `fast`
+
+`HAHAWEEK_PROFILE=free` is made for **free resources only**: the public RPC `https://rpc.mainnet.chain.robinhood.com` (no API key), a free GitHub Actions runner, or an Android phone with Termux. Small requests (100-block `getLogs`, 2 header requests in flight, 5 × 100 blocks per pass ≈ 1.7 MB download), long sleeps, and patient retries (exponential backoff + jitter on 429/5xx/timeouts, `Retry-After` honoured, cursor never moves on failure).
+
+It **does not keep up with the chain head** (~9.6 blocks/s). It builds a contiguous, authority-checked history at a polite pace. Use `HAHAWEEK_PROFILE=fast` (the earlier defaults: 500-block batches, 20 batches, 8 concurrent headers) with a keyed RPC to track the head. Any single variable can still be overridden. Probe numbers and reasoning: [ARCHITECTURE.md §3](ARCHITECTURE.md#3-profiles-throughput-and-start-block).
+
+```bash
+export HAHAWEEK_PROFILE=fast
+export HAHAWEEK_RPC_URL='https://<your keyed Robinhood Chain RPC>'
+export HAHAWEEK_START_BLOCK=59281988   # optional backfill start, only used with no cursor
+node src/runner.js
+```
+
+### Free runtime: GitHub Actions (no computer, no VPS)
+
+`.github/workflows/ingest-scheduled.yml` runs one free-profile pass every 30 minutes (minutes 7 and 37) and on demand. Public repo, so runner minutes are free; no secrets are used. **It becomes active only after it is merged to `main`** (GitHub runs schedules from the default branch only).
+
+- State (`data/`) is kept in the GitHub Actions cache between runs, not in git. See [ARCHITECTURE.md §3a](ARCHITECTURE.md#3a-free-runtime-github-actions-schedule).
+- Run now from the phone: GitHub app or browser → repo → **Actions** → *HAHAWEEK Scheduled Ingestion (free)* → **Run workflow**.
+- Bigger passes: set repo variable `HAHAWEEK_MAX_BATCHES_PER_RUN` (Settings → Secrets and variables → Actions → Variables).
+- If a run ends in a fail-closed STOP, later runs stay stopped (exit 78) until you run it manually with **resume_after_stop** ticked, after reading the log.
+
+### Termux (Android) option
+
+Copy-paste into Termux. Wi-Fi recommended: one pass downloads ~1.7 MB and the database grows ~8 KB per block (~4 MB per default pass).
+
+```bash
+pkg update -y && pkg install -y nodejs-lts git
+git clone https://github.com/littlepxyek-crypto/HAHAWEEK.git
+cd HAHAWEEK
+npm ci --omit=dev
+```
+
+One pass (free profile, 2 batches = 200 blocks to stay light on a phone):
+
+```bash
+HAHAWEEK_PROFILE=free HAHAWEEK_MAX_BATCHES_PER_RUN=2 node src/pass.js
+```
+
+Light loop: one pass every 15 minutes, stops by itself on a fail-closed STOP (exit 78). Press Ctrl+C to end.
+
+```bash
+termux-wake-lock 2>/dev/null
+while true; do
+  HAHAWEEK_PROFILE=free HAHAWEEK_MAX_BATCHES_PER_RUN=2 node src/pass.js
+  [ $? -eq 78 ] && echo "STOP: check the log above" && break
+  sleep 900
+done
+termux-wake-unlock 2>/dev/null
+```
+
+Check progress any time: `node src/status.js`. Data lives in `./data` inside the `HAHAWEEK` folder.
+
+Docker: `docker compose -f deploy/docker-compose.yml up -d` (requires `RPC_URL`; defaults to the `fast` profile). The container runs `src/runner.js` and stays idle instead of restarting after a fail-closed STOP.
 
 ---
 
