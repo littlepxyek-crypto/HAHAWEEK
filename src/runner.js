@@ -4,7 +4,15 @@ const { spawn } = require('node:child_process');
 const { loadState } = require('./core/state');
 const { readOperationalState, isRetryableFailure } = require('./core/operational-state');
 
-const { CHUNK_SIZE, MAX_BATCHES_PER_RUN, RPC_URL, RPC_URLS } = require('./core/config');
+const {
+  CHUNK_SIZE,
+  MAX_BATCHES_PER_RUN,
+  RPC_URL,
+  RPC_URLS,
+  LOOP_SLEEP_MS,
+  CATCHUP_SLEEP_MS,
+  PROFILE,
+} = require('./core/config');
 const { redactText } = require('./core/redact');
 
 function envInteger(names, fallback) {
@@ -21,12 +29,12 @@ function envInteger(names, fallback) {
 }
 
 // Sleep between ingestion passes when caught up with the chain.
-const POLL_INTERVAL_MS =
-  envInteger(['HAHAWEEK_LOOP_SLEEP_MS', 'RUNNER_INTERVAL_MS'], 5000);
+// Profile default: free 60000, fast 5000 (src/core/config.js).
+const POLL_INTERVAL_MS = LOOP_SLEEP_MS;
 
 // Sleep between passes while still behind (the previous pass hit its batch cap).
-const CATCH_UP_SLEEP_MS =
-  envInteger(['HAHAWEEK_CATCHUP_SLEEP_MS'], 250);
+// Profile default: free 15000, fast 250.
+const CATCH_UP_SLEEP_MS = CATCHUP_SLEEP_MS;
 
 const MAX_BACKOFF_MS =
   envInteger(['RUNNER_MAX_BACKOFF_MS'], 60000);
@@ -145,6 +153,7 @@ async function runRunner({
   let outcome = 'SIGNAL';
 
   output('=== HAHAWEEK RUNNER ===');
+  output(`Profile: ${PROFILE}`);
   output(`Interval: ${intervalMs}ms`);
   output(`Catch-up interval: ${catchUpSleepMs}ms`);
   output(`Max backoff: ${maxBackoffMs}ms`);

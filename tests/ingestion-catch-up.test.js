@@ -11,17 +11,25 @@ const { runRunner, nextSleepMs, EXIT_FAIL_CLOSED } = require('../src/runner');
 
 /* ---------------- config ---------------- */
 
-test('config defaults are sized for a ~10 blocks/s chain', () => {
+test('config defaults come from the free profile', () => {
   const config = readConfig({});
+  assert.equal(config.PROFILE, 'free');
   assert.equal(config.RPC_URL, DEFAULT_RPC_URL);
   assert.deepEqual(config.RPC_URLS, [DEFAULT_RPC_URL]);
   assert.equal(config.CHAIN_ID, 4663);
   assert.equal(config.CHUNK_SIZE, DEFAULTS.CHUNK_SIZE);
-  assert.equal(config.LOG_CHUNK_SIZE, DEFAULTS.CHUNK_SIZE);
+  assert.equal(config.LOG_CHUNK_SIZE, DEFAULTS.LOG_CHUNK_SIZE);
   assert.equal(config.MAX_BATCHES_PER_RUN, DEFAULTS.MAX_BATCHES_PER_RUN);
-  assert.ok(config.CHUNK_SIZE * config.MAX_BATCHES_PER_RUN >= 5000);
   assert.equal(config.HEADER_CONCURRENCY, DEFAULTS.HEADER_CONCURRENCY);
   assert.equal(config.START_BLOCK, null);
+});
+
+test('fast profile keeps the catch-up sizing for a ~10 blocks/s chain', () => {
+  const config = readConfig({ HAHAWEEK_PROFILE: 'fast' });
+  assert.equal(config.PROFILE, 'fast');
+  assert.ok(config.CHUNK_SIZE * config.MAX_BATCHES_PER_RUN >= 5000);
+  assert.equal(config.LOG_CHUNK_SIZE, config.CHUNK_SIZE);
+  assert.equal(config.HEADER_CONCURRENCY, 8);
 });
 
 test('HAHAWEEK_* variables take precedence over legacy names', () => {
