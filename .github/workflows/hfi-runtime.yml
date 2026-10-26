@@ -1,9 +1,10 @@
 name: HAHAWEEK HFI-MVP Runtime Verification
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+  # Hits the public mainnet RPC; run on a daily schedule and manual dispatch only,
+  # not as a PR/push gate (public-RPC timeouts and rate limits made it flaky).
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'
 permissions:
   contents: read
 jobs:
@@ -28,6 +29,10 @@ jobs:
           RPC_TIMEOUT_MS: 30000
           HFI_POOL_ID: "0xf399bd1544377680d48c62fd85c2105b869e55906c4189cc5ab3b4e83446928c"
           HFI_POOL_INIT_BLOCK: "59281988"
+          # The pool-filtered Swap query returns ~8.7k logs over the 7-day window (~6M blocks);
+          # 100k-block ranges need ~60 getLogs instead of ~2,400 at the 2,500 default, keeping
+          # the run inside the 20 min watchdog under public-RPC rate limits. Range-limit errors still split.
+          HFI_OUTCOME_LOG_CHUNK: "100000"
         run: |
           set +e
           rm -f docs/runtime/hfi-mvp-e2e-latest.json
