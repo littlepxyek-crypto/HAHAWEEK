@@ -533,3 +533,28 @@ test('rpc: keep-alive agents are used for every request', () => {
   assert.equal(agentFor('http://a.example').keepAlive, true);
   assert.notEqual(agentFor('https://a.example'), agentFor('http://a.example'));
 });
+
+test('headers: sliding window starts the next request when any finishes (no wave stall), order kept', async () => {
+  const { fetchHeadersInOrder } = require('../src/core/canonical-decision-input');
+  let inFlight = 0;
+  let maxInFlight = 0;
+  const started = [];
+  const provider = {
+    async getBlock(n) {
+      started.push(n);
+      inFlight += 1;
+      maxInFlight = Math.max(maxInFlight, inFlight);
+      // Block 10 is slow; with fixed waves 11..13 would wait for it.
+      await new Promise(resolve => setTimeout(resolve, n === 10 ? 60 : 5));
+      inFlight -= 1;
+      return { number: n };
+    },
+  };
+  let checks = 0;
+  const headers = await fetchHeadersInOrder({ provider, fromBlock: 10, toBlock: 21, concurrency: 2, beforeWave: () => { checks += 1; } });
+  assert.deepEqual(headers.map(h => h.number), Array.from({ length: 12 }, (_, i) => 10 + i));
+  assert.equal(maxInFlight, 2);
+  assert.equal(checks, 6);
+  // While block 10 was in flight, more than one other block was fetched.
+  assert.ok(started.indexOf(13) < 12);
+});

@@ -128,8 +128,9 @@ Pools whose `Initialize` block is at or below the cursor leave the pending list:
 | contiguous free, 2×100 blocks, after | 200 | 12.7 s (3 writes) |
 | window, ~70 s after the previous pass (2–4 segments, 1–3 gaps) | 200–210 | 6.3–8.1 s |
 | window, 30 min of chain (17,280 blocks discovered in 0.27 s, 39 pools → 40 segments, 38 gaps) | 390 | 33.9 s |
+| window, 100 latest blocks, while the RPC answered in ~0.5–1.3 s per call (later the same day) | 100–115 | 33–51 s |
 
-Header requests dominate (one `eth_getBlockByNumber` per ingested block, ~85 ms average, plus ethers' `eth_chainId` checks). Window mode uses `HAHAWEEK_WINDOW_HEADER_CONCURRENCY` (4): 8 drew occasional HTTP 429s, 4 was almost as fast without any. The old ~200 s / 250 blocks was RPC latency at concurrency 2, not CPU.
+Header requests dominate (one `eth_getBlockByNumber` per ingested block plus ethers' `eth_chainId` checks). Public-RPC latency moved between ~85 ms and ~1 s per call within an hour, so the same pass takes 6–50 s; headers are fetched with a sliding window (a new request starts as soon as one finishes). Window mode uses `HAHAWEEK_WINDOW_HEADER_CONCURRENCY` (4): 8 drew occasional HTTP 429s, 4 was almost as fast without any. The old ~200 s / 250 blocks was RPC latency at concurrency 2, not CPU.
 
 **Storage.** Measured 8.5–12.8 KB per fully ingested block in sqlite plus ~1–1.5 KB JSONL. Estimates: GitHub Actions every 30 min ≈ 20–25k blocks/day ≈ 200–350 MB/day (rotates every ~11–18 h, ≤ ~300 MB on disk with 1 old epoch); a Termux loop every ~2 min with 100 latest blocks ≈ 90k blocks/day ≈ 1 GB/day written (rotates every few hours, still ≤ ~300 MB on disk) and ~0.3 GB/day download.
 
