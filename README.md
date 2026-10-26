@@ -440,6 +440,7 @@ Run ingestion (configuration: [.env.example](.env.example), details in [ARCHITEC
 ```bash
 npm ci
 node src/pass.js       # one bounded pass (free profile by default), honours a previous fail-closed STOP
+HAHAWEEK_MODE=window node src/watch.js   # window-watch loop: new pools + latest blocks, gaps recorded
 node src/index.js      # one ingestion pass, then exit
 node src/runner.js     # continuous: health -> ingestion pass -> sleep; fail-closed STOP exits 78
 node src/status.js     # print persisted operational state
@@ -457,6 +458,34 @@ export HAHAWEEK_RPC_URL='https://<your keyed Robinhood Chain RPC>'
 export HAHAWEEK_START_BLOCK=59281988   # optional backfill start, only used with no cursor
 node src/runner.js
 ```
+
+### Mode window-watch (`HAHAWEEK_MODE=window`) — penjelasan sederhana
+
+Rantai Robinhood membuat ~9,6 blok per detik. RPC publik gratis tidak sanggup kalau kita mengambil **semua** blok. Mode window-watch bekerja dalam dua tahap:
+
+1. **Cari pool baru (murah).** Setiap pass meminta log `Initialize` saja dari PoolManager Uniswap v4, dalam potongan besar (100.000 blok sekali minta, maksimal 1 juta blok per pass). Bagian ini **tidak bolong**: semua blok dicek. Kalau RPC menjawab "terlalu banyak log", potongan dibagi dua lalu dicoba lagi.
+2. **Ambil detail (lengkap).** Untuk tiap pool baru (maksimal 60 terbaru per pass), HAHAWEEK mengambil penuh **5 blok** mulai dari blok pembuatan pool (Initialize, tambah likuiditas, swap), ditambah **200 blok terbaru**. Dari sampel, 89% pool sudah dapat likuiditas/swap pertama di blok pembuatannya.
+
+Yang jujur perlu diketahui:
+
+- Blok di antara jendela-jendela itu **dilewati**. Setiap lompatan dicatat sebagai *gap* (`WINDOW_SKIPPED`) **sebelum** jendela berikutnya diproses. Hasil analisis yang menyentuh gap ditandai `PARTIAL`/`UNKNOWN`, tidak pernah `COMPLETE`.
+- Setiap jendela tetap lewat jalur yang sama: header + hash induk dicek, lalu gerbang otoritas; kursor baru maju setelah `AUTHORIZED`. Jendela setelah gap memulai garis keturunan (*lineage*) baru (`INITIAL`), jadi tidak ada klaim "bersambung" melewati gap.
+- Data disimpan per **epoch** (folder). Epoch baru dibuat setiap 24 jam atau 150 MB, 1 epoch lama disimpan, yang lebih lama dihapus utuh. Tidak pernah dirotasi saat ada STOP.
+- Pool di luar batas 60 per pass, atau yang datang saat pass gagal, **tidak** diambil detailnya (dihitung sebagai `dropped`).
+
+Jalankan satu pass:
+
+```bash
+HAHAWEEK_MODE=window node src/pass.js
+```
+
+Atau terus-menerus (loop, berhenti sendiri saat STOP/exit 78):
+
+```bash
+HAHAWEEK_MODE=window node src/watch.js
+```
+
+Mode default tetap `contiguous` (profil `free`/`fast` seperti sebelumnya). Detail teknis dan angka: [ARCHITECTURE.md §3b](ARCHITECTURE.md#3b-window-watch-mode-hahaweek_modewindow).
 
 ### Free runtime: GitHub Actions (no computer, no VPS)
 
